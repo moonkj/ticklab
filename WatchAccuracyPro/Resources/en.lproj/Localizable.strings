@@ -1,29 +1,82 @@
 /* App */
 "app.name" = "Watch Accuracy Pro";
 
+/* Common */
+"common.cancel" = "Cancel";
+"common.save" = "Save";
+"common.done" = "Done";
+"common.delete" = "Delete";
+"common.unspecified" = "Unspecified";
+
+/* Units */
+"unit.seconds_per_day" = "s/day";
+
 /* Onboarding */
 "onboarding.title" = "Your watch, on the dot.";
 "onboarding.subtitle" = "Measure mechanical watch accuracy with your iPhone.";
 "onboarding.cta.start" = "Get Started";
+"onboarding.cta.next" = "Next";
+"onboarding.page1.title" = "Measure with your iPhone";
+"onboarding.page1.body" = "All you need is the microphone. Track every watch in your collection.";
+"onboarding.page2.title" = "AI explains the result";
+"onboarding.page2.body" = "More than just numbers — understand what your watch is doing.";
+"onboarding.page3.title" = "Korean & English support";
+"onboarding.page3.body" = "Glossary, watch database, and measurement guide in your language.";
 
 /* Mode */
+"mode.select.title" = "How do you want to use the app?";
+"mode.select.subtitle" = "You can change this anytime in Settings.";
 "mode.beginner.title" = "I'm new to this";
 "mode.beginner.subtitle" = "Get a simple 3-tier verdict: OK / Caution / Service recommended";
 "mode.expert.title" = "I know what I'm doing";
 "mode.expert.subtitle" = "Full data: rate, beat error, amplitude, BPH";
 
 /* Collection */
+"collection.title" = "My Watches";
 "collection.empty.title" = "Add your first watch";
+"collection.empty.subtitle" = "Register a watch to start tracking measurements and trends.";
 "collection.empty.cta" = "Add Watch";
 
+/* Watch row */
+"watch.row.never_measured" = "Never measured";
+"watch.cta.measure" = "Start Measuring";
+
+/* Add watch */
+"addwatch.title" = "Add Watch";
+"addwatch.section.photo" = "Photo";
+"addwatch.section.basic" = "Basic Info";
+"addwatch.section.movement" = "Movement";
+"addwatch.brand" = "Brand";
+"addwatch.model" = "Model";
+"addwatch.purchase_date" = "Purchase date";
+"addwatch.choose_photo" = "Choose photo";
+"addwatch.suggested" = "Suggested movement";
+"addwatch.accept_suggestion" = "Use this";
+"addwatch.skip_suggestion" = "Enter manually";
+
+/* Watch detail */
+"watch.info.movement_specs" = "Movement specs";
+"watch.history.title" = "Measurement history";
+
+/* Confidence */
+"confidence.label" = "Confidence";
+
 /* Glossary */
+"glossary.title" = "Glossary";
 "glossary.bph" = "BPH (Beats Per Hour)";
+"glossary.bph.desc" = "Vibrations per hour. 28800 BPH = 8 beats/sec (4Hz).";
 "glossary.rate" = "Rate";
+"glossary.rate.desc" = "Daily time deviation. +5 s/day means the watch gains 5 seconds per day.";
 "glossary.beat_error" = "Beat Error";
+"glossary.beat_error.desc" = "Asymmetry between tic and toc intervals. Closer to 0 is better.";
 "glossary.amplitude" = "Amplitude";
+"glossary.amplitude.desc" = "Balance wheel rotation angle. Healthy range: 270–315°.";
 "glossary.cosc" = "COSC";
+"glossary.cosc.desc" = "Swiss chronometer certification (-4 to +6 s/day).";
 "glossary.lift_angle" = "Lift Angle";
+"glossary.lift_angle.desc" = "Movement-specific escapement angle. Used for amplitude calculation.";
 "glossary.coaxial" = "Co-axial Escapement";
+"glossary.coaxial.desc" = "Omega's escapement design. Standard timegraphers can't measure its amplitude reliably.";
 
 /* Position */
 "position.dial_up" = "Dial Up";
@@ -42,4 +95,18 @@
 "measurement.permission.openSettings" = "Open Settings";
 
 /* Reliability notes */
-"movement.reliability.coaxial.notice" = "This movement uses a co-axial escapement. Amplitude can't be reliably measured with a standard timegrapher and is hidden.";
+"movement.reliability.coaxial.title" = "Co-axial Escapement";
+"movement.reliability.coaxial.notice" = "This movement uses Omega's co-axial escapement. Amplitude can't be reliably measured with a standard timegrapher and is hidden.";
+"movement.reliability.generic.notice" = "This movement behaves differently from a standard Swiss lever, so measurement accuracy may be lower.";
+
+/* Settings */
+"settings.title" = "Settings";
+"settings.section.mode" = "User mode";
+"settings.mode.label" = "Mode";
+"settings.section.measurement" = "Measurement";
+"settings.silent_mode_default" = "Silent measurement by default";
+"settings.section.help" = "Help";
+"settings.glossary" = "Glossary";
+"settings.section.about" = "About";
+"settings.version" = "Version";
+"settings.bundle_id" = "Bundle ID";

@@ -73,14 +73,17 @@ Reference: Master Plan Part 8.2, Part 6.3
 
 Reference: Master Plan Part 7.2
 
-- ⬜ 4.1 공통 컴포넌트 (PrimaryButton, MetricBadge, HelpCard, ConfidenceBadge)
-- ⬜ 4.2 `OnboardingView`
-- ⬜ 4.3 `ModeSelectView` (초보자/전문가)
-- ⬜ 4.4 `CollectionView` (홈)
-- ⬜ 4.5 `AddWatchView` + `MovementMatcher`
-- ⬜ 4.6 `WatchDetailView`
-- ⬜ 4.7 Localizable 키 채우기 + Preview 점검
-- ⬜ 4.8 Week 4 검증 + 커밋
+- ✅ 4.1 공통 컴포넌트 (PrimaryButton, MetricBadge, HelpCard, ConfidenceBadge, WatchRowView, InfoPill)
+- ✅ 4.2 `OnboardingView` (3페이지 swipe + CTA)
+- ✅ 4.3 `ModeSelectView` (초보자/전문가 카드)
+- ✅ 4.4 `CollectionView` (홈, 빈 상태 + 리스트, swipe-to-delete with deleteCascade)
+- ✅ 4.5 `AddWatchView` + `MovementMatcher` 통합 (브랜드 picker + 모델 입력 + 자동 매칭 카드)
+- ✅ 4.6 `WatchDetailView` (히어로 + 정보 카드 + 신뢰도 안내 + 측정 CTA + 이력)
+- ✅ 4.7 SettingsView (모드/무음/Glossary 링크) + GlossaryView (7개 용어)
+- ✅ 4.8 `UserPreferences` (@Observable + UserDefaults) — onboarding/모드/무음 기본
+- ✅ 4.9 RootView 진입 분기 (onboarding → mode → collection)
+- ✅ 4.10 Localizable 한국어/영어 60+ 키
+- ✅ 4.11 Week 4 검증 (build PASS, 47/47 unit tests still PASS)
 
 ## Phase 1 — Week 5: Measurement (메인 화면)
 
