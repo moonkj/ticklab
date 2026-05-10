@@ -119,6 +119,12 @@
 "movement.reliability.coaxial.notice" = "This movement uses Omega's co-axial escapement. Amplitude can't be reliably measured with a standard timegrapher and is hidden.";
 "movement.reliability.generic.notice" = "This movement behaves differently from a standard Swiss lever, so measurement accuracy may be lower.";
 
+/* Trend */
+"trend.title" = "Rate trend";
+"trend.range.7d" = "7d";
+"trend.range.30d" = "30d";
+"trend.empty" = "No measurements yet.";
+
 /* Settings */
 "settings.title" = "Settings";
 "settings.section.mode" = "User mode";

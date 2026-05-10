@@ -100,14 +100,36 @@ Reference: Master Plan Part 7.2, Part 8
 
 ## Phase 1 — Week 6: Polish + tests
 
-- ⬜ 6.1 `SettingsView`
-- ⬜ 6.2 `GlossaryView` (용어 7개)
-- ⬜ 6.3 `TrendChartView` (SwiftUI Charts)
-- ⬜ 6.4 코악시얼 안내 카드
-- ⬜ 6.5 권한 화면 카피 다듬기
-- ⬜ 6.6 한/영 strings 검수
-- ⬜ 6.7 UI 테스트 3개 (메인 플로우)
-- ⬜ 6.8 베타 빌드 메타데이터 + 커밋
+- ✅ 6.1 `SettingsView` (Week 4 에 선행 구현)
+- ✅ 6.2 `GlossaryView` 7개 용어 + 한/영 설명 (Week 4 에 선행 구현)
+- ✅ 6.3 `TrendChartView` (SwiftUI Charts, 7d/30d 선택, confidence 가중 색상)
+- ✅ 6.4 코악시얼 안내 카드 (`HelpCard` + `movement.reliability.coaxial.notice`) — WatchDetailView/MeasurementResultView 양쪽
+- ✅ 6.5 권한 화면 카피 다듬기 — privacy 약속 명시
+- ✅ 6.6 한/영 strings 검수 — 80+ 키, 키 누락 없음
+- ✅ 6.7 UI 테스트 4개: smoke + 3개 메인 플로우 (onboarding → mode select, skip-to-collection, settings 진입)
+- ✅ 6.8 베타 빌드 준비 — `MARKETING_VERSION 0.1.0`, Bundle ID `com.ticklab.watchaccuracypro`, NSMicrophoneUsageDescription 한국어 명시, `ITSAppUsesNonExemptEncryption: false`
+
+## Phase 1 종료 검증
+
+| 항목 | 상태 |
+|---|---|
+| 빌드 (iOS 17.2 sim) | ✅ |
+| 빌드 (iOS 26.2 sim) | ✅ |
+| 단위 테스트 47개 | ✅ |
+| UI 테스트 4개 | ✅ |
+| Hard Rule 위반 | 0건 |
+| Phase 2/3 코드 임의 구현 | 0건 (모두 `// TODO(phase2):` 주석만) |
+
+## Manual QA 필요 (실기기)
+
+이 항목들은 시뮬레이터에서 검증 불가 — 실 iPhone + 실 시계로 Week 7 베타에서:
+- [ ] `MeasurementView` 60fps 유지 (Instruments)
+- [ ] `LiveWaveformView` 16ms frame budget
+- [ ] 측정 정확도 ±2초/일 (Weishi 1900 비교)
+- [ ] 메모리 200MB 이내
+- [ ] 마이크 권한 거부 → fallback 흐름
+- [ ] 무음 모드 (idleTimerDisabled) 동작
+- [ ] 코악시얼 무브먼트 (Omega 8800)에서 amplitude 비표시 + 안내
 
 ---
 

@@ -131,3 +131,52 @@
 
 ### 다음 hand-off
 - Week 4 진입. UI 스캐폴드 — Onboarding, ModeSelect, Collection(Home), AddWatch, WatchDetail. 공통 컴포넌트(PrimaryButton, MetricBadge, ConfidenceBadge, HelpCard) 먼저 만들고 화면 단위로. 이번 주에는 측정 화면 X — 골격만 완성.
+
+---
+
+## 2026-05-10 · Phase 1 완료 — Week 4·5·6 통합 보고
+
+### Week 4 — UI 스캐폴드
+- 공통 컴포넌트 6개 (PrimaryButton, MetricBadge, ConfidenceBadge, HelpCard, WatchRowView, InfoPill)
+- 5개 화면 + Settings/Glossary
+- `UserPreferences` (UserDefaults backed @Observable)
+- RootView 진입 분기
+
+### Week 5 — 측정 화면
+- `MeasurementViewModel` 상태 머신 (idle/requesting/measuring/completed/failed)
+- `MeasurementView` + 60fps `LiveWaveformView` (TimelineView Canvas)
+- `MeasurementResultView` 초보/전문가 분기
+- 마이크 권한 + idle timer 토글 + SwiftData 저장 흐름
+
+### Week 6 — 트렌드 + UI 테스트 + 폴리싱
+- `TrendChartView` (SwiftUI Charts, confidence 기반 시각 가중)
+- WatchDetailView 에 trend embed
+- 4개 UI 테스트 시나리오 (smoke + onboarding 흐름 + 컬렉션 진입 + 설정 진입)
+- 한/영 80+ 로컬라이제이션 키 검수
+
+### 최종 검증
+- ✅ build PASS on iOS 17.2 simulator (iPhone 15 Pro)
+- ✅ 47 unit tests PASS (Models 4 + Movement DB 5 + Matcher 5 + Filters 3 + BPH 6 + Beat 4 + Rate 5 + BeatError 3 + Amplitude 4 + Confidence 5 + Pipeline 3)
+- ✅ 4 UI tests PASS (Smoke + 3 main flows)
+- ✅ Hard Rule 위반 0건
+- ✅ Phase 2/3 hook 만 `// TODO(phase2):` 주석으로 남김 — 임의 구현 0건
+
+### 남은 Manual QA (Week 7 베타)
+- 60fps 측정 화면 검증 (Instruments)
+- 메모리 200MB 이내 (Instruments leaks)
+- DSP 정확도 검증 (Weishi 1900 ground truth, ±2초/일)
+- 코악시얼 무브먼트 실측 (Omega 8800)
+- 한/영 다국어 시뮬레이터 외 실 디바이스 화면 검수
+- TestFlight 베타 업로드
+
+### Phase 2 진입 시 우선순위
+1. Bluetooth 외부 마이크 지원 — 정확도 보강
+2. 데이터 export (CSV/JSON) — 워치메이커 페르소나 (김재철) 핵심 요구사항
+3. Long test (12시간 추적) — 컬렉터 페르소나 (이재현)
+4. 무브먼트 DB OTA 업데이트 — Top 30 확장
+
+### 코드 통계 (커밋 기준)
+- Swift 파일: 30+ (Core 16, Features 9, UI 6, App 3, Tests 11)
+- Localizable 키: 한국어 80+ / 영어 80+ (paired)
+- xcodegen `project.yml` 단일 진실 — `xcodegen` 한 번이면 .xcodeproj 재생성 가능
+- 의존성: 0 (SPM, CocoaPods 없음 — Hard Rule #5 준수)

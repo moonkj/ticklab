@@ -119,6 +119,12 @@
 "movement.reliability.coaxial.notice" = "이 무브먼트는 Omega 코악시얼 이스케이프먼트를 사용합니다. amplitude는 일반 timegrapher로 정확히 측정하기 어려워 표시되지 않습니다.";
 "movement.reliability.generic.notice" = "이 무브먼트는 일반 swiss lever와 다른 작동 방식을 가져 측정 정확도가 낮을 수 있습니다.";
 
+/* Trend */
+"trend.title" = "정확도 추이";
+"trend.range.7d" = "7일";
+"trend.range.30d" = "30일";
+"trend.empty" = "측정 기록이 없습니다.";
+
 /* Settings */
 "settings.title" = "설정";
 "settings.section.mode" = "사용자 모드";

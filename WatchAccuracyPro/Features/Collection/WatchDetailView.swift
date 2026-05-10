@@ -26,6 +26,7 @@ struct WatchDetailView: View {
                 }
 
                 if !watch.measurements.isEmpty {
+                    TrendChartView(measurements: watch.measurements)
                     historySection
                 }
             }
