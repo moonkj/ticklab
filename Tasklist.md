@@ -48,13 +48,13 @@ Reference: Master Plan Part 6.2, Part 13.1
 
 Reference: Master Plan Part 8.2
 
-- ⬜ 2.1 `AudioCapture` (AVAudioEngine, .measurement, 48kHz mono, 100ms 청크)
-- ⬜ 2.2 `PreEmphasisFilter`, `BandPassFilter`, `EnvelopeExtractor` (vDSP)
-- ⬜ 2.3 `BPHEstimator` (autocorrelation, 표준 BPH 스냅)
-- ⬜ 2.4 `BeatDetector` (onset + tic/toc parity)
-- ⬜ 2.5 `DSPPipeline` 골격 (`AsyncStream<DSPEvent>`)
-- ⬜ 2.6 합성 신호 fixture (28800bph clean) + DSP 단위 테스트
-- ⬜ 2.7 Week 2 검증 + 커밋
+- ✅ 2.1 `AudioCapture` (AVAudioEngine, .measurement, 48kHz mono, 100ms 청크) + `AudioSource` 프로토콜
+- ✅ 2.2 `PreEmphasisFilter`, `BandPassFilter` (Direct Form II Transposed biquad), `EnvelopeExtractor` (vDSP abs + 1-pole IIR)
+- ✅ 2.3 `BPHEstimator` (autocorrelation, "최단 유의미 peak = inter-onset" 휴리스틱, 표준 BPH 스냅)
+- ✅ 2.4 `BeatDetector` (onset + tic/toc parity, refractory 30ms)
+- 🟦 2.5 `DSPPipeline` 골격 (`AsyncStream<DSPEvent>`) — Week 3에서 통합
+- ✅ 2.6 합성 신호 fixture `SyntheticSignal.ticTocImpulseTrain` + DSP 단위 테스트 13개 추가 (총 27 PASS)
+- ✅ 2.7 Week 2 검증 (27/27 PASS on iOS 17.2)
 
 ## Phase 1 — Week 3: DSP metrics + persistence
 
