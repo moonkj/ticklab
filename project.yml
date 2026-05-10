@@ -1,0 +1,109 @@
+name: WatchAccuracyPro
+options:
+  bundleIdPrefix: com.ticklab
+  deploymentTarget:
+    iOS: "17.0"
+  developmentLanguage: ko
+  createIntermediateGroups: true
+  groupSortPosition: top
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "17.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: "0.1.0"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_TREAT_WARNINGS_AS_ERRORS: NO
+  configs:
+    Debug:
+      SWIFT_OPTIMIZATION_LEVEL: -Onone
+      SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
+    Release:
+      SWIFT_OPTIMIZATION_LEVEL: -O
+
+targets:
+  WatchAccuracyPro:
+    type: application
+    platform: iOS
+    sources:
+      - path: WatchAccuracyPro
+        excludes:
+          - "Tests/**"
+    info:
+      path: WatchAccuracyPro/App/Info.plist
+      properties:
+        CFBundleDisplayName: Watch Accuracy Pro
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen:
+          UIColorName: ""
+        NSMicrophoneUsageDescription: "시계의 정확도를 측정하려면 마이크가 필요합니다. 오디오는 분석 즉시 폐기되며 저장되거나 외부로 전송되지 않습니다."
+        UIRequiredDeviceCapabilities:
+          - armv7
+          - microphone
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        CFBundleLocalizations:
+          - ko
+          - en
+        ITSAppUsesNonExemptEncryption: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ticklab.watchaccuracypro
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_PREVIEWS: YES
+        GENERATE_INFOPLIST_FILE: NO
+
+  WatchAccuracyProTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: WatchAccuracyPro/Tests/WatchAccuracyProTests
+    dependencies:
+      - target: WatchAccuracyPro
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ticklab.watchaccuracypro.tests
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/WatchAccuracyPro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchAccuracyPro"
+        GENERATE_INFOPLIST_FILE: YES
+
+  WatchAccuracyProUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: WatchAccuracyPro/Tests/WatchAccuracyProUITests
+    dependencies:
+      - target: WatchAccuracyPro
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ticklab.watchaccuracypro.uitests
+        TEST_TARGET_NAME: WatchAccuracyPro
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  WatchAccuracyPro:
+    build:
+      targets:
+        WatchAccuracyPro: all
+        WatchAccuracyProTests: [test]
+        WatchAccuracyProUITests: [test]
+    test:
+      targets:
+        - WatchAccuracyProTests
+        - WatchAccuracyProUITests
+      gatherCoverageData: true
+    run:
+      config: Debug
+    archive:
+      config: Release

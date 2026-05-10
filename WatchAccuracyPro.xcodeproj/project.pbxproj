@@ -1,0 +1,748 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7188931BE41A7B110E6264F /* WatchMeasurement.swift */; };
+		0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C27B0BEC35633950882906 /* MovementMatcherTests.swift */; };
+		0AF05D132A01F4584655E85D /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0BF3889B7C279B96913C8 /* Watch.swift */; };
+		38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */; };
+		4213E52F2A52302167A13CD8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434603408110ED068E285F1D /* Colors.swift */; };
+		49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6058169163AA8F5819F4E1D /* Typography.swift */; };
+		4A53CB814DD2AB9B5D5ABA7F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F98ED2951A2ECD727571FC /* ContentView.swift */; };
+		57442566C961CA26627FE75E /* MeasurementMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B8082627ED465EBBC3B05 /* MeasurementMetadata.swift */; };
+		5F2CBD2A6D2C758BC60BBDB3 /* SmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */; };
+		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
+		8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E460665285032C7AAEBC05E4 /* Movement.swift */; };
+		BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E473958975512F4841DB00 /* MovementDatabaseTests.swift */; };
+		D238CEC1244A180C651E0371 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119A8CA5E791C92005408AD5 /* Position.swift */; };
+		DCCAE5C8529B50600E873C12 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5958AF8CCF5F7A932120AD93 /* ModelTests.swift */; };
+		E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */; };
+		E141C24BD3FBAC354EDC7F5B /* MovementDB.json in Resources */ = {isa = PBXBuildFile; fileRef = 3FBF743788714E3756024905 /* MovementDB.json */; };
+		E37390163694686A0BC080FD /* MovementDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424742999A1D0919D98F7102 /* MovementDatabase.swift */; };
+		EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B73CA7D38E14891EFF33C /* Assets.xcassets */; };
+		F37386299DD9166F2DD70F9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00D28F675246E709FE2AC5E7 /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		48B55DAB3A426F56E441AADE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 485D755C8EB3EFF2887E58E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B35450A200C267DE00B341D;
+			remoteInfo = WatchAccuracyPro;
+		};
+		5B1DCBA75F7FABFDD15E884B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 485D755C8EB3EFF2887E58E9 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7B35450A200C267DE00B341D;
+			remoteInfo = WatchAccuracyPro;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		119A8CA5E791C92005408AD5 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		27F98ED2951A2ECD727571FC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		378B7AD6ADC6AF39B0B26AF6 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		3D7B73CA7D38E14891EFF33C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3FBF743788714E3756024905 /* MovementDB.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MovementDB.json; sourceTree = "<group>"; };
+		424742999A1D0919D98F7102 /* MovementDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDatabase.swift; sourceTree = "<group>"; };
+		425B8082627ED465EBBC3B05 /* MeasurementMetadata.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementMetadata.swift; sourceTree = "<group>"; };
+		434603408110ED068E285F1D /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		5958AF8CCF5F7A932120AD93 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
+		59C27B0BEC35633950882906 /* MovementMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcherTests.swift; sourceTree = "<group>"; };
+		60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
+		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A42707A0286E4620D0F3829 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProApp.swift; sourceTree = "<group>"; };
+		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		91E473958975512F4841DB00 /* MovementDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDatabaseTests.swift; sourceTree = "<group>"; };
+		93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDeletion.swift; sourceTree = "<group>"; };
+		96CD8670A5A573BAE4BEDF7F /* WatchAccuracyProUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WatchAccuracyProUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		97B0BF3889B7C279B96913C8 /* Watch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
+		A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcher.swift; sourceTree = "<group>"; };
+		E2CE3745D6F39CBDFAE4511C /* WatchAccuracyProTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WatchAccuracyProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E460665285032C7AAEBC05E4 /* Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movement.swift; sourceTree = "<group>"; };
+		F6058169163AA8F5819F4E1D /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
+		F7188931BE41A7B110E6264F /* WatchMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMeasurement.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		04A2AD5853B6259F7123CEC4 /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Fixtures;
+			sourceTree = "<group>";
+		};
+		0A56FE9948780638DE650918 /* DSP */ = {
+			isa = PBXGroup;
+			children = (
+				2AB8C2808FD4D323B3B6A061 /* Filters */,
+			);
+			path = DSP;
+			sourceTree = "<group>";
+		};
+		0B78B34AA6BBAF432D883A0B = {
+			isa = PBXGroup;
+			children = (
+				70AE09A853F055F0F4CC3FAE /* WatchAccuracyPro */,
+				7694FAE22D951C33E39D92E3 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		19A1540CF62B07AE3B3D0758 /* Time */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Time;
+			sourceTree = "<group>";
+		};
+		1CF83B4EF75A4DEAECEFBE9B /* Collection */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Collection;
+			sourceTree = "<group>";
+		};
+		2AB8C2808FD4D323B3B6A061 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
+		318A8F71BA2B1178D277BA19 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				0A56FE9948780638DE650918 /* DSP */,
+				77F5D330083D5499314081A5 /* Models */,
+				DEEFD90B13F2588AD9CA1C42 /* Movement */,
+				19A1540CF62B07AE3B3D0758 /* Time */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		6039386378F50F7E628BEADD /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		65D702ED74B8D8F9D9622FB4 /* Trends */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Trends;
+			sourceTree = "<group>";
+		};
+		6DDCB26E4B6851C069671BBE /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				CAA789BEF0557756671F6656 /* WatchAccuracyProTests */,
+				C4C328A8610C0F9CA1B8B852 /* WatchAccuracyProUITests */,
+			);
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		70AE09A853F055F0F4CC3FAE /* WatchAccuracyPro */ = {
+			isa = PBXGroup;
+			children = (
+				D17957082F6D45F15CC36D18 /* App */,
+				318A8F71BA2B1178D277BA19 /* Core */,
+				A02324C5B23CEAA897B2D03E /* Features */,
+				9EE7E5DC27E5EDE993BAB490 /* Resources */,
+				6DDCB26E4B6851C069671BBE /* Tests */,
+				E19EC790FC88EB97A2382AD3 /* UI */,
+			);
+			path = WatchAccuracyPro;
+			sourceTree = "<group>";
+		};
+		724792B883257AB887F2E3BF /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				434603408110ED068E285F1D /* Colors.swift */,
+				F6058169163AA8F5819F4E1D /* Typography.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		7694FAE22D951C33E39D92E3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */,
+				E2CE3745D6F39CBDFAE4511C /* WatchAccuracyProTests.xctest */,
+				96CD8670A5A573BAE4BEDF7F /* WatchAccuracyProUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		77F5D330083D5499314081A5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				425B8082627ED465EBBC3B05 /* MeasurementMetadata.swift */,
+				119A8CA5E791C92005408AD5 /* Position.swift */,
+				97B0BF3889B7C279B96913C8 /* Watch.swift */,
+				93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */,
+				F7188931BE41A7B110E6264F /* WatchMeasurement.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		841AFF94191B4423A65C1553 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		8C6BADC0CE27AE7B6600DC2E /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		9EE7E5DC27E5EDE993BAB490 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				00D28F675246E709FE2AC5E7 /* Localizable.strings */,
+				3D7B73CA7D38E14891EFF33C /* Assets.xcassets */,
+				3FBF743788714E3756024905 /* MovementDB.json */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A02324C5B23CEAA897B2D03E /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				1CF83B4EF75A4DEAECEFBE9B /* Collection */,
+				F28255DB742D464DE0D26C58 /* Measurement */,
+				6039386378F50F7E628BEADD /* Onboarding */,
+				8C6BADC0CE27AE7B6600DC2E /* Settings */,
+				65D702ED74B8D8F9D9622FB4 /* Trends */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		C4C328A8610C0F9CA1B8B852 /* WatchAccuracyProUITests */ = {
+			isa = PBXGroup;
+			children = (
+				60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */,
+			);
+			path = WatchAccuracyProUITests;
+			sourceTree = "<group>";
+		};
+		CAA789BEF0557756671F6656 /* WatchAccuracyProTests */ = {
+			isa = PBXGroup;
+			children = (
+				04A2AD5853B6259F7123CEC4 /* Fixtures */,
+				5958AF8CCF5F7A932120AD93 /* ModelTests.swift */,
+				91E473958975512F4841DB00 /* MovementDatabaseTests.swift */,
+				59C27B0BEC35633950882906 /* MovementMatcherTests.swift */,
+			);
+			path = WatchAccuracyProTests;
+			sourceTree = "<group>";
+		};
+		D17957082F6D45F15CC36D18 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				27F98ED2951A2ECD727571FC /* ContentView.swift */,
+				9051C5FCD8FEB261C7BDF80F /* Info.plist */,
+				89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		DEEFD90B13F2588AD9CA1C42 /* Movement */ = {
+			isa = PBXGroup;
+			children = (
+				E460665285032C7AAEBC05E4 /* Movement.swift */,
+				424742999A1D0919D98F7102 /* MovementDatabase.swift */,
+				A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */,
+			);
+			path = Movement;
+			sourceTree = "<group>";
+		};
+		E19EC790FC88EB97A2382AD3 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				841AFF94191B4423A65C1553 /* Components */,
+				724792B883257AB887F2E3BF /* Theme */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		F28255DB742D464DE0D26C58 /* Measurement */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Measurement;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		228556E29BD9DF5DBA150DCF /* WatchAccuracyProTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 77309E7E6C94F5D764DAF817 /* Build configuration list for PBXNativeTarget "WatchAccuracyProTests" */;
+			buildPhases = (
+				2614DAD248C0AB006E032AAB /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D41EFC715558A0DCF650598D /* PBXTargetDependency */,
+			);
+			name = WatchAccuracyProTests;
+			packageProductDependencies = (
+			);
+			productName = WatchAccuracyProTests;
+			productReference = E2CE3745D6F39CBDFAE4511C /* WatchAccuracyProTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		2F9AB2CDE4BA4993BC89D50B /* WatchAccuracyProUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B5855F9466899CA881348998 /* Build configuration list for PBXNativeTarget "WatchAccuracyProUITests" */;
+			buildPhases = (
+				8E3A5107018B8CDC075D8F47 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				94F1DBF752DE34AE22E8CE9A /* PBXTargetDependency */,
+			);
+			name = WatchAccuracyProUITests;
+			packageProductDependencies = (
+			);
+			productName = WatchAccuracyProUITests;
+			productReference = 96CD8670A5A573BAE4BEDF7F /* WatchAccuracyProUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		7B35450A200C267DE00B341D /* WatchAccuracyPro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0181355EC4403B8D7A05E73D /* Build configuration list for PBXNativeTarget "WatchAccuracyPro" */;
+			buildPhases = (
+				84ADE368F02C76A830C0DDDF /* Sources */,
+				13568083CDF9FCBF24A17DF9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WatchAccuracyPro;
+			packageProductDependencies = (
+			);
+			productName = WatchAccuracyPro;
+			productReference = 63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		485D755C8EB3EFF2887E58E9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					228556E29BD9DF5DBA150DCF = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+					2F9AB2CDE4BA4993BC89D50B = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+						TestTargetID = 7B35450A200C267DE00B341D;
+					};
+					7B35450A200C267DE00B341D = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = FC4B0AD8F33E703CD7799C37 /* Build configuration list for PBXProject "WatchAccuracyPro" */;
+			developmentRegion = ko;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+				ko,
+			);
+			mainGroup = 0B78B34AA6BBAF432D883A0B;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7694FAE22D951C33E39D92E3 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7B35450A200C267DE00B341D /* WatchAccuracyPro */,
+				228556E29BD9DF5DBA150DCF /* WatchAccuracyProTests */,
+				2F9AB2CDE4BA4993BC89D50B /* WatchAccuracyProUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		13568083CDF9FCBF24A17DF9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */,
+				F37386299DD9166F2DD70F9E /* Localizable.strings in Resources */,
+				E141C24BD3FBAC354EDC7F5B /* MovementDB.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2614DAD248C0AB006E032AAB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCCAE5C8529B50600E873C12 /* ModelTests.swift in Sources */,
+				BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */,
+				0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84ADE368F02C76A830C0DDDF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4213E52F2A52302167A13CD8 /* Colors.swift in Sources */,
+				4A53CB814DD2AB9B5D5ABA7F /* ContentView.swift in Sources */,
+				57442566C961CA26627FE75E /* MeasurementMetadata.swift in Sources */,
+				8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */,
+				E37390163694686A0BC080FD /* MovementDatabase.swift in Sources */,
+				E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */,
+				D238CEC1244A180C651E0371 /* Position.swift in Sources */,
+				49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */,
+				0AF05D132A01F4584655E85D /* Watch.swift in Sources */,
+				38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */,
+				74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */,
+				05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8E3A5107018B8CDC075D8F47 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F2CBD2A6D2C758BC60BBDB3 /* SmokeUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		94F1DBF752DE34AE22E8CE9A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B35450A200C267DE00B341D /* WatchAccuracyPro */;
+			targetProxy = 5B1DCBA75F7FABFDD15E884B /* PBXContainerItemProxy */;
+		};
+		D41EFC715558A0DCF650598D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7B35450A200C267DE00B341D /* WatchAccuracyPro */;
+			targetProxy = 48B55DAB3A426F56E441AADE /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		00D28F675246E709FE2AC5E7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6A42707A0286E4620D0F3829 /* en */,
+				378B7AD6ADC6AF39B0B26AF6 /* ko */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		17BB2F774491C62905151678 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WatchAccuracyPro/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticklab.watchaccuracypro;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6B219A6A886A31EDFC8D98B0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Release;
+		};
+		6F0A05C91727D95B3B632CD5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticklab.watchaccuracypro.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchAccuracyPro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchAccuracyPro";
+			};
+			name = Release;
+		};
+		B1753893705E0E17D36A755E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticklab.watchaccuracypro.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = WatchAccuracyPro;
+			};
+			name = Release;
+		};
+		C7EA721BA2E63963707816F5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticklab.watchaccuracypro.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WatchAccuracyPro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/WatchAccuracyPro";
+			};
+			name = Debug;
+		};
+		CC500DC53CEC9DDF424987B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = WatchAccuracyPro/App/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticklab.watchaccuracypro;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		D59CFF9BC12FD170251ABAE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.ticklab.watchaccuracypro.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = WatchAccuracyPro;
+			};
+			name = Debug;
+		};
+		FE6D14D0F53C49F912D42BE0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 5.9;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0181355EC4403B8D7A05E73D /* Build configuration list for PBXNativeTarget "WatchAccuracyPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				17BB2F774491C62905151678 /* Debug */,
+				CC500DC53CEC9DDF424987B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		77309E7E6C94F5D764DAF817 /* Build configuration list for PBXNativeTarget "WatchAccuracyProTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C7EA721BA2E63963707816F5 /* Debug */,
+				6F0A05C91727D95B3B632CD5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		B5855F9466899CA881348998 /* Build configuration list for PBXNativeTarget "WatchAccuracyProUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D59CFF9BC12FD170251ABAE3 /* Debug */,
+				B1753893705E0E17D36A755E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		FC4B0AD8F33E703CD7799C37 /* Build configuration list for PBXProject "WatchAccuracyPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE6D14D0F53C49F912D42BE0 /* Debug */,
+				6B219A6A886A31EDFC8D98B0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 485D755C8EB3EFF2887E58E9 /* Project object */;
+}

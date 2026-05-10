@@ -1,0 +1,122 @@
+[
+  {
+    "id": "ETA_2824-2",
+    "brandFamilies": ["Hamilton", "Tissot", "Tudor (구형)", "Mido"],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "ETA_2892-A2",
+    "brandFamilies": ["Omega (DeVille 일부)", "Breitling", "IWC", "Cartier"],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "ETA_7750",
+    "brandFamilies": ["Breitling", "IWC", "TAG (구형)", "Hamilton"],
+    "bph": 28800,
+    "liftAngleDegrees": 49.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Sellita_SW200",
+    "brandFamilies": ["Tudor", "Oris", "Christopher Ward"],
+    "bph": 28800,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Miyota_9015",
+    "brandFamilies": ["Citizen", "microbrand"],
+    "bph": 28800,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 30.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_NH35",
+    "brandFamilies": ["Seiko 5", "microbrand"],
+    "bph": 21600,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -20.0,
+    "coscToleranceMax": 40.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_6R15",
+    "brandFamilies": ["Seiko Presage", "Grand Seiko (구형 일부)"],
+    "bph": 21600,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -15.0,
+    "coscToleranceMax": 25.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3135",
+    "brandFamilies": ["Rolex Submariner", "Datejust (구형)", "Sea-Dweller"],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 2.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Omega_8800",
+    "brandFamilies": ["Omega Seamaster Diver 300M", "Aqua Terra (신형)"],
+    "bph": 25200,
+    "liftAngleDegrees": 38.0,
+    "escapement": "coAxial",
+    "typicalAmplitudeMin": null,
+    "typicalAmplitudeMax": null,
+    "coscToleranceMin": 0.0,
+    "coscToleranceMax": 5.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Tudor_MT5602",
+    "brandFamilies": ["Tudor Black Bay 58", "Tudor Pelagos"],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  }
+]

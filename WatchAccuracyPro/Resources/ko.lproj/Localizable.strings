@@ -1,0 +1,45 @@
+/* App */
+"app.name" = "Watch Accuracy Pro";
+
+/* Onboarding */
+"onboarding.title" = "당신의 시계, 정확하게";
+"onboarding.subtitle" = "iPhone으로 기계식 시계의 정확도를 측정하세요.";
+"onboarding.cta.start" = "시작하기";
+
+/* Mode */
+"mode.beginner.title" = "처음입니다";
+"mode.beginner.subtitle" = "정상 / 주의 / 서비스 권장 3단계로 알려드려요";
+"mode.expert.title" = "익숙합니다";
+"mode.expert.subtitle" = "rate, beat error, amplitude, BPH 모든 데이터";
+
+/* Collection (홈) */
+"collection.empty.title" = "첫 시계를 등록하세요";
+"collection.empty.cta" = "시계 추가";
+
+/* Glossary 용어 */
+"glossary.bph" = "BPH (시간당 비트)";
+"glossary.rate" = "Rate (정밀도)";
+"glossary.beat_error" = "Beat Error";
+"glossary.amplitude" = "Amplitude (진폭)";
+"glossary.cosc" = "COSC";
+"glossary.lift_angle" = "Lift Angle";
+"glossary.coaxial" = "코악시얼 이스케이프먼트";
+
+/* Position */
+"position.dial_up" = "다이얼 업";
+"position.dial_down" = "다이얼 다운";
+"position.crown_up" = "크라운 업";
+"position.crown_down" = "크라운 다운";
+"position.crown_left" = "크라운 좌";
+"position.crown_right" = "크라운 우";
+"position.unknown" = "미지정";
+
+/* Measurement */
+"measurement.button.start" = "측정 시작";
+"measurement.button.stop" = "정지";
+"measurement.permission.title" = "마이크 권한이 필요해요";
+"measurement.permission.body" = "시계 정확도를 측정하려면 마이크가 필요합니다. 오디오 데이터는 분석 즉시 폐기되며 저장되지 않습니다.";
+"measurement.permission.openSettings" = "설정에서 권한 켜기";
+
+/* Reliability notes */
+"movement.reliability.coaxial.notice" = "이 무브먼트는 코악시얼 이스케이프먼트를 사용합니다. amplitude는 일반 timegrapher로 정확히 측정하기 어려워 표시되지 않습니다.";

@@ -1,0 +1,45 @@
+/* App */
+"app.name" = "Watch Accuracy Pro";
+
+/* Onboarding */
+"onboarding.title" = "Your watch, on the dot.";
+"onboarding.subtitle" = "Measure mechanical watch accuracy with your iPhone.";
+"onboarding.cta.start" = "Get Started";
+
+/* Mode */
+"mode.beginner.title" = "I'm new to this";
+"mode.beginner.subtitle" = "Get a simple 3-tier verdict: OK / Caution / Service recommended";
+"mode.expert.title" = "I know what I'm doing";
+"mode.expert.subtitle" = "Full data: rate, beat error, amplitude, BPH";
+
+/* Collection */
+"collection.empty.title" = "Add your first watch";
+"collection.empty.cta" = "Add Watch";
+
+/* Glossary */
+"glossary.bph" = "BPH (Beats Per Hour)";
+"glossary.rate" = "Rate";
+"glossary.beat_error" = "Beat Error";
+"glossary.amplitude" = "Amplitude";
+"glossary.cosc" = "COSC";
+"glossary.lift_angle" = "Lift Angle";
+"glossary.coaxial" = "Co-axial Escapement";
+
+/* Position */
+"position.dial_up" = "Dial Up";
+"position.dial_down" = "Dial Down";
+"position.crown_up" = "Crown Up";
+"position.crown_down" = "Crown Down";
+"position.crown_left" = "Crown Left";
+"position.crown_right" = "Crown Right";
+"position.unknown" = "Unspecified";
+
+/* Measurement */
+"measurement.button.start" = "Start Measuring";
+"measurement.button.stop" = "Stop";
+"measurement.permission.title" = "Microphone access needed";
+"measurement.permission.body" = "We need the microphone to measure your watch's accuracy. Audio is discarded immediately after analysis and never stored.";
+"measurement.permission.openSettings" = "Open Settings";
+
+/* Reliability notes */
+"movement.reliability.coaxial.notice" = "This movement uses a co-axial escapement. Amplitude can't be reliably measured with a standard timegrapher and is hidden.";

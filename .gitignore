@@ -1,0 +1,47 @@
+# Xcode
+build/
+DerivedData/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcuserstate
+*.xcuserdatad/
+xcuserdata/
+*.moved-aside
+*.hmap
+
+# xcodegen 산출물 (project.yml로 재생성 가능)
+# .xcodeproj는 커밋 (CI/협업 편의를 위해), 단 user state는 무시
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Packages/
+Package.resolved
+*.xcworkspace/xcshareddata/swiftpm/
+
+# Cocoapods (사용하지 않음, 안전 차원)
+Pods/
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# IDEs
+.vscode/
+.idea/
+
+# Secrets
+*.p12
+*.mobileprovision
+*.cer
+secrets/
+
+# Logs / dumps
+*.log
+*.crash
+
+# Test outputs
+TestResults/
+*.xcresult
