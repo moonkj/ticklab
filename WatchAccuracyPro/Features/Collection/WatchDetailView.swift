@@ -19,8 +19,7 @@ struct WatchDetailView: View {
                     )
                 }
                 NavigationLink {
-                    Text("Measurement screen — Week 5")
-                        .navigationTitle("Measure")
+                    MeasurementView(watch: watch, preferences: preferences)
                 } label: {
                     PrimaryButton(String(localized: "watch.cta.measure")) {}
                         .allowsHitTesting(false)

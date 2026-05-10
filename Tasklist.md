@@ -89,13 +89,14 @@ Reference: Master Plan Part 7.2
 
 Reference: Master Plan Part 7.2, Part 8
 
-- ⬜ 5.1 `MeasurementViewModel` (@Observable)
-- ⬜ 5.2 `MeasurementView`
-- ⬜ 5.3 `LiveWaveformView` (Canvas, 60fps)
-- ⬜ 5.4 무음 측정 모드
-- ⬜ 5.5 `MeasurementResultView` (초보/전문가 분기)
-- ⬜ 5.6 권한 거부 fallback
-- ⬜ 5.7 Week 5 검증 + 커밋
+- ✅ 5.1 `MeasurementViewModel` (@Observable, idle→requesting→measuring→completed/failed 상태 머신)
+- ✅ 5.2 `MeasurementView` (헤더 + 라이브 wave + metrics grid + confidence + 제어 버튼)
+- ✅ 5.3 `LiveWaveformView` (TimelineView(.animation) 60fps Canvas)
+- ✅ 5.4 무음 측정 모드 — `UIApplication.isIdleTimerDisabled` 토글
+- ✅ 5.5 `MeasurementResultView` (초보자: 이모지 + 평가 / 전문가: 메트릭 grid + 메타데이터)
+- ✅ 5.6 권한 거부 fallback — `HelpCard` + 설정 열기 버튼
+- ✅ 5.7 SwiftData 저장 흐름 — `WatchMeasurement` 생성 + `watch.measurements` 자동 갱신
+- ✅ 5.8 `WatchDetailView` 의 measure CTA 를 실제 `MeasurementView` 로 연결
 
 ## Phase 1 — Week 6: Polish + tests
 

@@ -1,7 +1,7 @@
 import Foundation
 
 /// DSPPipeline 의 분석 산출물. UI 표시용 + SwiftData 저장용 중간 모델.
-struct MeasurementResult: Equatable, Sendable {
+struct MeasurementResult: Equatable, Hashable, Sendable {
     let bph: Int
     let rateSecondsPerDay: Double
     let beatErrorMs: Double

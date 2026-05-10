@@ -90,9 +90,29 @@
 /* Measurement */
 "measurement.button.start" = "Start Measuring";
 "measurement.button.stop" = "Stop";
+"measurement.button.see_result" = "See Result";
+"measurement.status.permission_pending" = "Checking microphone permission…";
 "measurement.permission.title" = "Microphone access needed";
 "measurement.permission.body" = "We need the microphone to measure your watch's accuracy. Audio is discarded immediately after analysis and never stored.";
 "measurement.permission.openSettings" = "Open Settings";
+
+/* Result */
+"result.title" = "Measurement Result";
+"result.duration" = "Duration";
+"result.beat_count" = "Beats detected";
+"result.expert.metadata" = "Conditions";
+"result.action.measure_again" = "Measure Again";
+"result.verdict.ok.title" = "Looks healthy";
+"result.verdict.ok.body" = "Your watch is within healthy range for daily use.";
+"result.verdict.caution.title" = "Keep an eye on it";
+"result.verdict.caution.body" = "Slightly outside the healthy range. Track for a few more days; if it persists, consider a check-up.";
+"result.verdict.service.title" = "Service recommended";
+"result.verdict.service.body" = "The deviation is significant. We recommend taking it to a watchmaker.";
+"result.beginner.why" = "Why did I get this result?";
+"result.beginner.detail.rate" = "Rate";
+"result.beginner.detail.beat_error" = "Beat error";
+"result.beginner.detail.amplitude" = "Amplitude";
+"result.beginner.detail.bph" = "BPH";
 
 /* Reliability notes */
 "movement.reliability.coaxial.title" = "Co-axial Escapement";

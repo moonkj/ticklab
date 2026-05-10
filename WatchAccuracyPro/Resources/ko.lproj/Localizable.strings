@@ -90,9 +90,29 @@
 /* Measurement */
 "measurement.button.start" = "측정 시작";
 "measurement.button.stop" = "정지";
+"measurement.button.see_result" = "결과 보기";
+"measurement.status.permission_pending" = "마이크 권한 확인 중…";
 "measurement.permission.title" = "마이크 권한이 필요해요";
 "measurement.permission.body" = "시계 정확도를 측정하려면 마이크가 필요합니다. 오디오 데이터는 분석 즉시 폐기되며 저장되지 않습니다.";
 "measurement.permission.openSettings" = "설정에서 권한 켜기";
+
+/* Result */
+"result.title" = "측정 결과";
+"result.duration" = "측정 시간";
+"result.beat_count" = "검출된 비트";
+"result.expert.metadata" = "측정 환경";
+"result.action.measure_again" = "다시 측정";
+"result.verdict.ok.title" = "정상이에요";
+"result.verdict.ok.body" = "이 시계는 일상 사용에 충분히 정확합니다.";
+"result.verdict.caution.title" = "조금 신경 써주세요";
+"result.verdict.caution.body" = "정상 범위를 약간 벗어났어요. 며칠 더 추적해보고 변화가 없으면 점검을 고려해보세요.";
+"result.verdict.service.title" = "서비스를 권장합니다";
+"result.verdict.service.body" = "오차가 큽니다. 워치메이커에게 점검을 받아보시는 것을 권장합니다.";
+"result.beginner.why" = "이 결과가 왜 나왔을까?";
+"result.beginner.detail.rate" = "정확도";
+"result.beginner.detail.beat_error" = "비트 오차";
+"result.beginner.detail.amplitude" = "진폭";
+"result.beginner.detail.bph" = "BPH";
 
 /* Reliability notes */
 "movement.reliability.coaxial.title" = "코악시얼 이스케이프먼트";
