@@ -60,14 +60,14 @@ Reference: Master Plan Part 8.2
 
 Reference: Master Plan Part 8.2, Part 6.3
 
-- ⬜ 3.1 `RateCalculator` + 테스트
-- ⬜ 3.2 `BeatErrorCalculator` + 테스트
-- ⬜ 3.3 `AmplitudeEstimator` (lift angle 주입, 코악시얼은 nil)
-- ⬜ 3.4 `ConfidenceScorer` (SNR·시간·BPH 분산·tic/toc 분리도)
-- ⬜ 3.5 `DSPPipeline` 통합 (snapshot at 30s/60s/120s)
-- ⬜ 3.6 `MeasurementResult` → `Measurement` 저장
-- ⬜ 3.7 신뢰도 라벨 적용 (medium/low → amplitude 비표시)
-- ⬜ 3.8 Week 3 검증 + 커밋
+- ✅ 3.1 `RateCalculator` (BPH 기반 + beat events 기반 두 진입점) + 5 테스트
+- ✅ 3.2 `BeatErrorCalculator` (T1/T2 평균 차) + 3 테스트
+- ✅ 3.3 `AmplitudeEstimator` (lift angle 주입, 코악시얼/스프링드라이브는 nil, FWHM 기반 t_imp 추정) + 4 테스트
+- ✅ 3.4 `ConfidenceScorer` (SNR·시간·BPH·beat error 가중합) + 5 테스트
+- ✅ 3.5 `DSPPipeline` 통합 — `LiveMetrics` AsyncStream + `analyze()` 스냅샷 + 3 통합 테스트
+- 🟦 3.6 `MeasurementResult` → `WatchMeasurement` SwiftData 저장 매퍼 (Week 4 ViewModel 단계에서 wire-up)
+- ✅ 3.7 신뢰도 라벨 적용 — `reliabilityLabel != .high` 면 amplitude nil + `reliabilityNoteKey` 부여
+- ✅ 3.8 Week 3 검증 (47/47 PASS on iOS 17.2)
 
 ## Phase 1 — Week 4: UI scaffolds
 

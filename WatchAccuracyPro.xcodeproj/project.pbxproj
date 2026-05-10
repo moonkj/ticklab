@@ -10,19 +10,28 @@
 		05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7188931BE41A7B110E6264F /* WatchMeasurement.swift */; };
 		0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C27B0BEC35633950882906 /* MovementMatcherTests.swift */; };
 		0AF05D132A01F4584655E85D /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0BF3889B7C279B96913C8 /* Watch.swift */; };
+		0CF6D20369F26C6371F0B92F /* BeatErrorCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */; };
 		1F5813C06CAC5657F2DE0F25 /* AudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCCBEDCDAED7D7BEDE087F /* AudioSource.swift */; };
 		1FB3D122E4D3897F69C6678F /* BPHEstimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47442C30079AEE977B647474 /* BPHEstimatorTests.swift */; };
 		21734A2CEE9B6E0DEA54C936 /* BandPassFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C71660316049739E9F0D772 /* BandPassFilter.swift */; };
+		2521BE79E2DE837FACC7DAF4 /* AmplitudeEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */; };
+		254839437847E46296E32359 /* BeatErrorCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34385F5101226F0E05DB6B1A /* BeatErrorCalculator.swift */; };
 		38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */; };
 		3FC8620F7EA308EFEADF4D3C /* DSPFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */; };
+		3FE38380443E433BA77C8EFE /* ConfidenceScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */; };
 		4213E52F2A52302167A13CD8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434603408110ED068E285F1D /* Colors.swift */; };
 		424BAABA02A09B0AE4D9AD00 /* BeatDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50549C4E534FE82AB2BE1CE6 /* BeatDetectorTests.swift */; };
 		49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6058169163AA8F5819F4E1D /* Typography.swift */; };
 		4A53CB814DD2AB9B5D5ABA7F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F98ED2951A2ECD727571FC /* ContentView.swift */; };
+		53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2276895B7370448EDD723736 /* SyntheticAudioSource.swift */; };
+		5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */; };
 		57442566C961CA26627FE75E /* MeasurementMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B8082627ED465EBBC3B05 /* MeasurementMetadata.swift */; };
 		5A9987E2B4D5776845869A91 /* BPHEstimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */; };
+		5B5B56535F1186D773EAF36B /* AmplitudeEstimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 005BAA1414033563E77A6ECC /* AmplitudeEstimatorTests.swift */; };
 		5F2CBD2A6D2C758BC60BBDB3 /* SmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */; };
 		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
+		890561467DEACD63387F0863 /* DSPPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */; };
+		8A70BB1CD654EE24EB2BA6E1 /* DSPPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */; };
 		8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E460665285032C7AAEBC05E4 /* Movement.swift */; };
 		9B1536D6967225521A27A721 /* BeatDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */; };
 		A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */; };
@@ -30,6 +39,7 @@
 		BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E473958975512F4841DB00 /* MovementDatabaseTests.swift */; };
 		D0758F7FDFC81C0AAF487057 /* EnvelopeExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93567E741B9D07241DB8502A /* EnvelopeExtractor.swift */; };
 		D238CEC1244A180C651E0371 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119A8CA5E791C92005408AD5 /* Position.swift */; };
+		D2EA0DCA95D9458B32160E6B /* RateCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708BF5CF03B1E5B1625CF7F /* RateCalculatorTests.swift */; };
 		DAD07F22F7161CCDC0D90EA4 /* SyntheticSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7CB354C788C3226BAF8FAF /* SyntheticSignal.swift */; };
 		DCCAE5C8529B50600E873C12 /* ModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5958AF8CCF5F7A932120AD93 /* ModelTests.swift */; };
 		E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */; };
@@ -37,6 +47,8 @@
 		E37390163694686A0BC080FD /* MovementDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 424742999A1D0919D98F7102 /* MovementDatabase.swift */; };
 		EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B73CA7D38E14891EFF33C /* Assets.xcassets */; };
 		F37386299DD9166F2DD70F9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00D28F675246E709FE2AC5E7 /* Localizable.strings */; };
+		FBB7A8BF6D8F35C269864AAE /* MeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D3852E0B4BCFD94CC708179 /* MeasurementResult.swift */; };
+		FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DD44A69BACBC9F88907263 /* RateCalculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,9 +69,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		005BAA1414033563E77A6ECC /* AmplitudeEstimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimatorTests.swift; sourceTree = "<group>"; };
+		04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipelineTests.swift; sourceTree = "<group>"; };
 		119A8CA5E791C92005408AD5 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		11DD44A69BACBC9F88907263 /* RateCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCalculator.swift; sourceTree = "<group>"; };
+		1D3852E0B4BCFD94CC708179 /* MeasurementResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementResult.swift; sourceTree = "<group>"; };
+		2276895B7370448EDD723736 /* SyntheticAudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticAudioSource.swift; sourceTree = "<group>"; };
 		27F98ED2951A2ECD727571FC /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPFiltersTests.swift; sourceTree = "<group>"; };
+		34385F5101226F0E05DB6B1A /* BeatErrorCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatErrorCalculator.swift; sourceTree = "<group>"; };
 		378B7AD6ADC6AF39B0B26AF6 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3D7B73CA7D38E14891EFF33C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3FBF743788714E3756024905 /* MovementDB.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MovementDB.json; sourceTree = "<group>"; };
@@ -70,13 +88,17 @@
 		4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapture.swift; sourceTree = "<group>"; };
 		4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimator.swift; sourceTree = "<group>"; };
 		4C71660316049739E9F0D772 /* BandPassFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandPassFilter.swift; sourceTree = "<group>"; };
+		4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatErrorCalculatorTests.swift; sourceTree = "<group>"; };
 		50549C4E534FE82AB2BE1CE6 /* BeatDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatDetectorTests.swift; sourceTree = "<group>"; };
+		52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceScorerTests.swift; sourceTree = "<group>"; };
 		5958AF8CCF5F7A932120AD93 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
 		59C27B0BEC35633950882906 /* MovementMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcherTests.swift; sourceTree = "<group>"; };
 		60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
 		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCCBEDCDAED7D7BEDE087F /* AudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSource.swift; sourceTree = "<group>"; };
 		6A42707A0286E4620D0F3829 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimator.swift; sourceTree = "<group>"; };
+		7708BF5CF03B1E5B1625CF7F /* RateCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCalculatorTests.swift; sourceTree = "<group>"; };
 		89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProApp.swift; sourceTree = "<group>"; };
 		8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreEmphasisFilter.swift; sourceTree = "<group>"; };
 		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -87,6 +109,8 @@
 		97B0BF3889B7C279B96913C8 /* Watch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Watch.swift; sourceTree = "<group>"; };
 		9C7CB354C788C3226BAF8FAF /* SyntheticSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticSignal.swift; sourceTree = "<group>"; };
 		A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcher.swift; sourceTree = "<group>"; };
+		B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipeline.swift; sourceTree = "<group>"; };
+		BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceScorer.swift; sourceTree = "<group>"; };
 		CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatDetector.swift; sourceTree = "<group>"; };
 		E2CE3745D6F39CBDFAE4511C /* WatchAccuracyProTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WatchAccuracyProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E460665285032C7AAEBC05E4 /* Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movement.swift; sourceTree = "<group>"; };
@@ -98,6 +122,7 @@
 		04A2AD5853B6259F7123CEC4 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				2276895B7370448EDD723736 /* SyntheticAudioSource.swift */,
 				9C7CB354C788C3226BAF8FAF /* SyntheticSignal.swift */,
 			);
 			path = Fixtures;
@@ -107,10 +132,16 @@
 			isa = PBXGroup;
 			children = (
 				2AB8C2808FD4D323B3B6A061 /* Filters */,
+				6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */,
 				4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */,
 				66DCCBEDCDAED7D7BEDE087F /* AudioSource.swift */,
 				CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */,
+				34385F5101226F0E05DB6B1A /* BeatErrorCalculator.swift */,
 				4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */,
+				BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */,
+				B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */,
+				1D3852E0B4BCFD94CC708179 /* MeasurementResult.swift */,
+				11DD44A69BACBC9F88907263 /* RateCalculator.swift */,
 			);
 			path = DSP;
 			sourceTree = "<group>";
@@ -273,12 +304,17 @@
 			isa = PBXGroup;
 			children = (
 				04A2AD5853B6259F7123CEC4 /* Fixtures */,
+				005BAA1414033563E77A6ECC /* AmplitudeEstimatorTests.swift */,
 				50549C4E534FE82AB2BE1CE6 /* BeatDetectorTests.swift */,
+				4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */,
 				47442C30079AEE977B647474 /* BPHEstimatorTests.swift */,
+				52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */,
 				2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */,
+				04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */,
 				5958AF8CCF5F7A932120AD93 /* ModelTests.swift */,
 				91E473958975512F4841DB00 /* MovementDatabaseTests.swift */,
 				59C27B0BEC35633950882906 /* MovementMatcherTests.swift */,
+				7708BF5CF03B1E5B1625CF7F /* RateCalculatorTests.swift */,
 			);
 			path = WatchAccuracyProTests;
 			sourceTree = "<group>";
@@ -440,12 +476,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B5B56535F1186D773EAF36B /* AmplitudeEstimatorTests.swift in Sources */,
 				1FB3D122E4D3897F69C6678F /* BPHEstimatorTests.swift in Sources */,
 				424BAABA02A09B0AE4D9AD00 /* BeatDetectorTests.swift in Sources */,
+				0CF6D20369F26C6371F0B92F /* BeatErrorCalculatorTests.swift in Sources */,
+				5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */,
 				3FC8620F7EA308EFEADF4D3C /* DSPFiltersTests.swift in Sources */,
+				890561467DEACD63387F0863 /* DSPPipelineTests.swift in Sources */,
 				DCCAE5C8529B50600E873C12 /* ModelTests.swift in Sources */,
 				BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */,
 				0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */,
+				D2EA0DCA95D9458B32160E6B /* RateCalculatorTests.swift in Sources */,
+				53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */,
 				DAD07F22F7161CCDC0D90EA4 /* SyntheticSignal.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -454,20 +496,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2521BE79E2DE837FACC7DAF4 /* AmplitudeEstimator.swift in Sources */,
 				AA4C23FA890988DD78C469EF /* AudioCapture.swift in Sources */,
 				1F5813C06CAC5657F2DE0F25 /* AudioSource.swift in Sources */,
 				5A9987E2B4D5776845869A91 /* BPHEstimator.swift in Sources */,
 				21734A2CEE9B6E0DEA54C936 /* BandPassFilter.swift in Sources */,
 				9B1536D6967225521A27A721 /* BeatDetector.swift in Sources */,
+				254839437847E46296E32359 /* BeatErrorCalculator.swift in Sources */,
 				4213E52F2A52302167A13CD8 /* Colors.swift in Sources */,
+				3FE38380443E433BA77C8EFE /* ConfidenceScorer.swift in Sources */,
 				4A53CB814DD2AB9B5D5ABA7F /* ContentView.swift in Sources */,
+				8A70BB1CD654EE24EB2BA6E1 /* DSPPipeline.swift in Sources */,
 				D0758F7FDFC81C0AAF487057 /* EnvelopeExtractor.swift in Sources */,
 				57442566C961CA26627FE75E /* MeasurementMetadata.swift in Sources */,
+				FBB7A8BF6D8F35C269864AAE /* MeasurementResult.swift in Sources */,
 				8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */,
 				E37390163694686A0BC080FD /* MovementDatabase.swift in Sources */,
 				E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */,
 				D238CEC1244A180C651E0371 /* Position.swift in Sources */,
 				A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */,
+				FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */,
 				49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */,
 				0AF05D132A01F4584655E85D /* Watch.swift in Sources */,
 				38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */,

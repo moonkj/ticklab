@@ -96,3 +96,38 @@
 
 ### 다음 hand-off
 - Week 3 진입. RateCalculator, BeatErrorCalculator, AmplitudeEstimator, ConfidenceScorer, DSPPipeline 통합, SwiftData 저장 흐름. AmplitudeEstimator는 lift angle을 외부 주입받으며 코악시얼은 무조건 nil 반환.
+
+---
+
+## 2026-05-10 · Week 3 — DSP 메트릭 + 파이프라인 통합 완료
+
+### 산출물
+- `RateCalculator` — measuredBph/nominalBph로 초/일, beats 시퀀스에서 직접 산출하는 오버로드 두 가지
+- `BeatErrorCalculator` — T1·T2 평균 차이의 절댓값, ms
+- `AmplitudeEstimator` — lift_angle × T_beat / (π × t_imp) 공식, t_imp는 envelope FWHM 기반. swissLever 만 추정, 코악시얼/스프링드라이브는 nil
+- `ConfidenceScorer` — SNR(30) + duration(25) + BPH conf(25) + beat sep(20) 가중합
+- `MeasurementResult` / `LiveMetrics` 중간 모델
+- `DSPPipeline` — AudioSource → 누적 envelope → analyze() 스냅샷 + AsyncStream<LiveMetrics> 라이브 스트림
+- `SyntheticAudioSource` 테스트 픽스처 — DSPPipeline 통합 테스트가 마이크 없이 동작
+- `Watch.deleteCascade(in:)` 헬퍼는 Week 1에서 도입, 이번 주 변경 없음
+
+### 검증
+- ✅ 47/47 unit tests PASS on iOS 17.2 (Filters 3 + BPH 6 + Beat 4 + Rate 5 + BeatError 3 + Amplitude 4 + Confidence 5 + Pipeline 3 + Model 4 + DB 5 + Matcher 5)
+- ✅ 합성 28800/25200/28829 BPH 신호로 파이프라인 통합 검증
+- ✅ 코악시얼 신호에서 amplitude nil + reliability note 키 자동 세팅
+
+### Cross-layer note (Hyemi)
+
+**AmplitudeEstimator 캘리브레이션 보류 (Sora·Jake 협의 필요)**
+- 현재 알고리즘은 표준 호롤로지 공식 + envelope FWHM 으로 t_imp 근사. 합성 신호에서는 100~360° 클램프 범위로 떨어지지만 실측 정확도는 미검증.
+- Week 7 베타 단계에서 Weishi 1900 ground truth 페어와 cross-validation 한 뒤 calibration 상수(tImp ↔ FWHM 비율) 조정 예정.
+- **Coder(Doyoon)** 에게: Phase 1 안에서 알고리즘 변경 금지. 캘리브레이션은 hyperparam만 조정.
+- **Reviewer(Jay)** 에게: AmplitudeEstimator 관련 PR 은 Week 7 이전엔 fixture 추가 외에는 reject.
+
+**DSPPipeline `analyze()` 호출 비용**
+- analyze() 가 매 라이브 스트림 emit 때마다 BPHEstimator/BeatDetector 를 envelope 전체에 대해 재실행. envelope 길이가 60초 → 2.88M 샘플 → autocorrelation O(N·lag) 부담.
+- 현재 합성 신호 5초 기준 30초 가량 테스트 시간이 걸리며, 실시간 측정에서는 throttling 필요.
+- **Performance(Sora)** 에게: Week 5 LiveWaveformView 작업 시 라이브 스트림 emit 주기를 1초 이상으로, 그리고 analyze() 도 마지막 N초 윈도우만 사용하도록 최적화 검토.
+
+### 다음 hand-off
+- Week 4 진입. UI 스캐폴드 — Onboarding, ModeSelect, Collection(Home), AddWatch, WatchDetail. 공통 컴포넌트(PrimaryButton, MetricBadge, ConfidenceBadge, HelpCard) 먼저 만들고 화면 단위로. 이번 주에는 측정 화면 X — 골격만 완성.
