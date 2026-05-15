@@ -2,16 +2,21 @@ import XCTest
 @testable import WatchAccuracyPro
 
 final class MovementDatabaseTests: XCTestCase {
-    func test_loadFromBundle_returnsTopTen() throws {
+    func test_loadFromBundle_returnsTopMovements() throws {
         let bundle = Bundle(for: type(of: self))
-        // 메인 앱 번들이 아닌 테스트 번들에서도 동일 리소스 검색을 위해 fallback 처리
         let movements: [Movement]
         do {
             movements = try MovementDatabase.loadFromBundle(.main)
         } catch {
             movements = try MovementDatabase.loadFromBundle(bundle)
         }
-        XCTAssertEqual(movements.count, 10, "Top 10 무브먼트 seed 가 정확히 10개여야 한다")
+        // Phase 2 OTA 확장: Top 10 → Top 30 으로. 최소 25개 이상 + 핵심 캘리버 유지를 검증.
+        XCTAssertGreaterThanOrEqual(movements.count, 25, "Phase 2 무브먼트 DB 는 최소 25개 이상")
+        let coreCalibers = ["ETA_2824-2", "ETA_7750", "Sellita_SW200",
+                            "Rolex_3135", "Omega_8800", "Tudor_MT5602", "Seiko_NH35"]
+        for id in coreCalibers {
+            XCTAssertNotNil(movements.first(where: { $0.id == id }), "필수 캘리버 \(id) 누락")
+        }
     }
 
     func test_eta_2824_has_correct_lift_angle_and_bph() throws {

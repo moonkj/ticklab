@@ -1,7 +1,12 @@
 [
   {
     "id": "ETA_2824-2",
-    "brandFamilies": ["Hamilton", "Tissot", "Tudor (구형)", "Mido"],
+    "brandFamilies": [
+      "Hamilton",
+      "Tissot",
+      "Tudor (vintage)",
+      "Mido"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 52.0,
     "escapement": "swissLever",
@@ -13,7 +18,12 @@
   },
   {
     "id": "ETA_2892-A2",
-    "brandFamilies": ["Omega (DeVille 일부)", "Breitling", "IWC", "Cartier"],
+    "brandFamilies": [
+      "Omega (DeVille series)",
+      "Breitling",
+      "IWC",
+      "Cartier"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 52.0,
     "escapement": "swissLever",
@@ -25,7 +35,12 @@
   },
   {
     "id": "ETA_7750",
-    "brandFamilies": ["Breitling", "IWC", "TAG (구형)", "Hamilton"],
+    "brandFamilies": [
+      "Breitling",
+      "IWC",
+      "TAG Heuer (vintage)",
+      "Hamilton"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 49.0,
     "escapement": "swissLever",
@@ -37,7 +52,11 @@
   },
   {
     "id": "Sellita_SW200",
-    "brandFamilies": ["Tudor", "Oris", "Christopher Ward"],
+    "brandFamilies": [
+      "Tudor",
+      "Oris",
+      "Christopher Ward"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 51.0,
     "escapement": "swissLever",
@@ -49,7 +68,10 @@
   },
   {
     "id": "Miyota_9015",
-    "brandFamilies": ["Citizen", "microbrand"],
+    "brandFamilies": [
+      "Citizen",
+      "microbrand"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 50.0,
     "escapement": "swissLever",
@@ -61,7 +83,10 @@
   },
   {
     "id": "Seiko_NH35",
-    "brandFamilies": ["Seiko 5", "microbrand"],
+    "brandFamilies": [
+      "Seiko 5",
+      "microbrand"
+    ],
     "bph": 21600,
     "liftAngleDegrees": 53.0,
     "escapement": "swissLever",
@@ -73,7 +98,10 @@
   },
   {
     "id": "Seiko_6R15",
-    "brandFamilies": ["Seiko Presage", "Grand Seiko (구형 일부)"],
+    "brandFamilies": [
+      "Seiko Presage",
+      "Grand Seiko (vintage)"
+    ],
     "bph": 21600,
     "liftAngleDegrees": 53.0,
     "escapement": "swissLever",
@@ -85,7 +113,11 @@
   },
   {
     "id": "Rolex_3135",
-    "brandFamilies": ["Rolex Submariner", "Datejust (구형)", "Sea-Dweller"],
+    "brandFamilies": [
+      "Rolex Submariner",
+      "Datejust (vintage)",
+      "Sea-Dweller"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 53.0,
     "escapement": "swissLever",
@@ -97,7 +129,10 @@
   },
   {
     "id": "Omega_8800",
-    "brandFamilies": ["Omega Seamaster Diver 300M", "Aqua Terra (신형)"],
+    "brandFamilies": [
+      "Omega Seamaster Diver 300M",
+      "Aqua Terra (new)"
+    ],
     "bph": 25200,
     "liftAngleDegrees": 38.0,
     "escapement": "coAxial",
@@ -109,7 +144,10 @@
   },
   {
     "id": "Tudor_MT5602",
-    "brandFamilies": ["Tudor Black Bay 58", "Tudor Pelagos"],
+    "brandFamilies": [
+      "Tudor Black Bay 58",
+      "Tudor Pelagos"
+    ],
     "bph": 28800,
     "liftAngleDegrees": 52.0,
     "escapement": "swissLever",
@@ -117,6 +155,1471 @@
     "typicalAmplitudeMax": 315.0,
     "coscToleranceMin": -2.0,
     "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "ETA_2895-2",
+    "brandFamilies": [
+      "Omega (small seconds)",
+      "Tudor",
+      "Mido"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "ETA_2836-2",
+    "brandFamilies": [
+      "Hamilton",
+      "Tissot",
+      "Mido"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Sellita_SW300",
+    "brandFamilies": [
+      "Oris",
+      "Tudor (some)",
+      "Norqain"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Sellita_SW500",
+    "brandFamilies": [
+      "Oris (chronograph)",
+      "Tudor"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 49.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3235",
+    "brandFamilies": [
+      "Rolex Submariner (new)",
+      "Datejust (new)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 2.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3186",
+    "brandFamilies": [
+      "Rolex GMT-Master II"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 2.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Omega_8500",
+    "brandFamilies": [
+      "Omega Seamaster (vintage)",
+      "Aqua Terra (vintage)"
+    ],
+    "bph": 25200,
+    "liftAngleDegrees": 38.0,
+    "escapement": "coAxial",
+    "typicalAmplitudeMin": null,
+    "typicalAmplitudeMax": null,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Omega_8900",
+    "brandFamilies": [
+      "Omega Aqua Terra Master Chronometer"
+    ],
+    "bph": 25200,
+    "liftAngleDegrees": 38.0,
+    "escapement": "coAxial",
+    "typicalAmplitudeMin": null,
+    "typicalAmplitudeMax": null,
+    "coscToleranceMin": 0.0,
+    "coscToleranceMax": 5.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Seiko_4R36",
+    "brandFamilies": [
+      "Seiko 5 Sports",
+      "Seiko Prospex (some)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 230.0,
+    "typicalAmplitudeMax": 280.0,
+    "coscToleranceMin": -35.0,
+    "coscToleranceMax": 45.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_8L35",
+    "brandFamilies": [
+      "Seiko Marinemaster (vintage)",
+      "Grand Seiko (some)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 15.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_9S65",
+    "brandFamilies": [
+      "Grand Seiko Heritage",
+      "Grand Seiko Sport"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -3.0,
+    "coscToleranceMax": 5.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_9R65",
+    "brandFamilies": [
+      "Grand Seiko Spring Drive"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 0.0,
+    "escapement": "springDrive",
+    "typicalAmplitudeMin": null,
+    "typicalAmplitudeMax": null,
+    "coscToleranceMin": -1.0,
+    "coscToleranceMax": 1.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "JLC_899",
+    "brandFamilies": [
+      "Jaeger-LeCoultre Master Control",
+      "Master Ultra Thin"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -3.0,
+    "coscToleranceMax": 5.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "JLC_750",
+    "brandFamilies": [
+      "Jaeger-LeCoultre Reverso Tribute"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -3.0,
+    "coscToleranceMax": 5.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Lemania_5100",
+    "brandFamilies": [
+      "Sinn (vintage)",
+      "Tutima (vintage)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 49.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 30.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Valjoux_7750",
+    "brandFamilies": [
+      "Breitling",
+      "IWC",
+      "TAG",
+      "Hamilton"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 49.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "FP_1185",
+    "brandFamilies": [
+      "Audemars Piguet Royal Oak Chrono (vintage)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Vacheron_1120",
+    "brandFamilies": [
+      "Vacheron Constantin Overseas (vintage)",
+      "Patek Philippe Nautilus (vintage)"
+    ],
+    "bph": 19800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Patek_324",
+    "brandFamilies": [
+      "Patek Philippe Nautilus (new)",
+      "Aquanaut"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -3.0,
+    "coscToleranceMax": 2.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Zenith_ElPrimero_400",
+    "brandFamilies": [
+      "Zenith"
+    ],
+    "bph": 36000,
+    "liftAngleDegrees": 49.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Panerai_P9000",
+    "brandFamilies": [
+      "Panerai"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Hublot_Unico_HUB1242",
+    "brandFamilies": [
+      "Hublot"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "TAG_Heuer_1887",
+    "brandFamilies": [
+      "TAG Heuer"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Breguet_Cal502",
+    "brandFamilies": [
+      "Breguet 5177",
+      "Breguet Classique"
+    ],
+    "bph": 35800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "siliconEscapement",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Breguet_537",
+    "brandFamilies": [
+      "Breguet"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Glashutte_Original_36",
+    "brandFamilies": [
+      "Glashütte Original"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Nomos_Alpha",
+    "brandFamilies": [
+      "Nomos"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 295.0,
+    "coscToleranceMin": -8.0,
+    "coscToleranceMax": 15.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Nomos_DUW3001",
+    "brandFamilies": [
+      "Nomos"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Bulova_UHF",
+    "brandFamilies": [
+      "Bulova (Precisionist)"
+    ],
+    "bph": 0,
+    "liftAngleDegrees": 0.0,
+    "escapement": "quartz",
+    "typicalAmplitudeMin": 0.0,
+    "typicalAmplitudeMax": 0.0,
+    "coscToleranceMin": -0.5,
+    "coscToleranceMax": 0.5,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "Junghans_J800",
+    "brandFamilies": [
+      "Junghans"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -8.0,
+    "coscToleranceMax": 15.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Sellita_SW330",
+    "brandFamilies": [
+      "Oris",
+      "Christopher Ward",
+      "Tudor GMT (some)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Soprod_M100",
+    "brandFamilies": [
+      "Christopher Ward",
+      "microbrand"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Miyota_8215",
+    "brandFamilies": [
+      "microbrand",
+      "Seiko/Miyota OEM"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -20.0,
+    "coscToleranceMax": 40.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Seiko_7S26",
+    "brandFamilies": [
+      "Seiko 5 Sports (vintage)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 230.0,
+    "typicalAmplitudeMax": 280.0,
+    "coscToleranceMin": -20.0,
+    "coscToleranceMax": 40.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Seiko_4R36_Diashock",
+    "brandFamilies": [
+      "Seiko Prospex (some)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -15.0,
+    "coscToleranceMax": 25.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Citizen_9015",
+    "brandFamilies": [
+      "Citizen (Series 8)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Hermes_H1837",
+    "brandFamilies": [
+      "Hermès"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Chopard_LUC_96",
+    "brandFamilies": [
+      "Chopard (LUC)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Piaget_1200P",
+    "brandFamilies": [
+      "Piaget"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Blancpain_1315",
+    "brandFamilies": [
+      "Blancpain"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Ulysse_Nardin_UN118",
+    "brandFamilies": [
+      "Ulysse Nardin"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "siliconEscapement",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "Cartier_1904MC",
+    "brandFamilies": [
+      "Cartier"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "IWC_82110",
+    "brandFamilies": [
+      "IWC"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "AP_Cal_3120",
+    "brandFamilies": [
+      "Audemars Piguet"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Longines_Cal30L",
+    "brandFamilies": [
+      "Longines (vintage, 1940s-1960s)"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 230.0,
+    "typicalAmplitudeMax": 270.0,
+    "coscToleranceMin": -15.0,
+    "coscToleranceMax": 25.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "Longines_Cal30Z",
+    "brandFamilies": [
+      "Longines (vintage, 1950s-1970s)"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 235.0,
+    "typicalAmplitudeMax": 275.0,
+    "coscToleranceMin": -15.0,
+    "coscToleranceMax": 25.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "Longines_L990",
+    "brandFamilies": [
+      "Longines Master Collection",
+      "Longines Conquest"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3255",
+    "brandFamilies": [
+      "Rolex Datejust 41 (new)",
+      "Day-Date 40",
+      "Sea-Dweller 43"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 2.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Tudor_MT5621",
+    "brandFamilies": [
+      "Tudor Black Bay GMT"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "IWC_35111",
+    "brandFamilies": [
+      "IWC Mark XVIII",
+      "IWC Pilot's Watch 371604",
+      "IWC Portofino Automatic 40"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 295.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "IWC_32111",
+    "brandFamilies": [
+      "IWC Pilot's Watch Mark XX manual",
+      "IWC Portofino Hand-Wound"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 295.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "IWC_52110",
+    "brandFamilies": [
+      "IWC Pilot's Watch (new)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_Cal3035",
+    "brandFamilies": [
+      "Rolex Submariner 16800/16660",
+      "Datejust 16030"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Valjoux_7733",
+    "brandFamilies": [
+      "Heuer Carrera 1153",
+      "Tissot (vintage chrono)"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 245.0,
+    "typicalAmplitudeMax": 285.0,
+    "coscToleranceMin": -8.0,
+    "coscToleranceMax": 15.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Universal_Cal215",
+    "brandFamilies": [
+      "Universal Genève Polerouter"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 51.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 280.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 20.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "AS_1902",
+    "brandFamilies": [
+      "AS calibre 1902",
+      "vintage Swiss automatic"
+    ],
+    "bph": 21000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 230.0,
+    "typicalAmplitudeMax": 270.0,
+    "coscToleranceMin": -15.0,
+    "coscToleranceMax": 25.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "Hamilton_Cal505",
+    "brandFamilies": [
+      "Hamilton vintage Electric/manual"
+    ],
+    "bph": 14400,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 220.0,
+    "typicalAmplitudeMax": 260.0,
+    "coscToleranceMin": -20.0,
+    "coscToleranceMax": 35.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "ETA_2750",
+    "brandFamilies": [
+      "Enicar (vintage)",
+      "Eterna (vintage)"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 280.0,
+    "coscToleranceMin": -15.0,
+    "coscToleranceMax": 30.0,
+    "confidenceLabel": "low"
+  },
+  {
+    "id": "Seiko_9S21",
+    "brandFamilies": [
+      "Grand Seiko (manual SBGW)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 255.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -3.0,
+    "coscToleranceMax": 5.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_9S66",
+    "brandFamilies": [
+      "Grand Seiko (SBGM GMT)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "RM_RMUL2",
+    "brandFamilies": [
+      "Richard Mille"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Omega_321",
+    "brandFamilies": [
+      "Omega Speedmaster (vintage)"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Omega_861",
+    "brandFamilies": [
+      "Omega Speedmaster Professional (manual)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Omega_1861",
+    "brandFamilies": [
+      "Omega Speedmaster Professional (manual)",
+      "Omega Moonwatch"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Omega_3313",
+    "brandFamilies": [
+      "Omega Speedmaster (automatic chrono)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "IWC_89361",
+    "brandFamilies": [
+      "IWC Portugieser Chronograph"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 49.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 260.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "IWC_59215",
+    "brandFamilies": [
+      "IWC Portugieser (manual)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "IWC_69000",
+    "brandFamilies": [
+      "IWC Pilot's Watch Chronograph Top Gun"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_1520",
+    "brandFamilies": [
+      "Rolex Datejust (vintage 1970s-80s)",
+      "Rolex Date"
+    ],
+    "bph": 19800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 305.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_1570",
+    "brandFamilies": [
+      "Rolex Submariner (vintage 1965-1980)",
+      "Rolex Explorer I (vintage)"
+    ],
+    "bph": 19800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_1575",
+    "brandFamilies": [
+      "Rolex GMT-Master (vintage 1965-1980)"
+    ],
+    "bph": 19800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3130",
+    "brandFamilies": [
+      "Rolex Explorer I (new)",
+      "Rolex Air-King"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 280.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3230",
+    "brandFamilies": [
+      "Rolex Explorer I (2021+)",
+      "Rolex Air-King (2023+)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 280.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Rolex_3285",
+    "brandFamilies": [
+      "Rolex GMT-Master II (2018+)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 280.0,
+    "typicalAmplitudeMax": 320.0,
+    "coscToleranceMin": -2.0,
+    "coscToleranceMax": 4.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "AP_Cal_2121",
+    "brandFamilies": [
+      "Audemars Piguet Royal Oak (ultra-thin)"
+    ],
+    "bph": 19800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "AP_Cal_4302",
+    "brandFamilies": [
+      "Audemars Piguet Royal Oak (2021+)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Patek_215",
+    "brandFamilies": [
+      "Patek Philippe Calatrava (manual)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Patek_240",
+    "brandFamilies": [
+      "Patek Philippe (ultra-thin automatic)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "ETA_6497",
+    "brandFamilies": [
+      "Panerai Luminor (base)",
+      "Stowa",
+      "Archimede"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "ETA_6498",
+    "brandFamilies": [
+      "Panerai Luminor (vintage base)",
+      "Stowa",
+      "Unitas"
+    ],
+    "bph": 18000,
+    "liftAngleDegrees": 53.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Tudor_MT5813",
+    "brandFamilies": [
+      "Tudor Black Bay Chrono"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Tudor_MT5400",
+    "brandFamilies": [
+      "Tudor Pelagos"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 270.0,
+    "typicalAmplitudeMax": 315.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_6309",
+    "brandFamilies": [
+      "Seiko 6309 Turtle (vintage)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 295.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_6105",
+    "brandFamilies": [
+      "Seiko 6105 Diver (vintage)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 295.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_NH34",
+    "brandFamilies": [
+      "Seiko 5 Sports GMT",
+      "Seiko Prospex GMT"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Seiko_6R35",
+    "brandFamilies": [
+      "Seiko Presage (2019+)",
+      "Seiko Prospex (new)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 295.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Miyota_8205",
+    "brandFamilies": [
+      "microbrand",
+      "Orient"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 235.0,
+    "typicalAmplitudeMax": 285.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Miyota_8285",
+    "brandFamilies": [
+      "microbrand GMT"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 235.0,
+    "typicalAmplitudeMax": 285.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Longines_L888",
+    "brandFamilies": [
+      "Longines Master Collection (current)",
+      "Longines HydroConquest"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Longines_L615",
+    "brandFamilies": [
+      "Longines Conquest (vintage)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Hamilton_H10",
+    "brandFamilies": [
+      "Hamilton Khaki Field (80h)",
+      "Hamilton Intra-Matic"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "JLC_822",
+    "brandFamilies": [
+      "Jaeger-LeCoultre Reverso (manual)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 245.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "JLC_849",
+    "brandFamilies": [
+      "Jaeger-LeCoultre Master Ultra Thin (manual)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 235.0,
+    "typicalAmplitudeMax": 280.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Vacheron_1400",
+    "brandFamilies": [
+      "Vacheron Constantin Patrimony (ultra-thin)"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 285.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "Zenith_EP3600",
+    "brandFamilies": [
+      "Zenith El Primero Chronomaster Sport"
+    ],
+    "bph": 36000,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "GP_3300",
+    "brandFamilies": [
+      "Girard-Perregaux Laureato",
+      "Girard-Perregaux 1966"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Orient_46D45",
+    "brandFamilies": [
+      "Orient (vintage)",
+      "Orient bambino (vintage)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 235.0,
+    "typicalAmplitudeMax": 285.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Orient_F6922",
+    "brandFamilies": [
+      "Orient (current)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 50.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 240.0,
+    "typicalAmplitudeMax": 290.0,
+    "coscToleranceMin": -10.0,
+    "coscToleranceMax": 10.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "Sellita_SW215",
+    "brandFamilies": [
+      "microbrand",
+      "Alpina"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "high"
+  },
+  {
+    "id": "FPJ_Cal1300",
+    "brandFamilies": [
+      "F.P. Journe Octa (automatic)"
+    ],
+    "bph": 21600,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 250.0,
+    "typicalAmplitudeMax": 300.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
+    "confidenceLabel": "medium"
+  },
+  {
+    "id": "ETA_2836-2_Ball",
+    "brandFamilies": [
+      "Ball Watch Engineer"
+    ],
+    "bph": 28800,
+    "liftAngleDegrees": 52.0,
+    "escapement": "swissLever",
+    "typicalAmplitudeMin": 265.0,
+    "typicalAmplitudeMax": 310.0,
+    "coscToleranceMin": -4.0,
+    "coscToleranceMax": 6.0,
     "confidenceLabel": "high"
   }
 ]

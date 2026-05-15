@@ -41,6 +41,7 @@
 		2B4BAA5D1BD153C47D0FD778 /* WatchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB9F352552A37E27C225FCC /* WatchBoxView.swift */; };
 		2BBA8C994DA9610E76E0DFB8 /* MeasurementActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38680208F755CAE7C44D2B6D /* MeasurementActivityAttributes.swift */; };
 		2E65F8B30D3042AD28B9261F /* BrandLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE067C7F3DCA7A186DC6FE7 /* BrandLeagueView.swift */; };
+		3BF87A813BF2406698A7E33B /* SupabaseBrandLeagueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B87586BFF804F0097D04EE7 /* SupabaseBrandLeagueService.swift */; };
 		30A1D7E3B9E8A3EC4FF2A3F3 /* SharedSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4817C4FF6E9CD72A586997 /* SharedSnapshotStore.swift */; };
 		367EB49536969E9791A23BCD /* BeatDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4995C3A82B5E708792DD27DE /* BeatDetectorProtocol.swift */; };
 		36C2B82C6131CB8239301BFE /* MeasurementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D1006CC82C071853A73BD9 /* MeasurementViewModel.swift */; };
@@ -205,6 +206,7 @@
 		0AE2539AD0268040B19EC189 /* ReliabilityNoteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReliabilityNoteTests.swift; sourceTree = "<group>"; };
 		0C31B146938DDDD93034D95D /* DialFortuneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialFortuneView.swift; sourceTree = "<group>"; };
 		0CE067C7F3DCA7A186DC6FE7 /* BrandLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandLeagueView.swift; sourceTree = "<group>"; };
+		1B87586BFF804F0097D04EE7 /* SupabaseBrandLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseBrandLeagueService.swift; sourceTree = "<group>"; };
 		119A8CA5E791C92005408AD5 /* Position.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		11DD44A69BACBC9F88907263 /* RateCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCalculator.swift; sourceTree = "<group>"; };
 		147FD52A1A20999D7CCBD88E /* DataExportServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExportServiceTests.swift; sourceTree = "<group>"; };
@@ -714,6 +716,7 @@
 				E8293C262F87D540B2E2C9E4 /* BadgesView.swift */,
 				40A1210C79FC5876A632B764 /* BatteryView.swift */,
 				0CE067C7F3DCA7A186DC6FE7 /* BrandLeagueView.swift */,
+				1B87586BFF804F0097D04EE7 /* SupabaseBrandLeagueService.swift */,
 				0C31B146938DDDD93034D95D /* DialFortuneView.swift */,
 				6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */,
 				286091247745D80CC0F014B0 /* TamagotchiView.swift */,
@@ -1064,6 +1067,7 @@
 				367EB49536969E9791A23BCD /* BeatDetectorProtocol.swift in Sources */,
 				254839437847E46296E32359 /* BeatErrorCalculator.swift in Sources */,
 				2E65F8B30D3042AD28B9261F /* BrandLeagueView.swift in Sources */,
+				3BF87A813BF2406698A7E33B /* SupabaseBrandLeagueService.swift in Sources */,
 				45BEA8592C353A4A3F03722D /* COSCBar.swift in Sources */,
 				4AB6F1F297397E9A6D0620DE /* CameraImagePicker.swift in Sources */,
 				4DA466650FB44A1B4458FD84 /* Chip.swift in Sources */,

@@ -122,10 +122,33 @@ struct TrendChartView: View {
                 AxisValueLabel(format: .dateTime.month(.abbreviated))
             })
         case .all:
-            return AnyAxisContent(AxisMarks(values: .automatic(desiredCount: 5)) { _ in
-                AxisGridLine()
-                AxisValueLabel(format: .dateTime.month(.abbreviated).year(.twoDigits))
-            })
+            // 실제 데이터 span 에 맞게 granularity 자동 조정.
+            let spanDays = sorted.isEmpty ? 0 : {
+                let s = sorted.first!.timestamp
+                let e = sorted.last!.timestamp
+                return Int(e.timeIntervalSince(s) / 86400)
+            }()
+            if spanDays <= 14 {
+                return AnyAxisContent(AxisMarks(values: .stride(by: .day, count: 1)) { _ in
+                    AxisGridLine()
+                    AxisValueLabel(format: .dateTime.month(.defaultDigits).day())
+                })
+            } else if spanDays <= 60 {
+                return AnyAxisContent(AxisMarks(values: .stride(by: .day, count: 7)) { _ in
+                    AxisGridLine()
+                    AxisValueLabel(format: .dateTime.month(.defaultDigits).day())
+                })
+            } else if spanDays <= 365 {
+                return AnyAxisContent(AxisMarks(values: .stride(by: .month, count: 1)) { _ in
+                    AxisGridLine()
+                    AxisValueLabel(format: .dateTime.month(.abbreviated))
+                })
+            } else {
+                return AnyAxisContent(AxisMarks(values: .stride(by: .month, count: 3)) { _ in
+                    AxisGridLine()
+                    AxisValueLabel(format: .dateTime.month(.abbreviated).year(.twoDigits))
+                })
+            }
         }
     }
 

@@ -6,19 +6,32 @@ enum MovementDatabaseError: Error {
 }
 
 /// 무브먼트 정적 DB. 앱 번들 내 `MovementDB.json` 을 한 번만 로드해 캐싱한다.
-/// Phase 2부터는 OTA 업데이트 가능하도록 확장 예정.
+/// Phase 2 부터 OTA 업데이트 시 `replaceAll(with:)` 으로 in-place 교체 가능.
+/// Round 5 (Min): OTA 적용과 측정 중 lookup 의 race 를 NSLock 으로 보호.
 final class MovementDatabase {
     static let shared = MovementDatabase()
 
-    private(set) var movements: [Movement]
-    private let byID: [String: Movement]
+    private let lock = NSLock()
+    private var _movements: [Movement]
+    private var byID: [String: Movement]
+
+    var movements: [Movement] {
+        lock.lock(); defer { lock.unlock() }
+        return _movements
+    }
 
     init(movements: [Movement]) {
-        self.movements = movements
+        self._movements = movements
         self.byID = Dictionary(uniqueKeysWithValues: movements.map { ($0.id, $0) })
     }
 
     private convenience init() {
+        // 1) OTA 캐시 우선
+        if let cached = MovementDBOTAService.shared.cachedMovements(), !cached.isEmpty {
+            self.init(movements: cached)
+            return
+        }
+        // 2) 번들 fallback
         do {
             let loaded = try Self.loadFromBundle(.main)
             self.init(movements: loaded)
@@ -40,10 +53,24 @@ final class MovementDatabase {
         }
     }
 
-    func movement(id: String) -> Movement? { byID[id] }
+    func movement(id: String) -> Movement? {
+        lock.lock(); defer { lock.unlock() }
+        return byID[id]
+    }
 
     func liftAngle(forCaliber caliber: String?) -> Double? {
         guard let caliber else { return nil }
+        lock.lock(); defer { lock.unlock() }
         return byID[caliber]?.liftAngleDegrees
+    }
+
+    /// OTA 적용 또는 테스트에서 in-place 교체. lookup 과 atomically.
+    /// Round 8 (Min): dictionary 재구축은 lock 밖에서 수행하고 lock 안에선 swap 만.
+    /// 큰 DB 에서도 lookup stall 시간 최소화.
+    func replaceAll(with newMovements: [Movement]) {
+        let newByID = Dictionary(uniqueKeysWithValues: newMovements.map { ($0.id, $0) })
+        lock.lock(); defer { lock.unlock() }
+        self._movements = newMovements
+        self.byID = newByID
     }
 }

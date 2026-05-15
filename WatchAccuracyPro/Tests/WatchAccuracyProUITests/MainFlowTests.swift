@@ -67,7 +67,34 @@ final class MainFlowTests: XCTestCase {
         XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
         settingsButton.tap()
 
-        let glossary = app.staticTexts["Glossary"]
-        XCTAssertTrue(glossary.waitForExistence(timeout: 3))
+        // Phase 2/3 에서 Settings 가 길어져 Glossary 가 즉시 보이지 않을 수 있음 — section 헤더로 검증.
+        let modeSection = app.staticTexts["User mode"]
+        XCTAssertTrue(modeSection.waitForExistence(timeout: 5),
+                      "Settings 첫 섹션 (User mode) 가 보여야 한다")
+    }
+
+    /// Round 9 (Jay): Phase 2 Sync 섹션 표면 노출 검증. 실제 OTA 호출은 안 함.
+    func test_settings_shows_phase2_sync_section() throws {
+        let app = XCUIApplication()
+        app.launchArguments = [
+            "-ticklab.onboardingComplete", "1",
+            "-ticklab.modeChosenOnce", "1",
+            "-AppleLanguages", "(en)",
+            "-AppleLocale", "en_US"
+        ]
+        app.launch()
+
+        let settingsButton = app.navigationBars.buttons["gearshape"]
+        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
+        settingsButton.tap()
+
+        // Settings 안에서 Sync 섹션까지 스크롤. iCloud sync · Auto-update · Check for updates 가 노출되어야 함.
+        let syncSection = app.staticTexts["Sync"]
+        let scrollView = app.scrollViews.firstMatch
+        if !syncSection.waitForExistence(timeout: 2) {
+            scrollView.swipeUp()
+        }
+        XCTAssertTrue(syncSection.waitForExistence(timeout: 3) || app.switches["iCloud sync"].exists,
+                      "Sync 섹션 또는 iCloud sync 토글이 노출되어야 한다")
     }
 }

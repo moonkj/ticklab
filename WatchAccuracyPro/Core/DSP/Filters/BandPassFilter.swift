@@ -9,7 +9,12 @@ final class BandPassFilter {
     private var stateLow = BiquadState()
     private var stateHigh = BiquadState()
 
-    init(sampleRate: Double = 48_000, lowCutoff: Double = 1_000, highCutoff: Double = 10_000) {
+    /// Round 37 (tickIQ 가 같은 환경 같은 순간 정확 lock — 우리 algorithm 결함 확정):
+    /// 3-10kHz revert → **1-7kHz**. 시계마다 case 공명 다양 (1kHz 부터 10kHz 까지). 좁은 band 가 IWC
+    /// 같은 일부 시계의 tic energy 차단했을 가능성. wider band 가 더 안전.
+    // Round 130 (DSP 전문가 3명 합의): 1-7kHz → 2.5-7kHz 좁힘.
+    // 1-2.5kHz 케이스 공명/HVAC hum 제거 → percentile noise floor 안정 → IWC 약 tic 검출률 ↑.
+    init(sampleRate: Double = 48_000, lowCutoff: Double = 2_500, highCutoff: Double = 7_000) {
         self.coeffsLow = BiquadCoefficients.highPass(sampleRate: sampleRate, cutoff: lowCutoff, q: 0.707)
         self.coeffsHigh = BiquadCoefficients.lowPass(sampleRate: sampleRate, cutoff: highCutoff, q: 0.707)
     }
@@ -76,5 +81,32 @@ struct BiquadState {
             out[i] = y
         }
         return out
+    }
+}
+
+/// Round 153 (Kim+Chen+Müller 토론): caliber-adaptive BandPass + envelope cutoff spec.
+/// MatchedFilterProfile.resolve(...) 와 동일 dispatch — single source of truth.
+/// 28800 BPH swissLever 는 production default 와 동일 → 회귀 zero.
+struct BandPassSpec {
+    let lowHz: Double
+    let highHz: Double
+    let envCutoffHz: Double
+
+    // Round 158 (tickIQ deep analysis): tickIQ filter 가 2-5kHz 영역 -50dB 제거, 8-15kHz 영역 보존/boost.
+    // 우리 2.5-7kHz 는 tickIQ 가 *무시하는* 영역 통과시킴. 6-15kHz 로 이동 — high-freq tic transient 영역.
+    static let `default` = BandPassSpec(lowHz: 6_000, highHz: 15_000, envCutoffHz: 500)
+
+    static func spec(for profile: MatchedFilterProfile, escapement: Escapement) -> BandPassSpec {
+        // co-axial: matched filter 는 bypass 지만 BP 는 wide-band 로 sub-pulse 보존.
+        if escapement == .coAxial {
+            return .init(lowHz: 2_000, highHz: 9_000, envCutoffHz: 400)
+        }
+        switch profile {
+        case .bypass:                 return .default
+        case .vintage18k:             return .init(lowHz: 1_500, highHz: 5_000, envCutoffHz: 250)
+        case .swissLever21600:        return .init(lowHz: 2_000, highHz: 6_000, envCutoffHz: 300)
+        case .swissLever28800Classic: return .default  // 현재 production 값과 동일 (회귀 zero).
+        case .highBeat36000:          return .init(lowHz: 3_500, highHz: 8_000, envCutoffHz: 500)
+        }
     }
 }

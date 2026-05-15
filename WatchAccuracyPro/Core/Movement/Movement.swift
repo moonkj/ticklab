@@ -5,6 +5,10 @@ enum Escapement: String, Codable, Sendable {
     case coAxial
     case springDrive
     case detentEscapement
+    /// Round 88: Ulysse Nardin DIAMonSIL 등 실리콘 이스케이프먼트 (동작은 swiss lever 유사).
+    case siliconEscapement
+    /// Round 88: HFQ 쿼츠 (Bulova Precisionist 등). DSP 측정 부적합 → confidence low.
+    case quartz
 }
 
 enum ReliabilityLabel: String, Codable, Sendable {

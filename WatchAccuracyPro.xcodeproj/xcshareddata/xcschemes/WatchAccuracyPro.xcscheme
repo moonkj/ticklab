@@ -49,6 +49,20 @@
                ReferencedContainer = "container:WatchAccuracyPro.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "36046827C9245BB788A3E701"
+               BuildableName = "WatchAccuracyProWidget.appex"
+               BlueprintName = "WatchAccuracyProWidget"
+               ReferencedContainer = "container:WatchAccuracyPro.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

@@ -25,7 +25,8 @@ enum AmplitudeEstimator {
         escapement: Escapement
     ) -> Double? {
         guard let liftAngle = liftAngleDegrees else { return nil }
-        guard escapement == .swissLever else { return nil }
+        // Round 103 (DSP): siliconEscapement 는 swissLever 와 동작 동일 — 동일 공식 적용.
+        guard escapement == .swissLever || escapement == .siliconEscapement else { return nil }
         guard beats.count >= 4 else { return nil }
 
         // T_beat 추정 — beats 사이 평균 간격
@@ -52,8 +53,11 @@ enum AmplitudeEstimator {
         guard tImp > 0 else { return nil }
 
         let amplitude = (liftAngle * tBeat) / (.pi * tImp)
-        // 합리적 범위 클램프 (스파이크 방지)
-        return min(max(amplitude, 100), 360)
+        // Round 158: 범위 50-400° 로 확장 (BandPass 6-15kHz 환경에서 FWHM 짧아져 amplitude 추정값 변동 큼).
+        // 너무 좁은 범위는 amplitude 가 항상 nil → 사용자에게 진폭 안 보임.
+        guard (50...400).contains(amplitude) else { return nil }
+        // 360° 위 값은 추정 noise — 360 으로 clamp (실제 amplitude 가 360° 넘는 시계는 거의 없음).
+        return min(amplitude, 360)
     }
 
     /// `centerIndex` 주변에서 local peak 의 envelope FWHM 을 초 단위로 반환.

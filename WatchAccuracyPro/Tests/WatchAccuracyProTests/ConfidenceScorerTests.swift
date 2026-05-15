@@ -32,8 +32,23 @@ final class ConfidenceScorerTests: XCTestCase {
             beatCount: 500,
             beatErrorMs: 0.5
         ))
-        // SNR 20 + duration 15 + BPH 25*0.8=20 + beat error 20*(1-0.25)=15 = 70
-        XCTAssertEqual(score, 70)
+        // Round 110 가중치: SNR 25dB(22dB상한) = 20점(만점).
+        // duration 60s = 17점. BPH 30*0.8 = 24점. beat error 25*(1-0.25) = 19점.
+        // 총 = 20+17+24+19 = 80점.
+        XCTAssertEqual(score, 80)
+    }
+
+    func test_realistic_watch_signal_scores_above_50() {
+        // 실 기계식 시계 보통 시나리오: SNR 18dB, 30s, BPH conf 0.7, beat error 0.6ms
+        // 신뢰도가 적어도 50 이상이라야 사용자에게 의미 있다.
+        let score = ConfidenceScorer.score(.init(
+            snrDB: 18,
+            durationSeconds: 30,
+            bphAutocorrelationConfidence: 0.7,
+            beatCount: 240,
+            beatErrorMs: 0.6
+        ))
+        XCTAssertGreaterThan(score, 50, "실 시계 평균 신호에서 신뢰도는 50점 이상 — got \(score)")
     }
 
     func test_score_never_exceeds_100() {
@@ -55,6 +70,7 @@ final class ConfidenceScorerTests: XCTestCase {
             beatCount: 1000,
             beatErrorMs: 5  // 매우 큰 beat error
         ))
-        XCTAssertEqual(score, 80, "beat error 2ms 이상이면 separation 점수는 0")
+        // SNR≥22→20 + duration≥120→25 + BPH conf 1.0→30 + beatError≥2ms→0 = 75.
+        XCTAssertEqual(score, 75, "beat error 2ms 이상이면 separation 점수는 0 → 총 75점")
     }
 }

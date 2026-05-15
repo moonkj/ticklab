@@ -11,6 +11,7 @@ struct WatchDetailView: View {
     @Environment(\.dismiss) private var dismiss
     /// Round 176: 대표 시계 토글 시 다른 시계의 isPrimary 해제 위해 전체 watch 목록 필요.
     @Query(sort: \Watch.createdAt, order: .reverse) private var allWatches: [Watch]
+    @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
 
     @State private var range: TrendRange = .week
     /// Round 29 (Doyoon): HistoryRow tap 시 편집할 측정. nil 이면 sheet 닫힘.
@@ -24,6 +25,8 @@ struct WatchDetailView: View {
     @State private var cachedServiceLogs: [ServiceLog] = []
     /// Round 170: 측정 이력 삭제 확인 (전체 삭제용).
     @State private var showDeleteAllMeasurementsAlert = false
+    @State private var historyExpanded = false
+    private static let historyPageSize = 10
     /// Round 170: 단일 측정 삭제 확인.
     @State private var measurementToDelete: WatchMeasurement?
     /// Round 173: 시계 정보 편집 sheet + 삭제 확인 alert.
@@ -1050,8 +1053,10 @@ struct WatchDetailView: View {
                 } label: {
                     Text(r.rawValue)
                         .font(.system(size: 11, weight: selected ? .bold : .medium, design: .monospaced))
+                        .lineLimit(1)
+                        .fixedSize()
                         .padding(.horizontal, 10)
-                        .frame(minHeight: 32)
+                        .frame(minWidth: 36, minHeight: 32)
                         .foregroundStyle(selected ? Color.white : AppColors.ink2)
                         .background(selected ? AppColors.ink0 : .clear)
                         .clipShape(Capsule())
@@ -1129,15 +1134,34 @@ struct WatchDetailView: View {
                 }
             }
             .padding(.horizontal, 20)
-            // Round 86 (이재현 #10): 10 → 50 으로 확장. 1년치(주1회 = 52건) 컬렉터 추이가 짤리지 않게.
+            let displayCount = historyExpanded ? measurements.count : min(Self.historyPageSize, measurements.count)
+            let hasMore = measurements.count > Self.historyPageSize
             VStack(spacing: 0) {
-                ForEach(Array(measurements.prefix(50).enumerated()), id: \.element.id) { idx, m in
+                ForEach(Array(measurements.prefix(displayCount).enumerated()), id: \.element.id) { idx, m in
                     HistoryRow(
                         measurement: m,
-                        isLast: idx == min(49, measurements.count - 1),
+                        isLast: idx == displayCount - 1 && (!hasMore || historyExpanded),
                         onTap: { editingMeasurement = m },
                         onDelete: { measurementToDelete = m }
                     )
+                }
+                if hasMore {
+                    Button {
+                        withAnimation(.easeOut(duration: 0.2)) { historyExpanded.toggle() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Text(historyExpanded
+                                 ? String(localized: "watch.history.collapse")
+                                 : String(format: NSLocalizedString("watch.history.showMore", comment: ""), measurements.count - Self.historyPageSize))
+                                .font(.system(size: 13, weight: .semibold))
+                            Image(systemName: historyExpanded ? "chevron.up" : "chevron.down")
+                                .font(.system(size: 11, weight: .semibold))
+                        }
+                        .foregroundStyle(AppColors.ink2)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
+                    }
+                    .buttonStyle(.plain)
                 }
             }
             .background(AppColors.paper0)
@@ -1705,37 +1729,43 @@ private struct PhotoSourceSheet: View {
 
     var body: some View {
         VStack(spacing: 0) {
+            // 드래그 핸들
             Capsule()
                 .fill(AppColors.rule)
                 .frame(width: 36, height: 4)
-                .padding(.top, 8)
+                .padding(.top, 10)
+            // 타이틀
             Text(title)
-                .font(.system(size: 13, weight: .medium))
+                .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(AppColors.ink2)
-                .padding(.top, 14)
-                .padding(.bottom, 8)
-            Divider().padding(.horizontal, 16)
+                .padding(.top, 16)
+                .padding(.bottom, 16)
+            Divider()
+            // 액션 목록
             VStack(spacing: 0) {
                 row(label: String(localized: "photo.source.library"), icon: "photo.on.rectangle", action: onLibrary)
-                Divider().padding(.leading, 56)
+                Divider().padding(.leading, 60)
                 row(label: String(localized: "photo.source.camera"), icon: "camera", action: onCamera)
                 if allowRemove, let onRemove {
-                    Divider().padding(.leading, 56)
+                    Divider().padding(.leading, 60)
                     row(label: String(localized: "photo.source.remove"), icon: "trash", destructive: true, action: onRemove)
                 }
             }
-            Divider().padding(.horizontal, 16).padding(.top, 8)
+            // 취소 — 중립 색상 (accent 아님)
+            Divider().padding(.top, 8)
             Button { dismiss() } label: {
                 Text(String(localized: "common.cancel"))
-                    .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(AppColors.accent)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(AppColors.ink2)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
+                    .padding(.vertical, 18)
             }
+            .buttonStyle(.plain)
         }
-        .background(AppColors.paper0)
-        .presentationDetents([.height(allowRemove ? 320 : 260)])
+        .background(AppColors.paper1.ignoresSafeArea())
+        .presentationDetents([.height(allowRemove ? 300 : 248)])
         .presentationDragIndicator(.hidden)
+        .presentationBackground(AppColors.paper1)
     }
 
     @ViewBuilder
@@ -1743,16 +1773,16 @@ private struct PhotoSourceSheet: View {
         Button(action: action) {
             HStack(spacing: 16) {
                 Image(systemName: icon)
-                    .font(.system(size: 18))
+                    .font(.system(size: 17))
                     .foregroundStyle(destructive ? AppColors.danger : AppColors.accent)
-                    .frame(width: 28)
+                    .frame(width: 28, alignment: .center)
                 Text(label)
                     .font(.system(size: 16))
-                    .foregroundStyle(destructive ? AppColors.danger : AppColors.ink0)
+                    .foregroundStyle(AppColors.ink0)  // 삭제도 텍스트는 ink0 — 아이콘만 빨강
                 Spacer()
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 16)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 15)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)

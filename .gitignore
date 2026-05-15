@@ -45,3 +45,7 @@ secrets/
 # Test outputs
 TestResults/
 *.xcresult
+
+# Round 138 — 관리자 모드 비번 (commit 제외)
+WatchAccuracyPro/Core/Security/AdminAccess.swift
+WatchAccuracyPro/Features/Settings/AdminPanelView.swift

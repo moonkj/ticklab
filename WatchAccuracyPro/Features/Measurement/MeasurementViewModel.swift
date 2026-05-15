@@ -107,7 +107,7 @@ final class MeasurementViewModel {
             lastRejectedResult = nil
             lastRejectionReason = nil
             setKeepScreenOn(enabled: preferences.keepScreenOnDuringMeasurement)
-            let nominalBph = movement?.bph ?? 28_800
+            let nominalBph = watch.customBph ?? movement?.bph ?? 28_800
             // 페르소나 (김재철) wish: watch-level lift angle override 가 있으면 우선.
             let liftAngle = watch.liftAngleOverride ?? movement?.liftAngleDegrees
             let escapement = movement?.escapement ?? .swissLever

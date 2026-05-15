@@ -1,0 +1,8 @@
+/* Round 127 (오정민 Critical): EN permission dialogs — Info.plist strings localized.
+   Without this file, iOS shows Korean text to EN-locale users on every permission request. */
+
+"NSCameraUsageDescription" = "TickLab needs your camera to take photos of your watches. Photos are stripped of GPS metadata and stored only on your device.";
+"NSFaceIDUsageDescription" = "TickLab uses Face ID to lock the app and protect your watch collection and measurement data.";
+"NSMicrophoneUsageDescription" = "TickLab needs your microphone to listen for the ticking sound and measure your watch's accuracy. Audio is processed instantly on-device and never stored or transmitted.";
+"NSMotionUsageDescription" = "TickLab uses your iPhone's magnetometer to detect ambient magnetic fields that could magnetize your mechanical watch. Readings are processed only on-device.";
+"NSPhotoLibraryUsageDescription" = "TickLab needs access to your photo library so you can add a photo of your watch to its collection entry.";

@@ -3,6 +3,9 @@ import SwiftData
 import PhotosUI
 
 struct AddWatchView: View {
+    /// Round 173: 기존 시계 수정 지원. nil 이면 신규 추가, 값 있으면 편집 모드.
+    var existing: Watch? = nil
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
 
@@ -10,14 +13,55 @@ struct AddWatchView: View {
     @State private var model: String = ""
     @State private var caliber: String? = nil
     @State private var purchaseDate: Date? = nil
+    /// Round 83 (정수민): 별명 / story / ref no. 감성 필드.
+    @State private var nickname: String = ""
+    @State private var story: String = ""
+    @State private var referenceNumber: String = ""
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
+    @State private var showingCamera = false
+    @State private var showingPhotosPicker = false
+    @State private var showingPhotoSourceDialog = false
+    @State private var showingDiscardAlert = false
     @State private var suggestion: MovementMatcher.Suggestion?
+    /// 페르소나 (김재철, 워치메이커) wish: lift angle override.
+    @State private var liftAngleOverride: String = ""
+    /// 무브먼트 직접입력 BPH (caliber == "__manual__" 일 때).
+    @State private var manualBphText: String = ""
+    private static let manualCaliberTag = "__manual__"
+    private var isManualEntry: Bool { caliber == Self.manualCaliberTag }
+    /// 무브먼트 타입 — automatic / manual / quartz.
+    @State private var movementType: WatchMovementType = .automatic
+    /// 수동감기: 매일 알림 활성화 + 시각.
+    @State private var windReminderEnabled: Bool = false
+    @State private var windReminderTime: Date = {
+        Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
+    }()
+    /// Quartz: 마지막 배터리 교체일 + 알림.
+    @State private var batteryLastReplaced: Date = Date()
+    @State private var batteryReminderEnabled: Bool = true
+    @Environment(UserPreferences.self) private var preferences
+
+    private var isEditing: Bool { existing != nil }
 
     private let matcher = MovementMatcher()
+    /// Round 84-87 (사용자 피드백 누적): 브랜드 풀 대폭 확장.
+    /// 알파벳 순. 입문 / 빈티지 / 하이엔드 / haute horlogerie / 패션 브랜드까지 포괄.
+    /// 사용자가 못 찾으면 "addwatch.brand.custom" 자유 입력 가능.
     private let popularBrands = [
-        "Rolex", "Omega", "Seiko", "Grand Seiko", "Tudor", "Hamilton", "Tissot",
-        "Breitling", "IWC", "TAG Heuer", "Cartier", "Citizen", "Oris"
+        "A. Lange & Söhne", "Anonimo", "Aquastar", "Audemars Piguet", "Ball",
+        "Bell & Ross", "Blancpain", "Breguet", "Breitling", "Bremont", "Bulgari", "Bulova",
+        "Carl F. Bucherer", "Cartier", "Casio", "Chanel", "Chopard", "Christopher Ward",
+        "Citizen", "Czapek", "De Bethune", "Dior", "Doxa", "Eterna", "F.P. Journe",
+        "Fortis", "Franck Muller", "Frederique Constant", "Girard-Perregaux",
+        "Glashütte Original", "Grand Seiko", "Greubel Forsey", "H. Moser & Cie",
+        "Hamilton", "Hermès", "Hublot", "IWC", "Jacob & Co", "Jaeger-LeCoultre",
+        "Junghans", "Laurent Ferrier", "Longines", "Louis Vuitton", "MB&F",
+        "Maurice Lacroix", "Mido", "Montblanc", "Movado", "Nomos", "Omega", "Oris",
+        "Panerai", "Parmigiani Fleurier", "Patek Philippe", "Piaget", "Rado", "Ressence",
+        "Richard Mille", "Roger Dubuis", "Rolex", "Seiko", "Sinn", "Swatch", "TAG Heuer",
+        "Tissot", "Tudor", "Tutima", "Ulysse Nardin", "Universal Genève", "Urwerk",
+        "Vacheron Constantin", "Van Cleef & Arpels", "Zenith"
     ]
 
     var body: some View {
@@ -27,11 +71,17 @@ struct AddWatchView: View {
                     photoPicker
                 }
                 Section(String(localized: "addwatch.section.basic")) {
+                    // Round 169: 브랜드 직접 입력도 가능하게. Picker(13종) + 텍스트 입력 보조.
                     Picker(String(localized: "addwatch.brand"), selection: $brand) {
                         Text(String(localized: "common.unspecified")).tag("")
                         ForEach(popularBrands, id: \.self) { Text($0).tag($0) }
+                        if !brand.isEmpty && !popularBrands.contains(brand) {
+                            Text(brand).tag(brand)
+                        }
                     }
                     .onChange(of: brand) { _, _ in updateSuggestion() }
+                    TextField(String(localized: "addwatch.brand.custom"), text: $brand)
+                        .font(.system(size: 14))
 
                     TextField(String(localized: "addwatch.model"), text: $model)
                         .onChange(of: model) { _, _ in updateSuggestion() }
@@ -46,26 +96,207 @@ struct AddWatchView: View {
                     )
                 }
 
-                if let suggestion {
-                    Section(String(localized: "addwatch.section.movement")) {
-                        suggestionCard(suggestion)
+                Section(String(localized: "addwatch.movement.type")) {
+                    Picker(String(localized: "addwatch.movement.type.label"), selection: $movementType) {
+                        ForEach(WatchMovementType.allCases, id: \.self) { t in
+                            Text(t.displayName).tag(t)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .tint(AppColors.accent)
+
+                    if movementType == .manual {
+                        Toggle(String(localized: "addwatch.wind.toggle"), isOn: $windReminderEnabled)
+                        if windReminderEnabled {
+                            DatePicker(String(localized: "addwatch.wind.time"),
+                                       selection: $windReminderTime,
+                                       displayedComponents: .hourAndMinute)
+                        }
+                        Text(String(localized: "addwatch.movement.manual.hint"))
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppColors.textSecondary)
+                    }
+
+                    if movementType == .quartz {
+                        DatePicker(String(localized: "addwatch.battery.last_replaced"),
+                                   selection: $batteryLastReplaced,
+                                   displayedComponents: .date)
+                        Toggle(String(localized: "addwatch.battery.reminder.toggle"), isOn: $batteryReminderEnabled)
+                        Text(String(localized: "addwatch.movement.quartz.hint"))
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppColors.textSecondary)
                     }
                 }
+
+                Section(String(localized: "addwatch.section.movement")) {
+                    if let suggestion, caliber == nil {
+                        suggestionCard(suggestion)
+                    }
+                    // 페르소나 (김재철) wish: expert 모드에서만 lift angle override 입력.
+                    if preferences.userMode == .pro {
+                        HStack {
+                            Text(String(localized: "addwatch.lift_angle.label"))
+                            Spacer()
+                            TextField(String(localized: "addwatch.lift_angle.placeholder"),
+                                      text: $liftAngleOverride)
+                                .keyboardType(.decimalPad)
+                                .multilineTextAlignment(.trailing)
+                                .frame(width: 80)
+                        }
+                    }
+                    // Manual picker — 추천이 없거나 사용자가 직접 고르고 싶을 때.
+                    Picker(String(localized: "addwatch.movement.picker"),
+                           selection: Binding(
+                            get: { caliber ?? "" },
+                            set: { caliber = $0.isEmpty ? nil : $0 }
+                           )) {
+                        Text(String(localized: "addwatch.movement.unknown")).tag("")
+                        ForEach(MovementDatabase.shared.movements, id: \.id) { m in
+                            Text("\(m.id) · \(m.bph) BPH").tag(m.id)
+                        }
+                        Divider()
+                        Text(String(localized: "addwatch.movement.manual_entry")).tag(Self.manualCaliberTag)
+                    }
+                    // 직접입력 선택 시 BPH 입력 필드 (측정에 필수)
+                    if isManualEntry {
+                        VStack(alignment: .leading, spacing: 8) {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(String(localized: "addwatch.movement.bph_label"))
+                                        .font(AppTypography.caption)
+                                        .foregroundStyle(AppColors.textSecondary)
+                                    HStack(spacing: 6) {
+                                        TextField("28800", text: $manualBphText)
+                                            .keyboardType(.numberPad)
+                                            .font(.system(size: 17, design: .monospaced))
+                                        Text("BPH")
+                                            .font(AppTypography.caption)
+                                            .foregroundStyle(AppColors.textSecondary)
+                                    }
+                                }
+                                Spacer()
+                                if let bph = Int(manualBphText), bph > 0 {
+                                    Image(systemName: "checkmark.circle.fill")
+                                        .foregroundStyle(AppColors.success)
+                                }
+                            }
+                            if manualBphText.isEmpty {
+                                Label(String(localized: "addwatch.movement.bph_required"), systemImage: "exclamationmark.circle.fill")
+                                    .font(AppTypography.caption)
+                                    .foregroundStyle(AppColors.warning)
+                            } else if let bph = Int(manualBphText), bph > 0 {
+                                let commonBPHs = [18000, 21600, 25200, 28800, 36000]
+                                if !commonBPHs.contains(bph) {
+                                    Label(String(format: NSLocalizedString("addwatch.movement.bph_uncommon", comment: ""), bph),
+                                          systemImage: "info.circle")
+                                        .font(AppTypography.caption)
+                                        .foregroundStyle(AppColors.ink3)
+                                }
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    }
+                    if let caliber, let movement = MovementDatabase.shared.movement(id: caliber) {
+                        HStack {
+                            Image(systemName: "checkmark.circle.fill")
+                                .foregroundStyle(AppColors.success)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(movement.id)
+                                    .font(AppTypography.headline)
+                                Text("\(movement.bph) BPH · \(Int(movement.liftAngleDegrees))° · \(movement.escapement.rawValue)")
+                                    .font(AppTypography.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+                        }
+                    }
+                }
+
+                // Round 83 (정수민/이재현): personalisation 섹션 — 별명/스토리/ref no.
+                Section(String(localized: "addwatch.section.personal")) {
+                    TextField(String(localized: "addwatch.nickname"), text: $nickname)
+                    TextField(String(localized: "addwatch.reference_no"), text: $referenceNumber)
+                        .autocorrectionDisabled()
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(String(localized: "addwatch.story.label"))
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppColors.textSecondary)
+                        TextField(String(localized: "addwatch.story.placeholder"), text: $story, axis: .vertical)
+                            .lineLimit(2...5)
+                    }
+                }
+
+                // Round 84: 디자인 SSOT screens-detail.jsx AddWatchView 시리얼 안내 helpcard.
+                Section {
+                    HStack(alignment: .top, spacing: 10) {
+                        Image(systemName: "info.circle")
+                            .foregroundStyle(AppColors.info)
+                        Text(String(localized: "addwatch.serial.hint"))
+                            .font(.system(size: 13))
+                            .foregroundStyle(AppColors.primaryDeep)
+                    }
+                    .padding(.vertical, 4)
+                }
+                .listRowBackground(AppColors.info.opacity(0.08))
             }
-            .navigationTitle(String(localized: "addwatch.title"))
+            .navigationTitle(isEditing
+                             ? String(localized: "editwatch.title")
+                             : String(localized: "addwatch.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button(String(localized: "common.cancel")) { dismiss() }
+                    Button(String(localized: "common.cancel")) {
+                        // Round 170: 미저장 변경 확인 — 데이터 손실 방지.
+                        if hasUnsavedChanges {
+                            showingDiscardAlert = true
+                        } else {
+                            dismiss()
+                        }
+                    }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "common.save")) { save() }
                         .disabled(!canSave)
+                        .fontWeight(.semibold)
                 }
             }
+            .alert(String(localized: "addwatch.discard.title"),
+                   isPresented: $showingDiscardAlert) {
+                Button(String(localized: "common.cancel"), role: .cancel) {}
+                Button(String(localized: "addwatch.discard.confirm"), role: .destructive) { dismiss() }
+            } message: {
+                Text(String(localized: "addwatch.discard.message"))
+            }
+            .onAppear { loadExisting() }
         }
     }
 
+    /// Round 173: 편집 모드 진입 시 기존 시계 데이터를 state 로 복원.
+    private func loadExisting() {
+        guard let existing else { return }
+        brand = existing.brand
+        model = existing.model
+        caliber = existing.caliber
+        purchaseDate = existing.purchaseDate
+        photoData = existing.photoData
+        liftAngleOverride = existing.liftAngleOverride.map { String(format: "%.0f", $0) } ?? ""
+        movementType = existing.movementType
+        windReminderEnabled = existing.windReminderEnabled
+        if existing.windReminderHour != 0 || existing.windReminderMinute != 0 {
+            windReminderTime = Calendar.current.date(
+                bySettingHour: existing.windReminderHour,
+                minute: existing.windReminderMinute,
+                second: 0, of: Date()
+            ) ?? windReminderTime
+        }
+        batteryLastReplaced = existing.batteryLastReplaced ?? Date()
+        batteryReminderEnabled = existing.batteryReminderEnabled
+        nickname = existing.nickname ?? ""
+        story = existing.story ?? ""
+        referenceNumber = existing.referenceNumber ?? ""
+        if let bph = existing.customBph { manualBphText = String(bph) }
+    }
+
+    /// Round 88: photo 없으면 brand+model 기반 WatchSilhouette 미리보기 (즉시 시각 피드백).
     private var photoPicker: some View {
         HStack(spacing: 12) {
             ZStack {
@@ -73,6 +304,13 @@ struct AddWatchView: View {
                     Image(uiImage: uiImage)
                         .resizable()
                         .scaledToFill()
+                } else if !brand.isEmpty || !model.isEmpty {
+                    // Brand/model 입력 중이면 실시간 silhouette preview.
+                    WatchSilhouette(
+                        model: silhouetteModelKey(model: model),
+                        tone: silhouetteToneKey(brand: brand),
+                        size: 60
+                    )
                 } else {
                     Image(systemName: "photo")
                         .font(.system(size: 28))
@@ -80,22 +318,46 @@ struct AddWatchView: View {
                 }
             }
             .frame(width: 72, height: 72)
-            .background(AppColors.surface)
+            .background(AppColors.paper2)
             .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
 
-            PhotosPicker(
-                selection: $photoItem,
-                matching: .images
-            ) {
-                Text(String(localized: "addwatch.choose_photo"))
+            VStack(alignment: .leading, spacing: 8) {
+                Button {
+                    showingPhotoSourceDialog = true
+                } label: {
+                    Label(String(localized: "addwatch.choose_photo"), systemImage: "photo.on.rectangle")
+                        .font(.system(size: 14))
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(AppColors.accent)
             }
-            .onChange(of: photoItem) { _, item in
-                Task {
-                    if let data = try? await item?.loadTransferable(type: Data.self) {
-                        photoData = data
-                    }
+        }
+        // Round 170 (사용자 보고: 사진 선택 / 사진 찍기 분리 안되고 순차 노출 버그):
+        // 두 개의 별도 tappable view → 단일 confirmation dialog 로 통합. 사용자가 선택 후 해당 sheet 만 표시.
+        .confirmationDialog(
+            String(localized: "addwatch.photo_source.title"),
+            isPresented: $showingPhotoSourceDialog,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "addwatch.photo_source.library")) {
+                showingPhotosPicker = true
+            }
+            Button(String(localized: "addwatch.photo_source.camera")) {
+                showingCamera = true
+            }
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+        }
+        .photosPicker(isPresented: $showingPhotosPicker, selection: $photoItem, matching: .images)
+        .onChange(of: photoItem) { _, item in
+            Task {
+                if let raw = try? await item?.loadTransferable(type: Data.self) {
+                    photoData = EXIFStripper.strippedJPEG(from: raw)
                 }
             }
+        }
+        .sheet(isPresented: $showingCamera) {
+            CameraImagePicker(imageData: $photoData)
+                .ignoresSafeArea()
         }
     }
 
@@ -142,8 +404,48 @@ struct AddWatchView: View {
     }
 
     private var canSave: Bool {
-        !brand.trimmingCharacters(in: .whitespaces).isEmpty
-            && !model.trimmingCharacters(in: .whitespaces).isEmpty
+        guard !brand.trimmingCharacters(in: .whitespaces).isEmpty,
+              !model.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
+        // 직접입력 선택 시 유효한 BPH 입력 필수.
+        if isManualEntry {
+            guard let bph = Int(manualBphText), bph > 0 else { return false }
+        }
+        return true
+    }
+
+    /// Round 170: 미저장 변경 감지 — cancel 시 데이터 손실 확인.
+    private var hasUnsavedChanges: Bool {
+        if isEditing { return false }  // 편집 모드는 매번 alert 보일 필요 없음.
+        return !brand.isEmpty || !model.isEmpty || photoData != nil
+            || !nickname.isEmpty || !story.isEmpty || !referenceNumber.isEmpty
+            || caliber != nil
+    }
+
+    /// Brand string → silhouette tone key (Watch.silhouetteTone 와 유사하나 form input 기반).
+    private func silhouetteToneKey(brand: String) -> String {
+        let b = brand.lowercased()
+        if b.contains("rolex") { return "green" }
+        if b.contains("omega") { return "silver" }
+        if b.contains("tudor") { return "black" }
+        if b.contains("cartier") { return "gold" }
+        if b.contains("jaeger") { return "gold" }
+        if b.contains("iwc") { return "silver" }
+        if b.contains("patek") { return "blue" }
+        if b.contains("audemars") { return "silver" }
+        if b.contains("seiko") { return "silver" }
+        return "gold"
+    }
+
+    /// Model string → silhouette model key.
+    private func silhouetteModelKey(model: String) -> String {
+        let m = model.lowercased()
+        if m.contains("speed") || m.contains("chrono") { return "speedmaster" }
+        if m.contains("sub") { return "submariner" }
+        if m.contains("gmt") { return "gmt" }
+        if m.contains("date") { return "datejust" }
+        if m.contains("tank") { return "tank" }
+        if m.contains("reverso") { return "reverso" }
+        return "submariner"
     }
 
     private func updateSuggestion() {
@@ -151,15 +453,75 @@ struct AddWatchView: View {
     }
 
     private func save() {
-        let watch = Watch(
-            brand: brand,
-            model: model,
-            caliber: caliber,
-            purchaseDate: purchaseDate,
-            photoData: photoData
-        )
-        modelContext.insert(watch)
+        // Round 112 (데이터 무결성 H-2): quartz + 기계식 caliber 불일치 → caliber 자동 초기화.
+        if movementType == .quartz, let cal = caliber,
+           let m = MovementDatabase.shared.movement(id: cal),
+           m.escapement != .quartz {
+            caliber = nil  // quartz 시계에 기계식 caliber 부착 차단.
+        }
+        // Round 173: 편집 모드면 기존 watch 의 필드만 업데이트, 신규면 새 Watch 생성.
+        let watch: Watch
+        let nicknameTrimmed = nickname.trimmingCharacters(in: .whitespaces)
+        let storyTrimmed = story.trimmingCharacters(in: .whitespaces)
+        let refTrimmed = referenceNumber.trimmingCharacters(in: .whitespaces)
+        let parsedCustomBph: Int? = isManualEntry ? Int(manualBphText) : nil
+        if let existing {
+            existing.brand = brand
+            existing.model = model
+            existing.caliber = caliber
+            existing.purchaseDate = purchaseDate
+            existing.photoData = photoData
+            PhotoCache.invalidate(id: existing.id)
+            existing.liftAngleOverride = Double(liftAngleOverride.trimmingCharacters(in: .whitespaces))
+            existing.movementType = movementType
+            existing.nickname = nicknameTrimmed.isEmpty ? nil : nicknameTrimmed
+            existing.story = storyTrimmed.isEmpty ? nil : storyTrimmed
+            existing.referenceNumber = refTrimmed.isEmpty ? nil : refTrimmed
+            existing.customBph = parsedCustomBph
+            watch = existing
+        } else {
+            watch = Watch(
+                brand: brand,
+                model: model,
+                caliber: caliber,
+                purchaseDate: purchaseDate,
+                photoData: photoData,
+                liftAngleOverride: Double(liftAngleOverride.trimmingCharacters(in: .whitespaces)),
+                movementType: movementType,
+                nickname: nicknameTrimmed.isEmpty ? nil : nicknameTrimmed,
+                story: storyTrimmed.isEmpty ? nil : storyTrimmed,
+                referenceNumber: refTrimmed.isEmpty ? nil : refTrimmed
+            )
+            watch.customBph = parsedCustomBph
+            modelContext.insert(watch)
+        }
+        if movementType == .manual {
+            watch.windReminderEnabled = windReminderEnabled
+            let comps = Calendar.current.dateComponents([.hour, .minute], from: windReminderTime)
+            watch.windReminderHour = comps.hour ?? 9
+            watch.windReminderMinute = comps.minute ?? 0
+        } else {
+            // 타입이 manual 이 아니면 wind reminder 끔.
+            watch.windReminderEnabled = false
+            NotificationService.cancelWindReminder(for: watch)
+        }
+        if movementType == .quartz {
+            watch.batteryLastReplaced = batteryLastReplaced
+            watch.batteryReminderEnabled = batteryReminderEnabled
+        } else {
+            watch.batteryReminderEnabled = false
+            NotificationService.cancelBatteryReminder(for: watch)
+        }
         try? modelContext.save()
+
+        if movementType == .manual && watch.windReminderEnabled {
+            NotificationService.scheduleWindReminder(for: watch)
+        }
+        if movementType == .quartz && watch.batteryReminderEnabled {
+            NotificationService.scheduleBatteryReminder(for: watch)
+        }
+        // 캐시 무효화 — 모델 변경이 collection / detail 에 즉시 반영.
+        WatchMoodService.invalidate(for: watch)
         dismiss()
     }
 }

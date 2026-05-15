@@ -21,8 +21,16 @@ final class WatchMeasurement {
     private var metadataData: Data
     var metadata: MeasurementMetadata {
         get {
-            (try? JSONDecoder().decode(MeasurementMetadata.self, from: metadataData))
-                ?? MeasurementMetadata()
+            do {
+                return try JSONDecoder().decode(MeasurementMetadata.self, from: metadataData)
+            } catch {
+                // Round 3 (Min): silent fallback 대신 logging — 디버깅 가능.
+                // 빈 Data 또는 schema mismatch 시 default 값 반환.
+                if !metadataData.isEmpty {
+                    print("⚠️ WatchMeasurement metadata decode failed (\(id)): \(error)")
+                }
+                return MeasurementMetadata()
+            }
         }
         set {
             metadataData = (try? JSONEncoder().encode(newValue)) ?? Data()

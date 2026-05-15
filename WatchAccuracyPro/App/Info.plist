@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Watch Accuracy Pro</string>
+	<string>TickLab</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -27,8 +27,20 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Photograph your watch for the collection record.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Unlock TickLab with Face ID.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>시계의 정확도를 측정하려면 마이크가 필요합니다. 오디오는 분석 즉시 폐기되며 저장되거나 외부로 전송되지 않습니다.</string>
+	<string>Listen to watch tics to measure rate, beat error, and amplitude. Audio is processed in real time and never recorded or transmitted.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Detect watch position during measurements.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Select photos of your watches for the collection.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Save share cards of your measurements to Photos.</string>
+	<key>NSSupportsLiveActivities</key>
+	<true/>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

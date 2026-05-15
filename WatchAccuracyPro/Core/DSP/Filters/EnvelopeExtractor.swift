@@ -7,8 +7,9 @@ final class EnvelopeExtractor {
     private let alpha: Float // smoothing factor
     private var state: Float = 0
 
-    /// `cutoffHz` 가 envelope 의 시간상수를 결정. 보통 100~300Hz.
-    init(sampleRate: Double = 48_000, cutoffHz: Double = 200) {
+    /// `cutoffHz` 가 envelope 의 시간상수를 결정.
+    /// **Audit 권고**: 200Hz (τ 0.8ms) 가 5ms tic 을 14dB 평탄화. 350Hz (τ 0.45ms) 로 sharper peak 보존.
+    init(sampleRate: Double = 48_000, cutoffHz: Double = 350) {
         let dt = 1.0 / sampleRate
         let rc = 1.0 / (2.0 * .pi * cutoffHz)
         self.alpha = Float(dt / (rc + dt))

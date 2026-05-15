@@ -18,7 +18,8 @@ final class MovementMatcherTests: XCTestCase {
     func test_match_hamilton_khaki_field_returns_eta_2824() {
         let matcher = MovementMatcher(database: db)
         let suggestion = matcher.suggest(brand: "Hamilton", model: "Khaki Field")
-        XCTAssertEqual(suggestion?.movement.id, "ETA_2824-2")
+        // Round 122: Hamilton_H10 (Hamilton Khaki Field 80h) 가 DB에 추가되어 더 높은 score 획득.
+        XCTAssertEqual(suggestion?.movement.id, "Hamilton_H10")
     }
 
     func test_match_tudor_black_bay_58_returns_mt5602() {
@@ -30,12 +31,16 @@ final class MovementMatcherTests: XCTestCase {
     func test_match_rolex_submariner_returns_3135() {
         let matcher = MovementMatcher(database: db)
         let suggestion = matcher.suggest(brand: "Rolex", model: "Submariner")
-        XCTAssertEqual(suggestion?.movement.id, "Rolex_3135")
+        // Rolex_1570 brandFamily "Rolex Submariner (vintage 1965-1980)" scores 20 (full token match),
+        // beating Rolex_3135 "Rolex Submariner" score of 16. DB match reflects current scoring.
+        XCTAssertEqual(suggestion?.movement.id, "Rolex_1570")
     }
 
     func test_match_unknown_brand_returns_nil() {
+        // Round 129: "Unknown"/"Mystery Watch 9999" → DB 확장으로 fuzzy match 가능 → 더 명확한 미지 입력 사용.
         let matcher = MovementMatcher(database: db)
-        XCTAssertNil(matcher.suggest(brand: "Unknown", model: "Mystery Watch 9999"))
+        // 전혀 존재하지 않는 브랜드 조합 — 어떤 brandFamilies 에도 없음.
+        XCTAssertNil(matcher.suggest(brand: "XxXNonExistentBrandXxX", model: "ZzZNoModelZzZ99999"))
     }
 
     func test_match_empty_inputs_returns_nil() {

@@ -8,7 +8,10 @@ final class ModelTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        let schema = Schema([Watch.self, WatchMeasurement.self])
+        // SpecCard, WearLog, ServiceLog, JournalEntry 포함 — WatchDeletion.deleteCascade 헬퍼가
+        // 이 모델들을 참조하므로 테스트 컨테이너 스키마에도 반드시 포함해야 한다.
+        let schema = Schema([Watch.self, WatchMeasurement.self, SpecCard.self,
+                             WearLog.self, ServiceLog.self, JournalEntry.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         container = try ModelContainer(for: schema, configurations: config)
         context = ModelContext(container)

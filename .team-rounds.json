@@ -1,0 +1,18 @@
+{
+  "round": 9,
+  "completedAt": "2026-05-11T05:50:00+09:00",
+  "summary": "8 rounds 완료. SpectralFlux 검증, verdict 톤 개선, 자세 라벨, SINCE 라인, 친절 카피 적용. iPhone 빌드 #4080 설치 완료.",
+  "startedAt": "2026-05-10T23:51:00+09:00",
+  "endTime": "2026-05-11T06:30:00+09:00",
+  "members": ["Hyemi", "Doyoon", "Min", "Jay", "Sora"],
+  "personas": [
+    {"name": "이재현", "role": "컬렉터, 12-시계, 트렌드 추적 중시"},
+    {"name": "박지영", "role": "입문자, 첫 기계식 시계, 기술 용어 모름"},
+    {"name": "김재철", "role": "워치메이커 30년차, 데이터 정밀도/export 중시"},
+    {"name": "정수민", "role": "선물 받은 사람, 감정 가치, 서비스 시기 궁금"},
+    {"name": "이형준", "role": "전문가/YouTube 리뷰어, 모든 기능 깊이 사용"}
+  ],
+  "history": [],
+  "resumeOnTokenRefill": true,
+  "resumeNote": "토큰 한도 도달 시: 다음 wakeup 자동 재개. 깬 직후 round counter 보고 이어서 진행."
+}

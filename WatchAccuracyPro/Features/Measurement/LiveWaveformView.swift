@@ -4,6 +4,7 @@ import SwiftUI
 /// TimelineView(.animation) 으로 60fps 타깃, frame budget 16ms 초과 시 fallback 권고 (CLAUDE.md Hard Rule #4).
 struct LiveWaveformView: View {
     let samples: [Float]
+    var snrDB: Double? = nil
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 60.0)) { _ in

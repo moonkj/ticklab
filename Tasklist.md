@@ -120,6 +120,42 @@ Reference: Master Plan Part 7.2, Part 8
 | Hard Rule 위반 | 0건 |
 | Phase 2/3 코드 임의 구현 | 0건 (모두 `// TODO(phase2):` 주석만) |
 
+## Phase 1.5 — Hot-fix (Round 1 토론 결과 반영)
+
+- ✅ DSPPipeline throttle 버그 수정 (`Int(elapsed * 2) % 1 == 0` 항상 참 → lastEmitTime 기반)
+- ✅ waveformSamples 실제 갱신 경로 연결 (`liveWaveformStream` 신설 + ViewModel 구독)
+- ✅ envelopeBuffer / rawBuffer 30초 ring trimming — 메모리 unbounded 방지
+- ✅ AudioSource 주입 가능하도록 ViewModel 시그니처 확장 (테스트/preview 용)
+
+## Phase 2 — Beta 기능 (사용자 승인 하 풀 구현)
+
+Reference: Master Plan Part 12, Tasklist Phase 2 priority
+
+- ✅ 2.1 `AtomicTimeService` (NTP UDP) — 첫 외부 호출. time.apple.com / pool.ntp.org 폴백. 4 신규 단위 테스트
+- ✅ 2.2 `AudioInputManager` + AudioCapture BT/외부 입력 라우팅 — Settings 에서 입력 선택
+- ✅ 2.3 `LongTestSession` SwiftData 모델 + `LongTestRunner` (foreground 자동 측정 + BGAppRefresh hook)
+- ✅ 2.4 `DataExportService` (CSV/JSON) + Settings ShareLink 통합. CSV escape, JSON DTO
+- ✅ 2.5 `MovementDBOTAService` (HTTPS + SHA-256 옵션 검증, App Support 캐시) + 무브먼트 DB Top 10 → Top 21
+- ✅ 2.6 `MeasurementActivityAttributes` + `MeasurementLiveActivityService` (ActivityKit) — 잠금화면/Dynamic Island
+- ✅ 2.7 Widget extension target (`WatchAccuracyProWidget`) — `LatestMeasurementWidget` + `MeasurementLiveActivityWidget`. App Group 통한 `SharedSnapshotStore` 공유
+- ✅ 2.8 `BeatDetecting` 프로토콜 + `OnsetBeatDetector` + `CoreMLBeatDetector` (모델 부재 시 fall-back)
+
+## Phase 3 — 동기화
+
+- ✅ 3.1 SwiftData `cloudKitDatabase: .private(...)` 통한 CloudKit sync — `UserPreferences.iCloudSyncEnabled` 토글
+- ✅ 3.2 Settings 의 iCloud 토글 + 자동 OTA 토글 (`UserPreferences.autoUpdateMovementDB`)
+
+## Phase 2/3 검증
+
+| 항목 | 상태 |
+|---|---|
+| 빌드 (iOS 17.2 sim) | ✅ |
+| 단위 테스트 61개 (47 + 14 신규) | ✅ |
+| UI 테스트 4개 | ✅ |
+| Widget extension 빌드 | ✅ |
+| Live Activity 코드 컴파일 | ✅ |
+| CloudKit 컨테이너 옵션 | ✅ (시뮬레이터에서 entitlement 필요시 비활성) |
+
 ## Manual QA 필요 (실기기)
 
 이 항목들은 시뮬레이터에서 검증 불가 — 실 iPhone + 실 시계로 Week 7 베타에서:
@@ -130,6 +166,17 @@ Reference: Master Plan Part 7.2, Part 8
 - [ ] 마이크 권한 거부 → fallback 흐름
 - [ ] 무음 모드 (idleTimerDisabled) 동작
 - [ ] 코악시얼 무브먼트 (Omega 8800)에서 amplitude 비표시 + 안내
+
+### Phase 2/3 추가 Manual QA (Round 5 Sora 발의)
+- [ ] 30분 연속 측정 — 배터리 5% 이하 소모 (Instruments Energy)
+- [ ] Live Activity update rate — 1초 간격, Dynamic Island compact 갱신 부드러움
+- [ ] OTA 적용 직후 첫 측정 — 새 무브먼트 lookup 일관성 (Min race 가드 검증)
+- [ ] BT 헤드셋 연결 → 측정 도중 disconnect → fallback 라우팅
+- [ ] LongTest 12시간 추적 — foreground 자동 측정 슬롯 누락 0건
+- [ ] Widget Latest measurement — 측정 직후 위젯 갱신 시간 < 5초
+- [ ] iCloud sync 켠 후 다른 디바이스에서 Watch 등장 (실 디바이스 2대)
+- [ ] Export CSV 한국어 brand 명 (브레게, 까르띠에 등) 한글 인코딩 정상
+- [ ] NTP 시간 비교 — 서버 미응답 시 timeout 정상 (3초 후)
 
 ---
 
