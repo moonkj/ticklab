@@ -32,7 +32,7 @@
 "watch.primary.set" = "Set as featured";
 "watch.primary.unset" = "Unfeature";
 "stats.mood.this_month" = "This month";
-"welcome.footer" = "Measure · Maintain · Journal · Glossary · 4 axes";
+"welcome.footer" = "Collection · Today · Journal · Analysis";
 "welcome.pick_watch.subtitle" = "You can add details later. Want to start quickly?";
 
 /* Journal */
@@ -197,7 +197,7 @@
 "onboarding.page2.new_body" = "Lay your watch beside the iPhone microphone. Thirty seconds is enough. We extract rate, beat error, and amplitude with reference to atomic time.";
 "onboarding.eyebrow.archive" = "Your archive";
 "onboarding.page3.new_title" = "Every reading, kept.";
-"onboarding.page3.new_body" = "Build a journal for each piece. Watch its drift over weeks. Export to CSV. Sync across devices through iCloud, privately.";
+"onboarding.page3.new_body" = "Build a journal for each piece. Watch its drift over weeks. Export to CSV.";
 "onboarding.continue" = "Continue";
 "onboarding.begin" = "Begin";
 "onboarding.skip" = "Skip";
@@ -754,7 +754,7 @@
 
 /* Round 92 — Today tab */
 "tab.today" = "Today";
-"today.greeting" = "How was today with your watch?";
+"today.greeting" = "Which watch today?";
 "today.stat.watches" = "Watch family";
 "today.stat.this_week" = "This week";
 "today.shake.title" = "Today's watch pick";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "Processing…";
 "purchase.cta.restore" = "Restore Purchase";
 "purchase.cta.restoring" = "Restoring…";
-"purchase.legal.auto_renew" = "Subscription auto-renews until cancelled. Manage anytime in Settings.";
+"purchase.legal.auto_renew" = "TickLab Pro · 1-year auto-renewing subscription. Payment charges your Apple ID at confirmation. Auto-renews at the same price within 24 hours before the period ends unless cancelled at least 24 hours prior. Manage or cancel anytime in your Apple ID settings.";
 "purchase.legal.terms" = "Terms of Use";
 "purchase.legal.privacy" = "Privacy Policy";
 "purchase.success.title" = "Pro Activated";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "Next overhaul recommended";
 "watch.overhaul.remaining_days" = "in about %d days";
 "watch.overhaul.overdue_days" = "%d days overdue — service recommended";
+"settings.help.support" = "Support · FAQ";
+"settings.help.privacy" = "Privacy Policy";
+"settings.help.terms" = "Terms of Use";
+"settings.help.contact" = "Contact Us";
+"settings.section.privacy" = "Data Sharing";
+"settings.brandleague.optin" = "Join Brand League";
+"settings.brandleague.optin.footer" = "When ON, your watch brand and wear count are anonymously sent to the global ranking server. No personal identifiers, serials, or photos are transmitted. When OFF, no data leaves your device.";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";

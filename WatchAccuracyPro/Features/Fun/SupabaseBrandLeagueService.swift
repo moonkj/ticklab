@@ -43,18 +43,21 @@ final class SupabaseBrandLeagueService: ObservableObject {
     // MARK: - Period key helpers
 
     static func periodKey(type: String, date: Date = Date()) -> String {
-        let cal = Calendar.current
+        // 사용자 보고 fix: non-Gregorian locale (Hebrew/Japanese imperial) 에서 force unwrap crash 차단.
+        //   POSIX Gregorian calendar 명시 사용.
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = Locale(identifier: "en_US_POSIX")
         switch type {
         case "day":
             let c = cal.dateComponents([.year, .month, .day], from: date)
-            return String(format: "%04d-%02d-%02d", c.year!, c.month!, c.day!)
+            return String(format: "%04d-%02d-%02d", c.year ?? 1970, c.month ?? 1, c.day ?? 1)
         case "week":
             let year = cal.component(.yearForWeekOfYear, from: date)
             let week = cal.component(.weekOfYear, from: date)
             return String(format: "%04d-W%02d", year, week)
         case "month":
             let c = cal.dateComponents([.year, .month], from: date)
-            return String(format: "%04d-%02d", c.year!, c.month!)
+            return String(format: "%04d-%02d", c.year ?? 1970, c.month ?? 1)
         case "year":
             return String(cal.component(.year, from: date))
         default:
@@ -152,6 +155,12 @@ final class SupabaseBrandLeagueService: ObservableObject {
     /// BrandLeagueView 에서 직접 계산한 (brand, periodType, periodKey, count) 를 업로드.
     /// @Query 관계 traversal 이슈를 뷰 레벨에서 해결 후 primitives 만 전달받음.
     func uploadBrandCounts(_ counts: [(brand: String, type: String, key: String, count: Int)]) async {
+        // Apple guideline 5.1.1/5.1.2 fix: 옵트인 사용자만 업로드. 그 외 캐시만 무효화.
+        let optedIn = UserDefaults.standard.bool(forKey: "ticklab.brandLeagueOptIn")
+        guard optedIn else {
+            rankingCache.removeAll()
+            return
+        }
         let hash = deviceHash
         // Round 14 (Sora): 직렬 await 30 brand × 4 period = 120 sequential HTTPS (24s).
         //   TaskGroup 으로 fanout — main actor 차단 시간을 한 자릿수 초로.

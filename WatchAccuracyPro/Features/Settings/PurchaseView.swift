@@ -252,7 +252,7 @@ struct PurchaseView: View {
                 .foregroundStyle(AppColors.ink3)
                 .multilineTextAlignment(.center)
             HStack(spacing: 16) {
-                Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
+                Link(destination: URL(string: "https://moonkj.github.io/ticklab/terms.html")!) {
                     Text(String(localized: "purchase.legal.terms"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppColors.ink2)

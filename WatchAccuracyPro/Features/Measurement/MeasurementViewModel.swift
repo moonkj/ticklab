@@ -64,6 +64,9 @@ final class MeasurementViewModel {
     private var captureSource: AudioSource?
     private var metricsTask: Task<Void, Never>?
     private var waveformTask: Task<Void, Never>?
+    /// 사용자 보고 fix: cancel() 와 stop() 의 detached task race — cancel() 호출 후
+    ///   stop() detached task 가 persist 호출하던 의도치 않은 measurement save 차단.
+    private var isCancelled: Bool = false
 
     init(watch: Watch, preferences: UserPreferences, audioSourceOverride: AudioSource? = nil) {
         self.watch = watch
@@ -84,6 +87,7 @@ final class MeasurementViewModel {
 
     @MainActor
     func start() async {
+        isCancelled = false  // 새 측정 시작 — 이전 cancel flag reset.
         state = .requestingPermission
         let granted = await requestMicrophonePermission()
         guard granted else {
@@ -212,6 +216,11 @@ final class MeasurementViewModel {
                     NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
                     return
                 }
+                // 사용자 보고 fix: cancel() 가 호출됐으면 persist/state 갱신 skip.
+                guard !self.isCancelled else {
+                    NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
+                    return
+                }
                 if let result {
                     // Round 169: anomaly 면 .completed 가 아닌 .failed 로 → 사용자에게 명확히 알림.
                     // Round 100: anomaly trip 은 .lockFailure 로 분기 (BPH lock 잡혔으나 신뢰 X).
@@ -236,6 +245,7 @@ final class MeasurementViewModel {
     /// 모든 경우에 state .idle 리셋 + cleanup 보장.
     @MainActor
     func cancel() {
+        isCancelled = true
         _ = pipeline?.stop()
         pipeline = nil
         metricsTask?.cancel()

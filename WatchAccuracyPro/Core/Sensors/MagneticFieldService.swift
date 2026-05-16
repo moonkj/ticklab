@@ -80,6 +80,8 @@ final class MagneticFieldService: ObservableObject {
             isAvailable = false
             return nil
         }
+        // 사용자 보고 fix: re-entrancy guard — 두 sample() 동시 호출 시 shared motionManager/sampleHistory race 차단.
+        guard !isSampling else { return nil }
 
         isAvailable = true
         isSampling = true

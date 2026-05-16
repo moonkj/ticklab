@@ -278,9 +278,21 @@ enum NotificationService {
     }
 
     /// 모든 시계에 대해 오버홀 알림 일괄 (re-)schedule. App launch / Settings 변경 / ServiceLog 변경 시 호출.
+    /// 사용자 보고 fix: N watches × FetchDescriptor 동기 호출 (N+1) → 단일 fetch + groupBy.
     static func rescheduleAllOverhaulReminders(watches: [Watch], years: Int, enabled: Bool, in context: ModelContext) {
+        let overhaulRaw = ServiceType.fullOverhaul.rawValue
+        let allOverhauls = (try? context.fetch(FetchDescriptor<ServiceLog>(
+            predicate: #Predicate { $0.typeRaw == overhaulRaw },
+            sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
+        ))) ?? []
+        // watch.id → 가장 최신 timestamp (정렬됨, first wins).
+        var latestById: [UUID: Date] = [:]
+        for log in allOverhauls {
+            guard let wid = log.watch?.id else { continue }
+            if latestById[wid] == nil { latestById[wid] = log.timestamp }
+        }
         for watch in watches {
-            let lastDate = lastOverhaulDate(for: watch, in: context) ?? watch.createdAt
+            let lastDate = latestById[watch.id] ?? watch.createdAt
             scheduleOverhaulReminder(for: watch, lastOverhaulDate: lastDate, years: years, enabled: enabled)
         }
     }

@@ -32,7 +32,7 @@
 "watch.primary.set" = "メインに設定";
 "watch.primary.unset" = "メインを解除";
 "stats.mood.this_month" = "今月";
-"welcome.footer" = "計測 · メンテナンス · ジャーナル · 用語集 · 4軸";
+"welcome.footer" = "コレクション · 今日 · ジャーナル · 分析";
 "welcome.pick_watch.subtitle" = "詳細はあとで追加できます。まずは気軽にはじめましょう。";
 
 /* Journal */
@@ -197,7 +197,7 @@
 "onboarding.page2.new_body" = "iPhone のマイクの横に時計を置きます。30秒で十分。原子時を基準に歩度・ビートエラー・振り角を抽出します。";
 "onboarding.eyebrow.archive" = "あなたのアーカイブ";
 "onboarding.page3.new_title" = "すべての計測を、残す。";
-"onboarding.page3.new_body" = "一本ごとにジャーナルを構築。数週間の変化を追い、CSV に書き出し、iCloud でプライベートに同期できます。";
+"onboarding.page3.new_body" = "一本ごとにジャーナルを構築。数週間の変化を追い、CSV に書き出せます。";
 "onboarding.continue" = "続ける";
 "onboarding.begin" = "はじめる";
 "onboarding.skip" = "スキップ";
@@ -754,7 +754,7 @@
 
 /* Round 92 — Today tab */
 "tab.today" = "今日";
-"today.greeting" = "今日の時計はいかがでしたか?";
+"today.greeting" = "今日はどの時計を?";
 "today.stat.watches" = "ウォッチファミリー";
 "today.stat.this_week" = "今週";
 "today.shake.title" = "今日の一本";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "処理中…";
 "purchase.cta.restore" = "購入を復元";
 "purchase.cta.restoring" = "復元中…";
-"purchase.legal.auto_renew" = "サブスクリプションは解約まで自動更新されます。設定からいつでも変更できます。";
+"purchase.legal.auto_renew" = "TickLab Pro · 1年自動更新サブスクリプション。決済は購入確定時に Apple ID に請求されます。期間終了の 24 時間前までに解約されない限り、同じ価格で自動更新されます。Apple ID アカウント設定からいつでも管理・解約できます。";
 "purchase.legal.terms" = "利用規約";
 "purchase.legal.privacy" = "プライバシーポリシー";
 "purchase.success.title" = "Pro が有効になりました";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "次のオーバーホール推奨";
 "watch.overhaul.remaining_days" = "約 %d 日後";
 "watch.overhaul.overdue_days" = "推奨日から %d 日経過 — 点検をおすすめします";
+"settings.help.support" = "サポート · FAQ";
+"settings.help.privacy" = "プライバシーポリシー";
+"settings.help.terms" = "利用規約";
+"settings.help.contact" = "お問い合わせ";
+"settings.section.privacy" = "データ共有";
+"settings.brandleague.optin" = "ブランドリーグに参加";
+"settings.brandleague.optin.footer" = "ONの場合、時計のブランド名と着用頻度のみが匿名でグローバルランキングサーバーに送信されます。個人識別情報、シリアル、写真は送信されません。OFFの場合、データは端末外に出ません。";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";

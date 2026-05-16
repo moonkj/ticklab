@@ -24,7 +24,7 @@
 "stats.mood.this_month" = "이번 달";
 "welcome.cta_start" = "시작하기";
 "welcome.skip" = "건너뛰기";
-"welcome.footer" = "측정 · 컬렉션 · 기록 · 보관함";
+"welcome.footer" = "컬렉션 · 오늘 · 기록 · 분석";
 "welcome.pick_watch" = "어떤 시계예요?";
 "welcome.pick_watch.subtitle" = "나중에 더 자세히 입력할 수 있어요. 우선 빠르게 시작해볼까요?";
 "feature.measure.title" = "측정";
@@ -136,7 +136,7 @@
 "onboarding.page2.title" = "한 줄로 풀어드려요";
 "onboarding.page2.body" = "복잡한 숫자 대신 \"이 시계가 어떤 상태인지\" 한 줄 해석. Apple Intelligence 지원 기기에서는 on-device AI 가 한국어로 설명해 줘요.";
 "onboarding.page3.title" = "모든 측정, 보관됩니다";
-"onboarding.page3.body" = "시계마다 trend · 기록 · 스펙 카드 · 사운드 녹음. CSV 내보내기와 iCloud 동기화 지원.";
+"onboarding.page3.body" = "시계마다 trend · 기록 · 스펙 카드 · 사운드 녹음. CSV 내보내기.";
 
 /* Mode — Round (3-2): 모두 dead. */
 
@@ -655,7 +655,7 @@
 "onboarding.page2.new_body" = "iPhone 하단 마이크에 시계 케이스백을 닿게 두세요. 조용한 곳에서 30초간 측정하면 결과가 나옵니다.";
 "onboarding.eyebrow.archive" = "당신의 아카이브";
 "onboarding.page3.new_title" = "모든 측정, 보관됩니다.";
-"onboarding.page3.new_body" = "시계마다 trend 그래프 · 기록 · 스펙 카드 · 무브먼트 사운드 녹음. CSV 내보내기와 iCloud 동기화 지원.";
+"onboarding.page3.new_body" = "시계마다 trend 그래프 · 기록 · 스펙 카드 · 무브먼트 사운드 녹음. CSV 내보내기.";
 "onboarding.continue" = "계속";
 "onboarding.begin" = "시작";
 "onboarding.skip" = "건너뛰기";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "처리 중…";
 "purchase.cta.restore" = "이전 구매 복원";
 "purchase.cta.restoring" = "복원 중…";
-"purchase.legal.auto_renew" = "구독은 취소 전까지 자동 갱신됩니다. 언제든 설정에서 관리할 수 있어요.";
+"purchase.legal.auto_renew" = "TickLab Pro · 1년 자동 갱신 구독. 결제는 Apple ID 계정에 청구되며, 현재 기간 종료 24시간 이전에 취소하지 않으면 같은 가격으로 자동 갱신됩니다. 구독은 Apple ID 계정 설정에서 언제든 관리·취소할 수 있어요.";
 "purchase.legal.terms" = "이용 약관";
 "purchase.legal.privacy" = "개인정보 처리방침";
 "purchase.success.title" = "Pro 활성화 완료";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "다음 오버홀 권장";
 "watch.overhaul.remaining_days" = "약 %d 일 남음";
 "watch.overhaul.overdue_days" = "권장일 %d 일 경과 — 점검 권장";
+"settings.help.support" = "지원 · FAQ";
+"settings.help.privacy" = "개인정보처리방침";
+"settings.help.terms" = "이용약관";
+"settings.help.contact" = "문의하기";
+"settings.section.privacy" = "데이터 공유";
+"settings.brandleague.optin" = "브랜드 리그 참여";
+"settings.brandleague.optin.footer" = "ON 시 시계 브랜드명과 착용 빈도가 익명으로 글로벌 랭킹 서버에 전송됩니다. 개인 식별 정보·시리얼·사진은 전송되지 않으며, OFF 면 데이터가 외부로 나가지 않습니다.";
 
 /* Round 127 — MeasurementResultView Hard Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";

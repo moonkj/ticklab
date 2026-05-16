@@ -32,7 +32,7 @@
 "watch.primary.set" = "Mettre en avant";
 "watch.primary.unset" = "Retirer de la une";
 "stats.mood.this_month" = "Ce mois-ci";
-"welcome.footer" = "Mesurer · Entretenir · Journal · Glossaire · 4 axes";
+"welcome.footer" = "Collection · Aujourd'hui · Journal · Analyse";
 "welcome.pick_watch.subtitle" = "Vous pourrez compléter les détails plus tard. Envie de commencer rapidement ?";
 
 /* Journal */
@@ -197,7 +197,7 @@
 "onboarding.page2.new_body" = "Posez votre montre contre le microphone de l'iPhone. Trente secondes suffisent. Nous extrayons marche, erreur de battement et amplitude par rapport à l'heure atomique.";
 "onboarding.eyebrow.archive" = "Votre archive";
 "onboarding.page3.new_title" = "Chaque lecture, conservée.";
-"onboarding.page3.new_body" = "Tenez un journal pour chaque pièce. Observez sa dérive au fil des semaines. Exportez en CSV. Synchronisez entre vos appareils via iCloud, en toute confidentialité.";
+"onboarding.page3.new_body" = "Tenez un journal pour chaque pièce. Observez sa dérive au fil des semaines. Exportez en CSV.";
 "onboarding.continue" = "Continuer";
 "onboarding.begin" = "Commencer";
 "onboarding.skip" = "Passer";
@@ -754,7 +754,7 @@
 
 /* Round 92 — Today tab */
 "tab.today" = "Aujourd'hui";
-"today.greeting" = "Comment s'est passée la journée avec votre montre ?";
+"today.greeting" = "Quelle montre aujourd'hui ?";
 "today.stat.watches" = "Famille horlogère";
 "today.stat.this_week" = "Cette semaine";
 "today.shake.title" = "Choix de la montre du jour";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "Traitement…";
 "purchase.cta.restore" = "Restaurer l'achat";
 "purchase.cta.restoring" = "Restauration…";
-"purchase.legal.auto_renew" = "L'abonnement se renouvelle automatiquement jusqu'à annulation. Géré à tout moment dans les Réglages.";
+"purchase.legal.auto_renew" = "TickLab Pro · Abonnement annuel à renouvellement automatique. Paiement débité de votre Apple ID à la confirmation. Renouvellement au même prix dans les 24 h précédant la fin de la période, sauf annulation au moins 24 h avant. Gérez ou annulez à tout moment dans les réglages de votre Apple ID.";
 "purchase.legal.terms" = "Conditions d'utilisation";
 "purchase.legal.privacy" = "Politique de confidentialité";
 "purchase.success.title" = "Pro activé";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "Prochaine révision recommandée";
 "watch.overhaul.remaining_days" = "dans environ %d jours";
 "watch.overhaul.overdue_days" = "%d jours en retard — révision recommandée";
+"settings.help.support" = "Support · FAQ";
+"settings.help.privacy" = "Politique de confidentialité";
+"settings.help.terms" = "Conditions d'utilisation";
+"settings.help.contact" = "Nous contacter";
+"settings.section.privacy" = "Partage de données";
+"settings.brandleague.optin" = "Rejoindre Brand League";
+"settings.brandleague.optin.footer" = "Si activé, la marque de votre montre et la fréquence de port sont envoyées de manière anonyme au serveur de classement mondial. Aucun identifiant personnel, numéro de série ou photo n'est transmis. Si désactivé, aucune donnée ne quitte l'appareil.";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "ANCRE SUISSE";

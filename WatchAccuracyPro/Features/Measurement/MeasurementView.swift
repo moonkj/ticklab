@@ -189,6 +189,16 @@ struct MeasurementView: View {
         .onReceive(NotificationCenter.default.publisher(for: .ticklabMeasurementDidEnd)) { _ in
             refreshTodayMeasurementCount()
         }
+        // 사용자 보고 fix: 측정 중인 watch 가 외부에서 삭제되면 즉시 측정 cancel.
+        //   SwiftData deleted object 에 persist 시도 시 trap 차단.
+        .onReceive(NotificationCenter.default.publisher(for: .ticklabWatchWillDelete)) { note in
+            if let watchId = note.userInfo?["watchId"] as? UUID,
+               watchId == viewModel.watch.id,
+               stateIsMeasuring {
+                viewModel.cancel()
+                dismiss()
+            }
+        }
         // Free 사용자 하루 측정 한도 초과 alert + Pro 업그레이드 CTA (shell PurchaseRouter).
         .alert(String(localized: "pro.limit.daily_measurement.title"), isPresented: $showDailyLimitAlert) {
             Button(String(localized: "pro.limit.upgrade")) {

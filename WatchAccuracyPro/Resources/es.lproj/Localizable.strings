@@ -32,7 +32,7 @@
 "watch.primary.set" = "Marcar como destacado";
 "watch.primary.unset" = "Quitar destacado";
 "stats.mood.this_month" = "Este mes";
-"welcome.footer" = "Medir · Mantener · Diario · Glosario · 4 ejes";
+"welcome.footer" = "Colección · Hoy · Diario · Análisis";
 "welcome.pick_watch.subtitle" = "Puedes añadir detalles después. ¿Quieres empezar rápido?";
 
 /* Journal */
@@ -197,7 +197,7 @@
 "onboarding.page2.new_body" = "Coloca tu reloj junto al micrófono del iPhone. Treinta segundos bastan. Extraemos marcha, error de marcha y amplitud usando como referencia la hora atómica.";
 "onboarding.eyebrow.archive" = "Tu archivo";
 "onboarding.page3.new_title" = "Cada lectura, guardada.";
-"onboarding.page3.new_body" = "Crea un diario para cada pieza. Observa su deriva a lo largo de semanas. Exporta a CSV. Sincroniza entre dispositivos mediante iCloud, de forma privada.";
+"onboarding.page3.new_body" = "Crea un diario para cada pieza. Observa su deriva a lo largo de semanas. Exporta a CSV.";
 "onboarding.continue" = "Continuar";
 "onboarding.begin" = "Empezar";
 "onboarding.skip" = "Omitir";
@@ -754,7 +754,7 @@
 
 /* Round 92 — Today tab */
 "tab.today" = "Hoy";
-"today.greeting" = "¿Qué tal el día con tu reloj?";
+"today.greeting" = "¿Qué reloj llevarás hoy?";
 "today.stat.watches" = "Familia de relojes";
 "today.stat.this_week" = "Esta semana";
 "today.shake.title" = "Reloj elegido para hoy";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "Procesando…";
 "purchase.cta.restore" = "Restaurar compra";
 "purchase.cta.restoring" = "Restaurando…";
-"purchase.legal.auto_renew" = "La suscripción se renueva automáticamente hasta cancelarla. Puedes gestionarla en cualquier momento desde Ajustes.";
+"purchase.legal.auto_renew" = "TickLab Pro · Suscripción anual con renovación automática. Se carga a tu Apple ID al confirmar la compra. Se renueva al mismo precio dentro de las 24 horas previas al final del periodo si no la cancelas con al menos 24 horas de antelación. Gestiona o cancela en cualquier momento desde la configuración de tu Apple ID.";
 "purchase.legal.terms" = "Términos de uso";
 "purchase.legal.privacy" = "Política de privacidad";
 "purchase.success.title" = "Pro activado";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "Próxima revisión recomendada";
 "watch.overhaul.remaining_days" = "en unos %d días";
 "watch.overhaul.overdue_days" = "%d días vencido — revisión recomendada";
+"settings.help.support" = "Soporte · FAQ";
+"settings.help.privacy" = "Política de privacidad";
+"settings.help.terms" = "Términos de uso";
+"settings.help.contact" = "Contacto";
+"settings.section.privacy" = "Compartir datos";
+"settings.brandleague.optin" = "Unirme a Brand League";
+"settings.brandleague.optin.footer" = "Si está activado, la marca de tu reloj y la frecuencia de uso se envían de forma anónima al servidor de clasificación global. No se transmiten identificadores personales, números de serie ni fotos. Si está desactivado, no se envía ningún dato fuera del dispositivo.";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "ESCAPE SUIZO";

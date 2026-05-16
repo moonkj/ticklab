@@ -20,7 +20,6 @@ struct SettingsView: View {
     /// Round 175: 알림 권한 거부 안내 alert.
     @State private var showNotificationPermissionAlert: Bool = false
     /// Round 175: iCloud 토글 변경 시 재시작 안내.
-    @State private var showRestartAlert: Bool = false
     /// shell-level paywall.
     @Environment(\.purchaseRouter) private var purchaseRouter
     /// Pro 사용자가 hero 탭하면 StoreKit manage subscriptions 진입.
@@ -221,6 +220,15 @@ struct SettingsView: View {
                 } footer: {
                     Text(String(localized: "settings.section.reminders.footer"))
                 }
+                // Apple guideline 5.1.1/5.1.2 fix: Brand League 데이터 전송 옵트인 명시.
+                Section {
+                    Toggle(String(localized: "settings.brandleague.optin"),
+                           isOn: $preferences.brandLeagueOptIn)
+                } header: {
+                    Text(String(localized: "settings.section.privacy"))
+                } footer: {
+                    Text(String(localized: "settings.brandleague.optin.footer"))
+                }
                 Section(String(localized: "settings.section.security")) {
                     Toggle(String(localized: "settings.applock"), isOn: $preferences.appLockEnabled)
                     if preferences.appLockEnabled {
@@ -254,6 +262,43 @@ struct SettingsView: View {
                 // Round 134 사용자 요청: 자기장 측정 토글 제거 — 오늘 탭에서 항상 노출.
                 Section(String(localized: "settings.section.help")) {
                     NavigationLink(String(localized: "settings.glossary"), destination: GlossaryView())
+                    // 사용자 요청: 개인정보처리방침 · 이용약관 · 지원 in-app 접근. App Store 심사 권장.
+                    Link(destination: URL(string: "https://moonkj.github.io/ticklab/support.html")!) {
+                        HStack {
+                            Text(String(localized: "settings.help.support"))
+                            Spacer()
+                            Image(systemName: "arrow.up.right.square")
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                    }
+                    Link(destination: URL(string: "https://moonkj.github.io/ticklab/privacy.html")!) {
+                        HStack {
+                            Text(String(localized: "settings.help.privacy"))
+                            Spacer()
+                            Image(systemName: "arrow.up.right.square")
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                    }
+                    Link(destination: URL(string: "https://moonkj.github.io/ticklab/terms.html")!) {
+                        HStack {
+                            Text(String(localized: "settings.help.terms"))
+                            Spacer()
+                            Image(systemName: "arrow.up.right.square")
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                    }
+                    Link(destination: URL(string: "mailto:imurmkj@naver.com?subject=TickLab%20%EB%AC%B8%EC%9D%98")!) {
+                        HStack {
+                            Text(String(localized: "settings.help.contact"))
+                            Spacer()
+                            Image(systemName: "envelope")
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                    }
                 }
                 Section(String(localized: "settings.section.about")) {
                     // 사용자 요청: Bundle ID + Movement DB Version 제거. 버전 10번 클릭으로 관리자 모드 진입.
@@ -302,14 +347,6 @@ struct SettingsView: View {
                 Button(String(localized: "common.done"), role: .cancel) {}
             } message: {
                 Text(String(localized: "notification.permission.denied.body"))
-            }
-            .alert(
-                String(localized: "settings.icloud.restart.title"),
-                isPresented: $showRestartAlert
-            ) {
-                Button(String(localized: "common.done"), role: .cancel) {}
-            } message: {
-                Text(String(localized: "settings.icloud.restart.body"))
             }
             // Round 138 (관리자 모드 — DEBUG 전용 영역) {
             #if DEBUG

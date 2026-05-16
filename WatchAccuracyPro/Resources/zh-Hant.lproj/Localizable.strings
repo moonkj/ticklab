@@ -32,7 +32,7 @@
 "watch.primary.set" = "設為主打腕錶";
 "watch.primary.unset" = "取消主打";
 "stats.mood.this_month" = "本月";
-"welcome.footer" = "測量 · 保養 · 日誌 · 詞彙 · 四大主軸";
+"welcome.footer" = "收藏 · 今日 · 日誌 · 分析";
 "welcome.pick_watch.subtitle" = "細節可稍後補上,想先快速開始嗎?";
 
 /* Journal */
@@ -197,7 +197,7 @@
 "onboarding.page2.new_body" = "將腕錶置於 iPhone 麥克風旁。三十秒已足夠。我們以原子時為基準,擷取走時、擺幅誤差與振幅。";
 "onboarding.eyebrow.archive" = "你的典藏";
 "onboarding.page3.new_title" = "每一次讀數,皆被珍藏。";
-"onboarding.page3.new_body" = "為每一只腕錶建立日誌。觀察數週間的變化。匯出 CSV。並透過 iCloud 在裝置間私密同步。";
+"onboarding.page3.new_body" = "為每一只腕錶建立日誌。觀察數週間的變化。匯出 CSV。";
 "onboarding.continue" = "繼續";
 "onboarding.begin" = "開始";
 "onboarding.skip" = "略過";
@@ -754,7 +754,7 @@
 
 /* Round 92 — Today tab */
 "tab.today" = "今日";
-"today.greeting" = "今天和你的腕錶過得如何?";
+"today.greeting" = "今天戴哪一支錶?";
 "today.stat.watches" = "腕錶家族";
 "today.stat.this_week" = "本週";
 "today.shake.title" = "今日腕錶推薦";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "處理中…";
 "purchase.cta.restore" = "還原購買";
 "purchase.cta.restoring" = "還原中…";
-"purchase.legal.auto_renew" = "訂閱會自動續訂直至取消。可隨時於「設定」中管理。";
+"purchase.legal.auto_renew" = "TickLab Pro · 1 年自動續訂訂閱。確認購買後將從 Apple ID 扣款。除非於當前週期結束前 24 小時取消,否則將以相同價格自動續訂。可於 Apple ID 帳戶設定中隨時管理或取消。";
 "purchase.legal.terms" = "使用條款";
 "purchase.legal.privacy" = "隱私權政策";
 "purchase.success.title" = "Pro 已啟用";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "下次大保養建議";
 "watch.overhaul.remaining_days" = "約 %d 天後";
 "watch.overhaul.overdue_days" = "已逾期 %d 天 — 建議保養";
+"settings.help.support" = "支援 · 常見問題";
+"settings.help.privacy" = "隱私政策";
+"settings.help.terms" = "使用條款";
+"settings.help.contact" = "聯絡我們";
+"settings.section.privacy" = "資料分享";
+"settings.brandleague.optin" = "加入品牌聯賽";
+"settings.brandleague.optin.footer" = "開啟後,你的手錶品牌和佩戴次數將匿名上傳至全球排行榜伺服器。不會傳輸任何個人識別資訊、序號或相片。關閉時,資料不會離開你的裝置。";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "瑞士槓桿";

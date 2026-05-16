@@ -122,6 +122,11 @@ final class UserPreferences {
     var overhaulReminderEnabled: Bool {
         didSet { defaults.set(overhaulReminderEnabled, forKey: Keys.overhaulReminder) }
     }
+    /// Apple Guideline 5.1.1/5.1.2 fix: Brand League 익명 brand+frequency 업로드 명시 동의 토글.
+    /// 기본 OFF — 사용자가 Settings 에서 ON 해야만 Supabase 로 전송.
+    var brandLeagueOptIn: Bool {
+        didSet { defaults.set(brandLeagueOptIn, forKey: Keys.brandLeagueOptIn) }
+    }
     /// 오버홀 권장 주기 (년). 사용자 설정 — 기본 4년, range 2~7.
     var overhaulReminderYears: Int {
         didSet { defaults.set(overhaulReminderYears, forKey: Keys.overhaulReminderYears) }
@@ -148,10 +153,10 @@ final class UserPreferences {
         ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
         // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
-        // 사용자 보고 fix: 기본 .novice 이라서 MeasurementResultView details, WatchDetail specs,
-        //   lift-angle override 등 5곳이 모든 유저에게 영구 hidden 이었음.
-        let modeString = defaults.string(forKey: Keys.mode) ?? UserMode.pro.rawValue
-        self.userMode = UserMode(rawValue: modeString) ?? .pro
+        // 사용자 보고 fix: 기존 .novice persisted 사용자가 영구 갇히던 트랩 → 강제 마이그레이션.
+        //   mode 토글 UI 가 사라진 상태에서 escape 가 불가능하므로 매 launch 시 .pro 로 덮어씀.
+        self.userMode = .pro
+        defaults.set(UserMode.pro.rawValue, forKey: Keys.mode)
         // 사용자 요청: silent / keepScreenOn 기본 ON.
         self.silentModeDefault = (defaults.object(forKey: Keys.silentMode) as? Bool) ?? true
         self.iCloudSyncEnabled = defaults.bool(forKey: Keys.iCloud)
@@ -179,6 +184,8 @@ final class UserPreferences {
         // 사용자 요청: 오버홀 리마인더 — 기본 ON, 기본 주기 4년.
         self.overhaulReminderEnabled = (defaults.object(forKey: Keys.overhaulReminder) as? Bool) ?? true
         self.overhaulReminderYears = (defaults.object(forKey: Keys.overhaulReminderYears) as? Int) ?? 4
+        // Apple guideline fix: Brand League 옵트인 — 기본 OFF.
+        self.brandLeagueOptIn = defaults.bool(forKey: Keys.brandLeagueOptIn)
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
         // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
         proEntitlementObserver = NotificationCenter.default.addObserver(
@@ -217,6 +224,7 @@ final class UserPreferences {
         static let useSimplifiedDSP = "ticklab.useSimplifiedDSP"
         static let overhaulReminder = "ticklab.overhaulReminderEnabled"
         static let overhaulReminderYears = "ticklab.overhaulReminderYears"
+        static let brandLeagueOptIn = "ticklab.brandLeagueOptIn"
         /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
         /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.
         static let windingHintShownAt = "ticklab.windingHintShownAt"

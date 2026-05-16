@@ -40,7 +40,9 @@ struct WatchAccuracyProApp: App {
         let attempted: ModelContainer
         var didFallback = false
         do {
-            attempted = try Self.makeContainer(iCloud: prefs.iCloudSyncEnabled, inMemory: false)
+            // Apple guideline 2.3.1 fix: CloudKit entitlement 없는 상태에서 iCloud 활성화 시 crash.
+            //   Phase 1 은 항상 local 만 사용. iCloud 토글은 Phase 3 에 entitlement 추가 후 활성화.
+            attempted = try Self.makeContainer(iCloud: false, inMemory: false)
         } catch {
             #if DEBUG
             print("⚠️ Disk ModelContainer failed (\(error)) — falling back to in-memory store. " +

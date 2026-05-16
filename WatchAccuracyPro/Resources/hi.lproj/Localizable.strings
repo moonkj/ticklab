@@ -32,7 +32,7 @@
 "watch.primary.set" = "फ़ीचर्ड बनाएँ";
 "watch.primary.unset" = "फ़ीचर्ड हटाएँ";
 "stats.mood.this_month" = "इस महीने";
-"welcome.footer" = "मापें · संभालें · जर्नल · शब्दावली · 4 अक्ष";
+"welcome.footer" = "संग्रह · आज · जर्नल · विश्लेषण";
 "welcome.pick_watch.subtitle" = "विवरण बाद में जोड़ सकते हैं। जल्दी शुरू करना चाहेंगे?";
 
 /* Journal */
@@ -197,7 +197,7 @@
 "onboarding.page2.new_body" = "अपनी घड़ी को iPhone माइक्रोफ़ोन के पास रखें। तीस सेकंड पर्याप्त हैं। हम परमाण्विक समय के संदर्भ में रेट, बीट एरर और एम्प्लीट्यूड निकालते हैं।";
 "onboarding.eyebrow.archive" = "आपका आर्काइव";
 "onboarding.page3.new_title" = "हर रीडिंग, सुरक्षित।";
-"onboarding.page3.new_body" = "हर घड़ी के लिए जर्नल बनाएँ। हफ़्तों में उसका ड्रिफ़्ट देखें। CSV में निर्यात करें। iCloud के माध्यम से निजी तौर पर डिवाइसों के बीच सिंक करें।";
+"onboarding.page3.new_body" = "हर घड़ी के लिए जर्नल बनाएँ। हफ़्तों में उसका ड्रिफ़्ट देखें। CSV में निर्यात करें।";
 "onboarding.continue" = "जारी रखें";
 "onboarding.begin" = "शुरू करें";
 "onboarding.skip" = "छोड़ें";
@@ -754,7 +754,7 @@
 
 /* Round 92 — Today tab */
 "tab.today" = "आज";
-"today.greeting" = "आज आपकी घड़ी के साथ कैसा रहा?";
+"today.greeting" = "आज कौन सी घड़ी?";
 "today.stat.watches" = "घड़ी परिवार";
 "today.stat.this_week" = "इस सप्ताह";
 "today.shake.title" = "आज की घड़ी चुनाव";
@@ -930,7 +930,7 @@
 "purchase.cta.processing" = "प्रोसेसिंग…";
 "purchase.cta.restore" = "ख़रीद पुनर्स्थापित करें";
 "purchase.cta.restoring" = "पुनर्स्थापित किया जा रहा है…";
-"purchase.legal.auto_renew" = "रद्द होने तक सदस्यता स्वतः नवीनीकृत होती है। Settings में कभी भी प्रबंधित करें।";
+"purchase.legal.auto_renew" = "TickLab Pro · 1 साल की स्वतः नवीनीकरण सदस्यता। ख़रीदी की पुष्टि पर भुगतान आपके Apple ID से लिया जाता है। अवधि समाप्त होने से 24 घंटे पहले रद्द न करने पर उसी कीमत पर स्वतः नवीनीकृत होती है। Apple ID सेटिंग्स से कभी भी प्रबंधन/रद्द कर सकते हैं।";
 "purchase.legal.terms" = "उपयोग की शर्तें";
 "purchase.legal.privacy" = "गोपनीयता नीति";
 "purchase.success.title" = "Pro सक्रिय";
@@ -960,6 +960,13 @@
 "watch.overhaul.next_due" = "अगला ओवरहॉल अनुशंसित";
 "watch.overhaul.remaining_days" = "लगभग %d दिन शेष";
 "watch.overhaul.overdue_days" = "%d दिन देरी — सर्विस अनुशंसित";
+"settings.help.support" = "सहायता · FAQ";
+"settings.help.privacy" = "गोपनीयता नीति";
+"settings.help.terms" = "उपयोग की शर्तें";
+"settings.help.contact" = "संपर्क करें";
+"settings.section.privacy" = "डेटा साझा करना";
+"settings.brandleague.optin" = "ब्रांड लीग में शामिल हों";
+"settings.brandleague.optin.footer" = "चालू होने पर, आपकी घड़ी का ब्रांड और उपयोग आवृत्ति गुमनाम रूप से ग्लोबल रैंकिंग सर्वर पर भेजी जाती है। कोई व्यक्तिगत पहचानकर्ता, सीरियल या फ़ोटो प्रसारित नहीं होती। बंद होने पर, कोई डेटा डिवाइस से बाहर नहीं जाता।";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "स्विस लीवर";
