@@ -153,9 +153,15 @@ final class SupabaseBrandLeagueService: ObservableObject {
     /// @Query 관계 traversal 이슈를 뷰 레벨에서 해결 후 primitives 만 전달받음.
     func uploadBrandCounts(_ counts: [(brand: String, type: String, key: String, count: Int)]) async {
         let hash = deviceHash
-        for c in counts {
-            await upsert(deviceHash: hash, brand: c.brand,
-                         periodType: c.type, periodKey: c.key, count: c.count)
+        // Round 14 (Sora): 직렬 await 30 brand × 4 period = 120 sequential HTTPS (24s).
+        //   TaskGroup 으로 fanout — main actor 차단 시간을 한 자릿수 초로.
+        await withTaskGroup(of: Void.self) { group in
+            for c in counts {
+                group.addTask { [weak self] in
+                    await self?.upsert(deviceHash: hash, brand: c.brand,
+                                       periodType: c.type, periodKey: c.key, count: c.count)
+                }
+            }
         }
         rankingCache.removeAll()
     }

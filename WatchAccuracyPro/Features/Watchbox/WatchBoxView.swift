@@ -116,15 +116,15 @@ struct WatchBoxView: View {
                             UISelectionFeedbackGenerator().selectionChanged()
                             withAnimation(.easeOut(duration: 0.2)) { slotCount = n }
                         } label: {
-                            Text("\(n)구")
+                            Text(String(format: NSLocalizedString("watchbox.slot_count", comment: ""), n))
                                 .font(.system(size: 14, weight: .semibold))
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 10)
+                                .frame(maxWidth: .infinity, minHeight: 44)
                                 .background(slotCount == n ? AppColors.primaryDeep : AppColors.paper2)
                                 .foregroundStyle(slotCount == n ? .white : AppColors.ink0)
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         .buttonStyle(.plain)
+                        .accessibilityAddTraits(slotCount == n ? .isSelected : [])
                     }
                 }
             }
@@ -153,7 +153,7 @@ struct WatchBoxView: View {
                                         .padding(.bottom, 4)
                                 }
                             }
-                            .frame(height: 40)
+                            .frame(height: 44)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
@@ -161,6 +161,8 @@ struct WatchBoxView: View {
                             )
                         }
                         .buttonStyle(.plain)
+                        .accessibilityLabel(m.label)
+                        .accessibilityAddTraits(material == m ? .isSelected : [])
                     }
                 }
             }
@@ -204,7 +206,7 @@ struct WatchBoxView: View {
                         Rectangle()
                             .fill(AppColors.primaryDeep.opacity(0.4))
                             .frame(width: 1, height: 9)
-                        Text("EST.2026")
+                        Text(BrandConstants.establishedTag)
                             .font(.system(size: 8, weight: .semibold, design: .monospaced))
                             .tracking(1.5)
                             .foregroundStyle(AppColors.primaryDeep)
@@ -261,13 +263,20 @@ struct WatchBoxView: View {
     }
 
     private func pillowSlot(idx: Int, watch: Watch?) -> some View {
-        Button {
-            UISelectionFeedbackGenerator().selectionChanged()
-            if watch == nil {
-                // Round 134: 빈 슬롯 tap → WatchBox 닫고 AddWatchView 진입 hint.
-                // 사용자에게 안내 — direct 진입은 NavigationStack 충돌 위험.
+        Group {
+            if let watch {
+                pillowSlotBody(idx: idx, watch: watch)
+                    .accessibilityElement(children: .combine)
+                    .accessibilityLabel("\(watch.brand) \(watch.model)")
+                    .accessibilityValue(String(format: NSLocalizedString("watchbox.slot.a11y.position", comment: ""), idx + 1))
+            } else {
+                pillowSlotBody(idx: idx, watch: nil)
+                    .accessibilityHint(String(localized: "watchbox.empty.a11y_hint"))
             }
-        } label: {
+        }
+    }
+
+    private func pillowSlotBody(idx: Int, watch: Watch?) -> some View {
             ZStack {
                 // Pillow radial — Round 138: 3구일 때 슬롯 가운데를 밝게 해서 구분 명확.
                 RadialGradient(
@@ -350,7 +359,7 @@ struct WatchBoxView: View {
                                 .font(.system(size: 14))
                                 .foregroundStyle(material.fgColor.opacity(0.5))
                         }
-                        Text("EMPTY · #\(String(format: "%02d", idx + 1))")
+                        Text(String(format: "%@ · #%02d", String(localized: "watchbox.stats.empty"), idx + 1))
                             .font(.system(size: 8, weight: .semibold, design: .monospaced))
                             .tracking(1.5)
                             .foregroundStyle(material.fgColor.opacity(0.5))
@@ -366,29 +375,27 @@ struct WatchBoxView: View {
                     : .default,
                 value: editing
             )
-        }
-        .buttonStyle(.plain)
     }
 
     private var statsRow: some View {
         // Round 134 사용자 요청: 1x4 HStack → 2x2 grid + 카드 너비 2배.
         // 너비가 두 배되면 "+13.2 s/d" 같은 값이 한 줄에 들어감.
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-            statCard(label: "OCCUPIED", value: "\(occupied)/\(slotCount)")
-            statCard(label: "BRANDS", value: "\(brands)")
+            statCard(label: String(localized: "watchbox.stats.occupied"), value: "\(occupied)/\(slotCount)")
+            statCard(label: String(localized: "watchbox.stats.brands"), value: "\(brands)")
             if let avg = avgRate {
-                statCard(label: "AVG RATE", value: String(format: "%@%.1f", avg >= 0 ? "+" : "", avg), unit: "s/d")
+                statCard(label: String(localized: "watchbox.stats.avg_rate"), value: String(format: "%@%.1f", avg >= 0 ? "+" : "", avg), unit: "s/d")
             } else {
-                statCard(label: "AVG RATE", value: "—")
+                statCard(label: String(localized: "watchbox.stats.avg_rate"), value: "—")
             }
-            statCard(label: "EMPTY", value: "\(slotCount - occupied)")
+            statCard(label: String(localized: "watchbox.stats.empty"), value: "\(slotCount - occupied)")
         }
     }
 
     private func statCard(label: String, value: String, unit: String? = nil) -> some View {
         // Round 134: 카드 내부 padding + 값 폰트 키움 (한 줄 안에 들어가게).
         VStack(alignment: .leading, spacing: 6) {
-            Text(label)
+            Text(label.uppercased())
                 .font(.system(size: 10, weight: .semibold, design: .monospaced))
                 .tracking(1.6)
                 .foregroundStyle(AppColors.ink3)

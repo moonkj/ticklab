@@ -20,8 +20,10 @@ struct MagneticFieldView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
                 headerCard
+                if !service.isAvailable {
+                    unavailableCard
+                }
                 measureButton
-                // Round 137 사용자 요청: 측정 중·완료 시 실시간 sample 그래프.
                 if isMeasuring || !service.sampleHistory.isEmpty {
                     liveChartCard
                 }
@@ -50,6 +52,28 @@ struct MagneticFieldView: View {
     }
 
     // MARK: - Header
+
+    private var unavailableCard: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "exclamationmark.triangle.fill")
+                .foregroundStyle(AppColors.warning)
+                .font(.system(size: 18))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(String(localized: "magnetic.unavailable.title"))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                Text(String(localized: "magnetic.unavailable.body"))
+                    .font(.system(size: 12))
+                    .foregroundStyle(AppColors.ink2)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(14)
+        .background(AppColors.warning.opacity(0.08))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.warning.opacity(0.3), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
 
     private var headerCard: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -135,13 +159,26 @@ struct MagneticFieldView: View {
 
     private func levelBadge(_ level: MagneticFieldService.Level) -> some View {
         let (fg, bg) = colorPair(for: level)
-        return Text(NSLocalizedString(level.localizationKey, comment: ""))
-            .font(.system(size: 12, weight: .semibold))
-            .foregroundStyle(fg)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(bg)
-            .clipShape(Capsule())
+        return HStack(spacing: 4) {
+            Image(systemName: iconName(for: level))
+                .font(.system(size: 10, weight: .bold))
+            Text(NSLocalizedString(level.localizationKey, comment: ""))
+                .font(.system(size: 12, weight: .semibold))
+        }
+        .foregroundStyle(fg)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(bg)
+        .clipShape(Capsule())
+    }
+
+    private func iconName(for level: MagneticFieldService.Level) -> String {
+        switch level {
+        case .normal:       return "checkmark.seal.fill"
+        case .slightlyHigh: return "exclamationmark.triangle.fill"
+        case .high:         return "exclamationmark.octagon.fill"
+        case .veryHigh:     return "xmark.octagon.fill"
+        }
     }
 
     private func colorPair(for level: MagneticFieldService.Level) -> (Color, Color) {

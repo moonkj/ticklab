@@ -1,0 +1,8 @@
+/* Español — diálogos de permisos */
+
+"NSCameraUsageDescription" = "TickLab necesita acceso a la cámara para fotografiar tus relojes. Las fotos se guardan solo en tu dispositivo, sin metadatos de ubicación.";
+"NSFaceIDUsageDescription" = "TickLab usa Face ID para bloquear la app y proteger tu colección y datos de medición.";
+"NSMicrophoneUsageDescription" = "TickLab necesita el micrófono para escuchar el tictac y medir la precisión de tu reloj. El audio se procesa en el dispositivo y nunca se almacena ni se transmite.";
+"NSMotionUsageDescription" = "TickLab usa el magnetómetro del iPhone para detectar campos magnéticos que podrían magnetizar tu reloj mecánico. Las lecturas se procesan solo en el dispositivo.";
+"NSPhotoLibraryUsageDescription" = "TickLab necesita acceso a la fototeca para añadir una foto de tu reloj a la colección.";
+"NSPhotoLibraryAddUsageDescription" = "TickLab necesita permiso para guardar tus tarjetas de medición en la fototeca.";

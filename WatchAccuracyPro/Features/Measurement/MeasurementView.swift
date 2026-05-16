@@ -4,7 +4,15 @@ import SwiftUI
 struct MeasurementView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(UserPreferences.self) private var preferences
     @State private var viewModel: MeasurementViewModel
+    @State private var showDailyLimitAlert = false
+    /// shell-level paywall.
+    @Environment(\.purchaseRouter) private var purchaseRouter
+    /// 사용자 보고 fix: @Query allMeasurements 전체 fetch 후 body 마다 startOfDay 필터링 → 200+ 측정 시
+    ///   매 render scan. predicate fetch + onAppear/완료시 refresh 로 변경.
+    @State private var todayMeasurementCount: Int = 0
 
     // Round 158: 30s 로 복귀 — drift 영향 시간 줄여 정확도 향상 시도.
     private let recommendedSeconds: Double = 30
@@ -17,27 +25,70 @@ struct MeasurementView: View {
 
     /// SNR hint hysteresis — 깜빡임 방지. 4초 연속 SNR < 12 일 때만 "약 신호" 경고.
     @State private var weakSnrSeenAt: Date?
+    /// 사용자 보고: 풀와인딩 안 한 시계 -45 s/d → "측정 오류" 오해. 측정 시작 전 안내 토스트.
+    @State private var showWindingHint: Bool = false
 
     init(watch: Watch, preferences: UserPreferences) {
         _viewModel = State(wrappedValue: MeasurementViewModel(watch: watch, preferences: preferences))
     }
 
-    /// SNR 가 weak 임계값 미만으로 4초 이상 지속됐는지.
+    /// 사용자 결정: Free 사용자는 하루 3회 측정 제한. Pro 무제한.
+    private var canStartMeasurement: Bool {
+        guard !preferences.isPro else { return true }
+        return todayMeasurementCount < ProEntitlement.freeDailyMeasurementLimit
+    }
+
+    /// 오늘 측정 카운트 — startOfDay >= 인 WatchMeasurement 개수만 fetch.
+    private func refreshTodayMeasurementCount() {
+        guard !preferences.isPro else { return }
+        let todayStart = Calendar.current.startOfDay(for: Date())
+        let descriptor = FetchDescriptor<WatchMeasurement>(
+            predicate: #Predicate { $0.timestamp >= todayStart }
+        )
+        todayMeasurementCount = (try? modelContext.fetchCount(descriptor)) ?? 0
+    }
+
+    private func attemptStart() {
+        if canStartMeasurement {
+            Task { await viewModel.start() }
+        } else {
+            showDailyLimitAlert = true
+        }
+    }
+
+    /// quartz 가 아니고 (auto/manual) 마지막 24h 안에 안 띄웠으면 토스트 표시.
+    private func shouldShowWindingHint() -> Bool {
+        let watch = viewModel.watch
+        guard watch.movementType != .quartz else { return false }
+        let last = UserDefaults.standard.double(forKey: "ticklab.windingHintShownAt")
+        let nowEpoch = Date().timeIntervalSince1970
+        // 0 = 처음 또는 24h+ 전 → 표시
+        return last == 0 || (nowEpoch - last) > 24 * 3600
+    }
+
+    private func markWindingHintShown() {
+        UserDefaults.standard.set(Date().timeIntervalSince1970, forKey: "ticklab.windingHintShownAt")
+    }
+
+    /// SNR 가 weak 임계값 미만으로 4초 이상 지속됐는지 판정 (read-only).
+    /// state mutation 은 `.onChange(of: viewModel.lastSnapshotSNRDB)` 에서 처리 — body-render 중 변경 금지.
     private func isWeakSignalSustained(_ snr: Double) -> Bool {
         // Round 129d: SNR 최소 임계 10dB와 일관. 12 → 10 으로 완화.
+        guard snr < 10, let seen = weakSnrSeenAt else { return false }
+        return Date().timeIntervalSince(seen) >= 4
+    }
+
+    /// Round 15 (Hyemi): body-render 중 DispatchQueue.main.async 로 state 변경하던 antipattern 제거.
+    /// onChange callback 으로 옮겨 SwiftUI render 사이클 외부에서 mutation.
+    private func updateWeakSnrSeenAt(_ snr: Double?) {
+        guard let snr else {
+            if weakSnrSeenAt != nil { weakSnrSeenAt = nil }
+            return
+        }
         if snr < 10 {
-            // 처음 발견 시각 기록.
-            if weakSnrSeenAt == nil {
-                DispatchQueue.main.async { weakSnrSeenAt = Date() }
-                return false
-            }
-            return Date().timeIntervalSince(weakSnrSeenAt ?? Date()) >= 4
-        } else {
-            // SNR 회복 — 카운트 리셋.
-            if weakSnrSeenAt != nil {
-                DispatchQueue.main.async { weakSnrSeenAt = nil }
-            }
-            return false
+            if weakSnrSeenAt == nil { weakSnrSeenAt = Date() }
+        } else if weakSnrSeenAt != nil {
+            weakSnrSeenAt = nil
         }
     }
 
@@ -110,6 +161,51 @@ struct MeasurementView: View {
                 viewModel.stop(modelContext: modelContext)
             }
         }
+        // Round 15 (Hyemi): weakSnrSeenAt mutation 을 body 밖으로.
+        .onChange(of: viewModel.lastSnapshotSNRDB) { _, newValue in
+            updateWeakSnrSeenAt(newValue)
+        }
+        // Round 18 (Min): background 진입 시 진행 중 measurement 자동 취소.
+        //   AVAudioSession interrupt 로 silent-stuck 되는 케이스 차단.
+        .onChange(of: scenePhase) { _, newPhase in
+            if newPhase == .background, stateIsMeasuring {
+                viewModel.cancel()
+            }
+        }
+        .onAppear {
+            // 사용자 보고: 풀와인딩 안 한 시계에서 -45 s/d → 측정 오류 오해. 1회/24h floating card.
+            if shouldShowWindingHint() {
+                showWindingHint = true
+            }
+            refreshTodayMeasurementCount()
+        }
+        // 측정 완료/취소 시 카운트 갱신 — 다음 measure 시작 전 정확한 한도 검사.
+        .onReceive(NotificationCenter.default.publisher(for: .ticklabMeasurementDidEnd)) { _ in
+            refreshTodayMeasurementCount()
+        }
+        // Free 사용자 하루 측정 한도 초과 alert + Pro 업그레이드 CTA (shell PurchaseRouter).
+        .alert(String(localized: "pro.limit.daily_measurement.title"), isPresented: $showDailyLimitAlert) {
+            Button(String(localized: "pro.limit.upgrade")) {
+                purchaseRouter?.intend(.dailyMeasurement)
+            }
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "pro.limit.daily_measurement.body"))
+        }
+        // Floating modal — 화면 중앙 강조 카드. dim background + tap-to-dismiss.
+        // confirmed=true (CTA): 24h timestamp 저장. false (dim tap): 다음 진입에 다시 표시.
+        .overlay {
+            if showWindingHint {
+                WindingHintToast(onDismiss: { confirmed in
+                    showWindingHint = false
+                    if confirmed {
+                        markWindingHintShown()
+                    }
+                })
+                .zIndex(100)
+                .transition(.opacity)
+            }
+        }
     }
 
     // MARK: - Identity strip
@@ -142,17 +238,15 @@ struct MeasurementView: View {
             TimelineView(.periodic(from: .now, by: 0.1)) { context in
                 let secs: Double = {
                     guard let start = viewModel.measurementStartedAt else { return 0 }
-                    let raw: Double
                     // Round 170: .measuring + .analyzing 둘 다 wall-clock 사용.
-                    // 이전엔 .analyzing 진입 시 lm.elapsedSeconds (analyzer 마지막 cycle) 로 fallback,
-                    // analyzer 가 8s 에서 정지하면 timer 가 30s → 8s 로 후퇴해 보이는 버그.
+                    // 사용자 보고: 측정 완료 후 전 페이지로 가면 상단 timer 가 마지막 elapsed (24s) 로 stuck.
+                    //   → .idle/.completed/.failed/.requestingPermission 일 땐 0 으로 초기화.
                     switch viewModel.state {
                     case .measuring, .analyzing:
-                        raw = context.date.timeIntervalSince(start)
+                        return min(context.date.timeIntervalSince(start), recommendedSeconds)
                     default:
-                        raw = viewModel.liveMetrics.elapsedSeconds
+                        return 0
                     }
-                    return min(raw, recommendedSeconds)
                 }()
                 Text(formatElapsed(secs))
                     .font(.system(size: 22, weight: .medium, design: .monospaced))
@@ -177,11 +271,11 @@ struct MeasurementView: View {
             // 실시간 정확도 숫자 숨김. 측정 중엔 "측정 중..." 만 표시, 최종 결과 화면에서만 rate 표시.
             HStack(alignment: .firstTextBaseline, spacing: 8) {
                 if case .measuring = viewModel.state {
-                    Text("측정 중...")
+                    Text(String(localized: "measurement.status.measuring"))
                         .font(.system(size: 28, weight: .medium, design: .monospaced))
                         .foregroundStyle(AppColors.ink2)
                 } else if case .analyzing = viewModel.state {
-                    Text("분석 중...")
+                    Text(String(localized: "measurement.status.analyzing"))
                         .font(.system(size: 28, weight: .medium, design: .monospaced))
                         .foregroundStyle(AppColors.accent)
                 } else {
@@ -196,8 +290,10 @@ struct MeasurementView: View {
                 }
             }
 
-            // TimelineView 로 진행률/elapsed 텍스트도 부드럽게 갱신.
-            TimelineView(.periodic(from: .now, by: 0.1)) { context in
+            // TimelineView 로 진행률/elapsed 텍스트 갱신.
+            // Round (6): progress bar 는 30s 에 걸쳐 변하므로 0.25s 주기로 충분 — 0.1s × 2 timelines 의
+            //   30fps 합산 wakeup 부담 절감 (iPhone 11 budget).
+            TimelineView(.periodic(from: .now, by: 0.25)) { context in
                 let liveSeconds: Double = {
                     guard let start = viewModel.measurementStartedAt else { return 0 }
                     let raw: Double
@@ -212,15 +308,23 @@ struct MeasurementView: View {
                 }()
                 let progress = min(1.0, liveSeconds / recommendedSeconds)
                 VStack(spacing: 6) {
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 1.5).fill(AppColors.rule).frame(height: 3)
-                        RoundedRectangle(cornerRadius: 1.5).fill(AppColors.accent)
-                            .frame(width: max(0, progress) * progressBarWidth, height: 3)
+                    GeometryReader { geo in
+                        ZStack(alignment: .leading) {
+                            RoundedRectangle(cornerRadius: 1.5).fill(AppColors.rule).frame(height: 3)
+                            RoundedRectangle(cornerRadius: 1.5).fill(AppColors.accent)
+                                .frame(width: max(0, CGFloat(progress)) * geo.size.width, height: 3)
+                        }
                     }
+                    .frame(height: 3)
                     HStack {
-                        Text("\(Int(liveSeconds))s / \(Int(recommendedSeconds))s")
-                            .font(.system(size: 10.5, design: .monospaced))
-                            .foregroundStyle(AppColors.ink3)
+                        // Round (사용자 요청): elapsed/total 표시 ("5s / 30s") 제거 — 카운트다운 한 줄로 충분.
+                        if case .measuring = viewModel.state {
+                            let remaining = Int(max(0, recommendedSeconds - liveSeconds).rounded(.up))
+                            Text(String(format: String(localized: "measurement.countdown"), remaining))
+                                .font(.system(size: 10.5, weight: .semibold, design: .monospaced))
+                                .foregroundStyle(AppColors.accent)
+                                .accessibilityLabel(String(format: String(localized: "measurement.countdown.a11y"), remaining))
+                        }
                         Spacer()
                     if case .measuring = viewModel.state {
                         HStack(spacing: 5) {
@@ -245,8 +349,6 @@ struct MeasurementView: View {
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 18))
     }
-
-    private var progressBarWidth: CGFloat { UIScreen.main.bounds.width - 40 - 36 }
 
     private func rateText(_ rate: Double?) -> String {
         guard let rate else { return "—" }
@@ -285,6 +387,10 @@ struct MeasurementView: View {
                 // Round 158: confidence > 30 (실제 lock) 일 때만 dots 표시.
                 // lockMem 의 stale bph (confidence decayed to 0) 는 fake lock 으로 보임 → 차단.
                 lockedBPH: (isRunning && viewModel.liveMetrics.confidenceScore > 30) ? viewModel.liveMetrics.bph : nil,
+                // 사용자 요청 (실시간 tic/toc): DSP 검출 onset timestamps + measurement start wall-clock.
+                //   60fps 흐름으로 점이 부드럽게 viewport 흐름 (elapsed analyzer cycle 1초 stuck 회피).
+                recentOnsetTimes: isRunning ? viewModel.liveMetrics.recentOnsetTimes : nil,
+                measurementStartedAt: isRunning ? viewModel.measurementStartedAt : nil,
                 showProInfo: viewModel.preferences.userMode == .pro
             )
             .frame(height: 170)
@@ -336,10 +442,14 @@ struct MeasurementView: View {
                 title: String(localized: "measurement.setup.step3.title"),
                 body: String(localized: "measurement.setup.step3.body")
             )
+            // 사용자 보고 fix: 이전엔 "3-5회 평균" 권장 vs Free 일일 3회 한도 충돌 — Free 는 3회 기준,
+            //   Pro 는 무제한 표현으로 분기.
             HelpCard(
                 icon: "chart.bar.fill",
                 title: String(localized: "measurement.tips.average.title"),
-                body: String(localized: "measurement.tips.average.body"),
+                body: preferences.isPro
+                    ? String(localized: "measurement.tips.average.body.pro")
+                    : String(localized: "measurement.tips.average.body.free"),
                 tone: .info
             )
             // Round 170 (사용자 요청): 측정값은 참고용 명시 — 법적/사용자 기대 관리.
@@ -354,12 +464,15 @@ struct MeasurementView: View {
 
     /// 페르소나 (김재철) Priority 1 wish: position picker — 측정 전 자세 선택.
     /// 6 자세 chip 가로 스크롤. 선택 안 하면 unknown 으로 저장.
+    /// Round 22 (Doyoon): filter 매 body 마다 reallocate 하지 않도록 static 으로 hoist.
+    private static let visiblePositions: [Position] = Position.allCases.filter { $0 != .unknown }
+
     private var positionPicker: some View {
         VStack(alignment: .leading, spacing: 8) {
             EyebrowLabel(text: String(localized: "measurement.position.title"))
-            ScrollView(.horizontal, showsIndicators: true) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(Position.allCases.filter { $0 != .unknown }, id: \.self) { pos in
+                    ForEach(Self.visiblePositions, id: \.self) { pos in
                         Button {
                             viewModel.selectedPosition = (viewModel.selectedPosition == pos) ? .unknown : pos
                         } label: {
@@ -379,50 +492,8 @@ struct MeasurementView: View {
         }
     }
 
-    /// 진단 strip — 무엇이 막히는지 단계별로 표시.
-    // Round 153 (Min+Chen): coupling coaching bars — mic contact + lock stability.
-    private var coachingBars: some View {
-        let lm = viewModel.liveMetrics
-        return VStack(spacing: 6) {
-            coachingRow(label: String(localized: "measurement.coaching.contact"), score: lm.micContactScore)
-            coachingRow(label: String(localized: "measurement.coaching.stability"), score: lm.lockStabilityScore)
-        }
-        .padding(10)
-        .frame(maxWidth: .infinity)
-        .background(AppColors.paper1)
-        .overlay(RoundedRectangle(cornerRadius: 10).stroke(AppColors.rule, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-
-    private func coachingRow(label: String, score: Int?) -> some View {
-        HStack(spacing: 10) {
-            Text(label.uppercased())
-                .font(.system(size: 9, weight: .semibold))
-                .tracking(1.5)
-                .foregroundStyle(AppColors.ink2)
-                .frame(width: 90, alignment: .leading)
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(AppColors.rule).frame(height: 6)
-                    Capsule()
-                        .fill(coachingColor(score))
-                        .frame(width: max(0, geo.size.width * CGFloat(score ?? 0) / 100), height: 6)
-                }
-            }
-            .frame(height: 6)
-            Text(score.map { "\($0)" } ?? "—")
-                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                .foregroundStyle(AppColors.ink2)
-                .frame(width: 28, alignment: .trailing)
-        }
-    }
-
-    private func coachingColor(_ score: Int?) -> Color {
-        guard let s = score else { return AppColors.ink3 }
-        if s >= 75 { return AppColors.success }
-        if s >= 50 { return AppColors.warning }
-        return AppColors.danger
-    }
+    // Round 22 (Doyoon): coachingBars/coachingRow/coachingColor 삭제 — Round 170 에서
+    //   사용자 요청으로 화면에서 제거됐는데 implementation 만 남아 있던 dead code (50+ lines).
 
     /// 1행: Mic (raw RMS) → 2행: SNR (envelope) → 3행: Onsets → 4행: BPH 락
     /// 사용자가 어디서 막히는지 즉시 보임.
@@ -431,25 +502,25 @@ struct MeasurementView: View {
         return VStack(spacing: 6) {
             HStack(spacing: 10) {
                 diagnosticCell(
-                    label: "Mic",
+                    label: String(localized: "measurement.diagnostic.mic"),
                     value: lm.rawRMSDB.map { String(format: "%.0f dB", $0) } ?? "—",
                     tone: micTone(lm.rawRMSDB)
                 )
                 Divider().frame(height: 24).background(AppColors.rule)
                 diagnosticCell(
-                    label: "SNR",
+                    label: String(localized: "measurement.diagnostic.snr"),
                     value: lm.snrDB.map { String(format: "%.0f", $0) } ?? "—",
                     tone: snrTone(lm.snrDB)
                 )
                 Divider().frame(height: 24).background(AppColors.rule)
                 diagnosticCell(
-                    label: "Onsets",
+                    label: String(localized: "measurement.diagnostic.onsets"),
                     value: lm.onsetCount.map { "\($0)" } ?? "—",
                     tone: onsetTone(lm.onsetCount)
                 )
                 Divider().frame(height: 24).background(AppColors.rule)
                 diagnosticCell(
-                    label: "BPH",
+                    label: String(localized: "measurement.diagnostic.bph"),
                     // Round 158: nominalBph echo (lock 잡힐 때까지 nominal 표시).
                     value: lm.bph.map { "\($0)" } ?? "\(viewModel.movement?.bph ?? 28_800)",
                     tone: lm.bph != nil ? .success : .neutral
@@ -519,15 +590,19 @@ struct MeasurementView: View {
         }
         // Tic 거의 감지 안 됨.
         if let onsets = lm.onsetCount, onsets < 5, lm.elapsedSeconds > 4 {
-            return "⚠️ 시계 박동이 잘 감지되지 않아요. 마이크에 더 가까이 대고 손가락이 마이크를 가리지 않게 해주세요."
+            return NSLocalizedString("measurement.hint.weak_detection", comment: "")
         }
         // BPH lock 시도 중.
         if lm.bph == nil, let onsets = lm.onsetCount, onsets > 5 {
-            return "🔍 박동 패턴 분석 중 — 30초 정도 측정하면 결과가 안정됩니다."
+            return NSLocalizedString("measurement.hint.analyzing", comment: "")
         }
-        // Round 158 디버그: 실패 원인 표시.
-        if let reason = lm.lockFailReason, lm.bph == nil, lm.elapsedSeconds > 8 {
-            return "🔍 박동 주기 잡히지 않아요. [DBG: \(reason)]"
+        // BPH lock 실패.
+        if lm.lockFailReason != nil, lm.bph == nil, lm.elapsedSeconds > 8 {
+            #if DEBUG
+            return String(format: NSLocalizedString("measurement.hint.no_lock_debug", comment: ""), lm.lockFailReason ?? "")
+            #else
+            return NSLocalizedString("measurement.hint.no_lock", comment: "")
+            #endif
         }
         return nil
     }
@@ -573,7 +648,7 @@ struct MeasurementView: View {
         switch viewModel.state {
         case .idle:
             PrimaryButton(String(localized: "measurement.button.start"), icon: "mic") {
-                Task { await viewModel.start() }
+                attemptStart()
             }
             .padding(.top, 4)
         case .requestingPermission:
@@ -647,7 +722,7 @@ struct MeasurementView: View {
             } else {
                 HStack(spacing: 8) {
                     PrimaryButton(String(localized: "measurement.button.retry"), style: .bordered) {
-                        Task { await viewModel.start() }
+                        attemptStart()
                     }
                     PrimaryButton(String(localized: "common.cancel"), style: .bordered) {
                         dismiss()

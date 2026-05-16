@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftData
 import SwiftUI
 import UIKit
@@ -20,6 +21,10 @@ struct SettingsView: View {
     @State private var showNotificationPermissionAlert: Bool = false
     /// Round 175: iCloud 토글 변경 시 재시작 안내.
     @State private var showRestartAlert: Bool = false
+    /// shell-level paywall.
+    @Environment(\.purchaseRouter) private var purchaseRouter
+    /// Pro 사용자가 hero 탭하면 StoreKit manage subscriptions 진입.
+    @State private var showingManageSubscriptions: Bool = false
 
     /// CoreML 모델 가용성 → 현재 active detector. (Round 81: 인라인 한국어 → localize)
     private var coreMLStatus: String {
@@ -219,9 +224,7 @@ struct SettingsView: View {
                             }
                         }
                     }
-                    HStack {
-                        Text(String(localized: "settings.serial_mask"))
-                        Spacer()
+                    LabeledContent(String(localized: "settings.serial_mask")) {
                         Text(String(localized: "settings.serial_mask.value")).foregroundStyle(.tertiary)
                     }
                 }
@@ -230,7 +233,10 @@ struct SettingsView: View {
                     NavigationLink(String(localized: "settings.glossary"), destination: GlossaryView())
                 }
                 Section(String(localized: "settings.section.about")) {
-                    LabeledContent(String(localized: "settings.version"), value: "0.2.0")
+                    LabeledContent(
+                        String(localized: "settings.version"),
+                        value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
+                    )
                     LabeledContent(String(localized: "settings.bundle_id"), value: "com.ticklab.watchaccuracypro")
                     // Round 138 (관리자 모드 — 10번 연속 클릭 → PIN prompt). git commit 시 제외할 영역.
                     LabeledContent(
@@ -238,7 +244,10 @@ struct SettingsView: View {
                         value: MovementDBOTAService.shared.installedVersion() ?? "bundled"
                     )
                     .contentShape(Rectangle())
+                    #if DEBUG
                     .onTapGesture {
+                        // Round (하드코딩 audit): admin entry 자체를 #if DEBUG 로 묶음 — release 빌드에선
+                        //   tap 이 admin prompt 띄우지 않으므로 "Admin Access"/"PIN" 등 영문 literal 도 사용자 미노출.
                         adminTapCount += 1
                         if adminTapCount >= 10 {
                             adminTapCount = 0
@@ -247,6 +256,7 @@ struct SettingsView: View {
                             showingAdminPinPrompt = true
                         }
                     }
+                    #endif
                 }
             }
             .navigationTitle(String(localized: "settings.title"))
@@ -283,23 +293,18 @@ struct SettingsView: View {
             } message: {
                 Text(String(localized: "settings.icloud.restart.body"))
             }
-            // Round 138 (관리자 모드 — git commit 시 제외해야 할 영역 시작) {
+            // Round 138 (관리자 모드 — DEBUG 전용 영역) {
+            #if DEBUG
             .alert("Admin Access", isPresented: $showingAdminPinPrompt) {
                 SecureField("PIN", text: $adminPinInput)
                     .keyboardType(.numberPad)
                 Button("Enter") {
-                    // Round 148 (Jay 5 #6 Critical): #if DEBUG 가드 — release/AppStore 빌드 에서 admin 모드 차단.
-                    // Note: literal — git commit 시 이 부분 제외.
-                    #if DEBUG
                     if adminPinInput == "1639316" {
                         adminPinInput = ""
                         showingAdminPanel = true
                     } else {
                         adminPinError = true
                     }
-                    #else
-                    adminPinError = true  // Release 빌드: PIN 일치 여부 무관하게 진입 차단.
-                    #endif
                 }
                 Button("Cancel", role: .cancel) {
                     adminPinInput = ""
@@ -307,6 +312,7 @@ struct SettingsView: View {
             } message: {
                 Text(adminPinError ? "Wrong PIN." : "Enter admin PIN.")
             }
+            #endif
             // Round 149 (Hyemi 7 C3): sheet 자체도 #if DEBUG — release 빌드 안 컴파일.
             #if DEBUG
             .sheet(isPresented: $showingAdminPanel) {
@@ -325,11 +331,17 @@ struct SettingsView: View {
     private var accountHero: some View {
         Button {
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
-            // Phase 2: PurchaseView 시트 진입.
+            // 사용자 보고 fix: Pro 면 paywall 대신 StoreKit 구독 관리 sheet 열기 (이전엔 no-op UX dead end).
+            if preferences.isPro {
+                showingManageSubscriptions = true
+            } else {
+                purchaseRouter?.intend(.settings)
+            }
         } label: {
             heroContent
         }
         .buttonStyle(.plain)
+        .manageSubscriptionsSheet(isPresented: $showingManageSubscriptions)
     }
 
     private var heroContent: some View {
@@ -415,19 +427,6 @@ struct SettingsView: View {
     }
 }
 
-extension ExportPayload {
-    /// ShareLink 가 file URL 을 선호하므로 임시 디렉토리에 한 번 쓰고 URL 반환.
-    var tempURL: URL? {
-        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-        do {
-            try data.write(to: tmp, options: .atomic)
-            return tmp
-        } catch {
-            return nil
-        }
-    }
-}
-
 struct GlossaryView: View {
     /// Round 85/101: 디자인 SSOT screens-detail.jsx GlossaryView — search field + card style entries.
     @State private var query: String = ""
@@ -463,6 +462,10 @@ struct GlossaryView: View {
     var body: some View {
         ScrollView {
             VStack(spacing: 10) {
+                if filtered.isEmpty && !query.isEmpty {
+                    ContentUnavailableView.search(text: query)
+                        .padding(.top, 32)
+                }
                 ForEach(filtered, id: \.key) { entry in
                     HStack(alignment: .top, spacing: 12) {
                         Image(systemName: entry.icon)
@@ -498,17 +501,28 @@ struct GlossaryView: View {
 // Round 138 (관리자 모드 — git commit 시 제외해야 할 영역 시작) {
 // Round 149 (Hyemi 7 C3 Critical): AdminPanelView 전체를 #if DEBUG 로 감싸 release 빌드 컴파일 차단.
 #if DEBUG
-/// 관리자 패널 — Free/Pro 모드 직접 전환. 개발용. App Store 빌드 전 제거 필수.
+/// 관리자 패널 — 개발/QA 테스트 기능. App Store 빌드 전 제거 필수.
+/// 사용자 요청: 데모 시계 10종 + 측정 20개씩 시드, wipe, preferences reset, cache invalidate.
 private struct AdminPanelView: View {
     @Environment(UserPreferences.self) private var preferences
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Query private var allWatches: [Watch]
+    @Query private var allMeasurements: [WatchMeasurement]
+    @Query private var allJournalEntries: [JournalEntry]
+    @Query private var allServiceLogs: [ServiceLog]
+    @Query private var allWearLogs: [WearLog]
+    @Query private var allSpecCards: [SpecCard]
+
+    @State private var seedToast: String? = nil
+    @State private var showWipeConfirm = false
+    @State private var showResetPrefsConfirm = false
 
     var body: some View {
         @Bindable var prefs = preferences
         NavigationStack {
             Form {
                 Section("License Mode") {
-                    // Round 147 (Min H1): ProEntitlement.markPro 호출로 @Published isPro 도 동기화.
                     Toggle("Pro Unlocked", isOn: Binding(
                         get: { prefs.isPro },
                         set: { newValue in
@@ -523,19 +537,86 @@ private struct AdminPanelView: View {
                         .foregroundStyle(.secondary)
                 }
                 Section("Status") {
-                    LabeledContent("Watch limit", value: prefs.isPro ? "∞" : "\(ProEntitlement.freeWatchLimit)")
-                    LabeledContent("Journal/month", value: prefs.isPro ? "∞" : "\(ProEntitlement.freeJournalMonthLimit)")
-                    LabeledContent("AI trial/watch", value: prefs.isPro ? "∞" : "\(ProEntitlement.freeAITrialPerWatch)")
+                    LabeledContent("Watches", value: "\(allWatches.count)")
+                    LabeledContent("Measurements", value: "\(allMeasurements.count)")
+                    LabeledContent("Journals", value: "\(allJournalEntries.count)")
+                    LabeledContent("Service logs", value: "\(allServiceLogs.count)")
+                    LabeledContent("Wear logs", value: "\(allWearLogs.count)")
+                    LabeledContent("Spec cards", value: "\(allSpecCards.count)")
+                }
+                Section("Seed Demo Data") {
+                    Button {
+                        let added = seedDemoWatches(in: modelContext)
+                        seedToast = "✅ \(added) 시계 + 측정 데이터 시드 완료"
+                    } label: {
+                        Label("Seed 10 watches + 20 measurements each", systemImage: "sparkles")
+                    }
+                    Button {
+                        let counts = seedJournalServiceWearSpecCard(watches: allWatches, in: modelContext)
+                        seedToast = "✅ 일기 \(counts.0) / 서비스 \(counts.1) / 착용 \(counts.2) / 스펙 \(counts.3) 시드 완료"
+                    } label: {
+                        Label("Seed journal/service/wear/spec for existing watches", systemImage: "doc.text.fill")
+                    }
+                    .disabled(allWatches.isEmpty)
+                    if let toast = seedToast {
+                        Text(toast)
+                            .font(.caption)
+                            .foregroundStyle(.green)
+                    }
+                }
+                Section("Wipe Data") {
+                    Button(role: .destructive) {
+                        showWipeConfirm = true
+                    } label: {
+                        Label("Wipe ALL data (watches/measurements/journals/...)", systemImage: "trash.fill")
+                    }
+                    .confirmationDialog("모든 데이터 삭제할까요?", isPresented: $showWipeConfirm) {
+                        Button("전부 삭제", role: .destructive) {
+                            wipeAllData(in: modelContext, watches: allWatches)
+                            seedToast = "🗑️ 모든 데이터 삭제 완료"
+                        }
+                        Button("취소", role: .cancel) {}
+                    } message: {
+                        Text("시계 + 측정 + 일기 + 서비스 로그 + 착용 기록 + 스펙 카드 모두 삭제됩니다.")
+                    }
+                }
+                Section("Preferences Reset") {
+                    Button(role: .destructive) {
+                        showResetPrefsConfirm = true
+                    } label: {
+                        Label("Reset all UserDefaults flags", systemImage: "arrow.counterclockwise.circle")
+                    }
+                    .confirmationDialog("모든 환경설정 초기화", isPresented: $showResetPrefsConfirm) {
+                        Button("초기화", role: .destructive) {
+                            resetAllPreferences(prefs: prefs, watches: allWatches)
+                            seedToast = "🔄 환경설정 초기화 (onboarding/winding hint/알림/PIN 등)"
+                        }
+                        Button("취소", role: .cancel) {}
+                    } message: {
+                        Text("Pro mode 토글은 유지되며, 나머지 flag 가 default 로 reset 됩니다.")
+                    }
+                }
+                Section("Caches") {
+                    Button {
+                        WatchMoodService.invalidateAll()
+                        for w in allWatches { PhotoCache.invalidate(id: w.id) }
+                        seedToast = "🧹 Cache 비움 (WatchMood + PhotoCache)"
+                    } label: {
+                        Label("Invalidate WatchMood + PhotoCache", systemImage: "memorychip")
+                    }
                 }
                 Section("Debug Reset") {
                     Button("Reset onboarding", role: .destructive) {
-                        // Round 141 (Min H10): 진행 중 LongTest 세션도 정리 — onboarding 위로 timer fire 방지.
                         dismiss()
                         prefs.hasCompletedOnboarding = false
                     }
                     Button("Clear PIN", role: .destructive) {
                         prefs.pinEnabled = false
                         PINService.shared.clearPIN()
+                    }
+                    Button("Reset winding hint") {
+                        UserDefaults.standard.removeObject(forKey: "ticklab.windingHintShownAt")
+                        seedToast = "✅ 와인딩 안내 토스트 한 번 더 표시"
                     }
                 }
             }
@@ -548,7 +629,173 @@ private struct AdminPanelView: View {
             }
         }
     }
+
+    // MARK: - Seed: 데모 시계 10종 + 측정 데이터
+
+    /// 다양한 brand/caliber/movementType 의 데모 시계 10종 시드. 각 시계에 측정 20개.
+    @discardableResult
+    private func seedDemoWatches(in context: ModelContext) -> Int {
+        struct Spec {
+            let brand: String, model: String, caliber: String?, type: WatchMovementType, bphFallback: Int
+        }
+        let specs: [Spec] = [
+            .init(brand: "Rolex", model: "Submariner", caliber: "Rolex_3135", type: .automatic, bphFallback: 28800),
+            .init(brand: "Omega", model: "Seamaster", caliber: "Omega_8800", type: .automatic, bphFallback: 25200),
+            .init(brand: "IWC", model: "Portugieser", caliber: "IWC_82110", type: .automatic, bphFallback: 28800),
+            .init(brand: "Tudor", model: "Black Bay 58", caliber: "Tudor_MT5602", type: .automatic, bphFallback: 28800),
+            .init(brand: "Seiko", model: "SARB033", caliber: "Seiko_6R15", type: .automatic, bphFallback: 21600),
+            .init(brand: "Hamilton", model: "Khaki Field", caliber: "Hamilton_H10", type: .automatic, bphFallback: 21600),
+            .init(brand: "Breguet", model: "Classique", caliber: "Breguet_Cal502", type: .automatic, bphFallback: 21600),
+            .init(brand: "Patek Philippe", model: "Calatrava", caliber: "ETA_2824", type: .manual, bphFallback: 28800),
+            .init(brand: "Citizen", model: "Eco-Drive", caliber: nil, type: .quartz, bphFallback: 0),
+            .init(brand: "Casio", model: "G-Shock", caliber: nil, type: .quartz, bphFallback: 0)
+        ]
+        let now = Date()
+        var inserted = 0
+        for (idx, s) in specs.enumerated() {
+            let nominal = s.bphFallback
+            let watch = Watch(
+                brand: s.brand,
+                model: s.model,
+                caliber: s.caliber,
+                purchaseDate: now.addingTimeInterval(-86400 * Double((idx + 1) * 120)),
+                isFavorite: idx % 3 == 0,
+                isPrimary: idx == 0,
+                movementType: s.type,
+                createdAt: now.addingTimeInterval(-86400 * Double(60 - idx * 4))
+            )
+            context.insert(watch)
+            // quartz 는 측정 불가 — measurement 시드 skip.
+            guard nominal > 0 else {
+                inserted += 1
+                continue
+            }
+            for m in 0..<20 {
+                // rate 분포: -8 ~ +8 s/d 안에 다양. 일부 outlier ±15.
+                let rate: Double = {
+                    let base = Double(m % 5) - 2.0  // -2..+2
+                    let drift = Double.random(in: -2.5...2.5)
+                    return base + drift
+                }()
+                let beatErr: Double = Double.random(in: 0.1...0.8)
+                let amplitude: Double = Double.random(in: 260...295)
+                let confidence: Int = Int.random(in: 75...96)
+                let daysAgo: Double = Double(m) * 1.6 + Double.random(in: 0...0.4)
+                let measurement = WatchMeasurement(
+                    watch: watch,
+                    timestamp: now.addingTimeInterval(-86400 * daysAgo),
+                    rateSecondsPerDay: rate,
+                    beatErrorMs: beatErr,
+                    amplitudeDegrees: amplitude,
+                    bph: nominal,
+                    confidenceScore: confidence,
+                    durationSeconds: 30
+                )
+                context.insert(measurement)
+            }
+            inserted += 1
+        }
+        try? context.save()
+        return inserted
+    }
+
+    // MARK: - Seed: Journal/Service/Wear/SpecCard (기존 시계 대상)
+
+    private func seedJournalServiceWearSpecCard(watches: [Watch], in context: ModelContext) -> (Int, Int, Int, Int) {
+        let moods: [Mood] = [.happy, .proud, .neutral, .curious, .nostalgic]
+        let bodies = [
+            "오늘은 이 시계 차고 외출.",
+            "오버홀 끝나고 첫 측정.",
+            "갈색 스트랩 교체 — 분위기 완전 다름.",
+            "가족 식사. 격식 있는 자리.",
+            "운동 후 컨디션 체크."
+        ]
+        let now = Date()
+        var jCount = 0, sCount = 0, wCount = 0, scCount = 0
+        for (idx, w) in watches.enumerated() {
+            // Journal 5개
+            for j in 0..<5 {
+                let entry = JournalEntry(
+                    watch: w,
+                    timestamp: now.addingTimeInterval(-86400 * Double(j * 6 + idx)),
+                    body: bodies[j % bodies.count],
+                    mood: moods[j % moods.count]
+                )
+                context.insert(entry)
+                jCount += 1
+            }
+            // ServiceLog 2개
+            for (k, sType) in [ServiceType.fullOverhaul, ServiceType.checkup].enumerated() {
+                let log = ServiceLog(watch: w)
+                log.type = sType
+                log.timestamp = now.addingTimeInterval(-86400 * Double(k == 0 ? 365 * 5 : 365))
+                log.serviceCenter = sType == .fullOverhaul ? "공식 서비스센터" : "지정 워치메이커"
+                log.notes = sType == .fullOverhaul ? "5년 풀 오버홀, 가스켓 교체" : "정기 점검"
+                if let months = sType.recommendedIntervalMonths {
+                    log.nextServiceDate = Calendar.current.date(byAdding: .month, value: months, to: log.timestamp)
+                }
+                context.insert(log)
+                sCount += 1
+            }
+            // WearLog 지난 30일 중 18일 (60%)
+            for d in 0..<30 where d % 5 != 0 {
+                let date = Calendar.current.startOfDay(for: now.addingTimeInterval(-86400 * Double(d)))
+                let log = WearLog(watch: w, date: date, isAuto: Bool.random())
+                context.insert(log)
+                wCount += 1
+            }
+            // SpecCard 1개
+            let card = SpecCard(watch: w)
+            context.insert(card)
+            scCount += 1
+        }
+        try? context.save()
+        return (jCount, sCount, wCount, scCount)
+    }
+
+    // MARK: - Wipe
+
+    private func wipeAllData(in context: ModelContext, watches: [Watch]) {
+        for w in watches {
+            w.deleteCascade(in: context)
+        }
+        // Orphan 정리 — cascade 안 잡힌 경우 (예: watch 없는 journal/log/wear).
+        (try? context.fetch(FetchDescriptor<JournalEntry>()))?.forEach { context.delete($0) }
+        (try? context.fetch(FetchDescriptor<ServiceLog>()))?.forEach { context.delete($0) }
+        (try? context.fetch(FetchDescriptor<WearLog>()))?.forEach { context.delete($0) }
+        (try? context.fetch(FetchDescriptor<SpecCard>()))?.forEach { context.delete($0) }
+        (try? context.fetch(FetchDescriptor<WatchMeasurement>()))?.forEach { context.delete($0) }
+        try? context.save()
+        WatchMoodService.invalidateAll()
+    }
+
+    // MARK: - Preferences reset
+
+    private func resetAllPreferences(prefs: UserPreferences, watches: [Watch]) {
+        prefs.hasCompletedOnboarding = false
+        prefs.silentModeDefault = false
+        prefs.aiVerdictEnabled = true
+        prefs.keepScreenOnDuringMeasurement = true
+        prefs.journalReminderEnabled = false
+        prefs.randomPickEnabled = false
+        prefs.useSimplifiedDSP = true
+        prefs.magneticFieldMeasurementEnabled = false
+        prefs.appLockEnabled = false
+        prefs.pinEnabled = false
+        prefs.autoUpdateMovementDB = false
+        UserDefaults.standard.removeObject(forKey: "ticklab.windingHintShownAt")
+        UserDefaults.standard.removeObject(forKey: "ticklab.fallbackAcknowledged")
+        UserDefaults.standard.removeObject(forKey: "ticklab.lastLaunchUsedInMemoryFallback")
+        NotificationService.cancelJournalReminder()
+        NotificationService.cancelRandomPick()
+        for w in watches {
+            NotificationService.cancelWindReminder(for: w)
+            NotificationService.cancelBatteryReminder(for: w)
+        }
+        PINService.shared.clearPIN()
+    }
 }
+
 #endif
 // } Round 138 끝 / Round 149 (Hyemi 7 C3) — AdminPanel #if DEBUG 가드
 

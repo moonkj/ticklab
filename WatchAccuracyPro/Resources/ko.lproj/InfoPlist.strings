@@ -5,3 +5,4 @@
 "NSMicrophoneUsageDescription" = "시계의 정확도를 측정하려면 마이크가 필요합니다. 오디오는 분석 즉시 폐기되며 저장되거나 외부로 전송되지 않습니다.";
 "NSMotionUsageDescription" = "주변 자기장을 측정해 시계 자성화 위험을 확인하기 위해 iPhone 의 자기장 센서를 사용합니다. 측정값은 디바이스에서만 처리되며 외부로 전송되지 않습니다.";
 "NSPhotoLibraryUsageDescription" = "시계 사진을 보관함에서 선택해 등록할 수 있습니다.";
+"NSPhotoLibraryAddUsageDescription" = "측정 결과 공유 카드를 사진 보관함에 저장하기 위해 권한이 필요합니다.";

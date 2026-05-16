@@ -102,7 +102,11 @@ final class MagneticFieldService: ObservableObject {
         var elapsedNanos: UInt64 = 0
 
         while elapsedNanos < totalNanos {
+            // Round 19 (Doyoon): cancellation 즉시 반영 — 이전엔 isSampling=false 만 set 되고
+            //   sleep loop 가 계속 진행되며 sample append 됨.
+            if Task.isCancelled { break }
             try? await Task.sleep(nanoseconds: stepNanos)
+            if Task.isCancelled { break }
             elapsedNanos += stepNanos
             if let field = motionManager.magnetometerData?.magneticField {
                 // CMMagnetometerData.magneticField 는 uT 단위 (Apple docs).
@@ -110,6 +114,8 @@ final class MagneticFieldService: ObservableObject {
                 magnitudes.append(m)
                 currentMicroTesla = m
                 sampleHistory.append(m)  // Round 137: 실시간 그래프 갱신.
+                // Round 19 (Sora): sampleHistory unbounded growth 차단 — 시각화는 최근 300 개만 충분.
+                if sampleHistory.count > 300 { sampleHistory.removeFirst() }
             }
         }
 

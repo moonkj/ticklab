@@ -18,6 +18,18 @@ struct ExportPayload: Sendable {
     let filename: String
     let data: Data
     let mimeType: String
+
+    /// ShareLink 가 file URL 을 선호하므로 임시 디렉토리에 한 번 쓰고 URL 반환.
+    /// Round 16 (Min): SettingsView 에 잘못 위치하던 extension 을 owner 옆으로 이동.
+    var tempURL: URL? {
+        let tmp = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        do {
+            try data.write(to: tmp, options: .atomic)
+            return tmp
+        } catch {
+            return nil
+        }
+    }
 }
 
 enum DataExportService {

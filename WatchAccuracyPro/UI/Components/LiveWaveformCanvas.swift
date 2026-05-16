@@ -10,6 +10,10 @@ struct LiveWaveformCanvas: View {
     /// Round 158: detected BPH (locked). nil 이면 검출 중 모드 (flat line + 검색 indicator).
     /// non-nil 이면 locked 모드 (tic/toc dots at expected intervals).
     var lockedBPH: Int? = nil
+    /// 사용자 요청: DSP 가 실제 검출한 onset timestamps (측정 시작 기준 seconds). 실시간 tic/toc dots.
+    var recentOnsetTimes: [Double]? = nil
+    /// 측정 시작 wall-clock — onset timestamps 와 함께 60fps viewport 매핑에 사용.
+    var measurementStartedAt: Date? = nil
     var showProInfo: Bool = false
 
     var body: some View {
@@ -30,47 +34,59 @@ struct LiveWaveformCanvas: View {
                         gc.stroke(p, with: .color(AppColors.primary500.opacity(0.12)), lineWidth: 1)
                     }
 
-                    if running {
-                        // Round 170 (사용자 요청: 측정 중 그래프 부드럽게):
-                        // lock 여부와 무관하게 항상 부드러운 sin curve. BPH lock 잡히면 dots 추가.
-                        let beatsPerSec: Double = lockedBPH.map { Double($0) / 3600.0 } ?? 8.0
+                    if running, let bph = lockedBPH, bph > 0 {
+                        // 사용자 요청: 직선처럼 평평하면 안 됨 — 적당히 활기있게.
+                        //   amplitude h × 0.18, frequency cycle 8개 (1초당 1.6 cycle) 정도.
+                        let _ = bph
                         let secondsPerScreen: Double = 5.0
-                        let speed = w / secondsPerScreen
-                        let off = t * speed
+                        let cyclesPerScreen: Double = 8.0
+                        let amplitude: Double = Double(h) * 0.18
+                        let timePhaseShift = t * 2.0  // 흐름 속도
                         var p = Path()
                         for xi in stride(from: 0.0, through: Double(w), by: 2) {
-                            let timeAtX = (xi - Double(off).truncatingRemainder(dividingBy: Double(w))) / speed
-                            let phase = timeAtX * beatsPerSec * 2 * .pi
-                            let env = exp(-pow(sin(phase * 0.5) - 0.3, 2) * 4)
-                            let y = Double(mid) + sin(phase) * env * Double(h) * 0.35
+                            let normX = xi / Double(w)
+                            let phase = normX * cyclesPerScreen * 2 * .pi + timePhaseShift
+                            let y = Double(mid) + sin(phase) * amplitude
                             if xi == 0 { p.move(to: CGPoint(x: xi, y: y)) }
                             else { p.addLine(to: CGPoint(x: xi, y: y)) }
                         }
-                        gc.stroke(p, with: .color(AppColors.primary500), lineWidth: 1.6)
-                        // tic / toc dots — BPH lock 잡힌 경우에만.
-                        if let bph = lockedBPH, bph > 0 {
-                            let dotSpacing = speed / beatsPerSec
-                            let pairWidth = dotSpacing * 2
-                            let totalPairs = Int(w / pairWidth) + 1
-                            for i in 0..<totalPairs {
-                                let baseX = Double(i) * pairWidth - off.truncatingRemainder(dividingBy: pairWidth)
-                                let x: CGFloat = baseX < 0 ? CGFloat(baseX) + w : CGFloat(baseX)
-                                let yT: CGFloat = mid - 14
-                                let yB: CGFloat = mid + 14
+                        gc.stroke(p, with: .color(AppColors.primary500), lineWidth: 1.5)
+                        // 사용자 요청 (실시간 tic/toc): viewport end = latest onset (envSlice tailTrim lag 보정).
+                        //   wallElapsed 사용 시 onset latest 가 항상 ~1.5초 lag → viewport 오른쪽 빈 영역.
+                        //   latestOnset 기반 viewport 면 점이 오른쪽 edge 까지 가득.
+                        if let onsets = recentOnsetTimes, let latest = onsets.last {
+                            let viewEnd = latest
+                            let viewStart = viewEnd - secondsPerScreen
+                            let yT: CGFloat = mid - 14
+                            let yB: CGFloat = mid + 14
+                            for (i, ts) in onsets.enumerated() where ts >= viewStart && ts <= viewEnd {
+                                let progress = (ts - viewStart) / secondsPerScreen  // 0...1
+                                let x = CGFloat(progress) * w
+                                let isTic = (i % 2 == 0)
+                                let y = isTic ? yT : yB
                                 gc.fill(
-                                    Path(ellipseIn: CGRect(x: x - 3, y: yT - 3, width: 6, height: 6)),
-                                    with: .color(AppColors.success)
-                                )
-                                gc.fill(
-                                    Path(ellipseIn: CGRect(x: x + CGFloat(dotSpacing) - 3, y: yB - 3, width: 6, height: 6)),
-                                    with: .color(AppColors.accent)
+                                    Path(ellipseIn: CGRect(x: x - 3, y: y - 3, width: 6, height: 6)),
+                                    with: .color(isTic ? AppColors.success : AppColors.accent)
                                 )
                             }
                         }
+                    } else if running {
+                        // 사용자 요청: 측정은 시작됐지만 lock 아직 → dashed line ("---------- 으로 나와야") .
+                        //   움직이는 dash offset 으로 측정 중임을 시각적으로 표시.
+                        let dashLen: CGFloat = 8
+                        let gapLen: CGFloat = 6
+                        let cycle = dashLen + gapLen
+                        let off = CGFloat(t * 30).truncatingRemainder(dividingBy: cycle)
+                        var x = -cycle + off
+                        var dashes = Path()
+                        while x < w {
+                            dashes.move(to: CGPoint(x: max(0, x), y: mid))
+                            dashes.addLine(to: CGPoint(x: min(w, x + dashLen), y: mid))
+                            x += cycle
+                        }
+                        gc.stroke(dashes, with: .color(AppColors.primary500.opacity(0.45)), lineWidth: 1.6)
                     } else {
-                        // Round 170 (사용자 보고: "측정 시작 시 옛 노이즈 그래프 나옴"):
-                        // 이전 synthetic sin + dots 가 noise 처럼 보임 → 깔끔한 baseline 으로 대체.
-                        // idle / .requestingPermission / 측정 시작 직후 모두 동일.
+                        // idle / .requestingPermission / 측정 시작 전 — 정적 가는 baseline.
                         var baseline = Path()
                         baseline.move(to: CGPoint(x: 0, y: mid))
                         baseline.addLine(to: CGPoint(x: w, y: mid))

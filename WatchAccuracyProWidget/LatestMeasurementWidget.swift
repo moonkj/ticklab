@@ -30,9 +30,9 @@ struct LatestMeasurementProvider: TimelineProvider {
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<LatestMeasurementEntry>) -> Void) {
         let entry = LatestMeasurementEntry(date: Date(), snapshot: SharedSnapshotStore.read())
-        // 다음 갱신은 30분 후. 새 측정 시 앱이 reloadAllTimelines() 호출.
-        let next = Date().addingTimeInterval(30 * 60)
-        completion(Timeline(entries: [entry], policy: .after(next)))
+        // Round 17 (Sora): .after(30min) + reloadAllTimelines 가 동시 작동 → 중복 wake-up.
+        //   policy: .never 로 변경해 앱의 reloadAllTimelines (MeasurementViewModel save 시점) 만 trigger.
+        completion(Timeline(entries: [entry], policy: .never))
     }
 }
 

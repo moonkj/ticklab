@@ -8,16 +8,39 @@ import UIKit
 enum PhotoCache {
     private static let cache: NSCache<NSUUID, UIImage> = {
         let c = NSCache<NSUUID, UIImage>()
-        c.countLimit = 64
+        // Round 14 (Sora): countLimit 64 → 32 + totalCostLimit 256MB.
+        // 4032×3024 사진 UIImage 한 장 ~50MB → 64장이면 3.2GB 메모리 압박.
+        c.countLimit = 32
+        c.totalCostLimit = 256 * 1024 * 1024
         return c
     }()
     static func image(for id: UUID, data: Data?) -> UIImage? {
         let key = id as NSUUID
         if let cached = cache.object(forKey: key) { return cached }
         guard let data, let image = UIImage(data: data) else { return nil }
-        cache.setObject(image, forKey: key)
+        // Round 21 (Sora): data.count = JPEG 압축 크기. NSCache 에 들어가는 건 decoded UIImage 라
+        //   width × height × scale^2 × 4 bytes (RGBA) — 4MP 사진은 4MB JPEG → ~46MB decoded (11x).
+        //   cost mismatch 면 totalCostLimit 256MB 가 실제론 ~12장 만에 fill → 500MB 점유 위험.
+        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
+        cache.setObject(image, forKey: key, cost: cost)
         return image
     }
+
+    /// Round (3-1): 사진 저장 직후 호출 — background thread 에서 미리 디코드 + 캐시 적재.
+    /// 다음 ListRow/Hero display 시 cache hit → main thread 디코드 spike 회피.
+    /// 호출처: AddWatchView save(), photo source sheet 사진 set 시.
+    static func prefetch(for id: UUID, data: Data?) {
+        guard let data else { return }
+        let key = id as NSUUID
+        // 이미 캐시되어 있으면 no-op.
+        guard cache.object(forKey: key) == nil else { return }
+        Task.detached(priority: .userInitiated) {
+            guard let image = UIImage(data: data) else { return }
+            let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
+            cache.setObject(image, forKey: key, cost: cost)
+        }
+    }
+
     static func invalidate(id: UUID) { cache.removeObject(forKey: id as NSUUID) }
 }
 
@@ -30,8 +53,9 @@ extension Watch {
         NotificationCenter.default.post(name: .ticklabWatchWillDelete, object: nil, userInfo: ["watchId": self.id])
         // Round 147 (Min C1): PhotoCache eviction — 동일 UUID 재사용 시 stale 방지.
         PhotoCache.invalidate(id: self.id)
-        // 1) 측정들 삭제
-        for measurement in measurements {
+        // 1) 측정들 삭제 — Round 14 (Hyemi): faulted SwiftData relationship 을 iteration 중 mutate 하는
+        //    undefined behavior 회피를 위해 Array snapshot 후 delete.
+        for measurement in Array(measurements) {
             context.delete(measurement)
         }
         let watchID = self.id
@@ -92,7 +116,8 @@ extension Watch {
 }
 
 extension Notification.Name {
-    /// Round 139 (Min Critical): Watch 삭제 직전 notification — LongTestRunner cancel 등 사이드 정리.
+    /// Round 139 (Min Critical): Watch 삭제 직전 notification — 사이드 listener (측정 cancel 등) 가
+    ///   in-flight 작업을 정리할 기회 제공. (예전 LongTestRunner 언급은 phase 2 미구현 — TODO(phase2).)
     static let ticklabWatchWillDelete = Notification.Name("ticklab.watch.willDelete")
     /// Round 140 (H1): 측정 진행 중 RootTabView .id() reset 차단.
     static let ticklabMeasurementDidStart = Notification.Name("ticklab.measurement.didStart")
@@ -103,12 +128,32 @@ extension Notification.Name {
 
 extension JournalEntry {
     /// Round 170: 일기 삭제 시 사진 파일도 cleanup.
+    /// Round 24 (Sora): JournalPhotoCache 도 동시 invalidate — 동일 path 재사용 시 stale image 잔존 차단.
     func deleteWithFiles(in context: ModelContext) {
         let fm = FileManager.default
-        for path in photoPaths where fm.fileExists(atPath: path) {
-            try? fm.removeItem(atPath: path)
+        for path in photoPaths {
+            JournalPhotoCache.invalidate(path)
+            if fm.fileExists(atPath: path) {
+                try? fm.removeItem(atPath: path)
+            }
         }
         context.delete(self)
+    }
+}
+
+extension Watch {
+    /// Round 19 (Min): isPrimary invariant 보호 — 컬렉션 내 1개만 true (Hard Rule 9).
+    ///   호출자가 직접 watch.isPrimary = true 만 set 하면 두 시계 다 true 가능.
+    ///   이 헬퍼로 통일해 atomic guarantee.
+    @discardableResult
+    static func setPrimary(_ target: Watch, in context: ModelContext) -> Bool {
+        let descriptor = FetchDescriptor<Watch>(predicate: #Predicate { $0.isPrimary })
+        guard let primaries = try? context.fetch(descriptor) else { return false }
+        for w in primaries where w.id != target.id {
+            w.isPrimary = false
+        }
+        target.isPrimary = true
+        return (try? context.save()) != nil
     }
 }
 

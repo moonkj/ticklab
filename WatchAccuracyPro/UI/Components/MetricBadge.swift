@@ -59,9 +59,10 @@ struct MetricBadge: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColors.paper0)
         // Round 176: VoiceOver — '라벨, 값, 단위' 한 번에.
+        // Round 18 (Hyemi): 빈 hint announce 차단 — modifier 자체를 hint 있을 때만 부착.
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(label) \(value)\(unit.map { " \($0)" } ?? "")")
-        .accessibilityHint(hint ?? "")
+        .modifier(OptionalAccessibilityHint(hint: hint))
     }
 
     private var toneColor: Color {
@@ -106,10 +107,22 @@ struct MetricGrid: View {
     }
 }
 
+/// Round 18: hint 가 nil 이면 modifier 자체를 부착하지 않음 — VoiceOver 가 빈 hint announce 시도하던 버그 차단.
+private struct OptionalAccessibilityHint: ViewModifier {
+    let hint: String?
+    func body(content: Content) -> some View {
+        if let hint, !hint.isEmpty {
+            content.accessibilityHint(Text(hint))
+        } else {
+            content
+        }
+    }
+}
+
 #Preview {
     VStack(spacing: 12) {
         MetricGrid(cells: [
-            MetricBadge(label: "Rate", value: "+1.8", unit: "s/day", hint: "Within COSC", tone: .success, big: true),
+            MetricBadge(label: "Rate", value: "+1.8", unit: "s/d", hint: "Within COSC", tone: .success, big: true),
             MetricBadge(label: "Beat Error", value: "0.32", unit: "ms", hint: "Excellent", tone: .success, big: true),
             MetricBadge(label: "Amplitude", value: "286", unit: "°", big: true),
             MetricBadge(label: "BPH", value: "28800", big: true)

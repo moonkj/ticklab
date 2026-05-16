@@ -26,14 +26,24 @@ final class WatchMeasurement {
             } catch {
                 // Round 3 (Min): silent fallback 대신 logging — 디버깅 가능.
                 // 빈 Data 또는 schema mismatch 시 default 값 반환.
+                #if DEBUG
                 if !metadataData.isEmpty {
                     print("⚠️ WatchMeasurement metadata decode failed (\(id)): \(error)")
                 }
+                #endif
                 return MeasurementMetadata()
             }
         }
         set {
-            metadataData = (try? JSONEncoder().encode(newValue)) ?? Data()
+            do {
+                metadataData = try JSONEncoder().encode(newValue)
+            } catch {
+                // Round 19 (Sora): encode 실패 silent → 디버깅 어려움. metadata 무결성 손실 시 로깅.
+                #if DEBUG
+                print("⚠️ WatchMeasurement metadata encode failed (\(id)): \(error)")
+                #endif
+                metadataData = Data()
+            }
         }
     }
 
@@ -63,3 +73,7 @@ final class WatchMeasurement {
         self.notes = notes
     }
 }
+
+// Round 24 (Hyemi): @Model 은 Identifiable 자동 합성 X. UUID id 가 이미 있어 안전.
+//   `.sheet(item:)` 에 바로 넘기기 위함. 모델 레이어로 이동 — view 파일이 global side effect 안 가지도록.
+extension WatchMeasurement: Identifiable {}

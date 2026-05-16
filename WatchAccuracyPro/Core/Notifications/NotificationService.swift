@@ -44,7 +44,12 @@ enum NotificationService {
             return
         }
         Task {
-            guard await requestAuthorizationIfNeeded() else { return }
+            guard await requestAuthorizationIfNeeded() else {
+                #if DEBUG
+                print("⚠️ scheduleWindReminder: 권한 거부 — skip (\(watch.brand) \(watch.model))")
+                #endif
+                return
+            }
             let content = UNMutableNotificationContent()
             // Round 109 (Hard Rule 3 + 아키텍처 C2): 알림 제목도 localize.
             content.title = String(format: NSLocalizedString("notif.wind.title", comment: ""),
@@ -58,7 +63,13 @@ enum NotificationService {
             let trigger = UNCalendarNotificationTrigger(dateMatching: date, repeats: true)
 
             let request = UNNotificationRequest(identifier: windID(watch), content: content, trigger: trigger)
-            try? await UNUserNotificationCenter.current().add(request)
+            do {
+                try await UNUserNotificationCenter.current().add(request)
+            } catch {
+                #if DEBUG
+                print("⚠️ scheduleWindReminder add failed: \(error)")
+                #endif
+            }
         }
     }
 
@@ -76,14 +87,27 @@ enum NotificationService {
             return
         }
         Task {
-            guard await requestAuthorizationIfNeeded() else { return }
+            guard await requestAuthorizationIfNeeded() else {
+                #if DEBUG
+                print("⚠️ scheduleBatteryReminder: 권한 거부 — skip (\(watch.brand) \(watch.model))")
+                #endif
+                return
+            }
             let cal = Calendar.current
-            // 1주 전 09:00 알림. 이미 지난 날짜라면 내일 09:00.
-            let warn = cal.date(byAdding: .day, value: -7, to: due) ?? due
-            let fire = max(warn, Date().addingTimeInterval(60))
-            var comps = cal.dateComponents([.year, .month, .day], from: fire)
-            comps.hour = 9
-            comps.minute = 0
+            // Round 1-2 (Jay 사용자 보고 후속): 이전 구현은 warn(=due-7d) vs (오늘+60s) max 후
+            //   comps.hour=9 강제 → 오늘 09:00 (이미 지남) 으로 해석되어 trigger 거부되던 버그.
+            //   수정: 9시 fire 시각을 같은 day-anchor 로 명시적으로 build 후 (이미 지났으면) 내일로 push.
+            let warnDay = cal.date(byAdding: .day, value: -7, to: due) ?? due
+            var fireComps = cal.dateComponents([.year, .month, .day], from: warnDay)
+            fireComps.hour = 9
+            fireComps.minute = 0
+            var fire = cal.date(from: fireComps) ?? warnDay
+            if fire <= Date() {
+                // warn 일이 이미 지났거나 09:00 도 지남 → 내일 09:00.
+                fire = cal.date(byAdding: .day, value: 1, to: cal.startOfDay(for: Date()))?
+                    .addingTimeInterval(9 * 3600) ?? Date().addingTimeInterval(60)
+            }
+            let trigComps = cal.dateComponents([.year, .month, .day, .hour, .minute], from: fire)
 
             let content = UNMutableNotificationContent()
             content.title = String(format: NSLocalizedString("notif.battery.title", comment: ""),
@@ -91,9 +115,18 @@ enum NotificationService {
             content.body = String(format: NSLocalizedString("notif.battery.body_prefix", comment: ""), NotificationService.shortDate(due))
             content.sound = .default
 
-            let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: false)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: trigComps, repeats: false)
             let request = UNNotificationRequest(identifier: batteryID(watch), content: content, trigger: trigger)
-            try? await UNUserNotificationCenter.current().add(request)
+            do {
+                try await UNUserNotificationCenter.current().add(request)
+                #if DEBUG
+                print("ℹ️ scheduleBatteryReminder: \(watch.brand) at \(fire)")
+                #endif
+            } catch {
+                #if DEBUG
+                print("⚠️ scheduleBatteryReminder add failed: \(error)")
+                #endif
+            }
         }
     }
 
@@ -102,9 +135,7 @@ enum NotificationService {
     }
 
     private static func shortDate(_ date: Date) -> String {
-        let f = DateFormatter()
-        f.dateFormat = "yyyy.MM.dd"
-        return f.string(from: date)
+        DateFormatter.localizedString(from: date, dateStyle: .medium, timeStyle: .none)
     }
 
     // MARK: - Random pick (랜덤 시계 뽑기)
@@ -113,10 +144,18 @@ enum NotificationService {
     /// 사용자가 해당 알림을 보거나 앱을 다시 열 때 reschedule 호출하여 다음 날 재예약.
     static func scheduleRandomPick(watches: [Watch], hour: Int, minute: Int, enabled: Bool) {
         cancelRandomPick()
-        guard enabled, watches.count >= 2 else { return }
+        // Round 19 (사용자 보고: "오늘의 시계 뽑기 알람 안 옴"):
+        //   이전 조건 `watches.count >= 2` → 시계 1개 사용자는 알람 silently dropped.
+        //   1개라도 그 시계로 알림 의미 있음 (선택지가 1개일 뿐).
+        guard enabled, !watches.isEmpty else { return }
         guard let pick = watches.randomElement() else { return }
         Task {
-            guard await requestAuthorizationIfNeeded() else { return }
+            guard await requestAuthorizationIfNeeded() else {
+                #if DEBUG
+                print("⚠️ scheduleRandomPick: 권한 거부 — 알림 등록 skip.")
+                #endif
+                return
+            }
             let cal = Calendar.current
             let now = Date()
             var comps = cal.dateComponents([.year, .month, .day], from: now)
@@ -136,7 +175,16 @@ enum NotificationService {
 
             let trigger = UNCalendarNotificationTrigger(dateMatching: trigComps, repeats: false)
             let request = UNNotificationRequest(identifier: randomPickID, content: content, trigger: trigger)
-            try? await UNUserNotificationCenter.current().add(request)
+            do {
+                try await UNUserNotificationCenter.current().add(request)
+                #if DEBUG
+                print("ℹ️ scheduleRandomPick: \(pick.brand) \(pick.model) at \(fire)")
+                #endif
+            } catch {
+                #if DEBUG
+                print("⚠️ scheduleRandomPick add failed: \(error)")
+                #endif
+            }
         }
     }
 
@@ -152,7 +200,12 @@ enum NotificationService {
         cancelJournalReminder()
         guard enabled else { return }
         Task {
-            guard await requestAuthorizationIfNeeded() else { return }
+            guard await requestAuthorizationIfNeeded() else {
+                #if DEBUG
+                print("⚠️ scheduleJournalReminder: 권한 거부 — skip")
+                #endif
+                return
+            }
             let content = UNMutableNotificationContent()
             content.title = NSLocalizedString("notif.journal.title", comment: "")
             content.body = NSLocalizedString("notif.journal.body", comment: "")
@@ -162,11 +215,32 @@ enum NotificationService {
             comps.minute = minute
             let trigger = UNCalendarNotificationTrigger(dateMatching: comps, repeats: true)
             let request = UNNotificationRequest(identifier: journalReminderID, content: content, trigger: trigger)
-            try? await UNUserNotificationCenter.current().add(request)
+            do {
+                try await UNUserNotificationCenter.current().add(request)
+            } catch {
+                #if DEBUG
+                print("⚠️ scheduleJournalReminder add failed: \(error)")
+                #endif
+            }
         }
     }
 
     static func cancelJournalReminder() {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [journalReminderID])
+    }
+}
+
+/// Round 19 (사용자 보고): foreground 일 때 알림 banner 가 표시 안 됨 — iOS 기본 동작.
+///   UNUserNotificationCenterDelegate.willPresent 에서 `.banner + .sound` 반환해야 노출됨.
+///   App init 시 한 번 등록.
+final class TickLabNotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    static let shared = TickLabNotificationDelegate()
+
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .sound, .list])
     }
 }

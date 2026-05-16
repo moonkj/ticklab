@@ -286,11 +286,13 @@ final class MeasurementViewModel {
         if rateUncertaintySD > 2.0 { failedGates.append(String(format: "rate정밀도>±2s/d(%.1f)", rateUncertaintySD)) }
         if beatYield < 0.5 { failedGates.append("beatYield<50%") }
         guard failedGates.isEmpty else {
+            #if DEBUG
             let rmsString = result.residualRMSSeconds.map { String(format: "%.1fμs", $0 * 1_000_000) } ?? "nil"
             print("⚠️ Refusing to persist: failed=\(failedGates) " +
                   "rate=\(result.rateSecondsPerDay), beatError=\(result.beatErrorMs), " +
                   "rms=\(rmsString), conf=\(result.confidenceScore), " +
                   "beats=\(result.beatCount)/\(expectedBeats) (\(Int(beatYield * 100))%)")
+            #endif
             lastRejectedResult = result
             lastRejectionReason = failedGates.joined(separator: ", ")
             return false
@@ -298,7 +300,9 @@ final class MeasurementViewModel {
         // Round 158 (사용자 보고: F-grade 측정도 저장되어 트렌드 오염):
         // F-grade 는 알고리즘이 "신뢰 부족" 으로 판단 — 저장 안 함, 사용자 재측정 유도.
         if result.reliabilityGrade == .f {
+            #if DEBUG
             print("⚠️ F-grade measurement not persisted (low reliability — encouraging retry)")
+            #endif
             lastRejectedResult = result
             lastRejectionReason = "F-grade"
             return false
@@ -308,9 +312,12 @@ final class MeasurementViewModel {
         lastRejectionReason = nil
         // Round 168: 측정 성공 → mood 캐시 무효화.
         WatchMoodService.invalidate(for: watch)
+        // Round 18 (Doyoon): SNR 을 ambientNoiseDB 에 잘못 저장하던 history 와 호환 위해 양쪽 field 모두 채움.
+        //   장기적으로는 ambientNoiseDB 는 별도 추정치로 분리하고 snrDB 만 의미적 진실로 보존.
         let metadata = MeasurementMetadata(
             position: selectedPosition,
             ambientNoiseDB: result.snrDB,
+            snrDB: result.snrDB,
             deviceModel: deviceModelString(),
             microphoneType: AudioInputManager.shared.activeMicrophoneType,
             ntpOffsetMs: ntpOffsetMs

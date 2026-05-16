@@ -35,6 +35,7 @@ struct SpecCardView: View {
                     } label: {
                         Image(systemName: "trash")
                     }
+                    .accessibilityLabel(String(localized: "common.delete"))
                 }
             }
             .alert(
@@ -120,8 +121,8 @@ struct SpecCardView: View {
         VStack(spacing: 0) {
             specRow(String(localized: "speccard.spec.movement"), card.movement)
             specRow(String(localized: "speccard.spec.case"), card.caseSize.map { String(format: "%.1f mm", $0) })
-            specRow("Power Reserve", card.powerReserveHours.map { String(format: "%.0f h", $0) })
-            specRow(String(localized: "speccard.spec.registered"), card.createdAt.formatted(.dateTime.year().month().day()))
+            specRow(String(localized: "speccard.spec.power_reserve"), card.powerReserveHours.map { String(format: "%.0f h", $0) })
+            specRow(String(localized: "speccard.spec.registered"), AppDateFormat.fullDate(card.createdAt))
         }
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.rule, lineWidth: 1))
@@ -170,6 +171,9 @@ struct SpecCardView: View {
             .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
         }
         .buttonStyle(.plain)
+        .accessibilityLabel(String(localized: "speccard.play.a11y"))
+        .accessibilityValue(String(localized: isPlaying ? "speccard.play.label.playing" : "speccard.play.label.idle"))
+        .accessibilityAddTraits(isPlaying ? .isSelected : [])
     }
 
     private var noteSection: some View {

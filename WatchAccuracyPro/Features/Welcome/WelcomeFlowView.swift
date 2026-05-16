@@ -64,8 +64,9 @@ private struct WelcomeHero: View {
                     Button(String(localized: "welcome.skip"), action: onNext)
                         .font(.system(size: 15))
                         .foregroundStyle(AppColors.ink2)
-                        .frame(minHeight: 44)
+                        .frame(minWidth: 44, minHeight: 44)
                         .padding(.horizontal, 4)
+                        .contentShape(Rectangle())
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 12)
@@ -140,6 +141,8 @@ private struct WelcomeHero: View {
             .tracking(-1.44)
             .multilineTextAlignment(.center)
             .lineSpacing(8)
+            .lineLimit(3)
+            .minimumScaleFactor(0.6)
             // Subtitle tk-body-lg = 17/24.
             Text(String(localized: "welcome.subtitle"))
                 .font(.system(size: 17))
@@ -227,11 +230,8 @@ private struct FeatureCarousel: View {
             }
             .padding(.bottom, 16)
 
-            // Founder card (page 3 only) + CTA.
+            // 사용자 보고 fix: founderCard 는 클릭 destination 미정의 + Pro 정책 변경됨 → 제거.
             VStack(spacing: 12) {
-                if page == 2 {
-                    founderCard
-                }
                 Button {
                     if page < pages.count - 1 {
                         withAnimation { page += 1 }
@@ -283,6 +283,7 @@ private struct FeatureCarousel: View {
     }
 
     // Page 0 — waveform + dots + "+5.2 s/d". Round 158: 시각 무게 중심 (100,100) 으로 재정렬.
+    // Round 19 (Sora): TabView swipe 중 매 frame Canvas re-draw 비용 회피 — .drawingGroup 으로 Metal-backed offscreen.
     private var illustration0: some View {
         Canvas { ctx, size in
             let s = size.width / 200.0
@@ -321,9 +322,11 @@ private struct FeatureCarousel: View {
                 .foregroundColor(AppColors.ink0)
             ctx.draw(text, at: CGPoint(x: 100 * s, y: 140 * s), anchor: .center)
         }
+        .drawingGroup()
     }
 
     // Page 1 — journal card with photo placeholder (jsx 200×200 viewBox port).
+    // Round 19 (Sora): .drawingGroup 으로 TabView transform 비용 절감.
     private var illustration1: some View {
         Canvas { ctx, size in
             let s = size.width / 200.0
@@ -363,9 +366,11 @@ private struct FeatureCarousel: View {
             )
             ctx.fill(Path(ellipseIn: circleRect), with: .color(AppColors.accent))
         }
+        .drawingGroup()
     }
 
     // Page 2 — gauge dial + sparkles + verdict (jsx 200×200 viewBox port).
+    // Round 19 (Sora): .drawingGroup 으로 TabView transform 비용 절감.
     private var illustration2: some View {
         Canvas { ctx, size in
             let s = size.width / 200.0
@@ -403,11 +408,12 @@ private struct FeatureCarousel: View {
             // Sparkle 2 — smaller at (40, 140).
             ctx.fill(starPath(center: CGPoint(x: 40 * s, y: 140 * s), radius: 7 * s), with: .color(AppColors.accent))
             // Verdict text at y=180.
-            let verdict = Text("🟡 약간 빠릅니다")
+            let verdict = Text(String(localized: "welcome.illustration.verdict"))
                 .font(.system(size: 12 * s, weight: .medium))
                 .foregroundColor(AppColors.ink0)
             ctx.draw(verdict, at: CGPoint(x: 100 * s, y: 180 * s), anchor: .center)
         }
+        .drawingGroup()
     }
 
     /// 4-point star path (sparkle).
@@ -431,38 +437,6 @@ private struct FeatureCarousel: View {
         return p
     }
 
-    private var founderCard: some View {
-        HStack(spacing: 12) {
-            ZStack {
-                LinearGradient(
-                    colors: [AppColors.accent, AppColors.accentDark],
-                    startPoint: .top, endPoint: .bottom
-                )
-                .frame(width: 36, height: 36)
-                .clipShape(RoundedRectangle(cornerRadius: 10))
-                Image(systemName: "sparkles")
-                    .font(.system(size: 16))
-                    .foregroundStyle(AppColors.primaryDeep)
-            }
-            .shadow(color: AppColors.accent.opacity(0.5), radius: 8)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(String(localized: "welcome.founder.title"))
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AppColors.primaryDeep)
-                Text(String(localized: "welcome.founder.subtitle"))
-                    .font(.system(size: 13))
-                    .foregroundStyle(AppColors.primary700)
-            }
-            Spacer()
-            Image(systemName: "chevron.right")
-                .font(.system(size: 16))
-                .foregroundStyle(AppColors.primary700)
-        }
-        .padding(14)
-        .background(AppColors.accent50)
-        .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.accentLight, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-    }
 }
 
 // MARK: - Step 3: Quick watch add (디자인 SSOT screens-onboarding.jsx QuickWatchAddView)
@@ -480,8 +454,10 @@ private struct QuickWatchAdd: View {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .medium))
                         .foregroundStyle(AppColors.primaryDeep)
-                        .frame(width: 36, height: 36)
+                        .frame(width: 44, height: 44)
+                        .contentShape(Rectangle())
                 }
+                .accessibilityLabel(String(localized: "welcome.nav.back"))
                 Spacer()
                 Text(String(localized: "welcome.pick_watch"))
                     .font(.system(size: 17, weight: .semibold))
@@ -493,6 +469,8 @@ private struct QuickWatchAdd: View {
                 }
                 .font(.system(size: 15))
                 .foregroundStyle(AppColors.ink2)
+                .frame(minWidth: 44, minHeight: 44, alignment: .trailing)
+                .contentShape(Rectangle())
             }
             .padding(.horizontal, 16)
             .frame(height: 44)
@@ -631,8 +609,8 @@ private struct FirstResultPlaceholder: View {
                 VStack(spacing: 20) {
                     Spacer().frame(height: 12)
                     introHeader
-                    // Round 138 사용자 요청: 사용자 모드 (친절히 알려주세요 / 전문적으로 분석) 선택 제거.
-                    // 항상 전문 분석 모드 고정 (UserPreferences.userMode 기본 .novice 유지하나 onboarding 에선 노출 X).
+                    // Round 138 사용자 요청: 사용자 모드 선택 제거 — 항상 .pro (전문 분석).
+                    //   UserPreferences.userMode 기본값도 .pro 로 변경됨.
                     measureGuideCard
                 }
                 .padding(.horizontal, 16)
@@ -725,14 +703,15 @@ private struct COSCBarView: View {
                 }
             }
             .frame(height: 14)
+            // 사용자 보고 fix: 하드코딩 라벨 → l10n 키로. Hard Rule 3 준수.
             HStack {
-                Text("−12").font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink2)
+                Text(String(localized: "cosc.bar.min")).font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink2)
                 Spacer()
-                Text("COSC −4 ~ +6")
+                Text(String(localized: "cosc.bar.range"))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.success)
                 Spacer()
-                Text("+12").font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink2)
+                Text(String(localized: "cosc.bar.max")).font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink2)
             }
         }
     }

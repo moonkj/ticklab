@@ -26,6 +26,8 @@ struct RootTabView: View {
     /// Round 140 (Hyemi/Min H1 Critical): 측정 진행 중 탭 전환 시 epoch 증가가 측정 silent 폐기 유발.
     /// MeasurementViewModel.start/stop 이 notification post → 측정 중에는 epoch 증가 차단.
     @State private var measurementInProgress: Bool = false
+    /// 사용자 보고 fix: 4 분산 sheet 호스트를 shell 레벨로 통합 — iPad multi-window race 차단 + 신규 진입점 추가 cost 감소.
+    @State private var purchaseRouter = PurchaseRouter()
 
     enum Tab: Hashable {
         case collection
@@ -38,22 +40,34 @@ struct RootTabView: View {
         TabView(selection: Binding(
             get: { selected },
             set: { newTab in
+                if newTab != selected {
+                    UISelectionFeedbackGenerator().selectionChanged()
+                }
                 // Round 140 (Hyemi/Min H1 Critical): 측정 진행 중에는 deep state 보존 → epoch 증가 차단.
-                // 측정 후엔 normal reset 으로 복귀.
+                // Round 19 (Hyemi): path reset 도 같이 guard — 이전엔 측정 중에도 NavigationPath 가 비워져
+                //   detail context 사라지던 버그 (epoch reset 만 차단되고 path 는 그대로 reset 됐었음).
                 let allowReset = !measurementInProgress
                 switch newTab {
                 case .collection:
-                    collectionPath = NavigationPath()
-                    if allowReset { collectionEpoch &+= 1 }
+                    if allowReset {
+                        collectionPath = NavigationPath()
+                        collectionEpoch &+= 1
+                    }
                 case .today:
-                    todayPath = NavigationPath()
-                    if allowReset { todayEpoch &+= 1 }
+                    if allowReset {
+                        todayPath = NavigationPath()
+                        todayEpoch &+= 1
+                    }
                 case .journal:
-                    journalPath = NavigationPath()
-                    if allowReset { journalEpoch &+= 1 }
+                    if allowReset {
+                        journalPath = NavigationPath()
+                        journalEpoch &+= 1
+                    }
                 case .stats:
-                    statsPath = NavigationPath()
-                    if allowReset { statsEpoch &+= 1 }
+                    if allowReset {
+                        statsPath = NavigationPath()
+                        statsEpoch &+= 1
+                    }
                 }
                 selected = newTab
             }
@@ -86,7 +100,15 @@ struct RootTabView: View {
                 }
                 .tag(Tab.stats)
         }
-        .tint(AppColors.accent)
+        // 사용자 보고 fix: 글로벌 accent gold 가 alert 버튼까지 propagate → 가독성 ↓ (#C9A961 on white ~2.8:1).
+        //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.
+        .tint(AppColors.primaryDeep)
+        .environment(\.purchaseRouter, purchaseRouter)
+        // shell-level paywall — 한 번에 하나만 띄움. 4 분산 sheet 대체.
+        .sheet(isPresented: $purchaseRouter.isPresenting) {
+            PurchaseView()
+                .environment(preferences)
+        }
         // Round 140 (H1): MeasurementViewModel 의 start/end notification 받아 epoch reset 차단.
         .onReceive(NotificationCenter.default.publisher(for: .ticklabMeasurementDidStart)) { _ in
             measurementInProgress = true

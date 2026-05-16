@@ -4,7 +4,7 @@ import SwiftUI
 
 /// Screen 21 — ShakePick. 폰을 흔들거나 버튼으로 오늘의 시계 추천.
 struct ShakePickView: View {
-    @Query private var watches: [Watch]
+    @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
     @Environment(UserPreferences.self) private var preferences
     @State private var phase: Phase = .idle
     @State private var picked: Watch?
@@ -282,7 +282,7 @@ struct ShakePickView: View {
                 // Round 138 사용자 요청: "2개 이상 등록되어 활성화" subtitle 제거 — 시계 1개로도 동작.
             }
             Spacer()
-            Toggle("", isOn: Binding(
+            Toggle(String(localized: "shake.schedule.toggle.a11y"), isOn: Binding(
                 get: { preferences.randomPickEnabled },
                 set: { newValue in
                     preferences.randomPickEnabled = newValue
@@ -295,6 +295,7 @@ struct ShakePickView: View {
                 }
             ))
             .labelsHidden()
+            .accessibilityLabel(String(localized: "shake.schedule.toggle.a11y"))
         }
         .padding(14)
         .background(AppColors.paper1)

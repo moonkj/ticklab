@@ -91,9 +91,12 @@ struct FullscreenPhotoViewer: View {
                         Image(systemName: "xmark")
                             .font(.system(size: 15, weight: .bold))
                             .foregroundStyle(.white)
-                            .frame(width: 36, height: 36)
-                            .background(.white.opacity(0.18))
-                            .clipShape(Circle())
+                            .frame(width: 44, height: 44)
+                            .background(
+                                Circle()
+                                    .fill(.white.opacity(0.18))
+                                    .frame(width: 36, height: 36)
+                            )
                             .contentShape(Circle())
                     }
                     .buttonStyle(.plain)

@@ -32,11 +32,7 @@ struct PINSetupView: View {
 
     var body: some View {
         VStack(spacing: 32) {
-            Spacer().frame(height: 8)
-
-            Text(String(localized: "pin.setup.title"))
-                .font(.system(size: 22, weight: .semibold))
-                .foregroundStyle(AppColors.ink0)
+            Spacer().frame(height: 24)
 
             Text(stepPrompt)
                 .font(.system(size: 15, weight: .regular))
@@ -64,6 +60,8 @@ struct PINSetupView: View {
                 .focused($focused)
                 .opacity(0.01)
                 .frame(height: 1)
+                .accessibilityLabel(String(localized: "pin.setup.title"))
+                .accessibilityHint(String(localized: "pin.entry.a11y.hint"))
                 .onChange(of: currentPIN) { _, newValue in
                     handlePINChange(newValue)
                 }
@@ -97,10 +95,13 @@ struct PINSetupView: View {
         HStack(spacing: 16) {
             ForEach(0..<PINService.pinLength, id: \.self) { i in
                 Circle()
-                    .fill(i < filled ? AppColors.accent : AppColors.rule)
+                    .fill(i < filled ? AppColors.accent : AppColors.paper2)
                     .frame(width: 14, height: 14)
+                    .overlay(Circle().stroke(AppColors.ink3.opacity(0.35), lineWidth: 1))
             }
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(String(format: NSLocalizedString("pin.entry.a11y.progress", comment: ""), filled, PINService.pinLength)))
     }
 
     private func handlePINChange(_ newValue: String) {

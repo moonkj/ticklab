@@ -128,13 +128,13 @@ struct BrandLeagueView: View {
                     Text(p.label)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(period == p ? .white : AppColors.ink0)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                        .frame(maxWidth: .infinity, minHeight: 44)
                         .background(period == p ? AppColors.primaryDeep : AppColors.paper2)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
+                .accessibilityAddTraits(period == p ? .isSelected : [])
             }
         }
     }
@@ -156,22 +156,13 @@ struct BrandLeagueView: View {
     // MARK: - Empty
 
     private var emptyState: some View {
-        VStack(spacing: 16) {
-            Image(systemName: "chart.bar.xaxis")
-                .font(.system(size: 48, weight: .light))
-                .foregroundStyle(AppColors.ink3)
-            Text(String(localized: "league.empty.title"))
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundStyle(AppColors.ink0)
-            Text(service.lastError != nil
-                 ? String(localized: "league.error.body")
-                 : String(localized: "league.empty.body"))
-                .font(.system(size: 13))
-                .foregroundStyle(AppColors.ink2)
-                .multilineTextAlignment(.center)
-        }
-        .padding(40)
-        .frame(maxWidth: .infinity)
+        EmptyState(
+            icon: "chart.bar.xaxis",
+            title: String(localized: "league.empty.title"),
+            message: service.lastError != nil
+                ? String(localized: "league.error.body")
+                : String(localized: "league.empty.body")
+        )
     }
 
     // MARK: - News Card
@@ -301,7 +292,7 @@ struct BrandLeagueView: View {
                 Text(String(localized: "league.myteam"))
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
                     .tracking(2).foregroundStyle(AppColors.accentDark)
-                Text("\(brand)  \(rank)위")
+                Text(String(format: NSLocalizedString("league.myteam.rank_value", comment: ""), brand, rank))
                     .font(.system(size: 16, weight: .semibold)).foregroundStyle(AppColors.ink0)
                 HStack(spacing: 8) {
                     Label("\(myCount)\(String(localized: "league.myteam.my_count"))",
@@ -324,8 +315,25 @@ struct BrandLeagueView: View {
 
     // MARK: - Ranking Section
 
+    /// Round 15 (Doyoon): 기존 O(N²) per-row rank 계산 → 단일 패스로 precompute.
+    /// 50 brand 기준 2500 비교 → 50 비교 (50x 감소).
+    private var precomputedRanks: [Int] {
+        let arr = service.globalRanking
+        guard !arr.isEmpty else { return [] }
+        var ranks = [Int](repeating: 1, count: arr.count)
+        var currentRank = 1
+        for i in 1..<arr.count {
+            if arr[i].totalCount < arr[i - 1].totalCount {
+                currentRank = i + 1
+            }
+            ranks[i] = currentRank
+        }
+        return ranks
+    }
+
     private var rankingSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        let ranks = precomputedRanks
+        return VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(String(localized: "league.ranking.all"))
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
@@ -338,14 +346,7 @@ struct BrandLeagueView: View {
             VStack(spacing: 0) {
                 ForEach(Array(service.globalRanking.enumerated()), id: \.element.brand) { i, b in
                     let isMyTeam = myTeam == b.brand
-                    // 동점이면 같은 순위 표시
-                    let rank: Int = {
-                        var r = 1
-                        for j in 0..<i {
-                            if service.globalRanking[j].totalCount > b.totalCount { r += 1 }
-                        }
-                        return r
-                    }()
+                    let rank: Int = i < ranks.count ? ranks[i] : (i + 1)
                     HStack(spacing: 12) {
                         Text("\(rank)")
                             .font(.system(size: 15, weight: .bold, design: .monospaced))

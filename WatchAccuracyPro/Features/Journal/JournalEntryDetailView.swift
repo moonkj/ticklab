@@ -7,6 +7,7 @@ struct JournalEntryDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @State private var sharing = false
+    @State private var showDeleteConfirm = false
 
     var body: some View {
         ScrollView {
@@ -26,7 +27,7 @@ struct JournalEntryDetailView: View {
             .padding(20)
         }
         .background(AppColors.paper0.ignoresSafeArea())
-        .navigationTitle(entry.timestamp.formatted(.dateTime.day().month().year()))
+        .navigationTitle(AppDateFormat.fullDate(entry.timestamp))
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
@@ -37,10 +38,7 @@ struct JournalEntryDetailView: View {
                         Label(String(localized: "journal.detail.share"), systemImage: "square.and.arrow.up")
                     }
                     Button(role: .destructive) {
-                        // Round 172: 사진 파일도 함께 cleanup (Round 170 추가된 헬퍼).
-                        entry.deleteWithFiles(in: modelContext)
-                        try? modelContext.save()
-                        dismiss()
+                        showDeleteConfirm = true
                     } label: {
                         Label(String(localized: "common.delete"), systemImage: "trash")
                     }
@@ -48,6 +46,7 @@ struct JournalEntryDetailView: View {
                     Image(systemName: "ellipsis.circle")
                         .foregroundStyle(AppColors.ink2)
                 }
+                .accessibilityLabel(String(localized: "a11y.more_actions"))
             }
         }
         .sheet(isPresented: $sharing) {
@@ -63,6 +62,20 @@ struct JournalEntryDetailView: View {
             }
             ShareCardComposerView(entry: entry, directRate: rate, entryPhotoData: entryPhotoData)
                 .presentationDetents([.large])
+        }
+        .confirmationDialog(
+            String(localized: "journal.detail.delete.confirm"),
+            isPresented: $showDeleteConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(String(localized: "common.delete"), role: .destructive) {
+                entry.deleteWithFiles(in: modelContext)
+                try? modelContext.save()
+                dismiss()
+            }
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "journal.detail.delete.message"))
         }
     }
 
@@ -104,7 +117,7 @@ struct JournalEntryDetailView: View {
                         .font(.system(size: 20, weight: .medium, design: .serif))
                         .foregroundStyle(AppColors.ink0)
                 }
-                Text(entry.timestamp, format: .dateTime.hour().minute().day().month())
+                Text(AppDateFormat.monthDayTime(entry.timestamp))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.ink3)
             }

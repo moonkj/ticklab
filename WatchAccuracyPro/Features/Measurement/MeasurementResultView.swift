@@ -8,17 +8,40 @@ struct MeasurementResultView: View {
     var onRetry: (() -> Void)? = nil
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
+    @ScaledMetric(relativeTo: .largeTitle) private var gradeTileSize: CGFloat = 64
+    @ScaledMetric(relativeTo: .largeTitle) private var gradeTileFont: CGFloat = 44
+    /// 사용자 보고 fix: verdict headline/body Dynamic Type 대응 — 노안 사용자가 XL 글자 크기 사용 시도.
+    @ScaledMetric(relativeTo: .title) private var scaledHeadlineSize: CGFloat = 28
+    @ScaledMetric(relativeTo: .title) private var scaledHeadlineSizeLow: CGFloat = 32
+    @ScaledMetric(relativeTo: .body) private var scaledBodySize: CGFloat = 14
+    @ScaledMetric(relativeTo: .body) private var scaledBodySizeLow: CGFloat = 15
+    /// Round 23 (Doyoon): onAppear haptic 가 매 reentry (share sheet dismiss 등) 마다 fire 하던 버그.
+    @State private var didFireHaptic = false
 
     private var movement: Movement? {
         watch.caliber.flatMap { MovementDatabase.shared.movement(id: $0) }
     }
 
+    /// verdict.headline 끝 글자가 종결 부호/한국어 종결어미면 마침표 추가 안 함.
+    private func needsTrailingDot(_ s: String) -> Bool {
+        guard let last = s.last else { return false }
+        // 이미 마침표/물음표/느낌표 있으면 skip.
+        if [".", "?", "!", "。", "?", "!"].contains(String(last)) { return false }
+        // 한국어 종결어미 "다", "요" 끝나면 마침표 자연.
+        // 이모지/특수 문자로 끝나면 마침표 어색 → skip.
+        if last.isLetter || last.isNumber { return true }
+        return false
+    }
+
     /// 신호 품질(신뢰도·박동오차)은 양호한데 rate 가 비정상적으로 크면
     /// 측정 오류(알고리즘 잘못된 주기 lock)일 가능성이 높음 → 재측정 권장.
+    /// 사용자 보고 fix: 이전 조건은 모든 abs(rate)>30 결과를 "의심" 표시 (lockFailure 가 이미 beat<1.5 거름).
+    ///   진폭 변동성 또는 cross-window delta 도 함께 봐서 정상 큰 rate 와 알고리즘 lock 오류 구분.
     private var isSuspiciousMeasurement: Bool {
-        abs(result.rateSecondsPerDay) > 30
-        && result.confidenceScore >= 50
-        && result.beatErrorMs < 2.0
+        // rate 가 매우 큼 (>45) 이면서 신뢰도도 매우 높으면 — drift 정상 시계는 ±60s/d 도 가능하므로 신호 품질 임계 ↑.
+        abs(result.rateSecondsPerDay) > 45
+        && result.confidenceScore >= 70
+        && result.beatErrorMs < 1.0
     }
 
     /// Round 170: OLS slope uncertainty 기반 rate 정밀도 (±X s/d). nil 이면 표시 X.
@@ -98,7 +121,8 @@ struct MeasurementResultView: View {
                 )
                 if let note = result.reliabilityNote { reliabilityHelp(note) }
                 // 페르소나 (박지영, 입문자) wish: "그래서 다음엔 뭘?" 가이드.
-                if preferences.userMode == .novice, watch.measurements.isEmpty {
+                // 사용자 보고 fix: userMode 기본 .pro 로 바뀌어 novice 가드가 dead → 첫 측정 기준으로.
+                if watch.measurements.count <= 1 {
                     nextStepGuide
                 }
                 actions
@@ -117,6 +141,17 @@ struct MeasurementResultView: View {
         .background(AppColors.paper0.ignoresSafeArea())
         .navigationTitle(String(localized: "result.title"))
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            // Round 23 (Doyoon): 최초 1회만 haptic. share sheet 닫고 reentry 시 재발화 차단.
+            guard !didFireHaptic else { return }
+            didFireHaptic = true
+            let gen = UINotificationFeedbackGenerator()
+            switch result.reliabilityGrade {
+            case .a, .b:    gen.notificationOccurred(.success)
+            case .c:        gen.notificationOccurred(.warning)
+            case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
+            }
+        }
     }
 
     // MARK: - Editorial verdict
@@ -147,9 +182,11 @@ struct MeasurementResultView: View {
         }()
         return HStack(spacing: 14) {
             Text(grade.rawValue.uppercased())
-                .font(.system(size: 44, weight: .bold, design: .serif))
+                .font(.system(size: gradeTileFont, weight: .bold, design: .serif))
                 .foregroundStyle(.white)
-                .frame(width: 64, height: 64)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .frame(width: gradeTileSize, height: gradeTileSize)
                 .background(color)
                 .clipShape(RoundedRectangle(cornerRadius: 14))
             VStack(alignment: .leading, spacing: 4) {
@@ -160,6 +197,18 @@ struct MeasurementResultView: View {
                 Text(claim)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppColors.ink0)
+                // 일반인 친화 한 줄 설명 (박지영 페르소나)
+                Text({
+                    switch grade {
+                    case .a: return String(localized: "result.grade.a.gloss")
+                    case .b: return String(localized: "result.grade.b.gloss")
+                    case .c: return String(localized: "result.grade.c.gloss")
+                    case .f: return String(localized: "result.grade.f.gloss")
+                    }
+                }())
+                    .font(.system(size: 12))
+                    .foregroundStyle(AppColors.ink2)
+                    .fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
         }
@@ -177,16 +226,19 @@ struct MeasurementResultView: View {
                 .foregroundStyle(AppColors.ink3)
             // Round 170 (팀 토론): low-confidence (C/F) 일 때 headline 더 크게 + body 강조.
             // 신뢰 안 되는 숫자보다 메시지가 우선 — 사용자에게 "재측정 권장" 명확히.
-            let headlineSize: CGFloat = isHighConfidenceGrade ? 28 : 32
-            let bodySize: CGFloat = isHighConfidenceGrade ? 14 : 15
-            Text("\u{201C}\(verdict.headline).\u{201D}")
-                .font(.system(size: headlineSize, weight: .semibold, design: .serif))
+            // 사용자 보고 fix: .system(size:) 는 Dynamic Type scaling 안 됨 → @ScaledMetric 으로 노안 사용자 대응.
+            // 사용자 보고 fix: 일부 verdict.headline 이 이미 종결어미/마침표/이모지 포함 → 중복 마침표 방지.
+            //   trailing 마침표/물음표/느낌표가 이미 있으면 추가 X.
+            Text("\u{201C}\(verdict.headline)\(needsTrailingDot(verdict.headline) ? "." : "")\u{201D}")
+                .font(.system(size: isHighConfidenceGrade ? scaledHeadlineSize : scaledHeadlineSizeLow,
+                              weight: .semibold, design: .serif))
                 .foregroundStyle(verdict.toneColor)
                 .lineSpacing(2)
                 .lineLimit(3)
                 .minimumScaleFactor(0.8)
             Text(verdict.body)
-                .font(.system(size: bodySize, weight: isHighConfidenceGrade ? .regular : .medium))
+                .font(.system(size: isHighConfidenceGrade ? scaledBodySize : scaledBodySizeLow,
+                              weight: isHighConfidenceGrade ? .regular : .medium))
                 .foregroundStyle(AppColors.ink0)
                 .lineSpacing(3)
                 .padding(.top, 4)
@@ -211,8 +263,10 @@ struct MeasurementResultView: View {
     }
 
     private var rateDialCard: some View {
-        let bigFont: CGFloat = isHighConfidenceGrade ? 60 : 38
-        let bigColor: Color = isHighConfidenceGrade ? verdict.toneColor : AppColors.ink2
+        let bigFont: CGFloat = isHighConfidenceGrade ? 60 : 28
+        let bigColor: Color = isHighConfidenceGrade ? verdict.toneColor : AppColors.ink3
+        let dialSize: CGFloat = isHighConfidenceGrade ? 220 : 160
+        let dialOpacity: Double = isHighConfidenceGrade ? 1.0 : 0.55
         return VStack(spacing: 6) {
             Text(String(localized: "watch.label.rate").uppercased())
                 .font(.system(size: 10, weight: .semibold))
@@ -224,20 +278,31 @@ struct MeasurementResultView: View {
                     .monospacedDigit()
                     .tracking(-1.5)
                     .foregroundStyle(bigColor)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.55)
                 Text(String(localized: "unit.seconds_per_day"))
                     .font(.system(size: 16, design: .monospaced))
                     .foregroundStyle(AppColors.ink2)
+                    .lineLimit(1)
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel("Rate \(formatRate(result.rateSecondsPerDay)) \(String(localized: "unit.seconds_per_day"))")
-            // Round 170: 측정 신뢰도 오차 ±X s/d — rate 아래 작게.
-            if let rateUncertainty = rateUncertaintyString {
-                Text(rateUncertainty)
-                    .font(.system(size: 12, design: .monospaced))
+            .accessibilityLabel(String(format: NSLocalizedString("a11y.rate_value", comment: ""), formatRate(result.rateSecondsPerDay), String(localized: "unit.seconds_per_day")))
+            // 낮은 신뢰도 등급일 때 "참고용 수치" 캡션
+            if !isHighConfidenceGrade {
+                Text(String(localized: "result.rate.reference_only").uppercased())
+                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                    .tracking(1.5)
                     .foregroundStyle(AppColors.ink3)
             }
-            RateDial(rate: result.rateSecondsPerDay, size: 220)
+            if let rateUncertainty = rateUncertaintyString {
+                // Round (기능 B): master plan 의 ±s/d 정밀도 표시 — Chip 으로 인지도 강화.
+                Chip(rateUncertainty, tone: .neutral, small: true)
+                    .accessibilityLabel(String(format: String(localized: "a11y.rate_uncertainty"), rateUncertainty))
+            }
+            RateDial(rate: result.rateSecondsPerDay, size: dialSize)
+                .opacity(dialOpacity)
                 .padding(.top, 4)
+                .transition(.scale.combined(with: .opacity))
             HStack(spacing: 8) {
                 let inCosc = result.rateSecondsPerDay >= -4 && result.rateSecondsPerDay <= 6
                 Chip(
@@ -294,19 +359,8 @@ struct MeasurementResultView: View {
         }
     }
 
-    private func amplitudeHint() -> String {
-        guard let amp = result.amplitudeDegrees else {
-            return movement?.escapement == .coAxial
-                ? String(localized: "result.amplitude.coaxial") : ""
-        }
-        // Round 99 (최용수 Critical #2): movement DB 의 typicalAmplitudeRange 를 임계 기준으로 사용.
-        // DB 에 없으면 modern Swiss 기본값 (270/220) 적용.
-        let minHealthy: Double = movement?.typicalAmplitudeMin ?? 270.0
-        let minBorderline: Double = minHealthy - 50.0
-        if amp >= minHealthy { return String(localized: "result.amplitude.healthy") }
-        if amp >= minBorderline { return String(localized: "result.amplitude.borderline") }
-        return String(localized: "result.amplitude.service")
-    }
+    // Round 23 (Doyoon): amplitudeHint() 삭제 — Round 170 amplitude metric cell 제거 후 caller 없음.
+    //   Localizable.strings 의 result.amplitude.{coaxial,healthy,borderline,service} 도 dead.
 
     // MARK: - Details (expert mode)
 
@@ -316,7 +370,7 @@ struct MeasurementResultView: View {
             VStack(spacing: 0) {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 14) {
                     SpecRow(label: String(localized: "result.label.duration"),
-                            value: "\(result.durationSeconds) s")
+                            value: String(format: NSLocalizedString("unit.seconds_short", comment: ""), result.durationSeconds))
                     SpecRow(label: String(localized: "result.label.beat_count"),
                             value: "\(result.beatCount)")
                     SpecRow(label: String(localized: "result.label.snr"),
@@ -379,16 +433,17 @@ struct MeasurementResultView: View {
                 .font(.system(size: 13))
                 .foregroundStyle(AppColors.ink2)
                 .fixedSize(horizontal: false, vertical: true)
+            // 사용자 보고 fix: warning banner 의 retry CTA 가 약한 tertiary link 처럼 보였음 → 강한 filled 버튼으로 prominence ↑.
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 if let onRetry { onRetry() } else { dismiss() }
             } label: {
                 Label(String(localized: "result.suspicious.retry"), systemImage: "arrow.clockwise")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppColors.warning)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(AppColors.warning.opacity(0.12))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 13)
+                    .background(AppColors.warning)
                     .clipShape(Capsule())
                     .contentShape(Capsule())
             }
@@ -411,31 +466,33 @@ struct MeasurementResultView: View {
 
     private var actions: some View {
         VStack(spacing: 10) {
-            PrimaryButton(String(localized: "result.action.save"), style: .accent) {
-                // Round 170: onRetry 호출만 — 부모 state .idle → navigationDestination(item:) 가 자동으로
-                // result view pop. 추가 dismiss() 시 NavigationStack 한 단계 더 pop 돼 WatchDetailView 로
-                // 가버리는 race 차단.
-                if let onRetry { onRetry() } else { dismiss() }
-            }
-            HStack(spacing: 10) {
-                PrimaryButton(String(localized: "result.action.again"), style: .bordered) {
-                    // Round 170: 재측정 — onRetry 만 호출. cancel() 이 state .idle 로 reset 하면
-                    // navigationDestination(item:) 가 result view 자동 pop → MeasurementView 정확히 도착.
-                    // 추가 dismiss() 호출하면 NavigationStack 이 한 단계 더 pop (WatchDetailView 까지 가는 버그).
+            if isHighConfidenceGrade {
+                PrimaryButton(String(localized: "result.action.done"), style: .accent, icon: "checkmark") {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     if let onRetry { onRetry() } else { dismiss() }
                 }
-                Button {
-                    showShareCard = true
-                } label: {
-                    Image(systemName: "square.and.arrow.up")
-                        .font(.system(size: 18))
-                        .foregroundStyle(AppColors.ink2)
-                        .frame(width: 48, height: 48)
-                        .background(AppColors.paper2)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .contentShape(RoundedRectangle(cornerRadius: 12))
+                HStack(spacing: 10) {
+                    PrimaryButton(String(localized: "result.action.again"), style: .bordered, icon: "arrow.clockwise") {
+                        if let onRetry { onRetry() } else { dismiss() }
+                    }
+                    PrimaryButton(String(localized: "result.action.share"), style: .bordered, icon: "square.and.arrow.up") {
+                        showShareCard = true
+                    }
                 }
-                .buttonStyle(.plain)
+            } else {
+                // Round 10: 낮은 신뢰도 — 재측정을 primary로.
+                PrimaryButton(String(localized: "result.action.again"), style: .accent, icon: "arrow.clockwise") {
+                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    if let onRetry { onRetry() } else { dismiss() }
+                }
+                HStack(spacing: 10) {
+                    PrimaryButton(String(localized: "result.action.done"), style: .bordered, icon: "checkmark") {
+                        if let onRetry { onRetry() } else { dismiss() }
+                    }
+                    PrimaryButton(String(localized: "result.action.share"), style: .bordered, icon: "square.and.arrow.up") {
+                        showShareCard = true
+                    }
+                }
             }
         }
         .padding(.top, 4)

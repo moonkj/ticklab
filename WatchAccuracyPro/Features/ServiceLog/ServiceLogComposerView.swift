@@ -13,6 +13,13 @@ struct ServiceLogComposerView: View {
     @State private var center: String = ""
     @State private var costText: String = ""
     @State private var note: String = ""
+    @State private var showingDiscardAlert = false
+
+    private var isDirty: Bool {
+        !center.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || !costText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || !note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
 
     var body: some View {
         NavigationStack {
@@ -37,15 +44,24 @@ struct ServiceLogComposerView: View {
             }
             .navigationTitle(String(localized: existing == nil ? "service.title.add" : "service.title.edit"))
             .navigationBarTitleDisplayMode(.inline)
+            .presentationDragIndicator(.visible)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Button(String(localized: "common.cancel")) { dismiss() }
+                    Button(String(localized: "common.cancel")) {
+                        if isDirty { showingDiscardAlert = true } else { dismiss() }
+                    }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(String(localized: "common.save")) { save() }.fontWeight(.semibold)
                 }
             }
             .onAppear { loadExisting() }
+            .alert(String(localized: "common.discard.title"), isPresented: $showingDiscardAlert) {
+                Button(String(localized: "common.discard.confirm"), role: .destructive) { dismiss() }
+                Button(String(localized: "common.cancel"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "common.discard.message"))
+            }
         }
     }
 

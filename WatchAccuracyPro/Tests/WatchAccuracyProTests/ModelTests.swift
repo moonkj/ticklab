@@ -101,4 +101,78 @@ final class ModelTests: XCTestCase {
         XCTAssertEqual(measurement.metadata.temperatureCelsius, 22.5)
         XCTAssertEqual(measurement.metadata.microphoneType, .builtin)
     }
+
+    // MARK: - Round 21 (Jay): Hard Rule 10 회복 — 모델 테스트 4종 추가 (Cascade + invariant).
+
+    func test_specCard_cascades_on_watch_deletion() throws {
+        let watch = Watch(brand: "TestBrand", model: "Model1")
+        context.insert(watch)
+        let card = SpecCard(watch: watch)
+        context.insert(card)
+        try context.save()
+
+        let beforeDesc = FetchDescriptor<SpecCard>()
+        XCTAssertEqual(try context.fetch(beforeDesc).count, 1)
+
+        watch.deleteCascade(in: context)
+        try context.save()
+
+        XCTAssertEqual(try context.fetch(beforeDesc).count, 0, "SpecCard 가 watch cascade 와 함께 삭제되지 않음")
+    }
+
+    func test_wearLog_cascades_on_watch_deletion() throws {
+        let watch = Watch(brand: "TestBrand", model: "Model2")
+        context.insert(watch)
+        let log = WearLog(watch: watch, date: Date())
+        context.insert(log)
+        try context.save()
+
+        let beforeDesc = FetchDescriptor<WearLog>()
+        XCTAssertEqual(try context.fetch(beforeDesc).count, 1)
+
+        watch.deleteCascade(in: context)
+        try context.save()
+
+        XCTAssertEqual(try context.fetch(beforeDesc).count, 0, "WearLog 가 watch cascade 와 함께 삭제되지 않음")
+    }
+
+    func test_serviceLog_cascades_on_watch_deletion() throws {
+        let watch = Watch(brand: "TestBrand", model: "Model3")
+        context.insert(watch)
+        let log = ServiceLog(watch: watch)
+        context.insert(log)
+        try context.save()
+
+        let beforeDesc = FetchDescriptor<ServiceLog>()
+        XCTAssertEqual(try context.fetch(beforeDesc).count, 1)
+
+        watch.deleteCascade(in: context)
+        try context.save()
+
+        XCTAssertEqual(try context.fetch(beforeDesc).count, 0, "ServiceLog 가 watch cascade 와 함께 삭제되지 않음")
+    }
+
+    func test_journalEntry_measurementId_nullified_on_measurement_delete() throws {
+        let watch = Watch(brand: "TestBrand", model: "Model4")
+        context.insert(watch)
+        let measurement = WatchMeasurement(
+            watch: watch,
+            rateSecondsPerDay: 1.0,
+            beatErrorMs: 0.3,
+            bph: 28800,
+            confidenceScore: 90,
+            durationSeconds: 30
+        )
+        context.insert(measurement)
+        let entry = JournalEntry(watch: watch, measurementId: measurement.id, body: "test")
+        context.insert(entry)
+        try context.save()
+
+        measurement.deleteWithJournalCleanup(in: context)
+        try context.save()
+
+        let refreshed = try context.fetch(FetchDescriptor<JournalEntry>())
+        XCTAssertEqual(refreshed.count, 1, "JournalEntry 가 measurement 삭제 시 함께 사라지면 안 됨")
+        XCTAssertNil(refreshed.first?.measurementId, "stale measurementId 가 nil 처리되지 않음")
+    }
 }

@@ -1,0 +1,1154 @@
+/* App */
+"app.name" = "TickLab";
+
+/* Common */
+"common.cancel" = "Cancelar";
+"common.save" = "Guardar";
+"common.done" = "Listo";
+"common.delete" = "Eliminar";
+"common.unspecified" = "Sin especificar";
+"common.next" = "Siguiente";
+"common.continue" = "Continuar";
+
+/* Tabs */
+"tab.collection" = "Colección";
+"tab.journal" = "Diario";
+"tab.stats" = "Estadísticas";
+"tab.settings" = "Ajustes";
+
+/* Welcome */
+"welcome.tagline" = "Registros diarios,\ncon tu reloj.";
+"welcome.cta_start" = "Comenzar";
+"welcome.skip" = "Omitir";
+"welcome.pick_watch" = "Elegir un reloj";
+"feature.measure.title" = "Medir";
+"feature.measure.body" = "Escucha los tics de tu reloj con el micrófono del móvil.\nObtén la marcha diaria y el error de marcha.";
+"feature.collect.title" = "Archivo diario";
+"feature.collect.body" = "Fotos, notas y mediciones en un solo lugar.\nUn diario de la vida con tus relojes.";
+"feature.journal.title" = "Veredicto claro";
+"feature.journal.body" = "Cifras complejas convertidas en una sola línea.\nApple Intelligence explica el resultado cuando está disponible.";
+/* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
+"welcome.subtitle" = "Precisión en cada tic.";
+"watch.primary.set" = "Marcar como destacado";
+"watch.primary.unset" = "Quitar destacado";
+"stats.mood.this_month" = "Este mes";
+"welcome.footer" = "Medir · Mantener · Diario · Glosario · 4 ejes";
+"welcome.pick_watch.subtitle" = "Puedes añadir detalles después. ¿Quieres empezar rápido?";
+
+/* Journal */
+"journal.title" = "Diario";
+"journal.view.grid" = "Cuadrícula";
+"journal.view.feed" = "Feed";
+"journal.view.calendar" = "Calendario";
+"journal.has_measurement" = "Medición adjunta";
+"journal.empty.title" = "Comienza tu primera entrada";
+"journal.empty.body" = "Registra el reloj de hoy, tu estado de ánimo y una nota breve.";
+"journal.compose.title" = "Nueva entrada";
+"journal.compose.watch" = "Reloj";
+"journal.compose.no_watch" = "Ninguno";
+"journal.compose.mood" = "Estado de ánimo";
+"journal.compose.body" = "Texto";
+"journal.compose.placeholder" = "¿Qué tal el reloj de hoy?";
+"journal.compose.photos" = "Fotos";
+"journal.compose.photo_count" = "%d foto(s)";
+"journal.detail.share" = "Compartir";
+"journal.detail.no_body" = "(sin texto)";
+"journal.detail.measurement_attached" = "Medición del día";
+"journal.detail.share_card_cta" = "Crear tarjeta para compartir";
+
+/* Mood */
+"mood.happy" = "Feliz";
+"mood.proud" = "Orgulloso";
+"mood.curious" = "Curioso";
+"mood.neutral" = "Neutral";
+"mood.concerned" = "Preocupado";
+"mood.nostalgic" = "Nostálgico";
+
+/* Stats */
+"stats.title" = "Análisis";
+"stats.total_measurements" = "Mediciones";
+"stats.total_entries" = "Entradas";
+"stats.mood_breakdown" = "Desglose de ánimo";
+"stats.average_rate.title" = "Marcha media";
+"stats.average_rate.subtitle" = "Basado en %d mediciones";
+"stats.average_rate.stddev" = "Dispersión ±%.1f s/d";
+"stats.empty.mood" = "Registra entradas para ver el desglose de ánimo.";
+"stats.empty.positions" = "Los promedios por posición aparecen cuando indicas la posición al medir.";
+
+/* Share Card */
+"share.title" = "Tarjeta para compartir";
+"share.background" = "Fondo";
+"share.show_metrics" = "Mostrar métricas";
+"share.show_caption" = "Mostrar leyenda";
+"share.show_date" = "Mostrar fecha";
+"share.photo_source" = "Foto";
+"share.photo_entry" = "Foto de la entrada";
+"share.photo_profile" = "Perfil";
+"share.photo_custom" = "Personalizada";
+"share.photo_pick" = "Seleccionar foto";
+"share.photo_change" = "Cambiar foto";
+"share.export" = "Compartir";
+"share.save_to_photos" = "Guardar en Fotos";
+
+/* Glossary — old glossary.title removed (Round 128 dedup). Latest at line 582. */
+
+/* Service log */
+"service.type.fullOverhaul" = "Revisión completa";
+"service.type.partialService" = "Servicio parcial";
+"service.type.checkup" = "Control de precisión";
+"service.type.waterTest" = "Prueba de hermeticidad";
+"service.type.batteryReplace" = "Cambio de pila";
+"service.type.crystalReplace" = "Cambio de cristal";
+"service.type.crownGasket" = "Corona/junta";
+"service.type.bracelet" = "Brazalete";
+"service.type.other" = "Otro";
+
+/* App lock */
+"applock.reason" = "Desbloquear TickLab";
+
+/* PIN auth */
+"pin.setup.title" = "Establecer PIN";
+"pin.setup.enter" = "Introduce un PIN de 6 dígitos";
+"pin.setup.confirm" = "Vuelve a introducirlo para confirmar";
+"pin.setup.mismatch" = "Los PIN no coinciden";
+"pin.setup.success" = "PIN establecido correctamente";
+"pin.entry.title" = "Introduce el PIN";
+"pin.entry.remaining" = "%d intentos restantes";
+"pin.entry.locked_out" = "PIN bloqueado — usa Face ID";
+"pin.entry.use_face_id" = "Usar Face ID";
+"settings.applock.pin_enabled" = "Activar PIN";
+"settings.applock.pin_setup" = "Configurar PIN";
+"settings.applock.pin_warning" = "Tras 5 intentos fallidos, solo Face ID podrá desbloquear";
+
+"alert.store_fallback.title" = "Almacenamiento de emergencia activo";
+"alert.store_fallback.message" = "El formato anterior de la base de datos cambió, por lo que estamos usando almacenamiento temporal en memoria. Los datos de esta sesión se perderán al salir de la app. Reinstala la app para restaurar el almacenamiento persistente.";
+
+/* Collection (new design) */
+"collection.eyebrow" = "El Taller";
+"collection.subtitle" = "un diario de precisión mecánica";
+"collection.empty.subtitle" = "Añade un reloj → mide 30 s → consulta su precisión. Cada lectura escribe un nuevo capítulo en la historia de tu reloj.";
+"collection.search.placeholder" = "Buscar en la colección";
+/* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
+"collection.section.recent" = "Medidos recientemente";
+"collection.last_rate" = "Última marcha";
+"collection.runs" = "%d mediciones";
+"collection.no_measurements" = "Sin mediciones aún — toca para empezar";
+"collection.footer" = "TICKLAB · v0.2 · 2026";
+
+/* Watch detail (new) */
+"watch.section.latest" = "Última lectura";
+"watch.section.trend" = "Marcha en el tiempo";
+"watch.history.runs" = "Historial · %d mediciones";
+"collection.reorder" = "Reordenar";
+"collection.reorder.title" = "Reordenar tarjetas";
+"collection.add_watch" = "Añadir reloj";
+"watch.history.deleteOne.title" = "Eliminar medición";
+"watch.history.deleteOne.message" = "¿Eliminar esta medición? Esta acción no se puede deshacer.";
+"watch.history.showMore" = "Mostrar %d más";
+"watch.history.collapse" = "Mostrar menos";
+"watch.history.deleteAll.title" = "Eliminar todas las mediciones";
+"watch.history.deleteAll.message" = "¿Eliminar las %d mediciones de este reloj? Esta acción no se puede deshacer.";
+"watch.history.deleteAll.confirm" = "Eliminar todas";
+
+/* Measurement note (Round 29) */
+"measurement.note.title" = "Nota de la medición";
+"measurement.note.placeholder" = "Notas para esta toma — posición, estado de la caja, entorno (opcional).";
+"watch.no_readings.title" = "Aún no hay lecturas";
+"watch.no_readings.body" = "Toca Medir abajo para registrar tu primera lectura. 30 segundos bastan para la mayoría de los movimientos.";
+"watch.label.rate" = "MARCHA";
+"watch.label.beat_error" = "ERROR DE MARCHA";
+"watch.label.position" = "POSICIÓN";
+"watch.stat.mean" = "Media";
+"watch.stat.deviation" = "Desviación σ";
+"watch.stat.best" = "Mejor";
+"watch.spec.caliber" = "Calibre";
+"watch.spec.bph" = "BPH";
+"watch.spec.lift_angle" = "Ángulo de alzado";
+"watch.spec.escapement" = "Escape";
+"position.dialup_short" = "DU";
+"position.dialdown_short" = "DD";
+"position.crownleft_short" = "CL";
+"position.crownright_short" = "CR";
+"position.pendantup_short" = "CU";
+"position.pendantdown_short" = "CD";
+
+/* Result (new) */
+"result.eyebrow.subtitle" = "%@ · %@";
+"result.section.metrics" = "Todas las métricas";
+"result.section.details" = "Detalles de la lectura";
+"result.cosc.in" = "✓ Dentro de COSC";
+"result.cosc.out" = "Fuera de COSC";
+"result.cosc.range" = "−4 / +6 s/d";
+"result.action.again" = "Medir de nuevo";
+/* Round 23 (Doyoon): result.amplitude.healthy/borderline/service/coaxial dead — amplitudeHint() 제거됨. */
+"result.beat.excellent" = "Excelente simetría";
+"result.beat.acceptable" = "Aceptable, vigila con el tiempo";
+"result.label.duration" = "Duración";
+"result.label.beat_count" = "Conteo de tics";
+"result.label.snr" = "SNR";
+"result.label.position" = "Posición";
+
+/* Onboarding (new) */
+"onboarding.eyebrow.welcome" = "Bienvenido";
+"onboarding.page1.new_title" = "Un timegrapher en tu bolsillo.";
+"onboarding.page1.new_body" = "TickLab escucha el latido de tu reloj mecánico y te indica, hasta la décima de segundo, cómo está funcionando.";
+"onboarding.eyebrow.howItWorks" = "Cómo funciona";
+"onboarding.page2.new_title" = "Solo apóyalo. Solo escucha.";
+"onboarding.page2.new_body" = "Coloca tu reloj junto al micrófono del iPhone. Treinta segundos bastan. Extraemos marcha, error de marcha y amplitud usando como referencia la hora atómica.";
+"onboarding.eyebrow.archive" = "Tu archivo";
+"onboarding.page3.new_title" = "Cada lectura, guardada.";
+"onboarding.page3.new_body" = "Crea un diario para cada pieza. Observa su deriva a lo largo de semanas. Exporta a CSV. Sincroniza entre dispositivos mediante iCloud, de forma privada.";
+"onboarding.continue" = "Continuar";
+"onboarding.begin" = "Empezar";
+"onboarding.skip" = "Omitir";
+
+/* Mode select — Round (3-2): ModeSelectView 삭제로 dead keys 제거. */
+
+/* LongTest (new) */
+
+/* Round (3-2 잔여): misc.* dead. */
+
+/* Units */
+"unit.seconds_per_day" = "s/d";
+
+/* Onboarding */
+"onboarding.title" = "Tu reloj, al segundo.";
+"onboarding.subtitle" = "Mide la precisión de un reloj mecánico con tu iPhone.";
+"onboarding.cta.start" = "Comenzar";
+"onboarding.cta.next" = "Siguiente";
+"onboarding.page1.title" = "Mide con tu iPhone";
+"onboarding.page1.body" = "Solo necesitas el micrófono. Lleva el control de todos los relojes de tu colección.";
+"onboarding.page2.title" = "La IA explica el resultado";
+"onboarding.page2.body" = "Más que cifras — comprende cómo se comporta tu reloj.";
+"onboarding.page3.title" = "Soporte en coreano e inglés";
+"onboarding.page3.body" = "Glosario, base de datos de relojes y guía de medición en tu idioma.";
+
+/* Mode — Round (3-2): 모두 dead. */
+
+/* Collection */
+"collection.title" = "Mis relojes";
+"collection.empty.title" = "Añade tu primer reloj";
+/* collection.empty.subtitle: old version removed (Round 129 dedup). Current value at line 135. */
+"collection.empty.cta" = "Añadir reloj";
+
+/* Watch row */
+"watch.cta.measure" = "Empezar a medir";
+
+/* Add watch */
+"addwatch.title" = "Añadir reloj";
+"addwatch.section.photo" = "Foto";
+"addwatch.section.basic" = "Información básica";
+"addwatch.section.movement" = "Movimiento";
+"addwatch.brand" = "Marca";
+"addwatch.brand.custom" = "Escribe una marca si no aparece en la lista";
+"wear.toggle.on" = "Lo estás llevando";
+"wear.toggle.off" = "Llévalo hoy";
+"watch.primary.badge" = "Destacado";
+"speccard.note" = "Nota";
+"speccard.title.label" = "Título";
+"speccard.movement" = "Movimiento";
+"speccard.sound.section" = "Sonido del movimiento (5 s)";
+"speccard.camera" = "Hacer foto";
+"watch.journal.empty.title" = "Diario de este reloj";
+"watch.service.empty.title" = "Sin registros de servicio";
+"watch.service.empty.body" = "Registra revisiones, desmagnetizaciones, compras y otros cuidados.";
+"watch.service.add" = "Añadir registro de servicio";
+"watch.mood.empty" = "Aún no hay mediciones ni registros de uso";
+"watch.wind.title" = "Recordatorio de cuerda diaria";
+"watch.battery.title" = "Pila de cuarzo";
+"watch.battery.life_months" = "Duración estimada: %d meses";
+"watch.battery.due_date" = "Caducidad prevista: %@";
+"collection.challenge.title" = "Próximo reto — una semana de mediciones";
+"addwatch.movement.manual.hint" = "Da cuerda a un reloj manual a la misma hora cada día para mayor estabilidad.";
+"addwatch.movement.quartz.hint" = "Las pilas de cuarzo suelen durar 2–3 años. Te avisaremos una semana antes de la caducidad.";
+"addwatch.serial.hint" = "Añade el número de serie de forma segura desde la pantalla de detalle (se guarda en Keychain).";
+"journal.empty.no_watch" = "Añade primero un reloj a tu colección.";
+"journal.compose.cta" = "Nueva entrada";
+"journal.detail.measurement_deleted" = "Este registro de medición ha sido eliminado.";
+"watchdetail.photo.library" = "Elegir de la biblioteca";
+"watchdetail.tab.measure" = "Medir";
+"watchdetail.tab.journal" = "Diario";
+"watchdetail.tab.service" = "Servicio";
+"settings.section.journal_notif" = "Diario · Notificaciones";
+"settings.journal_reminder" = "Recordatorio diario del diario";
+"settings.time" = "Hora";
+"settings.time.default_21" = "21:00 (predeterminado)";
+"settings.random_pick.toggle" = "🎲 Reloj aleatorio diario";
+"settings.random_pick.time" = "Notificar a las";
+"settings.random_pick.section.header" = "Reloj de hoy";
+"settings.random_pick.section.footer" = "Cuando tengas 2 o más relojes, elegiremos uno al azar a la hora indicada.";
+"settings.section.security" = "Seguridad";
+"settings.applock" = "Bloqueo de la app (Face ID)";
+"settings.serial_mask" = "Ocultar serie";
+"settings.serial_mask.value" = "ACTIVADO (predeterminado)";
+"common.close" = "Cerrar";
+"common.edit" = "Editar";
+"common.show_more_count" = "+%d más";
+"common.collapse" = "Contraer";
+"menu.watchbox" = "Caja de relojes";
+"menu.speccard" = "Tarjetas de ficha";
+/* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
+"menu.speccard.create" = "Crear tarjeta de ficha";
+"watch.photo.dialog.title" = "Foto del reloj";
+"speccard.list.empty" = "Aún no hay tarjetas";
+"speccard.photo.add" = "Añadir foto";
+"speccard.photo.change" = "Cambiar foto";
+"speccard.field.case_size" = "Tamaño de caja (mm)";
+"speccard.field.power_reserve" = "Reserva de marcha (h)";
+"speccard.field.placeholder.case" = "p. ej., 40";
+"speccard.field.placeholder.power" = "p. ej., 70";
+"speccard.movement.custom_placeholder" = "p. ej., ETA 7750, calibre manufactura";
+"speccard.movement.none" = "Sin seleccionar";
+"speccard.play.label.playing" = "Reproduciendo";
+"speccard.play.label.idle" = "Reproducir sonido del movimiento";
+"glossary.search.prompt" = "Buscar términos";
+"battery.empty" = "Ningún reloj de cuarzo registrado";
+"battery.timeline" = "Cronograma previsto";
+"battery.today" = "Hoy";
+"battery.replace.recorded" = "Marcar como reemplazada";
+"shake.title.eyebrow" = "Reloj de hoy";
+"shake.cta.retry" = "Elegir otra vez";
+"shake.cta.wear" = "Llevarlo hoy";
+"shake.cta.wear.done" = "Llevándolo hoy";
+"shake.tip" = "Agita el móvil o toca. También puedes programar una notificación diaria.";
+"shake.section.mywatches" = "Mis relojes";
+"league.collecting" = "Aún se está recopilando el ranking de %@.";
+"league.cheer" = "Animar";
+"league.ranking.all" = "Todos los rankings";
+"badges.earned" = "Obtenida";
+// Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
+"badges.detail.header" = "Insignia desbloqueada";
+"fortune.title.eyebrow" = "Suerte de esfera de hoy";
+"fortune.today_prefix" = "Hoy es ";
+"fortune.today_suffix" = ", el día de";
+"fortune.rituals.title" = "Rituales del reloj de hoy";
+"fortune.share.cta" = "Compartir la suerte de hoy";
+"tamagotchi.empty" = "Aún no hay relojes registrados";
+"tamagotchi.energy" = "Energía";
+"tamagotchi.measure" = "Medir";
+"tamagotchi.family.title" = "Familia (%d)";
+"tamagotchi.wind" = "Dar cuerda";
+"tamagotchi.winding" = "Dando cuerda";
+"tamagotchi.wear_today" = "Llevar hoy";
+"tamagotchi.worn_today" = "Registrado hoy";
+"welcome.carousel.final_cta" = "Añadir mi reloj";
+"lockscreen.app_name" = "TickLab";
+"lockscreen.faceid.unlock" = "Desbloquear con Face ID";
+"settings.section.ai" = "Diagnóstico con IA";
+"settings.ai.toggle" = "Usar Apple Intelligence";
+"settings.ai.footer.on" = "Apple Intelligence interpreta los resultados de medición en una sola línea. Requiere iOS 26 y un dispositivo compatible; en caso contrario, se usa el modo basado en reglas.";
+"settings.ai.footer.off" = "Solo se usará el diagnóstico basado en reglas (3 niveles).";
+"settings.ai.unavailable.title" = "Apple Intelligence no está disponible en este dispositivo";
+"settings.ai.unavailable.body" = "Actívalo en Ajustes → Apple Intelligence y Siri. Cuando no esté disponible, se mostrará automáticamente el diagnóstico basado en reglas. Toca para abrir Ajustes.";
+"watchbox.slots" = "Huecos";
+"watchbox.material" = "Material";
+"editwatch.title" = "Editar reloj";
+"watch.menu.edit" = "Editar detalles";
+"watch.menu.favorite.add" = "Añadir a favoritos";
+"watch.menu.favorite.remove" = "Quitar de favoritos";
+"watch.menu.delete" = "Eliminar reloj";
+"watch.delete.confirm.title" = "Eliminar reloj";
+"watch.delete.confirm.body" = "Se eliminarán todas las mediciones, entradas del diario y tarjetas de ficha de este reloj. Esta acción no se puede deshacer.";
+"battery.empty.hint" = "Añade un reloj desde la pestaña Colección con tipo de movimiento 'Cuarzo' para seguir la pila aquí.";
+"tamagotchi.empty.hint" = "Añade un reloj desde la pestaña Colección para sumarlo a la familia.";
+"speccard.delete.title" = "Eliminar tarjeta de ficha";
+"speccard.delete.body" = "También se eliminarán la foto y el archivo de sonido del movimiento adjuntos.";
+"settings.account.pro_name" = "Miembro TickLab Pro";
+"settings.account.free_name" = "TickLab Free";
+"settings.account.pro_body" = "Pro · todas las funciones desbloqueadas";
+"settings.account.free_body" = "Free · usando las funciones esenciales";
+"notification.permission.denied.title" = "Las notificaciones están desactivadas";
+"notification.permission.denied.body" = "Activa las notificaciones de TickLab en Ajustes de iOS para recibir recordatorios.";
+"notification.permission.open_settings" = "Abrir Ajustes";
+"settings.icloud.restart.title" = "Ajuste de iCloud modificado";
+"settings.icloud.restart.body" = "La nueva configuración de sincronización se aplicará la próxima vez que abras la app.";
+"stats.wear.this_month" = "Uso — este mes";
+"stats.wear.section" = "Uso";
+"stats.wear.prev_month" = "Mes anterior";
+"stats.wear.next_month" = "Mes siguiente";
+"stats.wear.jump_current" = "Ir a este mes";
+"stats.wear.next_month.disabled_hint" = "El mes actual es el más reciente";
+"stats.wear.a11y.today_prefix" = "Hoy";
+"stats.wear.a11y.no_wear" = "Sin registro de uso";
+"stats.wear.a11y.count" = "Usado %d veces";
+"stats.wear.total_days" = "%d días";
+"stats.wear.empty" = "Aún no hay registros de uso. Toca el botón ✓ de una tarjeta en Colección para registrar hoy.";
+"stats.wear.cumulative" = "Uso acumulado";
+"stats.wear.cumulative.title" = "Uso acumulado por reloj";
+"stats.wear.cumulative.empty" = "Aún no hay registros de uso acumulado.";
+"watch.battery.last_replaced" = "Último cambio";
+"quickwatch.custom.title" = "Otro";
+"quickwatch.custom.subtitle" = "Entrada personalizada";
+"a11y.watch_silhouette" = "Ilustración de reloj %@";
+"a11y.rate_dial" = "Esfera de marcha %.1f %@";
+
+/* AI / Mood / Movement / Notif sweep */
+"aidiag.fallback.ok.headline" = "🟢 Saludable";
+"aidiag.fallback.ok.body" = "Dentro de la tolerancia COSC. Excelente estado.";
+"aidiag.fallback.warn.headline" = "🟡 Ligeramente rápido";
+"aidiag.fallback.warn.body" = "Posible exposición magnética. ¿Cerca de un secador o altavoz?";
+"aidiag.fallback.danger.headline" = "🔴 Se recomienda servicio";
+"aidiag.fallback.danger.body" = "Es momento de una revisión. Consulta a un relojero.";
+"aidiag.confidence.ai" = "Confianza IA";
+"aidiag.confidence.rule" = "Confianza de la medición";
+"aidiag.expand.collapsed" = "¿Por qué? ▼";
+"aidiag.expand.expanded" = "¿Por qué? ▲";
+"aidiag.causes.title" = "Causas posibles";
+"aidiag.disclaimer.ai" = "El análisis con IA es informativo. Confía en un relojero para el diagnóstico.";
+"aidiag.disclaimer.rule" = "Este es un resumen basado en reglas. Confía en un relojero para el diagnóstico.";
+"aidiag.source.loading" = "Analizando…";
+"aidiag.source.ai" = "Apple Intelligence";
+"aidiag.source.rule" = "Medición";
+"aidiag.cause.ok.1" = "Variación diaria normal";
+"aidiag.cause.ok.2" = "Condiciones de medición estables";
+"aidiag.cause.warn.1" = "Exposición magnética (secador, altavoces)";
+"aidiag.cause.warn.2" = "Misma posición durante mucho tiempo";
+"aidiag.cause.warn.3" = "Ciclo de revisión próximo";
+"aidiag.cause.danger.1" = "Amplitud fuera del rango normal";
+"aidiag.cause.danger.2" = "Posible influencia magnética";
+"aidiag.cause.danger.3" = "Se recomienda servicio — consulta a un relojero";
+
+"mood.label.energetic" = "Con energía";
+"mood.label.happy" = "Feliz";
+"mood.label.sleepy" = "Somnoliento";
+"mood.label.dormant" = "Inactivo";
+"mood.label.lowBattery" = "Pila baja";
+"mood.label.needsWind" = "Necesita cuerda";
+
+"movementtype.automatic" = "Automático";
+"movementtype.manual" = "Manual";
+"movementtype.quartz" = "Cuarzo";
+
+"notif.wind.body" = "Es hora de dar cuerda a tu reloj.";
+"notif.battery.body_prefix" = "Próximo cambio de pila (previsto %@).";
+"notif.random.body" = "¿Qué tal hoy un %@ %@?";
+
+"addwatch.movement.type" = "Tipo de movimiento";
+"addwatch.movement.type.label" = "Tipo";
+"addwatch.wind.toggle" = "Recordatorio de cuerda diaria";
+"addwatch.wind.time" = "Notificar a las";
+"addwatch.battery.last_replaced" = "Última pila cambiada";
+"addwatch.battery.reminder.toggle" = "Recordatorio de cambio";
+
+"speccard.spec.movement" = "Movimiento";
+"speccard.spec.case" = "Caja";
+"speccard.spec.registered" = "Registrado";
+"speccard.nav.title" = "Tarjeta de ficha";
+"speccard.movement.custom_toggle" = "Entrada personalizada";
+"speccard.movement.pick" = "Elegir de la lista";
+"speccard.record.recording" = "Grabando... %d s";
+"speccard.record.again" = "Volver a grabar";
+"speccard.record.start" = "Grabar 5 s";
+"speccard.note.placeholder" = "Una historia sobre este reloj...";
+"speccard.record.error.prep" = "Falló la preparación de la grabación";
+"speccard.record.error.start" = "Error al iniciar la grabación: %@";
+"speccard.record.error.failed" = "Grabación fallida — inténtalo de nuevo";
+"speccard.record.error.short" = "Grabación demasiado corta (inténtalo de nuevo)";
+"speccard.record.error.save" = "Error al guardar: %@";
+"speccard.play.error.no_file" = "No hay archivo para reproducir";
+"speccard.play.error.missing" = "Archivo de grabación no encontrado";
+"speccard.play.error.empty" = "La grabación está vacía (vuelve a grabar)";
+"speccard.play.error.prep" = "Falló la preparación de la reproducción";
+"speccard.play.error.start" = "No se pudo iniciar la reproducción";
+"speccard.play.error.failed" = "Reproducción fallida: %@";
+"badges.filter.all" = "Todas";
+"badges.filter.earned" = "Obtenidas";
+"badges.filter.locked" = "En progreso";
+"badges.b1.name" = "Buzo profundo";        "badges.b1.desc" = "Mide un reloj de buceo";
+"badges.b2.name" = "Coleccionista";         "badges.b2.desc" = "Registra 5 o más relojes";
+"badges.b3.name" = "Un solo reloj";    "badges.b3.desc" = "Lleva un único reloj durante 30 días seguidos";
+"badges.b4.name" = "Patrulla del alba";       "badges.b4.desc" = "10 mediciones antes de las 5 a. m.";
+"badges.b5.name" = "Maestro COSC";       "badges.b5.desc" = "7 días con resultados COSC";
+"badges.b6.name" = "Caminante lunar";        "badges.b6.desc" = "Registra un reloj con fase lunar";
+"badges.b7.name" = "Viajero del tiempo";        "badges.b7.desc" = "Mide un reloj GMT";
+"badges.b8.name" = "Centurión";         "badges.b8.desc" = "100 mediciones en un mismo reloj";
+"badges.b9.name" = "Diversidad de marcas";   "badges.b9.desc" = "5 marcas distintas";
+"badges.b10.name" = "Primer tic";       "badges.b10.desc" = "Completa tu primera medición";
+"badges.b11.name" = "Diarista";   "badges.b11.desc" = "Escribe 50 entradas de diario";
+"badges.b12.name" = "Colección completa"; "badges.b12.desc" = "Desbloquea todas las demás insignias";
+"badges.b13.name" = "COSC alcanzado";    "badges.b13.desc" = "Medido dentro de la especificación COSC";         "badges.b13.condition" = "marcha −4 ~ +6 s/d una vez";
+"badges.b14.name" = "Grado A";          "badges.b14.desc" = "Máxima fiabilidad de medición";   "badges.b14.condition" = "Confianza ≥75";
+"badges.b15.name" = "Maestro del tic";     "badges.b15.desc" = "Detección de tic extremadamente precisa";  "badges.b15.condition" = "Error de marcha < 0,1 ms";
+"badges.b16.name" = "Ave nocturna";        "badges.b16.desc" = "Midiendo pasada la medianoche";            "badges.b16.condition" = "5 mediciones después de las 10 p. m.";
+"badges.b17.name" = "10 mediciones";  "badges.b17.desc" = "Construyendo datos constantes";           "badges.b17.condition" = "10 mediciones en total";
+"badges.b18.name" = "50 mediciones";  "badges.b18.desc" = "En serio con la precisión";             "badges.b18.condition" = "50 mediciones en total";
+"badges.b19.name" = "Campeón anual";  "badges.b19.desc" = "365 mediciones en un mismo reloj";      "badges.b19.condition" = "365 mediciones en el mismo reloj";
+"badges.b20.name" = "Amante del vintage";    "badges.b20.desc" = "El encanto de los movimientos retro";           "badges.b20.condition" = "Registra un reloj de 18000/19800 BPH";
+"badges.b21.name" = "Cronografista";    "badges.b21.desc" = "Dueño de complicaciones complejas";         "badges.b21.condition" = "Registra un reloj cronógrafo";
+"badges.b22.name" = "Dos cifras";    "badges.b22.desc" = "10 o más relojes en la colección";       "badges.b22.condition" = "Registra 10 o más relojes";
+"badges.b1.condition" = "Registra un reloj de buceo/submarinista";
+"badges.b2.condition" = "Registra 5 o más relojes";
+"badges.b3.condition" = "30 o más registros de uso en un mismo reloj";
+"badges.b4.condition" = "10 mediciones antes de las 5 a. m.";
+"badges.b5.condition" = "7 o más marcas distintas";
+"badges.b6.condition" = "Registra un reloj con fase lunar";
+"badges.b7.condition" = "Registra un reloj GMT";
+"badges.b8.condition" = "100 mediciones en un mismo reloj";
+"badges.b9.condition" = "5 o más marcas distintas";
+"badges.b10.condition" = "Completa la primera medición";
+"badges.b11.condition" = "Escribe 50 o más entradas de diario";
+"badges.b12.condition" = "Desbloquea las otras 21 insignias";
+"badges.toast.title" = "¡Insignia desbloqueada!";
+"service.section.type" = "Tipo";
+"service.picker.type" = "Tipo de servicio";
+"service.section.record" = "Registro";
+"service.date" = "Fecha";
+"service.center" = "Centro de servicio";
+"service.cost" = "Coste";
+"service.section.note" = "Notas";
+"service.note.placeholder" = "Detalles";
+"service.title.add" = "Añadir registro de servicio";
+"service.title.edit" = "Editar registro de servicio";
+"stats.more" = "Más";
+"stats.entry.badges" = "Insignias";
+"stats.entry.badges.subtitle" = "Sigue el progreso de tu colección";
+"stats.entry.league" = "Liga de marcas";
+"stats.entry.league.subtitle" = "Tu equipo frente al global";
+"welcome.firstresult.cta" = "Ir a Colección";
+"welcome.firstresult.ready" = "Listo";
+"welcome.firstresult.body" = "Ahora elige un reloj de Colección y mide.";
+"welcome.firstresult.tip.title" = "Consejo para la primera medición";
+"welcome.firstresult.tip.body" = "Apoya el fondo de la caja del reloj directamente sobre el micrófono inferior del móvil, en un lugar silencioso — 30 segundos.";
+"quickwatch.cta.pick" = "Elegir un reloj";
+"quickwatch.cta.custom" = "Entrada personalizada → siguiente";
+"quickwatch.cta.next" = "Siguiente → primera medición";
+"shake.title" = "Reloj de hoy";
+"shake.cta.shaking" = "Agitando…";
+"shake.cta.idle" = "Agita para elegir";
+"shake.schedule.daily" = "Cada día %02d:%02d";
+"shake.schedule.subtitle.active" = "Activo con 2 o más relojes";
+"shake.schedule.subtitle.inactive" = "Se activa cuando tengas 2 o más relojes";
+"shake.reason.1" = "Juntos por hoy";
+"shake.reason.2" = "Un reloj que has echado de menos";
+"shake.reason.3" = "Hace tiempo que no lo llevas";
+"shake.reason.4" = "Un saludo matutino";
+"shake.reason.5" = "Un reloj para un buen día";
+"shake.reason.6" = "Un día que le sienta bien";
+"shake.reason.7" = "De vuelta a tu muñeca";
+"shake.reason.8" = "Hoy, este";
+"league.news.suffix" = "noticias";
+"league.news.headline" = "¡%1$@ se llevó %4$@ veces más que %3$@ este %2$@!";
+"league.myteam" = "MI EQUIPO";
+"league.myteam.body" = "%@ tus usos: %d · global %@";
+"league.trend_increase" = "+%d%%";
+"league.period.day" = "Hoy";
+"league.period.week" = "Semana";
+"league.period.month" = "Mes";
+"league.period.year" = "Año";
+"league.nav.title" = "Liga de marcas";
+"league.empty.title" = "Aún no hay registros de uso";
+"league.empty.body" = "Registra tus relojes para ver los rankings por marca";
+"league.news.solo" = "¡%@ va en cabeza con %d usos este %@!";
+"badges.nav.title" = "Insignias";
+"badges.level.max" = "¡Nivel máximo!";
+"badges.level.next" = "%d para el siguiente nivel";
+"battery.nav.title" = "Monitor de pila";
+"battery.status.good" = "Bien";
+"battery.status.warn" = "Cambiar pronto";
+"battery.status.low" = "Cerca de agotarse";
+"battery.kv.last" = "Último cambio";
+"battery.kv.elapsed" = "Transcurrido";
+"battery.kv.due" = "Caducidad prevista";
+"battery.insight.low" = "La pila está casi agotada. Prepara el cambio.";
+"battery.insight.warn" = "Cambio recomendado en 1–2 meses.";
+"battery.insight.ok" = "Queda mucho. Cuando se active el indicador EOL, el segundero saltará de 2 en 2 segundos.";
+"addwatch.model" = "Modelo";
+"addwatch.purchase_date" = "Fecha de compra";
+"addwatch.choose_photo" = "Añadir foto";
+"addwatch.photo_source.title" = "¿Cómo quieres añadir la foto?";
+"addwatch.photo_source.library" = "Elegir de la biblioteca";
+"addwatch.photo_source.camera" = "Hacer con la cámara";
+"addwatch.discard.title" = "¿Descartar cambios?";
+"addwatch.discard.message" = "Tus cambios aún no se han guardado.";
+"addwatch.discard.confirm" = "Descartar";
+"addwatch.suggested" = "Movimiento sugerido";
+"addwatch.accept_suggestion" = "Usar este";
+"addwatch.movement.picker" = "Movimiento";
+"addwatch.movement.manual_entry" = "Introducir manualmente";
+"addwatch.movement.bph_label" = "BPH (requerido para medir)";
+"addwatch.movement.bph_required" = "Se requiere BPH para habilitar la medición";
+"addwatch.movement.bph_uncommon" = "%d BPH es poco habitual. Verifícalo de nuevo";
+"addwatch.movement.unknown" = "Desconocido (predeterminado 28800 BPH)";
+"addwatch.lift_angle.label" = "Anular ángulo de alzado";
+"addwatch.lift_angle.placeholder" = "p. ej. 52";
+"addwatch.skip_suggestion" = "Introducir manualmente";
+
+/* Watch detail */
+"watch.info.movement_specs" = "Especificaciones del movimiento";
+"watch.owned_since" = "DESDE %@";
+"watch.history.title" = "Historial de mediciones";
+
+/* Confidence */
+"confidence.label" = "Confianza";
+
+/* Glossary */
+"glossary.title" = "Glosario";
+"glossary.bph" = "BPH (vibraciones por hora)";
+"glossary.bph.desc" = "Vibraciones por hora. 28800 BPH = 8 tics/s (4 Hz).";
+"glossary.rate" = "Marcha";
+"glossary.rate.desc" = "Desviación diaria del tiempo. +5 s/día significa que el reloj se adelanta 5 segundos al día.";
+"glossary.beat_error" = "Error de marcha";
+"glossary.beat_error.desc" = "Asimetría entre los intervalos tic y toc. Cuanto más cerca de 0, mejor.";
+"glossary.amplitude" = "Amplitud";
+"glossary.amplitude.desc" = "Ángulo de rotación del volante. Rango saludable: 270–315°.";
+"glossary.cosc" = "COSC";
+"glossary.cosc.desc" = "Certificación cronométrica suiza (−4 a +6 s/día).";
+"glossary.lift_angle" = "Ángulo de alzado";
+"glossary.lift_angle.desc" = "Ángulo de escape propio del movimiento. Se usa para calcular la amplitud.";
+"glossary.coaxial" = "Escape coaxial";
+"glossary.coaxial.desc" = "Diseño de escape de Omega. Los timegraphers estándar no pueden medir su amplitud de forma fiable.";
+"glossary.mic" = "Mic dB";
+"glossary.mic.desc" = "Volumen total que recibe el micrófono del iPhone. Entre −60 y −40 dB es adecuado para medir relojes. Por debajo de −80 dB, el móvil está demasiado lejos del reloj.";
+"glossary.onsets" = "Onsets";
+"glossary.onsets.desc" = "Número de tics detectados (ventana de 12 s). Los relojes de 28800 BPH dan unos 96, los de 21600 BPH unos 72.";
+
+/* Position */
+"position.dial_up" = "Esfera arriba";
+"position.dial_down" = "Esfera abajo";
+"position.crown_up" = "Corona arriba";
+"position.crown_down" = "Corona abajo";
+"position.crown_left" = "Corona a la izquierda";
+"position.crown_right" = "Corona a la derecha";
+"position.unknown" = "Sin especificar";
+
+/* Measurement */
+"measurement.button.start" = "Empezar a medir";
+"measurement.button.stop" = "Detener";
+"measurement.button.see_result" = "Ver resultado";
+"measurement.status.permission_pending" = "Comprobando permiso del micrófono…";
+"measurement.status.analyzing" = "Analizando…";
+"measurement.permission.title" = "Se necesita acceso al micrófono";
+"measurement.permission.body" = "Necesitamos el micrófono para medir la precisión de tu reloj. El audio se descarta inmediatamente después del análisis y nunca se almacena.";
+"measurement.permission.openSettings" = "Abrir Ajustes";
+"measurement.position.title" = "Posición de medición (opcional)";
+"measurement.setup.step1.title" = "1. Mantén el reloj inmóvil";
+"measurement.setup.step1.body" = "El movimiento del reloj durante la medición puede alterar el resultado en ±5 s/d. Colócalo plano sobre una superficie estable con el fondo de caja hacia arriba.";
+"measurement.setup.step2.title" = "2. Centra el micrófono sobre el fondo de caja";
+"measurement.setup.step2.body" = "El micrófono inferior del iPhone (el orificio pequeño junto al puerto de carga) debe tocar el centro del fondo del reloj. Evita cubrir el micrófono con los dedos.";
+"measurement.setup.step3.title" = "3. Entorno silencioso";
+"measurement.setup.step3.body" = "Bloquea el ruido ambiental (TV, conversaciones, ventiladores). Apunta a un SNR ≥ 20 dB.";
+"measurement.tips.average.title" = "Consejo para una medición precisa";
+"measurement.tips.average.body" = "La variación de una sola medición es de ±5 s/d. Promedia **3-5 mediciones** para una precisión de ±2 s/d. Mantén el reloj en la misma posición entre mediciones.";
+"measurement.tips.average.body.free" = "La variación de una sola medición es de ±5 s/d. El plan gratuito permite 3 mediciones por día — varias tomas consecutivas en la misma posición estabilizan la media. Actualiza a Pro para mediciones ilimitadas y precisión de ±2 s/d con 5 o más mediciones.";
+"measurement.tips.average.body.pro" = "La variación de una sola medición es de ±5 s/d. Promedia **3-5 mediciones** para una precisión de ±2 s/d. Mantén el reloj en la misma posición entre mediciones.";
+"measurement.disclaimer.title" = "Las lecturas son orientativas";
+"result.suspicious.title" = "Posible error de medición";
+"result.suspicious.body" = "La calidad de la señal parece buena, pero la marcha es inusualmente alta. Prueba a ajustar la posición del micrófono y vuelve a medir.";
+"result.suspicious.retry" = "Volver a medir";
+"measurement.disclaimer.body" = "Las mediciones de esta app son solo orientativas. La precisión basada en micrófono depende de la posición del reloj, el entorno y el material del fondo de caja, y no sustituye a un timegrapher profesional (p. ej., Witschi). Consulta a un relojero para decisiones de servicio.";
+"measurement.progress.label" = "%d / %d s (recomendado)";
+"measurement.hint.minimum_duration" = "Mide durante al menos 5 segundos para obtener lecturas estables.";
+"measurement.hint.move_closer" = "La señal es débil. Acerca el micrófono al reloj (tocando el fondo de caja).";
+"measurement.hint.weak.title" = "Señal débil";
+"measurement.hint.acceptable" = "La señal es buena. Sigue midiendo más de 30 s para aumentar la confianza.";
+"measurement.button.retry" = "Reintentar";
+"measurement.fail.too_short.title" = "Medición demasiado corta";
+"measurement.fail.too_short.body" = "Necesitamos al menos 5 segundos de audio para estimar BPH y marcha. Toca Reintentar y mide durante más de 30 segundos.";
+"measurement.fail.no_signal.title" = "No se ha podido detectar el reloj";
+"measurement.fail.no_signal.body" = "Puede que el micrófono esté demasiado lejos del reloj o que la sala sea muy ruidosa. Apoya el fondo del iPhone directamente sobre el fondo de caja y vuelve a intentarlo en un lugar silencioso.";
+"measurement.fail.engine.title" = "El motor de audio no se ha iniciado";
+"measurement.fail.engine.body" = "Puede que otra app esté usando el micrófono o que haya un conflicto de enrutamiento Bluetooth. Cierra cualquier app de llamada o grabación e inténtalo de nuevo.";
+
+/* Result */
+"result.title" = "Resultado de la medición";
+"result.duration" = "Duración";
+"result.beat_count" = "Tics detectados";
+"result.expert.metadata" = "Condiciones";
+"result.verdict.ok.title" = "Parece saludable";
+"result.verdict.ok.body" = "Tu reloj está dentro de un rango saludable para uso diario.";
+"result.verdict.caution.title" = "Mantenlo bajo observación";
+"result.verdict.caution.body" = "Ligeramente fuera del rango saludable. Hazle seguimiento unos días; si persiste, considera una revisión.";
+"result.verdict.service.title" = "Se recomienda servicio";
+"result.verdict.service.body" = "La desviación es significativa. Recomendamos llevarlo a un relojero.";
+"result.verdict.first_anomaly.title" = "¿Probamos de nuevo?";
+"result.verdict.first_anomaly.body" = "Esta lectura muestra una deriva significativa. Una sola medición no es concluyente — vuelve a intentarlo en distintas posiciones o en otro momento antes de decidir.";
+"result.next_step.eyebrow" = "Siguiente paso";
+"result.next_step.body" = "Los relojes mecánicos derivan de forma distinta según posición, temperatura y nivel de cuerda. Mide a la misma hora cada día durante una semana — el gráfico de tendencia revela la imagen real.";
+"result.beginner.why" = "¿Por qué obtuve este resultado?";
+
+/* Reliability notes */
+"movement.reliability.generic.title" = "Nota de medición";
+"movement.reliability.generic.notice" = "Este movimiento se comporta de forma distinta al escape suizo estándar, por lo que la precisión de la medición puede ser menor.";
+
+/* Trend */
+"trend.title" = "Tendencia de marcha";
+"trend.range.7d" = "7 d";
+"trend.range.30d" = "30 d";
+"trend.range.90d" = "90 d";
+"trend.range.1y" = "1 a";
+"trend.range.all" = "Todo";
+"trend.range.a11y.7d" = "Últimos 7 días";
+"trend.range.a11y.30d" = "Últimos 30 días";
+"trend.range.a11y.90d" = "Últimos 90 días";
+"trend.range.a11y.1y" = "Último año";
+"trend.range.a11y.all" = "Histórico completo";
+"trend.empty" = "Aún no hay mediciones.";
+
+"pin.entry.a11y.hint" = "Toca dos veces para introducir tu PIN de 6 dígitos";
+
+"a11y.confidence_badge" = "Confianza %d por ciento";
+"a11y.disclosure.expanded" = "Expandido";
+"a11y.disclosure.collapsed" = "Contraído";
+
+"a11y.battery.gauge" = "Pila al %1$d por ciento, %2$@, %3$@ %4$@";
+"addwatch.replace_photo" = "Reemplazar foto";
+"addwatch.remove_photo" = "Quitar foto";
+"speccard.play.a11y" = "Reproducir sonido del tic";
+
+/* Settings */
+"settings.title" = "Ajustes";
+"settings.section.mode" = "Modo de usuario";
+"settings.mode.label" = "Modo";
+"settings.section.measurement" = "Medición";
+"settings.silent_mode_default" = "Modo silencioso predeterminado";
+"settings.silent_mode_default.hint" = "Activa automáticamente el modo silencioso al iniciar una medición para evitar interrupciones por notificaciones.";
+"settings.section.help" = "Ayuda";
+"settings.glossary" = "Glosario";
+"settings.section.about" = "Acerca de";
+"settings.version" = "Versión";
+"settings.bundle_id" = "Bundle ID";
+"settings.section.data" = "Datos";
+"settings.export.format" = "Formato de exportación";
+"settings.export.action" = "Exportar mediciones";
+"settings.section.sync" = "Sincronización";
+"settings.icloud.label" = "Sincronización con iCloud";
+"settings.movementdb.auto_update" = "Actualizar base de datos de movimientos automáticamente";
+"settings.coreml.label" = "Detector de tics CoreML (experimental)";
+"settings.coreml.hint" = "Detección de onsets basada en ML. Recurre al algoritmo predeterminado si falta el modelo.";
+"settings.coreml.status_prefix" = "Actualmente:";
+"settings.movementdb.privacy_note" = "Cuando está activado, los nuevos calibres se descargan como un JSON estático en segundo plano. Tus mediciones y fotos nunca salen del dispositivo.";
+"settings.movementdb.update_now" = "Buscar actualizaciones";
+"settings.movementdb.checking" = "Buscando actualizaciones…";
+"settings.movementdb.ok" = "Versión %@ instalada (%d movimientos)";
+"settings.movementdb.fail" = "Actualización fallida: %@";
+"settings.movementdb.version" = "Versión de la BD de movimientos";
+"settings.section.timeref" = "Referencia horaria";
+"settings.audio_input.label" = "Entrada de micrófono";
+"settings.audio_input.empty" = "No hay dispositivos de entrada disponibles";
+"settings.audio_input.system_default" = "Predeterminado del sistema";
+"audio.input.builtin" = "Integrado";
+"audio.input.wired" = "Con cable";
+"audio.input.bluetooth" = "Bluetooth";
+"audio.input.external" = "Externo";
+
+/* Round 81 — Hard Rule 3 cleanup: inline strings removed from code */
+"notif.random.title" = "🎲 Reloj del día";
+"watch.journal.empty.hint" = "Etiqueta este reloj en una entrada del diario y aparecerá aquí.";
+"settings.coreml.status_coreml" = "CoreML";
+"settings.coreml.status_rule" = "Basado en reglas (falta el modelo)";
+
+/* Round 83 — personalisation: nickname / story / ref */
+"addwatch.section.personal" = "La historia de este reloj";
+"addwatch.nickname" = "Apodo (opcional)";
+"addwatch.reference_no" = "Referencia";
+"addwatch.story.label" = "Historia";
+"addwatch.story.placeholder" = "p. ej., Un regalo de mi abuelo";
+
+/* Round 84 — measurement view labels localized (Jiyoung C3). */
+"measurement.eyebrow.live_rate" = "Marcha en vivo";
+"measurement.eyebrow.live_signal" = "Señal en vivo";
+"measurement.eyebrow.metrics" = "Métricas";
+"measurement.metric.beat_error" = "Error de marcha";
+"measurement.metric.bph" = "BPH";
+
+/* Round 90 — Story card label */
+"watch.story.label" = "LA HISTORIA DE ESTE RELOJ";
+
+/* Round 92 — Today tab */
+"tab.today" = "Hoy";
+"today.greeting" = "¿Qué tal el día con tu reloj?";
+"today.stat.watches" = "Familia de relojes";
+"today.stat.this_week" = "Esta semana";
+"today.shake.title" = "Reloj elegido para hoy";
+"today.shake.subtitle" = "¿Cuál llevarás hoy?";
+"today.fortune.title" = "Suerte de esfera de hoy";
+"today.fortune.subtitle" = "Esfera, número y ritual de la suerte — según la fecha.";
+
+/* Round 93 — concept-matched pick reasons */
+"shake.reason.dress.1" = "Una elegancia natural para momentos refinados.";
+"shake.reason.dress.2" = "Hoy pide elegancia formal.";
+"shake.reason.dress.3" = "Una esfera tranquila para concentrar la mente.";
+"shake.reason.dress.4" = "Gracia discreta durante todo el día.";
+"shake.reason.sport.1" = "Los días vibrantes merecen una muñeca con carácter.";
+"shake.reason.sport.2" = "Hecho para la aventura que viene.";
+"shake.reason.sport.3" = "Una declaración fuerte en un día fuerte.";
+"shake.reason.sport.4" = "Tu compañero para el aire libre.";
+"shake.reason.manual.1" = "Empieza el día con unas vueltas de cuerda suaves.";
+"shake.reason.manual.2" = "Un ritual matutino de cuerda manual.";
+
+/* Round 96 — Journal reminder notif */
+"notif.journal.title" = "📓 La línea de hoy";
+"notif.journal.body" = "Tómate un momento para escribir sobre el reloj que llevaste hoy.";
+
+/* Round 98 — measurement failure reasons */
+"measurement.fail.unsupported.title" = "Este movimiento no es compatible";
+"measurement.fail.unsupported.body" = "Los movimientos de cuarzo o de 0 BPH no se pueden medir acústicamente. Usa un reloj mecánico automático o de cuerda manual.";
+"measurement.fail.lock.title" = "Lectura fuera del rango fiable";
+"measurement.fail.lock.body" = "El enganche de BPH es débil — o el reloj está realmente fuera de rango. Prueba otra posición o llévalo a un relojero.";
+
+/* Round 104 — bug + A11y corrections */
+"watch.row.just_now" = "Justo ahora";
+"collection.challenge.progress" = "%d/%d días completados · faltan %d días";
+"aidiag.confidence.a11y" = "Confianza %d por ciento";
+
+/* Round 105 — DialFortuneView inline strings (Hard Rule 3 compliance) */
+"fortune.dial.blue" = "Esfera azul";
+"fortune.dial.black" = "Esfera negra";
+"fortune.dial.green" = "Esfera verde";
+"fortune.dial.silver" = "Esfera plateada";
+"fortune.dial.champagne" = "Champán";
+"fortune.dial.panda" = "Panda";
+"fortune.complication.1" = "Fase lunar";
+"fortune.complication.2" = "GMT";
+"fortune.complication.3" = "Cronógrafo";
+"fortune.complication.4" = "Día-Fecha";
+"fortune.complication.5" = "Calendario perpetuo";
+"fortune.unlucky.1" = "Esfera negra";
+"fortune.unlucky.2" = "Champán";
+"fortune.unlucky.3" = "Esfera plateada";
+"fortune.unlucky.4" = "Esfera verde";
+"fortune.ritual.1" = "Da 12 vueltas de cuerda al amanecer";
+"fortune.ritual.2" = "Llévalo en la muñeca derecha";
+"fortune.ritual.3" = "Una bebida azul a mediodía";
+"fortune.ritual.4" = "Posición esfera arriba antes de medir";
+"fortune.ritual.5" = "Deja que el reloj descanse al anochecer";
+"fortune.ritual.6" = "30 minutos de luz solar";
+"fortune.horoscope.1" = "El azul profundo calma la mente. Un buen día para empezar algo nuevo.";
+"fortune.horoscope.2" = "Una esfera ordenada inspira confianza. Perfecto para una reunión importante.";
+"fortune.horoscope.3" = "El verde es el color del crecimiento. Te llega una oportunidad inesperada.";
+"fortune.horoscope.4" = "El plata afina el pensamiento. Termina lo que has estado posponiendo.";
+"fortune.horoscope.5" = "El champán aporta calidez. Un plan con un viejo amigo lleva a algo bueno.";
+"fortune.pill.lucky" = "Suerte";
+"fortune.pill.unlucky" = "Evitar";
+"fortune.share.text" = "🔮 Suerte de esfera TickLab · %@\n\nHoy es el día de %@\nNÚMERO DE LA SUERTE: %d\n\n%@\n\nComplicación afortunada · %@\nEvitar · %@";
+"fortune.lucky_number" = "NÚMERO DE LA SUERTE";
+"fortune.metric.love" = "Amor";
+"fortune.metric.work" = "Carrera";
+"fortune.metric.money" = "Riqueza";
+"fortune.metric.health" = "Salud";
+
+/* Round 109 — notification titles localized (Hard Rule 3) */
+"notif.wind.title" = "🔄 %@";
+"notif.battery.title" = "🔋 %@";
+
+/* Round 113 — Pro gate */
+"pro.limit.watch.title" = "Has alcanzado el límite de relojes";
+"pro.limit.watch.body" = "El plan gratuito admite 1 reloj. Actualiza a TickLab Pro (9,99 $/año) para gestionar toda tu colección.";
+"pro.limit.daily_measurement.title" = "Has alcanzado el límite diario de mediciones";
+"pro.limit.daily_measurement.body" = "El plan gratuito permite 3 mediciones por día. Actualiza a TickLab Pro (9,99 $/año) para mediciones ilimitadas.";
+"pro.limit.journal_monthly.title" = "Has alcanzado el límite mensual del diario";
+"pro.limit.journal_monthly.body" = "El plan gratuito permite 5 entradas de diario al mes. Actualiza a TickLab Pro (9,99 $/año) para entradas ilimitadas.";
+
+/* Round 116 — A11y: ShakePick button */
+"shake.cta.a11y.label" = "Elegir un reloj";
+"shake.cta.a11y.hint" = "Toca el botón o agita el móvil para elegir el reloj de hoy";
+
+/* Round 117 — Hard Rule 9 + misc */
+"result.amplitude.low_confidence" = "Amplitud omitida — este movimiento tiene una clasificación de fiabilidad baja.";
+"result.amplitude.unavailable.title" = "Amplitud no mostrada";
+"result.amplitude.unavailable.body" = "La amplitud basada en micrófono no es fiable para este movimiento (fondo de zafiro, escape coaxial, etc.) y se omite.";
+
+/* Round 118 — storyCard + journalTab compose */
+"watch.story.empty_prompt" = "Añade la historia de este reloj";
+"watch.journal.compose" = "Escribir una entrada de diario";
+
+/* Round 119 — StatsView per-watch picker */
+"stats.position.watch_picker" = "Reloj";
+"stats.position.all" = "Todos los relojes";
+
+/* Round 121 — Glossary 5 new entries */
+"glossary.confidence" = "Confianza";
+"glossary.confidence.desc" = "Puntuación de 0 a 100 que indica la fiabilidad de una medición. Depende del SNR, la duración, la calidad del enganche de BPH y el error de marcha.";
+"glossary.snr" = "SNR (relación señal/ruido)";
+"glossary.snr.desc" = "Relación entre el sonido del reloj y el ruido ambiente (dB). Cuanto mayor, mejor — se necesitan al menos 12 dB para un resultado fiable.";
+"glossary.drift" = "Deriva";
+"glossary.drift.desc" = "Tendencia de la marcha a cambiar con el tiempo debido a temperatura, posición o tensión del muelle real.";
+"glossary.isochronism" = "Isocronismo";
+"glossary.isochronism.desc" = "Capacidad de un movimiento para mantener una marcha constante sin importar la reserva de marcha restante. Mayor isocronismo significa precisión más estable.";
+"glossary.positional" = "Variación posicional";
+"glossary.positional.desc" = "Cuánto cambia la marcha según la orientación del reloj (esfera arriba, esfera abajo, posiciones de corona). Se comprueba con el test de 6 posiciones.";
+
+/* Round 123 — BatteryView Rule 3 */
+"battery.caliber_life" = "Cal. %@ · Vida útil estimada %d meses";
+"battery.status.urgent" = "Cambiar pronto";
+"battery.status.caution" = "Cambio próximo";
+"battery.status.ok" = "Bien";
+"battery.reminder.off" = "Desactivar recordatorio";
+"battery.reminder.on" = "Programar recordatorio de caducidad";
+
+/* Round 123 — TamagotchiView Rule 3 */
+"tamagotchi.mood.energetic" = "Con energía";
+"tamagotchi.mood.happy" = "Tranquilo";
+"tamagotchi.mood.sleepy" = "Somnoliento";
+"tamagotchi.mood.dormant" = "Inactivo";
+"tamagotchi.mood.low_battery" = "Pila baja";
+"tamagotchi.mood.needs_wind" = "Necesita cuerda";
+"tamagotchi.last_activity" = "Última actividad hace %d días";
+"tamagotchi.no_activity" = "Sin actividad registrada";
+"tamagotchi.sleepy_hint" = "Vuelve a quedarse dormido en 48 h";
+
+/* Round 124 — WelcomeFlowView Rule 3 */
+"welcome.hero.line1" = "Un iPhone.";
+"welcome.hero.line2" = "Mide tu reloj.";
+"welcome.hero.accent" = "Registra";
+"welcome.hero.suffix" = "lo.";
+"welcome.nav.back" = "← Atrás";
+
+/* Round 125 — Rule 3 + share + units */
+"measurement.rec_label" = "REC";
+"measurement.snr_label" = "SNR %d dB";
+"journal.detail.beat_error" = "Error de marcha %.2f ms";
+"unit.seconds_per_day_short" = "s/d";
+/* watch.label.rate dedup — original at line 161 */
+
+/* Round 126 — CollectionView + Pro */
+"collection.status.ok" = "OK";
+"collection.status.caution" = "Atención";
+"collection.status.service" = "Servicio";
+"pro.limit.upgrade" = "Actualizar a Pro";
+
+/* TickLab Pro paywall ($9.99/yr) */
+"purchase.headline" = "TickLab Pro";
+"purchase.subtitle" = "Colección y mediciones ilimitadas — la caja de herramientas adecuada para la relojería seria.";
+"purchase.benefit.unlimited_watches.title" = "Relojes ilimitados";
+"purchase.benefit.unlimited_watches.body" = "Lleva el control de toda tu colección — sin el tope de 1 reloj.";
+"purchase.benefit.unlimited_measurements.title" = "Mediciones ilimitadas";
+"purchase.benefit.unlimited_measurements.body" = "Mide todas las veces que quieras — sin tope diario.";
+"purchase.benefit.unlimited_journal.title" = "Diario ilimitado";
+"purchase.benefit.unlimited_journal.body" = "Captura cada momento — sin tope mensual.";
+"purchase.benefit.unlimited_ai.title" = "Diagnóstico con IA ilimitado";
+"purchase.benefit.unlimited_ai.body" = "Obtén interpretación con IA en cada medición — sin el tope de 3 intentos.";
+"purchase.plan.yearly" = "Suscripción anual";
+"purchase.plan.yearly.per_year" = "/ año con renovación automática — cancela cuando quieras";
+"purchase.cta.subscribe" = "Activar Pro";
+"purchase.cta.processing" = "Procesando…";
+"purchase.cta.restore" = "Restaurar compra";
+"purchase.cta.restoring" = "Restaurando…";
+"purchase.legal.auto_renew" = "La suscripción se renueva automáticamente hasta cancelarla. Puedes gestionarla en cualquier momento desde Ajustes.";
+"purchase.legal.terms" = "Términos de uso";
+"purchase.legal.privacy" = "Política de privacidad";
+"purchase.success.title" = "Pro activado";
+"purchase.success.body" = "Todas las funciones desbloqueadas. ¡Disfruta de la relojería!";
+"purchase.error.title" = "Error de compra";
+"purchase.unavailable" = "Conectando con la App Store. Inténtalo de nuevo en un momento.";
+"purchase.retry" = "Reintentar";
+"aidiag.trial.remaining" = "Diagnóstico con IA %d/%d restantes";
+"aidiag.trial.exhausted_cta" = "Diagnóstico con IA ilimitado — Actualiza a Pro";
+"purchase.context.watch_limit" = "Has alcanzado el límite de 1 reloj — Pro desbloquea relojes ilimitados";
+"purchase.context.daily_measurement" = "Has alcanzado el límite diario de mediciones — Pro desbloquea mediciones ilimitadas";
+"purchase.context.journal_monthly" = "Has alcanzado el límite mensual de entradas — Pro desbloquea entradas ilimitadas";
+"purchase.context.ai_trial" = "Has agotado los ensayos de IA — Pro desbloquea IA ilimitada";
+"cosc.bar.min" = "−12";
+"cosc.bar.max" = "+12";
+"cosc.bar.range" = "COSC −4 ~ +6";
+"aidiag.confidence.grade.high" = "alta";
+"aidiag.confidence.grade.medium" = "media";
+"aidiag.confidence.grade.low" = "baja";
+"unit.seconds_short" = "%d s";
+
+/* Round 127 — MeasurementResultView Rule 3 */
+"result.escapement.fallback" = "ESCAPE SUIZO";
+"result.snr_beats_hint" = "SNR %.0f dB · %d tics";
+"watch.ref_label" = "Ref. %@";
+
+/* Round 129 */
+"speccard.list.empty.hint" = "Ve a Detalle del reloj → menú '···' → 'Crear tarjeta de ficha'.";
+"result.saved.hint" = "Medición guardada ✓";
+"measurement.hint.noise" = "🔊 Demasiado ruido ambiente. Estabiliza el móvil en un sitio silencioso e inténtalo de nuevo.";
+"measurement.hint.press_closer" = "📍 Presiona el fondo de caja del reloj con firmeza contra el micrófono inferior del iPhone.";
+"measurement.hint.no_signal" = "🎤 Apenas hay señal. Coloca el micrófono directamente contra el fondo de caja del reloj.";
+"measurement.hint.bluetooth" = "🎧 Un micrófono Bluetooth (AirPods, etc.) está activo. Se necesita el micrófono del propio iPhone para escuchar el reloj. Desconecta el Bluetooth o cambia la entrada en Ajustes.";
+"measurement.hint.wired" = "🎙️ Hay un micrófono externo con cable activo. El micrófono integrado del iPhone funciona mejor para medir relojes.";
+"share.watch.fallback" = "Reloj";
+
+/* Round 114 — LongTest summary */
+
+/* Round 180 (Sora) — Magnetic field measurement */
+"magnetic.title" = "Campo magnético";
+"magnetic.header.subtitle" = "Los relojes mecánicos son sensibles al magnetismo. Comprueba el entorno antes de medir.";
+"magnetic.measure_button" = "Medir";
+"magnetic.measuring" = "Midiendo…";
+"magnetic.level.normal" = "🟢 Normal";
+"magnetic.level.slightly_high" = "🟡 Ligeramente alto";
+"magnetic.level.high" = "🟠 Alto";
+"magnetic.level.very_high" = "🔴 Muy alto";
+"magnetic.verdict.label.ai" = "APPLE INTELLIGENCE";
+"magnetic.verdict.label.tip" = "CONSEJO";
+"magnetic.verdict.loading" = "Leyendo el campo…";
+"magnetic.verdict.normal" = "El campo ambiente es normal. No afecta a la medición.";
+"magnetic.verdict.slightly_high" = "Ligeramente por encima de lo habitual. Probablemente no haya problema — toma otra lectura en un sitio distinto.";
+"magnetic.verdict.high" = "Campo magnético elevado — riesgo de magnetización. Aléjate antes de medir.";
+"magnetic.verdict.very_high" = "¡Atención! Se ha detectado un campo muy intenso. Aleja el reloj de este punto inmediatamente.";
+"magnetic.result.earthfield_note" = "El campo terrestre suele estar entre 25 y 65 μT.";
+"magnetic.info.title" = "SOBRE EL MAGNETISMO";
+"magnetic.info.body" = "Los altavoces, auriculares, cierres magnéticos y fundas de tablet pueden magnetizar un reloj mecánico — haciéndolo adelantar o volverse inestable. Si tu reloj ha estado expuesto, un relojero puede desmagnetizarlo en segundos.";
+
+/* Round 180 — Today tab magnetic check card */
+"today.card.magnetic.title" = "Comprobación magnética";
+"today.card.magnetic.subtitle" = "Comprueba el riesgo de magnetización a tu alrededor";
+
+/* Round 176 — Primary watch / Wear-today UX clarification (user-requested, Hyemi) */
+"watch.set_as_primary" = "Marcar como principal";
+"watch.set_as_primary.hint" = "Lo fija en la pestaña Hoy";
+"watch.is_primary" = "Reloj principal";
+"watch.unset_primary" = "Quitar como principal";
+"watch.unset_primary.hint" = "Toca para quitarlo";
+"watch.log_wear_today" = "Registrar como usado hoy";
+"watch.log_wear_today.hint" = "Toca para registrar";
+"watch.worn_today" = "Usado hoy";
+"watch.worn_today.hint" = "Registrado para hoy";
+"today.primary.empty.title" = "Sin reloj principal";
+"today.primary.empty.body" = "Fija tu reloj de diario para que aparezca en lo alto de Hoy.";
+"today.primary.empty.cta" = "Elegir un reloj";
+
+/* Round 133: photo source sheet */
+"photo.source.library" = "Fototeca";
+"photo.source.camera" = "Hacer foto";
+"photo.source.remove" = "Quitar foto";
+
+/* Round 133: keep-screen-on + reminders */
+"settings.keep_screen_on" = "Mantener la pantalla encendida durante la medición";
+"settings.section.reminders" = "Recordatorios";
+"settings.section.reminders.footer" = "Define horas para los avisos del diario y los relojes aleatorios.";
+"settings.journal_reminder.time" = "Hora del recordatorio del diario";
+"today.primary.picker.title" = "Elegir reloj principal";
+"magnetic.chart.title" = "Campo magnético en vivo";
+"magnetic.chart.live" = "EN VIVO";
+"wear.toast.logged" = "Registrado como usado hoy";
+"today.states.title" = "Estados de los relojes";
+/* Round (3-2 잔여): battery.expected_change/life dead. */
+"measurement.title" = "Medición";
+"fortune.nav.title" = "Esfera de hoy";
+"result.grade.eyebrow" = "Fiabilidad de la medición";
+"result.grade.a.claim" = "±3 s/d con confianza — listo para actuar";
+"result.grade.b.claim" = "±10 s/d con confianza — apto para seguimiento";
+"result.grade.c.claim" = "±25 s/d con confianza — prueba a recolocar";
+"result.grade.f.claim" = "No es fiable — vuelve a medir";
+"result.grade.a.suffix" = "con confianza — listo para actuar";
+"result.grade.b.suffix" = "con confianza — apto para seguimiento";
+"result.grade.c.suffix" = "con confianza — prueba a recolocar";
+"result.grade.f.suffix" = "— vuelve a medir";
+
+// ── New badges b23-b32 ──────────────────────────────────────────────
+"badges.b23.name" = "Primer calibre"; "badges.b23.desc" = "El momento en que te importó por primera vez lo que hay dentro"; "badges.b23.condition" = "Introduce un calibre para cualquier reloj";
+"badges.b24.name" = "Relojero nocturno"; "badges.b24.desc" = "Sigues midiendo pasada la medianoche"; "badges.b24.condition" = "5 mediciones entre la medianoche y las 2 a. m.";
+"badges.b25.name" = "Diario de reloj"; "badges.b25.desc" = "Registrado cada día durante una semana"; "badges.b25.condition" = "7 días consecutivos con entradas de diario";
+"badges.b26.name" = "Medidor paciente"; "badges.b26.desc" = "Quienes esperan 5 minutos obtienen los datos más precisos"; "badges.b26.condition" = "25 mediciones de 5 o más minutos";
+"badges.b27.name" = "Día perfecto"; "badges.b27.desc" = "Mañana y tarde — midiendo el mismo reloj dos veces en un día"; "badges.b27.condition" = "Mismo reloj medido 2+ veces en el mismo día — 10 días";
+"badges.b28.name" = "Espectro emocional"; "badges.b28.desc" = "Anotando cada sentimiento, de la alegría a la nostalgia"; "badges.b28.condition" = "20+ entradas con 4 o más estados de ánimo distintos";
+"badges.b29.name" = "Amplitud dorada"; "badges.b29.desc" = "Más de 300° — prueba de un movimiento en condiciones perfectas"; "badges.b29.condition" = "5 mediciones con amplitud ≥300° y confianza ≥70";
+"badges.b30.name" = "Doctor en movimientos"; "badges.b30.desc" = "Comprender relojes con distintos latidos"; "badges.b30.condition" = "Mide 3 o más tipos de BPH (18k/21,6k/28,8k/36k)";
+"badges.b31.name" = "Coleccionista de estaciones"; "badges.b31.desc" = "Medido en las cuatro estaciones del año"; "badges.b31.condition" = "Al menos 1 medición en cada una de las 4 estaciones";
+"badges.b32.name" = "Historia del tiempo"; "badges.b32.desc" = "Coleccionados y medidos 5 relojes vintage de más de 25 años"; "badges.b32.condition" = "5 relojes anteriores al año 2000, cada uno medido al menos una vez";
+
+"league.loading" = "Cargando rankings globales...";
+"league.error.body" = "Error de red. Desliza para actualizar.";
+"league.myteam.my_count" = " mis usos";
+"league.myteam.global_count" = " global";
+"league.myteam.badge" = "MI EQUIPO";
+"league.last_updated" = "Actualizado %@";
+
+"result.rate.reference_only" = "Solo a título orientativo";
+"result.action.done" = "Listo";
+"measurement.hint.weak_detection" = "⚠️ Los tics del reloj no se detectan bien. Acerca el reloj al micrófono y mantén los dedos fuera del micrófono.";
+"measurement.hint.analyzing" = "🔍 Analizando el patrón de tics — mide durante 30 s para resultados estables.";
+"measurement.hint.no_lock" = "🔍 No se ha podido enganchar el periodo de tic. Ajusta la posición del micrófono e inténtalo de nuevo.";
+"measurement.hint.no_lock_debug" = "🔍 No se ha podido enganchar el periodo de tic. [DBG: %@]";
+
+"addwatch.brand.custom.hint" = "Escribe una marca que no esté en la lista.";
+"common.ok" = "OK";
+
+"measurement.status.measuring" = "Escuchando…";
+"welcome.illustration.verdict" = "🟡 Ligeramente rápido";
+
+"stats.subtitle" = "Conclusiones a partir de mediciones y datos de uso de tu colección";
+"journal.subtitle" = "Pequeñas notas con tu muñeca";
+
+"league.myteam.rank_value" = "%@  n.º %d";
+"badges.summary.earned" = "%d / %d obtenidas";
+"badges.summary.level" = "NV. %d";
+"stats.wear.days_value" = "%d días";
+"watch.mood.last_active" = "%d días desde la última actividad · Energía %d%%";
+"collection.filter.favorites_only" = "Solo favoritos";
+"result.grade.a.gloss" = "El resultado está dentro de un rango fiable.";
+"result.grade.b.gloss" = "El resultado es utilizable para seguimiento.";
+"result.grade.c.gloss" = "La señal es débil — la precisión se reduce. Prueba a medir de nuevo.";
+"result.grade.f.gloss" = "La señal es demasiado débil o el reloj puede tener problemas.";
+"share.save.success" = "Guardado en Fotos";
+"share.save.failed" = "Error al guardar";
+"share.save.permission_denied" = "Se requiere acceso a Fotos";
+"result.action.share" = "Compartir";
+
+"magnetic.unavailable.title" = "Magnetómetro no disponible";
+"magnetic.unavailable.body" = "Este dispositivo no tiene sensor de magnetómetro.";
+
+"a11y.favorite.add" = "Añadir a favoritos";
+"a11y.favorite.remove" = "Quitar de favoritos";
+"a11y.wear_today" = "Marcar como usado hoy";
+"a11y.value.worn" = "Usado";
+"a11y.value.not_worn" = "Sin usar";
+"a11y.more_actions" = "Más acciones";
+"a11y.change_photo" = "Cambiar foto";
+"a11y.photo_view" = "Ver foto";
+
+"measurement.diagnostic.mic" = "Mic";
+"measurement.diagnostic.snr" = "SNR";
+"measurement.diagnostic.onsets" = "Onsets";
+"measurement.diagnostic.bph" = "BPH";
+
+"stats.eyebrow.figures" = "ANÁLISIS";
+"badges.rarity.common" = "Común";
+"badges.rarity.rare" = "Rara";
+"badges.rarity.epic" = "Épica";
+"badges.rarity.legendary" = "Legendaria";
+
+"share.aspect.a11y" = "Relación de aspecto";
+"shake.schedule.toggle.a11y" = "Notificación de elección diaria";
+"common.discard.title" = "¿Descartar lo que has escrito?";
+"common.discard.message" = "Tus cambios no se guardarán.";
+"common.discard.confirm" = "Descartar";
+
+"watchbox.stats.occupied" = "Ocupados";
+"watchbox.stats.brands" = "Marcas";
+"watchbox.stats.avg_rate" = "Marcha media";
+"watchbox.stats.empty" = "Vacíos";
+"watchbox.empty.a11y_hint" = "Añade un reloj desde la colección";
+
+"badges.locked" = "Bloqueada";
+
+"speccard.record.a11y.recording" = "Grabando";
+"speccard.record.a11y.idle" = "Inactivo";
+
+"a11y.rate_value" = "Marcha %1$@ %2$@";
+
+"movement.reliability.coaxial.title" = "Amplitud no mostrada para coaxial";
+"movement.reliability.coaxial.notice" = "Los movimientos con escape coaxial dan estimaciones de amplitud poco fiables basadas en micrófono, por lo que la celda de amplitud se oculta. La marcha y el error de marcha se miden con normalidad.";
+"movement.reliability.amplitude_unstable.title" = "La amplitud puede ser inestable";
+"movement.reliability.amplitude_unstable.notice" = "Este movimiento muestra una gran variación de amplitud según las condiciones (posición, temperatura, reserva de marcha). Toma 3-5 mediciones en la misma posición y consulta la media.";
+
+"measurement.winding_hint.title" = "Da cuerda al reloj antes de medir";
+"measurement.winding_hint.body" = "Los relojes automáticos/manuales necesitan cuerda suficiente para una precisión estable. Da 40-50 vueltas a la corona antes de medir. Una cuerda insuficiente puede provocar una marcha negativa constante (−20 s/d o peor).";
+"measurement.winding_hint.cta" = "Entendido";
+
+"pin.entry.a11y.progress" = "%1$d de %2$d dígitos introducidos";
+"pin.entry.a11y.failed" = "Incorrecto, inténtalo de nuevo";
+
+"speccard.spec.power_reserve" = "Reserva de marcha";
+
+"measurement.waveform.a11y.label" = "Forma de onda de audio en vivo";
+"measurement.waveform.a11y.snr" = "Señal %.0f decibelios";
+"measurement.waveform.a11y.idle" = "Escuchando";
+
+"journal.detail.delete.confirm" = "¿Eliminar esta entrada del diario?";
+"journal.detail.delete.message" = "Las entradas y fotos eliminadas no se pueden recuperar.";
+
+"watchbox.slot.a11y.position" = "Hueco %d";
+
+"measurement.countdown" = "%d s restantes";
+"measurement.countdown.a11y" = "%d segundos restantes";
+"a11y.rate_uncertainty" = "Precisión %@";
+
+"addwatch.movement.search.prompt" = "Buscar calibre (p. ej. 2824, Rolex)";
+"addwatch.movement.section.recommended" = "Sugeridos para esta marca";
+"addwatch.movement.section.all" = "Todos los movimientos";
+"addwatch.movement.section.results" = "Resultados de búsqueda";

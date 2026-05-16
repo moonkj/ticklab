@@ -26,10 +26,14 @@ struct AddWatchView: View {
     @State private var suggestion: MovementMatcher.Suggestion?
     /// 페르소나 (김재철, 워치메이커) wish: lift angle override.
     @State private var liftAngleOverride: String = ""
-    /// 무브먼트 직접입력 BPH (caliber == "__manual__" 일 때).
+    /// 무브먼트 직접입력 BPH (caliber == Watch.manualCaliberTag 일 때).
     @State private var manualBphText: String = ""
-    private static let manualCaliberTag = "__manual__"
-    private var isManualEntry: Bool { caliber == Self.manualCaliberTag }
+    @State private var showingBrandInputSheet: Bool = false
+    @State private var brandInputText: String = ""
+    /// Round (1-3 사용자 요청): 200+ Picker → searchable sheet.
+    @State private var showingMovementPicker: Bool = false
+    /// Round 2-3: sentinel 은 Watch.manualCaliberTag 로 통일. local alias 만 유지 (가독성).
+    private var isManualEntry: Bool { caliber == Watch.manualCaliberTag }
     /// 무브먼트 타입 — automatic / manual / quartz.
     @State private var movementType: WatchMovementType = .automatic
     /// 수동감기: 매일 알림 활성화 + 시각.
@@ -71,17 +75,41 @@ struct AddWatchView: View {
                     photoPicker
                 }
                 Section(String(localized: "addwatch.section.basic")) {
-                    // Round 169: 브랜드 직접 입력도 가능하게. Picker(13종) + 텍스트 입력 보조.
-                    Picker(String(localized: "addwatch.brand"), selection: $brand) {
-                        Text(String(localized: "common.unspecified")).tag("")
-                        ForEach(popularBrands, id: \.self) { Text($0).tag($0) }
-                        if !brand.isEmpty && !popularBrands.contains(brand) {
-                            Text(brand).tag(brand)
+                    // Picker + 직접 입력 통합 — Menu 로 인기 브랜드 선택 + 직접 입력 시트.
+                    HStack {
+                        Text(String(localized: "addwatch.brand"))
+                        Spacer()
+                        Menu {
+                            ForEach(popularBrands, id: \.self) { b in
+                                Button {
+                                    brand = b
+                                    updateSuggestion()
+                                } label: {
+                                    if brand == b {
+                                        Label(b, systemImage: "checkmark")
+                                    } else {
+                                        Text(b)
+                                    }
+                                }
+                            }
+                            Divider()
+                            Button {
+                                showingBrandInputSheet = true
+                            } label: {
+                                Label(String(localized: "addwatch.brand.custom"), systemImage: "square.and.pencil")
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(brand.isEmpty ? String(localized: "common.unspecified") : brand)
+                                    .foregroundStyle(brand.isEmpty ? AppColors.ink3 : AppColors.ink0)
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(AppColors.ink3)
+                            }
+                            .frame(minHeight: 44, alignment: .trailing)
+                            .contentShape(Rectangle())
                         }
                     }
-                    .onChange(of: brand) { _, _ in updateSuggestion() }
-                    TextField(String(localized: "addwatch.brand.custom"), text: $brand)
-                        .font(.system(size: 14))
 
                     TextField(String(localized: "addwatch.model"), text: $model)
                         .onChange(of: model) { _, _ in updateSuggestion() }
@@ -144,19 +172,27 @@ struct AddWatchView: View {
                                 .frame(width: 80)
                         }
                     }
-                    // Manual picker — 추천이 없거나 사용자가 직접 고르고 싶을 때.
-                    Picker(String(localized: "addwatch.movement.picker"),
-                           selection: Binding(
-                            get: { caliber ?? "" },
-                            set: { caliber = $0.isEmpty ? nil : $0 }
-                           )) {
-                        Text(String(localized: "addwatch.movement.unknown")).tag("")
-                        ForEach(MovementDatabase.shared.movements, id: \.id) { m in
-                            Text("\(m.id) · \(m.bph) BPH").tag(m.id)
+                    // Round (1-3): 200+ ForEach Picker → searchable sheet 로 교체.
+                    //   사용자가 brand 입력한 상태면 brand 매칭 무브먼트가 상단 추천 섹션.
+                    Button {
+                        showingMovementPicker = true
+                    } label: {
+                        HStack {
+                            Text(String(localized: "addwatch.movement.picker"))
+                                .foregroundStyle(AppColors.ink0)
+                            Spacer()
+                            Text(caliberDisplayLabel())
+                                .foregroundStyle(caliber == nil ? AppColors.ink3 : AppColors.ink2)
+                                .lineLimit(1)
+                                .truncationMode(.middle)
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(AppColors.ink3)
                         }
-                        Divider()
-                        Text(String(localized: "addwatch.movement.manual_entry")).tag(Self.manualCaliberTag)
+                        .frame(minHeight: 44)
+                        .contentShape(Rectangle())
                     }
+                    .buttonStyle(.plain)
                     // 직접입력 선택 시 BPH 입력 필드 (측정에 필수)
                     if isManualEntry {
                         VStack(alignment: .leading, spacing: 8) {
@@ -242,6 +278,23 @@ struct AddWatchView: View {
                              ? String(localized: "editwatch.title")
                              : String(localized: "addwatch.title"))
             .navigationBarTitleDisplayMode(.inline)
+            .alert(String(localized: "addwatch.brand.custom"), isPresented: $showingBrandInputSheet) {
+                TextField(String(localized: "addwatch.brand"), text: $brandInputText)
+                    .textInputAutocapitalization(.words)
+                Button(String(localized: "common.cancel"), role: .cancel) {
+                    brandInputText = ""
+                }
+                Button(String(localized: "common.ok")) {
+                    let trimmed = brandInputText.trimmingCharacters(in: .whitespaces)
+                    if !trimmed.isEmpty {
+                        brand = trimmed
+                        updateSuggestion()
+                    }
+                    brandInputText = ""
+                }
+            } message: {
+                Text(String(localized: "addwatch.brand.custom.hint"))
+            }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(String(localized: "common.cancel")) {
@@ -281,13 +334,12 @@ struct AddWatchView: View {
         liftAngleOverride = existing.liftAngleOverride.map { String(format: "%.0f", $0) } ?? ""
         movementType = existing.movementType
         windReminderEnabled = existing.windReminderEnabled
-        if existing.windReminderHour != 0 || existing.windReminderMinute != 0 {
-            windReminderTime = Calendar.current.date(
-                bySettingHour: existing.windReminderHour,
-                minute: existing.windReminderMinute,
-                second: 0, of: Date()
-            ) ?? windReminderTime
-        }
+        // 0:00 (자정) 도 유효한 시각 — guard 제거.
+        windReminderTime = Calendar.current.date(
+            bySettingHour: existing.windReminderHour,
+            minute: existing.windReminderMinute,
+            second: 0, of: Date()
+        ) ?? windReminderTime
         batteryLastReplaced = existing.batteryLastReplaced ?? Date()
         batteryReminderEnabled = existing.batteryReminderEnabled
         nickname = existing.nickname ?? ""
@@ -325,11 +377,27 @@ struct AddWatchView: View {
                 Button {
                     showingPhotoSourceDialog = true
                 } label: {
-                    Label(String(localized: "addwatch.choose_photo"), systemImage: "photo.on.rectangle")
-                        .font(.system(size: 14))
+                    Label(
+                        String(localized: photoData != nil ? "addwatch.replace_photo" : "addwatch.choose_photo"),
+                        systemImage: "photo.on.rectangle"
+                    )
+                    .font(.system(size: 14))
+                    .frame(minHeight: 44)
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(AppColors.accent)
+                if photoData != nil {
+                    Button(role: .destructive) {
+                        photoData = nil
+                        photoItem = nil
+                    } label: {
+                        Label(String(localized: "addwatch.remove_photo"), systemImage: "trash")
+                            .font(.system(size: 13))
+                            .frame(minHeight: 36)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(AppColors.danger)
+                }
             }
         }
         // Round 170 (사용자 보고: 사진 선택 / 사진 찍기 분리 안되고 순차 노출 버그):
@@ -349,15 +417,42 @@ struct AddWatchView: View {
         }
         .photosPicker(isPresented: $showingPhotosPicker, selection: $photoItem, matching: .images)
         .onChange(of: photoItem) { _, item in
+            // Round 14 (Hyemi): EXIF strip + JPEG re-encode 가 main thread 100-300ms 점유 →
+            //   detached task 에서 작업 후 main actor 로 assign.
             Task {
-                if let raw = try? await item?.loadTransferable(type: Data.self) {
-                    photoData = EXIFStripper.strippedJPEG(from: raw)
-                }
+                guard let raw = try? await item?.loadTransferable(type: Data.self) else { return }
+                let stripped = await Task.detached(priority: .userInitiated) {
+                    EXIFStripper.strippedJPEG(from: raw)
+                }.value
+                await MainActor.run { photoData = stripped }
             }
         }
         .sheet(isPresented: $showingCamera) {
             CameraImagePicker(imageData: $photoData)
                 .ignoresSafeArea()
+        }
+        .sheet(isPresented: $showingMovementPicker) {
+            MovementPickerSheet(
+                selectedCaliber: Binding(
+                    get: { caliber },
+                    set: { caliber = $0 }
+                ),
+                manualEntryTag: Watch.manualCaliberTag,
+                brandHint: brand
+            )
+            .presentationDetents([.large])
+        }
+    }
+
+    /// Round (1-3): 무브먼트 picker button 의 우측 라벨 — 선택 상태 표시.
+    private func caliberDisplayLabel() -> String {
+        switch caliber {
+        case .none:
+            return String(localized: "addwatch.movement.unknown")
+        case .some(Watch.manualCaliberTag):
+            return String(localized: "addwatch.movement.manual_entry")
+        case .some(let id):
+            return id
         }
     }
 
@@ -472,6 +567,8 @@ struct AddWatchView: View {
             existing.purchaseDate = purchaseDate
             existing.photoData = photoData
             PhotoCache.invalidate(id: existing.id)
+            // Round (3-1): 다음 ListRow/Hero render 시 main thread 디코드 spike 회피.
+            PhotoCache.prefetch(for: existing.id, data: photoData)
             existing.liftAngleOverride = Double(liftAngleOverride.trimmingCharacters(in: .whitespaces))
             existing.movementType = movementType
             existing.nickname = nicknameTrimmed.isEmpty ? nil : nicknameTrimmed
@@ -494,6 +591,8 @@ struct AddWatchView: View {
             )
             watch.customBph = parsedCustomBph
             modelContext.insert(watch)
+            // Round (3-1): 신규 시계도 prefetch.
+            PhotoCache.prefetch(for: watch.id, data: photoData)
         }
         if movementType == .manual {
             watch.windReminderEnabled = windReminderEnabled

@@ -4,7 +4,7 @@ import SwiftUI
 /// Screen 20 — Quartz Battery 모니터 (독립 화면).
 /// WatchDetail의 careSection batteryCard 과 동일 데이터, 더 큰 시각화.
 struct BatteryView: View {
-    @Query private var allWatches: [Watch]
+    @Query(sort: \Watch.createdAt, order: .reverse) private var allWatches: [Watch]
     @State private var activeId: PersistentIdentifier?
 
     private var quartzWatches: [Watch] {
@@ -85,12 +85,15 @@ struct BatteryView: View {
                             .font(.system(size: 13, weight: .semibold))
                             .foregroundStyle(isActive ? .white : AppColors.ink0)
                             .padding(.horizontal, 12)
-                            .padding(.vertical, 8)
+                            .padding(.vertical, 12)
+                            .frame(minHeight: 44)
                             .background(isActive ? AppColors.primaryDeep : AppColors.paper2)
                             .clipShape(Capsule())
                             .overlay(Capsule().stroke(isActive ? AppColors.primaryDeep : AppColors.rule, lineWidth: 1))
+                            .contentShape(Capsule())
                     }
                     .buttonStyle(.plain)
+                    .accessibilityAddTraits(isActive ? .isSelected : [])
                 }
             }
         }
@@ -138,6 +141,8 @@ struct BatteryView: View {
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(String(format: NSLocalizedString("a11y.battery.gauge", comment: ""), Int(pct), health.label, watch.brand, watch.model)))
     }
 
     private func batteryCellSVG(pct: Double, color: Color) -> some View {
@@ -189,7 +194,7 @@ struct BatteryView: View {
             .padding(.vertical, 8)
 
             HStack {
-                Text(changed, format: .dateTime.month().day())
+                Text(AppDateFormat.shortMonthDay(changed))
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
                     .foregroundStyle(AppColors.ink2)
                 Spacer()
@@ -197,15 +202,15 @@ struct BatteryView: View {
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
                     .foregroundStyle(AppColors.primaryDeep)
                 Spacer()
-                Text(expires, format: .dateTime.month().day())
+                Text(AppDateFormat.shortMonthDay(expires))
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
                     .foregroundStyle(AppColors.danger)
             }
 
             HStack(spacing: 8) {
-                kv(String(localized: "battery.kv.last"), value: changed.formatted(.dateTime.month().day()))
+                kv(String(localized: "battery.kv.last"), value: AppDateFormat.shortMonthDay(changed))
                 kv(String(localized: "battery.kv.elapsed"), value: "\(daysSince)d", accent: true)
-                kv(String(localized: "battery.kv.due"), value: expires.formatted(.dateTime.month().day()))
+                kv(String(localized: "battery.kv.due"), value: AppDateFormat.shortMonthDay(expires))
             }
         }
         .padding(14)

@@ -24,6 +24,9 @@ enum UserMode: String, CaseIterable {
 final class UserPreferences {
     @ObservationIgnored
     private let defaults = UserDefaults.standard
+    /// Round 23 (Min): NotificationCenter observer token — deinit 에서 removeObserver 하기 위함.
+    @ObservationIgnored
+    private var proEntitlementObserver: NSObjectProtocol?
 
     var hasCompletedOnboarding: Bool {
         didSet { defaults.set(hasCompletedOnboarding, forKey: Keys.onboarding) }
@@ -115,9 +118,24 @@ final class UserPreferences {
     }
 
     init() {
+        // Round 23 (Min): defaults.register — 외부 reader (Settings.app) / 다른 process 에서도
+        //   ON-by-default 키들이 일관된 fallback. didSet 으로 한 번이라도 write 한 값은 우선 유지.
+        defaults.register(defaults: [
+            Keys.autoOTA: false,
+            Keys.aiVerdict: true,
+            Keys.keepScreenOn: true,
+            Keys.journalReminderHour: 21,
+            Keys.journalReminderMinute: 0,
+            Keys.randomPickHour: 8,
+            Keys.randomPickMinute: 0,
+            Keys.useSimplifiedDSP: true
+        ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
-        let modeString = defaults.string(forKey: Keys.mode) ?? UserMode.novice.rawValue
-        self.userMode = UserMode(rawValue: modeString) ?? .novice
+        // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
+        // 사용자 보고 fix: 기본 .novice 이라서 MeasurementResultView details, WatchDetail specs,
+        //   lift-angle override 등 5곳이 모든 유저에게 영구 hidden 이었음.
+        let modeString = defaults.string(forKey: Keys.mode) ?? UserMode.pro.rawValue
+        self.userMode = UserMode(rawValue: modeString) ?? .pro
         self.silentModeDefault = defaults.bool(forKey: Keys.silentMode)
         self.iCloudSyncEnabled = defaults.bool(forKey: Keys.iCloud)
         // Round 6 (Hyemi): 외부 호출 사용자 동의는 명시적 opt-in 으로. 기본 OFF.
@@ -141,11 +159,18 @@ final class UserPreferences {
         // Round 170: simplified DSP — 기본 ON. 사용자가 명시 OFF 해야 legacy 경로 사용.
         self.useSimplifiedDSP = (defaults.object(forKey: Keys.useSimplifiedDSP) as? Bool) ?? true
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
-        NotificationCenter.default.addObserver(
+        // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
+        proEntitlementObserver = NotificationCenter.default.addObserver(
             forName: .ticklabProEntitlementChanged, object: nil, queue: .main
         ) { [weak self] note in
             guard let on = note.userInfo?["isPro"] as? Bool else { return }
             self?.isPro = on
+        }
+    }
+
+    deinit {
+        if let token = proEntitlementObserver {
+            NotificationCenter.default.removeObserver(token)
         }
     }
 
@@ -169,5 +194,8 @@ final class UserPreferences {
         static let magneticField = "ticklab.magneticFieldMeasurementEnabled"
         static let pinEnabled = "ticklab.pinEnabled"
         static let useSimplifiedDSP = "ticklab.useSimplifiedDSP"
+        /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
+        /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.
+        static let windingHintShownAt = "ticklab.windingHintShownAt"
     }
 }

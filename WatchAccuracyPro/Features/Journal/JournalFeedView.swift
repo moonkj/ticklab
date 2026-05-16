@@ -11,6 +11,11 @@ struct JournalFeedView: View {
 
     @State private var viewMode: ViewMode = .feed
     @State private var composing = false
+    /// 더보기 / 접기 토글. 표준: dense grid 12, narrative feed 8 — 너무 많은 데이터 노출 방지.
+    @State private var gridExpanded = false
+    @State private var feedExpanded = false
+    private static let gridPageSize = 12
+    private static let feedPageSize = 8
 
     /// Round 176: RootTabView 가 주입하는 NavigationStack path.
     private let externalPath: Binding<NavigationPath>?
@@ -39,6 +44,7 @@ struct JournalFeedView: View {
         NavigationStack(path: pathBinding) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
+                    editorialHeader
                     storiesRail
                     calendarStrip
                     modePicker
@@ -53,22 +59,22 @@ struct JournalFeedView: View {
                 .padding(.vertical, 12)
             }
             .background(AppColors.paper0.ignoresSafeArea())
-            .navigationTitle(String(localized: "journal.title"))
-            // Round 138 사용자 요청: 통계처럼 inline 고정 — 스크롤해도 제목 사라지지 않음.
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.paper0, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            // Round 72: toolbar text(title) 색상 강제 — system dark mode 에서도 light 톤 유지.
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        composing = true
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .foregroundStyle(AppColors.accent)
-                    }
+            .toolbar(.hidden, for: .navigationBar)
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    composing = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .background(AppColors.ink0)
+                        .clipShape(Circle())
                 }
+                .buttonStyle(.plain)
+                .padding(.top, 12)
+                .padding(.trailing, 20)
+                .accessibilityLabel(String(localized: "journal.compose.title"))
             }
             .sheet(isPresented: $composing) {
                 JournalComposerView()
@@ -84,6 +90,16 @@ struct JournalFeedView: View {
     // MARK: - Stories rail (per-watch latest entries)
     /// 디자인 SSOT screens-main.jsx JournalFeedView stories rail.
     /// "+ 새 일기" dashed border 카드 + watch silhouette circles (hasEntry 면 gold border).
+    private var editorialHeader: some View {
+        EditorialPageHeader(
+            eyebrow: "FIELD NOTES",
+            title: String(localized: "journal.title"),
+            subtitle: String(localized: "journal.subtitle")
+        )
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+    }
+
     /// Round 93: 시계 없을 때 hint message.
     @ViewBuilder
     private var storiesRail: some View {
@@ -227,42 +243,69 @@ struct JournalFeedView: View {
         return f.string(from: date).uppercased()
     }
 
-    // MARK: - Mode picker
+    // MARK: - Mode picker (editorial pill switcher)
     private var modePicker: some View {
-        Picker("View", selection: $viewMode) {
+        HStack(spacing: 0) {
             ForEach(ViewMode.allCases, id: \.self) { mode in
-                Text(mode.localizedName).tag(mode)
+                let selected = viewMode == mode
+                Button {
+                    UISelectionFeedbackGenerator().selectionChanged()
+                    withAnimation(.easeOut(duration: 0.18)) { viewMode = mode }
+                } label: {
+                    Text(mode.localizedName)
+                        .font(.system(size: 12, weight: selected ? .semibold : .medium, design: .monospaced))
+                        .tracking(1.2)
+                        .foregroundStyle(selected ? .white : AppColors.ink2)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                        .background(selected ? AppColors.ink0 : Color.clear)
+                        .clipShape(Capsule())
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
             }
         }
-        .pickerStyle(.segmented)
-        .tint(AppColors.accent)
+        .padding(3)
+        .background(AppColors.paper1)
+        .overlay(Capsule().stroke(AppColors.rule, lineWidth: 1))
+        .clipShape(Capsule())
         .padding(.horizontal, 20)
     }
 
     // MARK: - Grid / Feed / Calendar sections
     private var gridSection: some View {
-        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 3), spacing: 4) {
-            ForEach(entries) { entry in
-                NavigationLink(value: entry) {
-                    gridThumb(entry: entry)
+        let displayCount = gridExpanded ? entries.count : min(Self.gridPageSize, entries.count)
+        let hasMore = entries.count > Self.gridPageSize
+        return VStack(spacing: 12) {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 4), count: 3), spacing: 4) {
+                ForEach(Array(entries.prefix(displayCount))) { entry in
+                    NavigationLink(value: entry) {
+                        gridThumb(entry: entry)
+                    }
+                }
+            }
+            if hasMore {
+                moreToggleButton(expanded: gridExpanded,
+                                 remaining: entries.count - Self.gridPageSize) {
+                    withAnimation(.easeOut(duration: 0.2)) { gridExpanded.toggle() }
                 }
             }
         }
         .padding(.horizontal, 20)
-        // Round 141 (Hyemi H2): navigationDestination 은 NavigationStack 최상단에 한 번만.
     }
 
     private func gridThumb(entry: JournalEntry) -> some View {
         ZStack {
             AppColors.paper2
-            // Round 172: photoPaths 첫 사진 실제 로드 (이전엔 photo icon placeholder).
-            if let stored = entry.photoPaths.first,
-               let firstPath = EXIFStripper.resolvePhotoPath(stored),
-               let data = try? Data(contentsOf: URL(fileURLWithPath: firstPath)),
-               let img = UIImage(data: data) {
-                Image(uiImage: img)
-                    .resizable()
-                    .scaledToFill()
+            // Round 15 (Doyoon/Sora): 동기 Data(contentsOf:) → AsyncDiskImage 캐시 + 비동기 로드.
+            if let stored = entry.photoPaths.first {
+                AsyncDiskImage(storedPath: stored) {
+                    if let watch = entry.watch {
+                        WatchSilhouette(watch: watch, size: 90)
+                    } else {
+                        Color.clear
+                    }
+                }
             } else if let watch = entry.watch {
                 if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
                     Image(uiImage: img).resizable().scaledToFill()
@@ -290,20 +333,48 @@ struct JournalFeedView: View {
     }
 
     private var feedSection: some View {
-        VStack(spacing: 16) {
+        let displayCount = feedExpanded ? entries.count : min(Self.feedPageSize, entries.count)
+        let hasMore = entries.count > Self.feedPageSize
+        return LazyVStack(spacing: 16) {
             if entries.isEmpty {
                 emptyState
             } else {
-                ForEach(entries) { entry in
+                ForEach(Array(entries.prefix(displayCount))) { entry in
                     NavigationLink(value: entry) {
                         feedCard(entry: entry)
                     }
                     .buttonStyle(.plain)
                 }
+                if hasMore {
+                    moreToggleButton(expanded: feedExpanded,
+                                     remaining: entries.count - Self.feedPageSize) {
+                        withAnimation(.easeOut(duration: 0.2)) { feedExpanded.toggle() }
+                    }
+                }
             }
         }
         .padding(.horizontal, 20)
-        // Round 141 (Hyemi H2): navigationDestination 은 NavigationStack 최상단에 한 번만.
+    }
+
+    /// 더보기 / 접기 공통 토글 버튼 — WatchDetailView 측정 history 와 동일 패턴.
+    private func moreToggleButton(expanded: Bool, remaining: Int, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            HStack(spacing: 6) {
+                Text(expanded
+                     ? String(localized: "common.collapse")
+                     : String(format: NSLocalizedString("common.show_more_count", comment: ""), remaining))
+                    .font(.system(size: 13, weight: .semibold))
+                Image(systemName: expanded ? "chevron.up" : "chevron.down")
+                    .font(.system(size: 11, weight: .semibold))
+            }
+            .foregroundStyle(AppColors.ink2)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .background(AppColors.paper1)
+            .overlay(RoundedRectangle(cornerRadius: AppRadius.md).stroke(AppColors.rule, lineWidth: 1))
+            .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+        }
+        .buttonStyle(.plain)
     }
 
     private func feedCard(entry: JournalEntry) -> some View {
@@ -322,7 +393,7 @@ struct JournalFeedView: View {
                     }
                 }
                 Spacer()
-                Text(entry.timestamp, format: .dateTime.day().month())
+                Text(AppDateFormat.shortMonthDay(entry.timestamp))
                     .font(.system(size: 11, design: .monospaced))
                     .foregroundStyle(AppColors.ink3)
             }
@@ -331,15 +402,11 @@ struct JournalFeedView: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
                         ForEach(Array(entry.photoPaths.prefix(4).enumerated()), id: \.offset) { _, stored in
-                            if let path = EXIFStripper.resolvePhotoPath(stored),
-                               let data = try? Data(contentsOf: URL(fileURLWithPath: path)),
-                               let img = UIImage(data: data) {
-                                Image(uiImage: img)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 64, height: 64)
-                                    .clipShape(RoundedRectangle(cornerRadius: 8))
+                            AsyncDiskImage(storedPath: stored) {
+                                Color.clear
                             }
+                            .frame(width: 64, height: 64)
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                         }
                     }
                 }

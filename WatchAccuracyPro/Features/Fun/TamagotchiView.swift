@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Screen 22 — Tamagotchi. 시계를 디지털 펫처럼 다루는 전용 화면.
 struct TamagotchiView: View {
-    @Query private var watches: [Watch]
+    @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @Environment(\.modelContext) private var modelContext
     @State private var activeId: PersistentIdentifier?

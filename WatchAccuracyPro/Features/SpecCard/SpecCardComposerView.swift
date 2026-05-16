@@ -37,6 +37,7 @@ struct SpecCardComposerView: View {
                 }
                 .padding(16)
             }
+            .scrollDismissesKeyboard(.interactively)
             .background(AppColors.paper0.ignoresSafeArea())
             .navigationTitle(String(localized: "speccard.nav.title"))
             .navigationBarTitleDisplayMode(.inline)
@@ -210,9 +211,19 @@ struct SpecCardComposerView: View {
                     Task { await recorder.toggle() }
                 } label: {
                     HStack(spacing: 8) {
-                        Image(systemName: recorder.isRecording ? "stop.circle.fill" : "mic.circle.fill")
-                            .font(.system(size: 24))
-                            .foregroundStyle(recorder.isRecording ? AppColors.danger : AppColors.accent)
+                        ZStack {
+                            Image(systemName: recorder.isRecording ? "stop.fill" : "mic.circle.fill")
+                                .font(.system(size: 24))
+                                .foregroundStyle(recorder.isRecording ? AppColors.danger : AppColors.accent)
+                            if recorder.isRecording {
+                                Circle()
+                                    .fill(AppColors.danger)
+                                    .frame(width: 8, height: 8)
+                                    .offset(x: 12, y: -12)
+                                    .opacity(0.9)
+                                    .accessibilityHidden(true)
+                            }
+                        }
                         Text(recorder.isRecording ?
                                 String(format: NSLocalizedString("speccard.record.recording", comment: ""), recorder.elapsedSec) :
                                 (recorder.hasRecording ?
@@ -228,6 +239,7 @@ struct SpecCardComposerView: View {
                     .overlay(Capsule().stroke(AppColors.rule, lineWidth: 1))
                 }
                 .buttonStyle(.plain)
+                .accessibilityValue(recorder.isRecording ? String(localized: "speccard.record.a11y.recording") : String(localized: "speccard.record.a11y.idle"))
                 if recorder.hasRecording {
                     Button {
                         Task { await recorder.play() }

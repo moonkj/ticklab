@@ -107,6 +107,9 @@ struct LiveMetrics: Sendable, Equatable {
     var lockStabilityScore: Int? = nil
     /// Pro mode 진단용 — rate 의 rolling std-dev (s/d).
     var rateRollingStdDev: Double? = nil
+    /// 사용자 요청: 실시간 tic/toc 점 시각화 — 최근 검출 onset 시각 (측정 시작 기준 seconds).
+    /// 알고리즘 자체는 unchanged — 기존 detection 결과 외부 노출 전용. nil 이면 빈 화면.
+    var recentOnsetTimes: [Double]? = nil
 }
 
 /// 라이브 파형 표시용 페이로드. -1...1 범위 다운샘플 진폭 + 측정 시작부터의 경과 시각.

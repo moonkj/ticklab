@@ -68,6 +68,8 @@ struct PINEntryView: View {
                     .opacity(0.01)
                     .frame(height: 1)
                     .disabled(pinService.isPINLockedOut)
+                    .accessibilityLabel(String(localized: "pin.entry.title"))
+                    .accessibilityHint(String(localized: "pin.entry.a11y.hint"))
                     .onChange(of: pin) { _, newValue in
                         handlePINChange(newValue)
                     }
@@ -116,6 +118,9 @@ struct PINEntryView: View {
             }
         }
         .animation(.easeOut(duration: 0.18), value: filled)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(String(format: NSLocalizedString("pin.entry.a11y.progress", comment: ""), filled, PINService.pinLength)))
+        .accessibilityValue(failed ? Text(String(localized: "pin.entry.a11y.failed")) : Text(""))
     }
 
     private func handlePINChange(_ newValue: String) {

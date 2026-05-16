@@ -22,7 +22,19 @@ final class MovementDatabase {
 
     init(movements: [Movement]) {
         self._movements = movements
-        self.byID = Dictionary(uniqueKeysWithValues: movements.map { ($0.id, $0) })
+        // Round 17 (Min): uniqueKeysWithValues 는 중복 id 만나면 trap → bad MovementDB.json 으로 앱 크래시.
+        //   defensive grouping + first-wins + 디버그 빌드에서만 assert.
+        var dict: [String: Movement] = [:]
+        for m in movements {
+            if dict[m.id] != nil {
+                #if DEBUG
+                assertionFailure("⚠️ MovementDB 에 중복 movement id 발견: \(m.id) — first-wins 로 진행.")
+                #endif
+                continue
+            }
+            dict[m.id] = m
+        }
+        self.byID = dict
     }
 
     private convenience init() {

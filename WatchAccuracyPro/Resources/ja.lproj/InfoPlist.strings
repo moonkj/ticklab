@@ -1,0 +1,8 @@
+/* 日本語 — 権限ダイアログ */
+
+"NSCameraUsageDescription" = "腕時計の写真をコレクションに登録するためにカメラが必要です。写真はEXIF位置情報を削除してデバイス内にのみ保存されます。";
+"NSFaceIDUsageDescription" = "TickLabアプリを開くときにFace IDでロックを解除します。腕時計コレクションと測定データを安全に保護します。";
+"NSMicrophoneUsageDescription" = "腕時計の精度を測定するためにマイクが必要です。音声は解析後すぐに破棄され、保存や外部送信は一切行いません。";
+"NSMotionUsageDescription" = "周囲の磁場を測定して腕時計の磁化リスクを確認するため、iPhoneの磁気センサーを使用します。測定値はデバイス内でのみ処理されます。";
+"NSPhotoLibraryUsageDescription" = "写真ライブラリから腕時計の写真を選んでコレクションに登録できます。";
+"NSPhotoLibraryAddUsageDescription" = "測定結果の共有カードを写真ライブラリに保存するために権限が必要です。";

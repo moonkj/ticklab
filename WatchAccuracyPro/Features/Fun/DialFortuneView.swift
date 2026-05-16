@@ -4,7 +4,7 @@ import SwiftUI
 struct DialFortuneView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
-    private let today = Date()
+    private var today: Date { Date() }
 
     /// 날짜 기반 deterministic seed.
     private var seed: Int {

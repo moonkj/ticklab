@@ -1,0 +1,8 @@
+/* 繁體中文 — 權限對話框 */
+
+"NSCameraUsageDescription" = "TickLab 需要使用相機為您的手錶拍照。照片僅儲存於您的裝置,並自動移除位置中繼資料。";
+"NSFaceIDUsageDescription" = "TickLab 使用 Face ID 鎖定應用程式,保護您的手錶收藏與測量資料。";
+"NSMicrophoneUsageDescription" = "TickLab 需要使用麥克風聆聽機芯走時聲以測量手錶精度。音訊僅在裝置本地即時處理,不會儲存或上傳。";
+"NSMotionUsageDescription" = "TickLab 使用 iPhone 磁力計偵測可能使機械錶磁化的環境磁場。讀數僅在裝置本地處理。";
+"NSPhotoLibraryUsageDescription" = "TickLab 需要存取相片圖庫,以便您將手錶相片加入收藏。";
+"NSPhotoLibraryAddUsageDescription" = "TickLab 需要權限才能將測量分享卡儲存到相片圖庫。";

@@ -7,7 +7,12 @@ import UIKit
 struct JournalComposerView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(UserPreferences.self) private var preferences
     @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
+    @Query private var allEntries: [JournalEntry]
+    @State private var showMonthlyLimitAlert = false
+    /// shell-level paywall.
+    @Environment(\.purchaseRouter) private var purchaseRouter
 
     /// Round 118 (검토B High): WatchDetail 일기 탭에서 직접 진입 시 미리 선택된 시계.
     var defaultWatch: Watch? = nil
@@ -17,6 +22,8 @@ struct JournalComposerView: View {
     @State private var mood: Mood = .neutral
     @State private var photoItems: [PhotosPickerItem] = []
     @State private var photoDatas: [Data] = []
+    /// Round 15 (Min): rapid re-pick 시 older Task 가 newer 결과 덮어쓰는 race 회피.
+    @State private var photoLoadTask: Task<Void, Never>?
     @State private var pickedPhotoCount: Int = 0
     @State private var isProcessingPhotos: Bool = false
     @FocusState private var bodyFocused: Bool
@@ -32,7 +39,9 @@ struct JournalComposerView: View {
                 }
                 .padding(20)
             }
+            .scrollDismissesKeyboard(.interactively)
             .background(AppColors.paper0.ignoresSafeArea())
+            .presentationDragIndicator(.visible)
             .navigationTitle(String(localized: "journal.compose.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -52,6 +61,14 @@ struct JournalComposerView: View {
                     selectedWatch = defaultWatch ?? watches.first
                 }
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { bodyFocused = true }
+            }
+            .alert(String(localized: "pro.limit.journal_monthly.title"), isPresented: $showMonthlyLimitAlert) {
+                Button(String(localized: "pro.limit.upgrade")) {
+                    purchaseRouter?.intend(.journalMonthly)
+                }
+                Button(String(localized: "common.cancel"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "pro.limit.journal_monthly.body"))
             }
         }
     }
@@ -164,18 +181,23 @@ struct JournalComposerView: View {
             // Round 170: PhotosPickerItem → Data 변환 + EXIF strip 후 메모리에 보관.
             // save() 호출 시 disk 로 영구 저장 (orphan 방지).
             .onChange(of: photoItems) { _, newItems in
-                Task {
+                // Round 15: 이전 Task 가 in-flight 면 취소 후 새 Task 만 결과 반영.
+                photoLoadTask?.cancel()
+                photoLoadTask = Task {
                     isProcessingPhotos = true
+                    // 사용자 보고 fix: isCancelled return 분기에서도 spinner 가 stuck 안 되도록 defer.
+                    defer { isProcessingPhotos = false }
                     var datas: [Data] = []
                     for item in newItems {
+                        if Task.isCancelled { return }
                         if let raw = try? await item.loadTransferable(type: Data.self),
                            let stripped = EXIFStripper.strippedJPEG(from: raw) {
                             datas.append(stripped)
                         }
                     }
+                    guard !Task.isCancelled else { return }
                     photoDatas = datas
                     pickedPhotoCount = datas.count
-                    isProcessingPhotos = false
                 }
             }
             // Selected photo thumbnails preview.
@@ -197,7 +219,23 @@ struct JournalComposerView: View {
         }
     }
 
+    /// Free 사용자 월 5개 일기 제한. Pro 무제한.
+    private var canCreateEntry: Bool {
+        guard !preferences.isPro else { return true }
+        let cal = Calendar.current
+        let now = Date()
+        let thisMonthCount = allEntries.filter {
+            cal.isDate($0.timestamp, equalTo: now, toGranularity: .month)
+        }.count
+        return thisMonthCount < ProEntitlement.freeJournalMonthLimit
+    }
+
     private func save() {
+        // 사용자 결정: Free 월 5개 일기 제한.
+        guard canCreateEntry else {
+            showMonthlyLimitAlert = true
+            return
+        }
         // Round 170: 사진을 영구 저장하고 path 를 entry 에 보관.
         let paths = photoDatas.compactMap { EXIFStripper.savePhoto($0) }
         let entry = JournalEntry(

@@ -23,10 +23,18 @@ struct WatchDetailView: View {
     /// Round 125 (성능 H10): journal/service fetch 캐시 — body 재계산마다 DB 스캔 방지.
     @State private var cachedJournalEntries: [JournalEntry] = []
     @State private var cachedServiceLogs: [ServiceLog] = []
+    /// Round 20 (Sora): isWornToday body 안 3회 fetch 차단 — wear toggle 시점에 갱신.
+    @State private var cachedWornToday: Bool = false
     /// Round 170: 측정 이력 삭제 확인 (전체 삭제용).
     @State private var showDeleteAllMeasurementsAlert = false
     @State private var historyExpanded = false
-    private static let historyPageSize = 10
+    private static let historyPageSize = 8
+    /// 일기 탭 더보기 토글 — 첫 진입 시 5개만 표시.
+    @State private var journalExpanded = false
+    private static let journalPageSize = 5
+    /// 서비스 로그 타임라인 더보기 토글 — 첫 진입 시 5개만 표시.
+    @State private var serviceLogExpanded = false
+    private static let serviceLogPageSize = 5
     /// Round 170: 단일 측정 삭제 확인.
     @State private var measurementToDelete: WatchMeasurement?
     /// Round 173: 시계 정보 편집 sheet + 삭제 확인 alert.
@@ -94,6 +102,8 @@ struct WatchDetailView: View {
         .onAppear {
             sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
             refreshJournalAndServiceCache()
+            // Round 20 (Sora): isWornToday body 안 fetch 차단용 캐시 초기화.
+            cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
         }
         .onChange(of: watch.measurements.count) { _, _ in
             sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
@@ -151,6 +161,8 @@ struct WatchDetailView: View {
                         watch.photoData = newData
                         // Round 147 (Min C1): photo 변경 시 NSCache stale 방지.
                         PhotoCache.invalidate(id: watch.id)
+                        // Round (3-1): 즉시 background prefetch — 다음 hero render main thread spike 회피.
+                        PhotoCache.prefetch(for: watch.id, data: newData)
                         try? modelContext.save()
                     }
                 }
@@ -173,6 +185,8 @@ struct WatchDetailView: View {
                     watch.photoData = stripped
                     // Round 147 (Min C1): NSCache stale 방지.
                     PhotoCache.invalidate(id: watch.id)
+                    // Round (3-1): background prefetch.
+                    PhotoCache.prefetch(for: watch.id, data: stripped)
                     try? modelContext.save()
                 }
             }
@@ -189,29 +203,31 @@ struct WatchDetailView: View {
         .navigationTitle(watch.model)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                    watch.isFavorite.toggle()
-                } label: {
-                    Image(systemName: watch.isFavorite ? "star.fill" : "star")
-                        .foregroundStyle(watch.isFavorite ? AppColors.accent : AppColors.ink2)
-                }
-            }
+            // 사용자 보고 fix: iPhone SE 에서 3 toolbar slot + 긴 모델명 → title 잘림. favorite 을 menu 안으로 이동.
+            //   (favorite 은 컬렉션 카드 contextMenu 에서도 접근 가능해서 toolbar 중복 제거 안전.)
             // Round 121: "오늘 착용" toggle (디자인 Journey axis).
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     UISelectionFeedbackGenerator().selectionChanged()
                     WearLogService.toggleToday(watch, in: modelContext)
+                    // Round 20: cache 갱신 — 다음 body 호출이 fetch 안 하도록.
+                    cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
                 } label: {
-                    let worn = WearLogService.isWornToday(watch, in: modelContext)
-                    Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
-                        .foregroundStyle(worn ? AppColors.accent : AppColors.ink2)
+                    Image(systemName: cachedWornToday ? "checkmark.seal.fill" : "checkmark.seal")
+                        .foregroundStyle(cachedWornToday ? AppColors.accent : AppColors.ink2)
                 }
+                .accessibilityLabel(String(localized: "a11y.wear_today"))
+                .accessibilityValue(String(localized: cachedWornToday ? "a11y.value.worn" : "a11y.value.not_worn"))
             }
-            // 페르소나 (김재철) 피드백: export 액션을 별 옆에서 menu 로 분리.
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button {
+                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                        watch.isFavorite.toggle()
+                    } label: {
+                        Label(String(localized: watch.isFavorite ? "watch.menu.favorite.remove" : "watch.menu.favorite.add"),
+                              systemImage: watch.isFavorite ? "star.fill" : "star")
+                    }
                     // Round 173: 시계 정보 편집 / 삭제.
                     Button {
                         editing = true
@@ -243,6 +259,7 @@ struct WatchDetailView: View {
                     Image(systemName: "ellipsis.circle")
                         .foregroundStyle(AppColors.ink2)
                 }
+                .accessibilityLabel(String(localized: "a11y.more_actions"))
             }
         }
         .sheet(isPresented: $editing) {
@@ -385,12 +402,13 @@ struct WatchDetailView: View {
                 Image(systemName: "camera.fill")
                     .font(.system(size: 14))
                     .foregroundStyle(.white)
-                    .padding(10)
+                    .frame(width: 44, height: 44)
                     .background(.black.opacity(0.5))
                     .clipShape(Circle())
             }
             .buttonStyle(.plain)
-            .padding(14)
+            .padding(10)
+            .accessibilityLabel(String(localized: "a11y.change_photo"))
         }
     }
 
@@ -408,7 +426,7 @@ struct WatchDetailView: View {
                         MetricBadge(
                             label: String(localized: "watch.label.rate"),
                             value: formatRate(last.rateSecondsPerDay),
-                            unit: "s/day",
+                            unit: String(localized: "unit.seconds_per_day"),
                             tone: rateColorTone(last.rateSecondsPerDay),
                             big: true
                         ),
@@ -545,15 +563,17 @@ struct WatchDetailView: View {
             .padding(.vertical, 60)
             .frame(maxWidth: .infinity)
         } else {
+            let displayCount = journalExpanded ? entries.count : min(Self.journalPageSize, entries.count)
+            let hasMore = entries.count > Self.journalPageSize
             VStack(spacing: 10) {
-                ForEach(entries) { entry in
+                ForEach(Array(entries.prefix(displayCount))) { entry in
                     NavigationLink {
                         JournalEntryDetailView(entry: entry)
                     } label: {
                         HStack(alignment: .top, spacing: 12) {
                             Text(entry.mood.emoji).font(.system(size: 24))
                             VStack(alignment: .leading, spacing: 4) {
-                                Text(entry.timestamp, format: .dateTime.day().month().year())
+                                Text(AppDateFormat.fullDate(entry.timestamp))
                                     .font(.system(size: 11, weight: .semibold, design: .monospaced))
                                     .tracking(0.5)
                                     .foregroundStyle(AppColors.ink2)
@@ -573,6 +593,24 @@ struct WatchDetailView: View {
                         .background(AppColors.paper1)
                         .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
                         .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+                    .buttonStyle(.plain)
+                }
+                if hasMore {
+                    Button {
+                        withAnimation(.easeOut(duration: 0.2)) { journalExpanded.toggle() }
+                    } label: {
+                        HStack(spacing: 6) {
+                            Text(journalExpanded
+                                 ? String(localized: "common.collapse")
+                                 : String(format: NSLocalizedString("common.show_more_count", comment: ""), entries.count - Self.journalPageSize))
+                                .font(.system(size: 13, weight: .semibold))
+                            Image(systemName: journalExpanded ? "chevron.up" : "chevron.down")
+                                .font(.system(size: 11, weight: .semibold))
+                        }
+                        .foregroundStyle(AppColors.ink2)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 14)
                     }
                     .buttonStyle(.plain)
                 }
@@ -604,13 +642,15 @@ struct WatchDetailView: View {
                 .padding(.vertical, 40)
                 .frame(maxWidth: .infinity)
             } else {
+                let displayCount = serviceLogExpanded ? logs.count : min(Self.serviceLogPageSize, logs.count)
+                let hasMore = logs.count > Self.serviceLogPageSize
                 ZStack(alignment: .topLeading) {
                     Rectangle()
                         .fill(AppColors.rule)
                         .frame(width: 2)
                         .padding(.leading, 18)
                     VStack(alignment: .leading, spacing: 18) {
-                        ForEach(logs) { log in
+                        ForEach(Array(logs.prefix(displayCount))) { log in
                             HStack(alignment: .top, spacing: 14) {
                                 ZStack {
                                     Circle().fill(AppColors.paper1).frame(width: 22, height: 22)
@@ -620,7 +660,7 @@ struct WatchDetailView: View {
                                         .foregroundStyle(AppColors.accentDark)
                                 }
                                 VStack(alignment: .leading, spacing: 2) {
-                                    Text(log.timestamp, format: .dateTime.year().month().day())
+                                    Text(AppDateFormat.fullDate(log.timestamp))
                                         .font(.system(size: 11, weight: .semibold, design: .monospaced))
                                         .tracking(0.5)
                                         .foregroundStyle(AppColors.ink2)
@@ -634,6 +674,25 @@ struct WatchDetailView: View {
                                     }
                                 }
                             }
+                        }
+                        if hasMore {
+                            Button {
+                                withAnimation(.easeOut(duration: 0.2)) { serviceLogExpanded.toggle() }
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Text(serviceLogExpanded
+                                         ? String(localized: "common.collapse")
+                                         : String(format: NSLocalizedString("common.show_more_count", comment: ""), logs.count - Self.serviceLogPageSize))
+                                        .font(.system(size: 13, weight: .semibold))
+                                    Image(systemName: serviceLogExpanded ? "chevron.up" : "chevron.down")
+                                        .font(.system(size: 11, weight: .semibold))
+                                }
+                                .foregroundStyle(AppColors.ink2)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 10)
+                                .padding(.leading, 36)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -696,7 +755,7 @@ struct WatchDetailView: View {
     /// 대표 시계 / 오늘 착용 토글을 시계 상세 본문에 명시. 기존엔 toolbar 의 작은 아이콘만 있어 사용자가 못 찾음.
     /// 두 카드를 가로 배치, 활성 상태는 색상으로 즉시 구분.
     private var statusStripSection: some View {
-        let worn = WearLogService.isWornToday(watch, in: modelContext)
+        let worn = cachedWornToday  // Round 20 (Sora): body 안 fetch 제거 — onAppear 에서 set.
         return HStack(spacing: 10) {
             // 대표 시계 토글
             Button {
@@ -720,6 +779,8 @@ struct WatchDetailView: View {
             Button {
                 UISelectionFeedbackGenerator().selectionChanged()
                 WearLogService.toggleToday(watch, in: modelContext)
+                // 사용자 보고 fix: 토글 후 cachedWornToday 가 stale → 즉시 재계산.
+                cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
             } label: {
                 statusCard(
                     icon: worn ? "checkmark.seal.fill" : "checkmark.seal",
@@ -860,7 +921,7 @@ struct WatchDetailView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)
                 if let days = status.daysSinceInteraction {
-                    Text("\(days)일 전 마지막 활동 · 에너지 \(status.mood.energy)%")
+                    Text(String(format: NSLocalizedString("watch.mood.last_active", comment: ""), days, status.mood.energy))
                         .font(.system(size: 12))
                         .foregroundStyle(AppColors.ink2)
                 } else {
@@ -991,7 +1052,7 @@ struct WatchDetailView: View {
                     Image(systemName: "clock")
                         .font(.system(size: 11))
                     Text(String(format: NSLocalizedString("watch.battery.due_date", comment: ""),
-                                due.formatted(.dateTime.year().month().day())))
+                                AppDateFormat.fullDate(due)))
                         .font(.system(size: 12, design: .monospaced))
                 }
                 .foregroundStyle(AppColors.ink2)
@@ -1051,18 +1112,20 @@ struct WatchDetailView: View {
                     UISelectionFeedbackGenerator().selectionChanged()
                     withAnimation(.easeOut(duration: 0.18)) { range = r }
                 } label: {
-                    Text(r.rawValue)
+                    Text(r.localizedLabel)
                         .font(.system(size: 11, weight: selected ? .bold : .medium, design: .monospaced))
                         .lineLimit(1)
                         .fixedSize()
                         .padding(.horizontal, 10)
-                        .frame(minWidth: 36, minHeight: 32)
+                        .frame(minWidth: 44, minHeight: 44)
                         .foregroundStyle(selected ? Color.white : AppColors.ink2)
                         .background(selected ? AppColors.ink0 : .clear)
                         .clipShape(Capsule())
                         .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(r.accessibilityLabel)
+                .accessibilityAddTraits(selected ? .isSelected : [])
             }
         }
         .padding(3)
@@ -1136,7 +1199,7 @@ struct WatchDetailView: View {
             .padding(.horizontal, 20)
             let displayCount = historyExpanded ? measurements.count : min(Self.historyPageSize, measurements.count)
             let hasMore = measurements.count > Self.historyPageSize
-            VStack(spacing: 0) {
+            LazyVStack(spacing: 0) {
                 ForEach(Array(measurements.prefix(displayCount).enumerated()), id: \.element.id) { idx, m in
                     HistoryRow(
                         measurement: m,
@@ -1259,535 +1322,12 @@ struct WatchDetailView: View {
 
 // MARK: - History row
 
-private struct HistoryRow: View {
-    let measurement: WatchMeasurement
-    let isLast: Bool
-    /// Round 29 (Doyoon): tap → note editor sheet. nil 이면 비활성.
-    var onTap: (() -> Void)? = nil
-    /// Round 170: swipe-to-delete.
-    var onDelete: (() -> Void)? = nil
+// Round (잔여 분할): HistoryRow, StatBlock, WatchMeasurement Identifiable conformance 는
+//   별 파일 WatchDetailRowComponents.swift 로 이동.
 
-    private var tone: Color {
-        let abs = abs(measurement.rateSecondsPerDay)
-        if abs <= 6 { return AppColors.success }
-        if abs <= 20 { return AppColors.warning }
-        return AppColors.danger
-    }
+// MARK: - Note editor sheet — Round 22 (Hyemi): MeasurementNoteEditor 는 별 파일 MeasurementNoteEditor.swift 로 이동.
 
-    private var hasNote: Bool {
-        guard let n = measurement.notes else { return false }
-        return !n.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-    }
-
-    var body: some View {
-        Button {
-            onTap?()
-        } label: {
-            rowContent
-        }
-        .buttonStyle(.plain)
-        .disabled(onTap == nil)
-        // Round 170: VStack 안에선 swipeActions 가 작동 X → contextMenu 로 개별 삭제 제공.
-        // 사용자 long-press → menu → 삭제 선택 → 확인 alert.
-        .contextMenu {
-            if let onDelete {
-                Button(role: .destructive) { onDelete() } label: {
-                    Label(String(localized: "common.delete"), systemImage: "trash")
-                }
-            }
-        }
-    }
-
-    private var rowContent: some View {
-        HStack(spacing: 12) {
-            Rectangle().fill(tone).frame(width: 4, height: 30).clipShape(Capsule())
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(alignment: .firstTextBaseline, spacing: 3) {
-                    Text(formatRate(measurement.rateSecondsPerDay))
-                        .font(.system(size: 14, weight: .medium, design: .monospaced))
-                        .foregroundStyle(tone)
-                    Text(String(localized: "unit.seconds_per_day"))
-                        .font(.system(size: 10, design: .monospaced))
-                        .foregroundStyle(AppColors.ink3)
-                }
-                HStack(spacing: 6) {
-                    Text(formatTimestamp(measurement.timestamp))
-                        .font(.system(size: 10.5, design: .monospaced))
-                        .foregroundStyle(AppColors.ink3)
-                    if hasNote {
-                        Image(systemName: "text.bubble")
-                            .font(.system(size: 10))
-                            .foregroundStyle(AppColors.accent)
-                    }
-                }
-            }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 4) {
-                Chip("\(measurement.confidenceScore)",
-                     tone: measurement.confidenceScore >= 80 ? .success
-                        : measurement.confidenceScore >= 50 ? .warning : .danger,
-                     small: true)
-                Text(String(format: "%.2fms", measurement.beatErrorMs))
-                    .font(.system(size: 10, design: .monospaced))
-                    .foregroundStyle(AppColors.ink3)
-            }
-            if onTap != nil {
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 11, weight: .medium))
-                    .foregroundStyle(AppColors.ink3)
-            }
-        }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 12)
-        .contentShape(Rectangle())
-        .overlay(alignment: .bottom) {
-            if !isLast {
-                Rectangle().fill(AppColors.rule).frame(height: 1)
-            }
-        }
-    }
-
-    private func formatTimestamp(_ d: Date) -> String {
-        let f = DateFormatter()
-        f.dateFormat = "MMM d, h:mm a"
-        return f.string(from: d).uppercased()
-    }
-}
-
-// MARK: - StatBlock helper
-
-private struct StatBlock: View {
-    let label: String
-    let value: String
-    let unit: String
-
-    var body: some View {
-        VStack(spacing: 4) {
-            Text(label.uppercased())
-                .font(.system(size: 9, weight: .semibold))
-                .tracking(2)
-                .foregroundStyle(AppColors.ink2)
-            HStack(alignment: .firstTextBaseline, spacing: 3) {
-                Text(value)
-                    .font(.system(size: 17, weight: .medium, design: .monospaced))
-                    .foregroundStyle(AppColors.ink0)
-                Text(unit)
-                    .font(.system(size: 9, design: .monospaced))
-                    .foregroundStyle(AppColors.ink3)
-            }
-        }
-        .frame(maxWidth: .infinity)
-    }
-}
-
-// MARK: - WatchMeasurement Identifiable conformance
-// `@Model` 은 Identifiable 자동 합성 X. UUID id 가 이미 있어 안전하게 conformance 가능.
-// `.sheet(item:)` 에 바로 넘기기 위함.
-extension WatchMeasurement: Identifiable {}
-
-// MARK: - Note editor sheet
-
-/// Round 29 (Doyoon): HistoryRow tap 으로 열림. 측정마다 짧은 메모(자세/케이스 상태/이상치 사유 등).
-/// 페르소나 김재철(워치메이커) + 이재현(컬렉터) wish — 측정 컨텍스트를 lose 하지 않기 위해.
-struct MeasurementNoteEditor: View {
-    @Bindable var measurement: WatchMeasurement
-    /// 저장 후 호출. 호출자가 modelContext.save() 책임.
-    let onSave: () -> Void
-
-    @Environment(\.dismiss) private var dismiss
-    @State private var draft: String = ""
-    @FocusState private var focused: Bool
-
-    /// 한 측정에 대한 메모 길이 cap — 길어지면 export/공유 시 잘림.
-    private let maxLength = 280
-
-    var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading, spacing: 14) {
-                contextHeader
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                Divider().background(AppColors.rule)
-                ZStack(alignment: .topLeading) {
-                    if draft.isEmpty {
-                        Text(String(localized: "measurement.note.placeholder"))
-                            .font(.system(size: 14))
-                            .foregroundStyle(AppColors.ink3)
-                            .padding(.horizontal, 24)
-                            .padding(.top, 16)
-                    }
-                    TextEditor(text: $draft)
-                        .font(.system(size: 14))
-                        .foregroundStyle(AppColors.ink0)
-                        .scrollContentBackground(.hidden)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
-                        .focused($focused)
-                        .onChange(of: draft) { _, new in
-                            if new.count > maxLength {
-                                draft = String(new.prefix(maxLength))
-                            }
-                        }
-                }
-                HStack {
-                    Spacer()
-                    Text("\(draft.count)/\(maxLength)")
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(AppColors.ink3)
-                        .padding(.horizontal, 20)
-                        .padding(.bottom, 12)
-                }
-            }
-            .background(AppColors.paper0.ignoresSafeArea())
-            .navigationTitle(String(localized: "measurement.note.title"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button(String(localized: "common.cancel")) { dismiss() }
-                        .foregroundStyle(AppColors.ink2)
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "common.save")) {
-                        let trimmed = draft.trimmingCharacters(in: .whitespacesAndNewlines)
-                        measurement.notes = trimmed.isEmpty ? nil : trimmed
-                        onSave()
-                        dismiss()
-                    }
-                    .foregroundStyle(AppColors.accent)
-                    .fontWeight(.medium)
-                }
-            }
-        }
-        .onAppear {
-            draft = measurement.notes ?? ""
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) { focused = true }
-        }
-    }
-
-    private var contextHeader: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(formatTimestamp(measurement.timestamp))
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                .tracking(2)
-                .foregroundStyle(AppColors.ink2)
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(formatRate(measurement.rateSecondsPerDay))
-                    .font(.system(size: 22, weight: .medium, design: .monospaced))
-                    .foregroundStyle(AppColors.ink0)
-                Text(String(localized: "unit.seconds_per_day"))
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(AppColors.ink3)
-                Spacer()
-                Chip("\(measurement.confidenceScore)",
-                     tone: measurement.confidenceScore >= 80 ? .success
-                        : measurement.confidenceScore >= 50 ? .warning : .danger,
-                     small: true)
-            }
-        }
-    }
-
-    private func formatTimestamp(_ d: Date) -> String {
-        let f = DateFormatter()
-        f.dateFormat = "MMM d, h:mm a"
-        return f.string(from: d).uppercased()
-    }
-}
-
-/// Round 133: 사진 소스 선택 (라이브러리/카메라/삭제) — iOS 표준 하단 시트.
-/// confirmationDialog 가 iOS 26 에서 중앙 popover 로 렌더링되고 안의 PhotosPicker 가
-/// trigger 안 되는 버그를 함께 우회.
-/// Round 138 사용자 요청: 쿼츠 시계는 측정 무의미 → 측정 탭 자리에 배터리 모니터 표시.
-/// BatteryView 의 핵심 카드 (hero gauge + timeline + insight + actions) 통합.
-private struct QuartzBatteryCard: View {
-    @Bindable var watch: Watch
-    @Environment(\.modelContext) private var modelContext
-
-    var body: some View {
-        // Round 138 BUG FIX (사용자 보고: 교체 기록 버튼 동작 X):
-        // @Bindable 로 watch.batteryLastReplaced 명시적 observe → 변경 시 body 재계산.
-        let lastChange = watch.batteryLastReplaced ?? watch.createdAt
-        let lifespanDays = max(1, watch.batteryExpectedLifeMonths * 30)
-        let daysSince = max(0, Calendar.current.dateComponents([.day], from: lastChange, to: Date()).day ?? 0)
-        let pct: Double = max(0, min(100, 100 - (Double(daysSince) / Double(lifespanDays)) * 100))
-        let expires = Calendar.current.date(byAdding: .day, value: lifespanDays, to: lastChange) ?? Date()
-
-        return VStack(spacing: 14) {
-            heroGauge(pct: pct)
-            timelineCard(changed: lastChange, expires: expires, daysSince: daysSince, pct: pct)
-            insightCard(pct: pct)
-            actions(daysSince: daysSince)
-        }
-        .padding(.horizontal, 20)
-        .padding(.top, 10)
-    }
-
-    private func heroGauge(pct: Double) -> some View {
-        let health: (Color, String) = {
-            switch pct {
-            case 60...: return (AppColors.success, String(localized: "battery.status.good"))
-            case 25..<60: return (AppColors.warning, String(localized: "battery.status.warn"))
-            default: return (AppColors.danger, String(localized: "battery.status.low"))
-            }
-        }()
-        return VStack(spacing: 14) {
-            ZStack(alignment: .leading) {
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(AppColors.ink0, lineWidth: 2.5)
-                    .frame(width: 200, height: 80)
-                HStack(spacing: 0) {
-                    Spacer().frame(width: 200)
-                    Rectangle().fill(AppColors.ink0)
-                        .frame(width: 8, height: 30)
-                        .clipShape(RoundedRectangle(cornerRadius: 3))
-                }
-                RoundedRectangle(cornerRadius: 6)
-                    .fill(LinearGradient(colors: [health.0, health.0.opacity(0.65)],
-                                         startPoint: .top, endPoint: .bottom))
-                    .overlay(RoundedRectangle(cornerRadius: 6).stroke(health.0.opacity(0.85), lineWidth: 0.5))
-                    .frame(width: max(8, (pct / 100) * 188), height: 64)
-                    .padding(.leading, 6)
-            }
-            .frame(width: 208, height: 84)
-            (Text("\(Int(pct))")
-                .font(.system(size: 44, weight: .bold, design: .monospaced))
-                .foregroundStyle(AppColors.ink0)
-                + Text("%")
-                .font(.system(size: 22, weight: .medium, design: .monospaced))
-                .foregroundStyle(AppColors.ink2))
-            HStack(spacing: 6) {
-                Circle().fill(health.0).frame(width: 6, height: 6)
-                Text(health.1).font(.system(size: 12, weight: .semibold))
-            }
-            .foregroundStyle(health.0)
-            .padding(.horizontal, 10).padding(.vertical, 4)
-            .background(health.0.opacity(0.13))
-            .clipShape(Capsule())
-
-            // Round 138 사용자 요청: 캘리버 / 예상수명 / 예상방전일 부제 제거 — 타임라인에 이미 시각화됨.
-        }
-        .frame(maxWidth: .infinity)
-        .padding(20)
-        .background(AppColors.paper1)
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-    }
-
-    private func timelineCard(changed: Date, expires: Date, daysSince: Int, pct: Double) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(String(localized: "battery.timeline").uppercased())
-                .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                .tracking(2)
-                .foregroundStyle(AppColors.ink2)
-            GeometryReader { geo in
-                let progress = 1 - (pct / 100)
-                ZStack(alignment: .leading) {
-                    Capsule().fill(AppColors.paper2).frame(height: 6)
-                    Capsule()
-                        .fill(LinearGradient(colors: [AppColors.success, AppColors.warning, AppColors.danger],
-                                             startPoint: .leading, endPoint: .trailing))
-                        .frame(width: geo.size.width * CGFloat(progress), height: 6)
-                    Circle()
-                        .fill(AppColors.primaryDeep)
-                        .overlay(Circle().stroke(.white, lineWidth: 3))
-                        .frame(width: 14, height: 14)
-                        .offset(x: max(0, geo.size.width * CGFloat(progress) - 7))
-                }
-            }
-            .frame(height: 14)
-            .padding(.vertical, 8)
-            // Round 138 사용자 요청: 연도 포함 — "올해 방전" 오인 방지.
-            HStack {
-                Text(changed, format: .dateTime.year().month().day())
-                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(AppColors.ink2)
-                Spacer()
-                Text(String(localized: "battery.today"))
-                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(AppColors.primaryDeep)
-                Spacer()
-                Text(expires, format: .dateTime.year().month().day())
-                    .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(AppColors.danger)
-            }
-            // Round 138 사용자 요청: 예상 방전일 KV 제거 (timeline 시각화로 충분).
-            HStack(spacing: 8) {
-                kv(String(localized: "battery.kv.last"), value: changed.formatted(.dateTime.year(.twoDigits).month().day()))
-                kv(String(localized: "battery.kv.elapsed"), value: "\(daysSince)d", accent: true)
-            }
-        }
-        .padding(14)
-        .background(AppColors.paper1)
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-    }
-
-    private func kv(_ label: String, value: String, accent: Bool = false) -> some View {
-        VStack(alignment: .leading, spacing: 2) {
-            Text(label.uppercased())
-                .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                .tracking(1.4)
-                .foregroundStyle(AppColors.ink3)
-            Text(value)
-                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                .foregroundStyle(accent ? AppColors.accentDark : AppColors.ink0)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(8)
-        .background(accent ? AppColors.accent50 : AppColors.paper2)
-        .clipShape(RoundedRectangle(cornerRadius: 10))
-    }
-
-    private func insightCard(pct: Double) -> some View {
-        let (icon, msg, color): (String, String, Color) = {
-            if pct < 25 { return ("exclamationmark.triangle.fill", String(localized: "battery.insight.low"), AppColors.danger) }
-            if pct < 60 { return ("clock.badge.exclamationmark", String(localized: "battery.insight.warn"), AppColors.warning) }
-            return ("sparkles", String(localized: "battery.insight.ok"), AppColors.success)
-        }()
-        return HStack(alignment: .top, spacing: 12) {
-            Image(systemName: icon)
-                .font(.system(size: 16))
-                .foregroundStyle(color)
-                .frame(width: 32, height: 32)
-                .background(color.opacity(0.12))
-                .clipShape(Circle())
-            VStack(alignment: .leading, spacing: 4) {
-                Text(pct < 25 ? String(localized: "battery.status.urgent")
-                              : pct < 60 ? String(localized: "battery.status.caution")
-                              : String(localized: "battery.status.ok"))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(AppColors.ink0)
-                Text(msg)
-                    .font(.system(size: 12))
-                    .foregroundStyle(AppColors.ink2)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Spacer(minLength: 0)
-        }
-        .padding(14)
-        .background(pct < 25 ? AppColors.danger.opacity(0.14) : AppColors.accent50)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-    }
-
-    private func actions(daysSince: Int) -> some View {
-        // Round 138 사용자 요청: "교체 완료 기록" 버튼은 동작 모호 → 마지막 교체일 DatePicker 로 직접 입력.
-        VStack(spacing: 10) {
-            HStack {
-                Image(systemName: "calendar")
-                    .foregroundStyle(AppColors.primaryDeep)
-                DatePicker(
-                    String(localized: "watch.battery.last_replaced"),
-                    selection: Binding(
-                        get: { watch.batteryLastReplaced ?? Date() },
-                        set: { newDate in
-                            watch.batteryLastReplaced = newDate
-                            try? modelContext.save()
-                            if watch.batteryReminderEnabled {
-                                NotificationService.scheduleBatteryReminder(for: watch)
-                            }
-                        }
-                    ),
-                    displayedComponents: .date
-                )
-                .font(.system(size: 14))
-            }
-            .padding(14)
-            .background(AppColors.paper1)
-            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-
-            Button {
-                UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                watch.batteryReminderEnabled.toggle()
-                try? modelContext.save()
-                if watch.batteryReminderEnabled {
-                    NotificationService.scheduleBatteryReminder(for: watch)
-                } else {
-                    NotificationService.cancelBatteryReminder(for: watch)
-                }
-            } label: {
-                Text(String(localized: watch.batteryReminderEnabled ? "battery.reminder.off" : "battery.reminder.on"))
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(AppColors.ink0)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(AppColors.paper2)
-                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
-                    .clipShape(RoundedRectangle(cornerRadius: 12))
-            }
-            .buttonStyle(.plain)
-        }
-    }
-}
-
-private struct PhotoSourceSheet: View {
-    var title: String
-    var allowRemove: Bool
-    var onLibrary: () -> Void
-    var onCamera: () -> Void
-    var onRemove: (() -> Void)?
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack(spacing: 0) {
-            // 드래그 핸들
-            Capsule()
-                .fill(AppColors.rule)
-                .frame(width: 36, height: 4)
-                .padding(.top, 10)
-            // 타이틀
-            Text(title)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(AppColors.ink2)
-                .padding(.top, 16)
-                .padding(.bottom, 16)
-            Divider()
-            // 액션 목록
-            VStack(spacing: 0) {
-                row(label: String(localized: "photo.source.library"), icon: "photo.on.rectangle", action: onLibrary)
-                Divider().padding(.leading, 60)
-                row(label: String(localized: "photo.source.camera"), icon: "camera", action: onCamera)
-                if allowRemove, let onRemove {
-                    Divider().padding(.leading, 60)
-                    row(label: String(localized: "photo.source.remove"), icon: "trash", destructive: true, action: onRemove)
-                }
-            }
-            // 취소 — 중립 색상 (accent 아님)
-            Divider().padding(.top, 8)
-            Button { dismiss() } label: {
-                Text(String(localized: "common.cancel"))
-                    .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(AppColors.ink2)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-            }
-            .buttonStyle(.plain)
-        }
-        .background(AppColors.paper1.ignoresSafeArea())
-        .presentationDetents([.height(allowRemove ? 300 : 248)])
-        .presentationDragIndicator(.hidden)
-        .presentationBackground(AppColors.paper1)
-    }
-
-    @ViewBuilder
-    private func row(label: String, icon: String, destructive: Bool = false, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: 16) {
-                Image(systemName: icon)
-                    .font(.system(size: 17))
-                    .foregroundStyle(destructive ? AppColors.danger : AppColors.accent)
-                    .frame(width: 28, alignment: .center)
-                Text(label)
-                    .font(.system(size: 16))
-                    .foregroundStyle(AppColors.ink0)  // 삭제도 텍스트는 ink0 — 아이콘만 빨강
-                Spacer()
-            }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 15)
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-    }
-}
+// Round (잔여 분할): QuartzBatteryCard 는 별 파일 QuartzBatteryCard.swift 로 이동.
 
 #Preview {
     NavigationStack {

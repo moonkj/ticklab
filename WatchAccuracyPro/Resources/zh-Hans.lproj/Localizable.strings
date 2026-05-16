@@ -1,0 +1,1154 @@
+/* App */
+"app.name" = "TickLab";
+
+/* Common */
+"common.cancel" = "取消";
+"common.save" = "保存";
+"common.done" = "完成";
+"common.delete" = "删除";
+"common.unspecified" = "未指定";
+"common.next" = "下一步";
+"common.continue" = "继续";
+
+/* Tabs */
+"tab.collection" = "藏品";
+"tab.journal" = "日志";
+"tab.stats" = "洞察";
+"tab.settings" = "设置";
+
+/* Welcome */
+"welcome.tagline" = "每日记录,\n与你的腕表相伴。";
+"welcome.cta_start" = "立即开始";
+"welcome.skip" = "跳过";
+"welcome.pick_watch" = "选择一枚腕表";
+"feature.measure.title" = "测量";
+"feature.measure.body" = "用手机麦克风聆听腕表的滴答声。\n获取日差走时与摆轮误差。";
+"feature.collect.title" = "日常档案";
+"feature.collect.body" = "照片、笔记与测量数据汇于一处。\n记录你与腕表共度的每一天。";
+"feature.journal.title" = "通俗易懂的结论";
+"feature.journal.body" = "复杂的数据化为一句话。\n支持的设备由 Apple Intelligence 解读测量结果。";
+/* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
+"welcome.subtitle" = "精准,源自每一次跳动。";
+"watch.primary.set" = "设为主表";
+"watch.primary.unset" = "取消主表";
+"stats.mood.this_month" = "本月";
+"welcome.footer" = "测量 · 保养 · 日志 · 词条 · 四大维度";
+"welcome.pick_watch.subtitle" = "细节可稍后补充。想要快速开始吗?";
+
+/* Journal */
+"journal.title" = "日志";
+"journal.view.grid" = "网格";
+"journal.view.feed" = "信息流";
+"journal.view.calendar" = "日历";
+"journal.has_measurement" = "已附测量数据";
+"journal.empty.title" = "写下你的第一条记录";
+"journal.empty.body" = "记录今天佩戴的腕表、心情与随感。";
+"journal.compose.title" = "新建记录";
+"journal.compose.watch" = "腕表";
+"journal.compose.no_watch" = "无";
+"journal.compose.mood" = "心情";
+"journal.compose.body" = "正文";
+"journal.compose.placeholder" = "今天与腕表的故事如何?";
+"journal.compose.photos" = "照片";
+"journal.compose.photo_count" = "%d 张照片";
+"journal.detail.share" = "分享";
+"journal.detail.no_body" = "(无正文)";
+"journal.detail.measurement_attached" = "当日测量数据";
+"journal.detail.share_card_cta" = "生成分享卡片";
+
+/* Mood */
+"mood.happy" = "愉悦";
+"mood.proud" = "自豪";
+"mood.curious" = "好奇";
+"mood.neutral" = "平静";
+"mood.concerned" = "担忧";
+"mood.nostalgic" = "怀旧";
+
+/* Stats */
+"stats.title" = "分析";
+"stats.total_measurements" = "测量次数";
+"stats.total_entries" = "日志条数";
+"stats.mood_breakdown" = "心情分布";
+"stats.average_rate.title" = "平均走时";
+"stats.average_rate.subtitle" = "基于 %d 次测量";
+"stats.average_rate.stddev" = "波动 ±%.1f s/d";
+"stats.empty.mood" = "记录日志以查看心情分布。";
+"stats.empty.positions" = "在测量时设置位置后,将显示各方位的平均值。";
+
+/* Share Card */
+"share.title" = "分享卡片";
+"share.background" = "背景";
+"share.show_metrics" = "显示数据";
+"share.show_caption" = "显示文字";
+"share.show_date" = "显示日期";
+"share.photo_source" = "照片";
+"share.photo_entry" = "日志照片";
+"share.photo_profile" = "腕表主图";
+"share.photo_custom" = "自定义";
+"share.photo_pick" = "选择照片";
+"share.photo_change" = "更换照片";
+"share.export" = "分享";
+"share.save_to_photos" = "存入照片";
+
+/* Glossary — old glossary.title removed (Round 128 dedup). Latest at line 582. */
+
+/* Service log */
+"service.type.fullOverhaul" = "完整保养";
+"service.type.partialService" = "局部保养";
+"service.type.checkup" = "走时检测";
+"service.type.waterTest" = "防水测试";
+"service.type.batteryReplace" = "更换电池";
+"service.type.crystalReplace" = "更换表镜";
+"service.type.crownGasket" = "表冠 / 密封圈";
+"service.type.bracelet" = "表带";
+"service.type.other" = "其他";
+
+/* App lock */
+"applock.reason" = "解锁 TickLab";
+
+/* PIN auth */
+"pin.setup.title" = "设置 PIN";
+"pin.setup.enter" = "输入 6 位 PIN";
+"pin.setup.confirm" = "再次输入以确认";
+"pin.setup.mismatch" = "两次 PIN 不一致";
+"pin.setup.success" = "PIN 设置成功";
+"pin.entry.title" = "输入 PIN";
+"pin.entry.remaining" = "剩余 %d 次机会";
+"pin.entry.locked_out" = "PIN 已锁定 — 请使用 Face ID";
+"pin.entry.use_face_id" = "使用 Face ID";
+"settings.applock.pin_enabled" = "启用 PIN";
+"settings.applock.pin_setup" = "设置 PIN";
+"settings.applock.pin_warning" = "连续 5 次输入错误后,只能用 Face ID 解锁";
+
+"alert.store_fallback.title" = "已启用临时存储";
+"alert.store_fallback.message" = "旧版数据库格式发生变化,正在使用临时的内存储存。本次的数据将在退出 App 后丢失。请重新安装 App 以恢复持久化储存。";
+
+/* Collection (new design) */
+"collection.eyebrow" = "工作台";
+"collection.subtitle" = "一份机械精度的日常档案";
+"collection.empty.subtitle" = "添加腕表 → 30 秒测量 → 查看精度。每一次读数,都是腕表故事的新篇章。";
+"collection.search.placeholder" = "搜索藏品";
+/* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
+"collection.section.recent" = "近期测量";
+"collection.last_rate" = "最近走时";
+"collection.runs" = "%d 次记录";
+"collection.no_measurements" = "尚无测量记录 — 点按开始";
+"collection.footer" = "TICKLAB · v0.2 · 2026";
+
+/* Watch detail (new) */
+"watch.section.latest" = "最新读数";
+"watch.section.trend" = "走时变化";
+"watch.history.runs" = "历史记录 · %d 次";
+"collection.reorder" = "排序";
+"collection.reorder.title" = "调整卡片顺序";
+"collection.add_watch" = "添加腕表";
+"watch.history.deleteOne.title" = "删除测量记录";
+"watch.history.deleteOne.message" = "确定删除此次测量?此操作无法撤销。";
+"watch.history.showMore" = "再显示 %d 条";
+"watch.history.collapse" = "收起";
+"watch.history.deleteAll.title" = "删除全部测量记录";
+"watch.history.deleteAll.message" = "确定删除这枚腕表的全部 %d 条测量记录?此操作无法撤销。";
+"watch.history.deleteAll.confirm" = "全部删除";
+
+/* Measurement note (Round 29) */
+"measurement.note.title" = "测量备注";
+"measurement.note.placeholder" = "本次记录的备注 — 表位、表壳状态、环境(可选)。";
+"watch.no_readings.title" = "尚无读数";
+"watch.no_readings.body" = "点按下方“测量”记录首次读数。多数机芯只需 30 秒即可完成。";
+"watch.label.rate" = "走时";
+"watch.label.beat_error" = "摆轮误差";
+"watch.label.position" = "表位";
+"watch.stat.mean" = "平均";
+"watch.stat.deviation" = "σ 偏差";
+"watch.stat.best" = "最佳";
+"watch.spec.caliber" = "机芯型号";
+"watch.spec.bph" = "BPH";
+"watch.spec.lift_angle" = "抬起角";
+"watch.spec.escapement" = "擒纵机构";
+"position.dialup_short" = "DU";
+"position.dialdown_short" = "DD";
+"position.crownleft_short" = "CL";
+"position.crownright_short" = "CR";
+"position.pendantup_short" = "CU";
+"position.pendantdown_short" = "CD";
+
+/* Result (new) */
+"result.eyebrow.subtitle" = "%@ · %@";
+"result.section.metrics" = "全部指标";
+"result.section.details" = "读数详情";
+"result.cosc.in" = "✓ 符合 COSC";
+"result.cosc.out" = "超出 COSC";
+"result.cosc.range" = "−4 / +6 s/d";
+"result.action.again" = "再次测量";
+/* Round 23 (Doyoon): result.amplitude.healthy/borderline/service/coaxial dead — amplitudeHint() 제거됨. */
+"result.beat.excellent" = "节拍极为对称";
+"result.beat.acceptable" = "尚可,需持续观察";
+"result.label.duration" = "时长";
+"result.label.beat_count" = "节拍数";
+"result.label.snr" = "信噪比";
+"result.label.position" = "表位";
+
+/* Onboarding (new) */
+"onboarding.eyebrow.welcome" = "欢迎";
+"onboarding.page1.new_title" = "口袋里的校表仪。";
+"onboarding.page1.new_body" = "TickLab 聆听机械腕表的节拍,以 0.1 秒的精度告诉你它的状态。";
+"onboarding.eyebrow.howItWorks" = "工作原理";
+"onboarding.page2.new_title" = "只需放下,只需聆听。";
+"onboarding.page2.new_body" = "将腕表置于 iPhone 麦克风旁。30 秒即可。我们以原子时为基准,解算走时、摆轮误差与振幅。";
+"onboarding.eyebrow.archive" = "你的档案";
+"onboarding.page3.new_title" = "每一次读数,都被珍藏。";
+"onboarding.page3.new_body" = "为每一枚腕表建立日志。观察数周的走时变化。可导出 CSV。通过 iCloud 私密地多端同步。";
+"onboarding.continue" = "继续";
+"onboarding.begin" = "开始";
+"onboarding.skip" = "跳过";
+
+/* Mode select — Round (3-2): ModeSelectView 삭제로 dead keys 제거. */
+
+/* LongTest (new) */
+
+/* Round (3-2 잔여): misc.* dead. */
+
+/* Units */
+"unit.seconds_per_day" = "s/d";
+
+/* Onboarding */
+"onboarding.title" = "你的腕表,分秒不差。";
+"onboarding.subtitle" = "用 iPhone 测量机械腕表的精度。";
+"onboarding.cta.start" = "立即开始";
+"onboarding.cta.next" = "下一步";
+"onboarding.page1.title" = "用 iPhone 测量";
+"onboarding.page1.body" = "只需麦克风,即可追踪你藏品中的每一枚腕表。";
+"onboarding.page2.title" = "AI 解读结果";
+"onboarding.page2.body" = "不只是数字 — 真正读懂腕表的运行状态。";
+"onboarding.page3.title" = "支持中文与英文";
+"onboarding.page3.body" = "词条、机芯数据库与测量指南,皆以你熟悉的语言呈现。";
+
+/* Mode — Round (3-2): 모두 dead. */
+
+/* Collection */
+"collection.title" = "我的腕表";
+"collection.empty.title" = "添加第一枚腕表";
+/* collection.empty.subtitle: old version removed (Round 129 dedup). Current value at line 135. */
+"collection.empty.cta" = "添加腕表";
+
+/* Watch row */
+"watch.cta.measure" = "开始测量";
+
+/* Add watch */
+"addwatch.title" = "添加腕表";
+"addwatch.section.photo" = "照片";
+"addwatch.section.basic" = "基本信息";
+"addwatch.section.movement" = "机芯";
+"addwatch.brand" = "品牌";
+"addwatch.brand.custom" = "若列表中没有,可直接输入品牌";
+"wear.toggle.on" = "佩戴中";
+"wear.toggle.off" = "今日佩戴";
+"watch.primary.badge" = "主表";
+"speccard.note" = "备注";
+"speccard.title.label" = "标题";
+"speccard.movement" = "机芯";
+"speccard.sound.section" = "机芯声音(5 秒)";
+"speccard.camera" = "拍摄照片";
+"watch.journal.empty.title" = "这枚腕表的日志";
+"watch.service.empty.title" = "暂无保养记录";
+"watch.service.empty.body" = "记录大保养、消磁、购入与其他护理事件。";
+"watch.service.add" = "添加保养记录";
+"watch.mood.empty" = "暂无测量或佩戴记录";
+"watch.wind.title" = "每日上链提醒";
+"watch.battery.title" = "石英电池";
+"watch.battery.life_months" = "预计寿命:%d 个月";
+"watch.battery.due_date" = "预计到期:%@";
+"collection.challenge.title" = "下一个挑战 — 连续一周测量";
+"addwatch.movement.manual.hint" = "手动腕表建议每日固定时间上链,以获得稳定的走时。";
+"addwatch.movement.quartz.hint" = "石英电池通常可使用 2–3 年。临近到期前一周会发出提醒。";
+"addwatch.serial.hint" = "可在详情页安全地录入序列号(储存在 Keychain 中)。";
+"journal.empty.no_watch" = "请先在藏品中添加一枚腕表。";
+"journal.compose.cta" = "新建记录";
+"journal.detail.measurement_deleted" = "此条测量记录已被删除。";
+"watchdetail.photo.library" = "从相册选择";
+"watchdetail.tab.measure" = "测量";
+"watchdetail.tab.journal" = "日志";
+"watchdetail.tab.service" = "保养";
+"settings.section.journal_notif" = "日志 · 通知";
+"settings.journal_reminder" = "每日日志提醒";
+"settings.time" = "时间";
+"settings.time.default_21" = "21:00(默认)";
+"settings.random_pick.toggle" = "🎲 每日随机选表";
+"settings.random_pick.time" = "提醒时间";
+"settings.random_pick.section.header" = "今日腕表";
+"settings.random_pick.section.footer" = "当你拥有 2 枚以上腕表时,我们会在指定时间随机为你挑选一枚。";
+"settings.section.security" = "安全";
+"settings.applock" = "App 锁定(Face ID)";
+"settings.serial_mask" = "序列号遮蔽";
+"settings.serial_mask.value" = "开启(默认)";
+"common.close" = "关闭";
+"common.edit" = "编辑";
+"common.show_more_count" = "再加 %d";
+"common.collapse" = "收起";
+"menu.watchbox" = "表盒";
+"menu.speccard" = "规格卡";
+/* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
+"menu.speccard.create" = "创建规格卡";
+"watch.photo.dialog.title" = "腕表照片";
+"speccard.list.empty" = "暂无规格卡";
+"speccard.photo.add" = "添加照片";
+"speccard.photo.change" = "更换照片";
+"speccard.field.case_size" = "表壳尺寸(mm)";
+"speccard.field.power_reserve" = "动力储存(小时)";
+"speccard.field.placeholder.case" = "例如 40";
+"speccard.field.placeholder.power" = "例如 70";
+"speccard.movement.custom_placeholder" = "例如 ETA 7750、自制机芯";
+"speccard.movement.none" = "未选择";
+"speccard.play.label.playing" = "播放中";
+"speccard.play.label.idle" = "播放机芯声音";
+"glossary.search.prompt" = "搜索词条";
+"battery.empty" = "尚未登记石英腕表";
+"battery.timeline" = "预计时间线";
+"battery.today" = "今日";
+"battery.replace.recorded" = "标记为已更换";
+"shake.title.eyebrow" = "今日腕表";
+"shake.cta.retry" = "再选一次";
+"shake.cta.wear" = "戴上出门";
+"shake.cta.wear.done" = "今日佩戴中";
+"shake.tip" = "摇一摇或轻点即可。也可设置每日通知。";
+"shake.section.mywatches" = "我的腕表";
+"league.collecting" = "本 %@ 的榜单仍在收集中。";
+"league.cheer" = "加油";
+"league.ranking.all" = "全部榜单";
+"badges.earned" = "已获得";
+// Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
+"badges.detail.header" = "已解锁徽章";
+"fortune.title.eyebrow" = "今日表盘运势";
+"fortune.today_prefix" = "今日属于 ";
+"fortune.today_suffix" = "";
+"fortune.rituals.title" = "今日腕表小仪式";
+"fortune.share.cta" = "分享今日运势";
+"tamagotchi.empty" = "尚未登记腕表";
+"tamagotchi.energy" = "能量";
+"tamagotchi.measure" = "测量";
+"tamagotchi.family.title" = "家族(%d)";
+"tamagotchi.wind" = "上链";
+"tamagotchi.winding" = "上链中";
+"tamagotchi.wear_today" = "今日佩戴";
+"tamagotchi.worn_today" = "今日已记录";
+"welcome.carousel.final_cta" = "添加我的腕表";
+"lockscreen.app_name" = "TickLab";
+"lockscreen.faceid.unlock" = "使用 Face ID 解锁";
+"settings.section.ai" = "AI 诊断";
+"settings.ai.toggle" = "使用 Apple Intelligence";
+"settings.ai.footer.on" = "Apple Intelligence 将以一句话解读测量结果。需要 iOS 26 及支持的设备;否则将回退至基于规则的诊断。";
+"settings.ai.footer.off" = "仅使用基于规则的诊断(三级判定)。";
+"settings.ai.unavailable.title" = "此设备无法使用 Apple Intelligence";
+"settings.ai.unavailable.body" = "请在“设置 → Apple Intelligence 与 Siri”中启用。当不可用时,会自动改为基于规则的诊断。点按以打开“设置”。";
+"watchbox.slots" = "格位";
+"watchbox.material" = "材质";
+"editwatch.title" = "编辑腕表";
+"watch.menu.edit" = "编辑详情";
+"watch.menu.favorite.add" = "加入收藏";
+"watch.menu.favorite.remove" = "取消收藏";
+"watch.menu.delete" = "删除腕表";
+"watch.delete.confirm.title" = "删除腕表";
+"watch.delete.confirm.body" = "将删除此腕表的所有测量、日志记录与规格卡。此操作无法撤销。";
+"battery.empty.hint" = "请从“藏品”中添加一枚机芯类型为“石英”的腕表,以追踪其电池寿命。";
+"tamagotchi.empty.hint" = "请从“藏品”中添加一枚腕表,加入家族。";
+"speccard.delete.title" = "删除规格卡";
+"speccard.delete.body" = "随附的照片与机芯声音文件也将一并删除。";
+"settings.account.pro_name" = "TickLab Pro 会员";
+"settings.account.free_name" = "TickLab Free";
+"settings.account.pro_body" = "Pro · 已解锁全部功能";
+"settings.account.free_body" = "Free · 使用核心功能";
+"notification.permission.denied.title" = "通知已关闭";
+"notification.permission.denied.body" = "请前往 iOS 设置中开启 TickLab 通知,以接收提醒。";
+"notification.permission.open_settings" = "打开设置";
+"settings.icloud.restart.title" = "iCloud 设置已更改";
+"settings.icloud.restart.body" = "新的同步设置将在下次启动 App 时生效。";
+"stats.wear.this_month" = "佩戴 — 本月";
+"stats.wear.section" = "佩戴";
+"stats.wear.prev_month" = "上一个月";
+"stats.wear.next_month" = "下一个月";
+"stats.wear.jump_current" = "跳转至本月";
+"stats.wear.next_month.disabled_hint" = "本月已是最新";
+"stats.wear.a11y.today_prefix" = "今日";
+"stats.wear.a11y.no_wear" = "无佩戴记录";
+"stats.wear.a11y.count" = "佩戴 %d 次";
+"stats.wear.total_days" = "%d 天";
+"stats.wear.empty" = "尚无佩戴记录。在“藏品”中的卡片上点按 ✓ 按钮以记录今日。";
+"stats.wear.cumulative" = "累计佩戴";
+"stats.wear.cumulative.title" = "各腕表累计佩戴";
+"stats.wear.cumulative.empty" = "尚无累计佩戴记录。";
+"watch.battery.last_replaced" = "上次更换";
+"quickwatch.custom.title" = "其他";
+"quickwatch.custom.subtitle" = "自定义录入";
+"a11y.watch_silhouette" = "%@ 腕表插图";
+"a11y.rate_dial" = "走时表盘 %.1f %@";
+
+/* AI / Mood / Movement / Notif sweep */
+"aidiag.fallback.ok.headline" = "🟢 状态良好";
+"aidiag.fallback.ok.body" = "处于 COSC 容差范围内。表现出色。";
+"aidiag.fallback.warn.headline" = "🟡 略微偏快";
+"aidiag.fallback.warn.body" = "可能受到磁场影响。是否曾靠近吹风机或音响?";
+"aidiag.fallback.danger.headline" = "🔴 建议送修";
+"aidiag.fallback.danger.body" = "是时候进行大保养了。请咨询制表师。";
+"aidiag.confidence.ai" = "AI 置信度";
+"aidiag.confidence.rule" = "测量置信度";
+"aidiag.expand.collapsed" = "为什么? ▼";
+"aidiag.expand.expanded" = "为什么? ▲";
+"aidiag.causes.title" = "可能原因";
+"aidiag.disclaimer.ai" = "AI 分析仅供参考。诊断仍应以制表师为准。";
+"aidiag.disclaimer.rule" = "此为基于规则的概述。诊断仍应以制表师为准。";
+"aidiag.source.loading" = "分析中…";
+"aidiag.source.ai" = "Apple Intelligence";
+"aidiag.source.rule" = "测量";
+"aidiag.cause.ok.1" = "正常的日间波动";
+"aidiag.cause.ok.2" = "测量环境稳定";
+"aidiag.cause.warn.1" = "磁场影响(吹风机、音响)";
+"aidiag.cause.warn.2" = "长时间保持同一表位";
+"aidiag.cause.warn.3" = "接近大保养周期";
+"aidiag.cause.danger.1" = "振幅超出正常范围";
+"aidiag.cause.danger.2" = "可能受到磁场影响";
+"aidiag.cause.danger.3" = "建议送修 — 请咨询制表师";
+
+"mood.label.energetic" = "活力充沛";
+"mood.label.happy" = "愉悦";
+"mood.label.sleepy" = "略显困倦";
+"mood.label.dormant" = "休眠";
+"mood.label.lowBattery" = "电量不足";
+"mood.label.needsWind" = "需要上链";
+
+"movementtype.automatic" = "自动机械";
+"movementtype.manual" = "手动机械";
+"movementtype.quartz" = "石英";
+
+"notif.wind.body" = "该为腕表上链了。";
+"notif.battery.body_prefix" = "电池更换时间临近(预计 %@)。";
+"notif.random.body" = "今天不如戴上 %@ %@?";
+
+"addwatch.movement.type" = "机芯类型";
+"addwatch.movement.type.label" = "类型";
+"addwatch.wind.toggle" = "每日上链提醒";
+"addwatch.wind.time" = "提醒时间";
+"addwatch.battery.last_replaced" = "上次更换电池";
+"addwatch.battery.reminder.toggle" = "更换提醒";
+
+"speccard.spec.movement" = "机芯";
+"speccard.spec.case" = "表壳";
+"speccard.spec.registered" = "登记日期";
+"speccard.nav.title" = "规格卡";
+"speccard.movement.custom_toggle" = "自定义录入";
+"speccard.movement.pick" = "从列表选择";
+"speccard.record.recording" = "录音中… %d 秒";
+"speccard.record.again" = "重新录制";
+"speccard.record.start" = "录制 5 秒";
+"speccard.note.placeholder" = "关于这枚腕表的故事……";
+"speccard.record.error.prep" = "录音准备失败";
+"speccard.record.error.start" = "录音启动失败:%@";
+"speccard.record.error.failed" = "录音失败 — 请重试";
+"speccard.record.error.short" = "录音过短(请重试)";
+"speccard.record.error.save" = "保存失败:%@";
+"speccard.play.error.no_file" = "无可播放的文件";
+"speccard.play.error.missing" = "未找到录音文件";
+"speccard.play.error.empty" = "录音为空(请重新录制)";
+"speccard.play.error.prep" = "播放准备失败";
+"speccard.play.error.start" = "无法开始播放";
+"speccard.play.error.failed" = "播放失败:%@";
+"badges.filter.all" = "全部";
+"badges.filter.earned" = "已获得";
+"badges.filter.locked" = "进行中";
+"badges.b1.name" = "深海潜士";        "badges.b1.desc" = "测量一枚潜水表";
+"badges.b2.name" = "藏家";         "badges.b2.desc" = "登记 5 枚以上腕表";
+"badges.b3.name" = "一表一生";    "badges.b3.desc" = "连续 30 天佩戴同一枚腕表";
+"badges.b4.name" = "黎明值守";       "badges.b4.desc" = "凌晨 5 点前完成 10 次测量";
+"badges.b5.name" = "COSC 大师";       "badges.b5.desc" = "7 天均符合 COSC 标准";
+"badges.b6.name" = "月相行者";        "badges.b6.desc" = "登记一枚月相表";
+"badges.b7.name" = "时区旅人";       "badges.b7.desc" = "测量一枚 GMT 腕表";
+"badges.b8.name" = "百次礼赞";         "badges.b8.desc" = "对同一枚腕表完成 100 次测量";
+"badges.b9.name" = "品牌万花筒";   "badges.b9.desc" = "登记 5 个不同品牌";
+"badges.b10.name" = "首次跳动";       "badges.b10.desc" = "完成首次测量";
+"badges.b11.name" = "日志守护人";   "badges.b11.desc" = "撰写 50 篇日志";
+"badges.b12.name" = "收藏齐全"; "badges.b12.desc" = "解锁所有其他徽章";
+"badges.b13.name" = "COSC 达成";    "badges.b13.desc" = "测得 COSC 规格之内的结果";         "badges.b13.condition" = "走时 -4 ~ +6 s/d 任一次";
+"badges.b14.name" = "A 级表现";          "badges.b14.desc" = "最高的测量可信度";   "badges.b14.condition" = "置信度 ≥75";
+"badges.b15.name" = "节拍宗师";     "badges.b15.desc" = "极致精准的节拍检测";  "badges.b15.condition" = "摆轮误差 < 0.1ms";
+"badges.b16.name" = "夜行者";        "badges.b16.desc" = "凌晨仍在测量";            "badges.b16.condition" = "晚 10 点后完成 5 次测量";
+"badges.b17.name" = "10 次测量";  "badges.b17.desc" = "正在建立稳定的数据";           "badges.b17.condition" = "累计 10 次测量";
+"badges.b18.name" = "50 次测量";  "badges.b18.desc" = "对精度认真起来";             "badges.b18.condition" = "累计 50 次测量";
+"badges.b19.name" = "年度冠军";  "badges.b19.desc" = "对同一枚腕表完成 365 次测量";      "badges.b19.condition" = "对同一枚腕表完成 365 次测量";
+"badges.b20.name" = "古董之爱";    "badges.b20.desc" = "复古机芯的独特魅力";           "badges.b20.condition" = "登记 18000/19800 BPH 的腕表";
+"badges.b21.name" = "计时大师";    "badges.b21.desc" = "复杂功能的拥有者";         "badges.b21.condition" = "登记一枚计时码表";
+"badges.b22.name" = "两位数藏家";    "badges.b22.desc" = "藏品达到 10 枚以上";       "badges.b22.condition" = "登记 10 枚以上腕表";
+"badges.b1.condition" = "登记一枚潜水/Submariner 腕表";
+"badges.b2.condition" = "登记 5 枚以上腕表";
+"badges.b3.condition" = "对同一枚腕表记录 30 次以上佩戴";
+"badges.b4.condition" = "凌晨 5 点前完成 10 次测量";
+"badges.b5.condition" = "7 个以上不同品牌";
+"badges.b6.condition" = "登记一枚月相表";
+"badges.b7.condition" = "登记一枚 GMT 腕表";
+"badges.b8.condition" = "对同一枚腕表完成 100 次测量";
+"badges.b9.condition" = "5 个以上不同品牌";
+"badges.b10.condition" = "完成首次测量";
+"badges.b11.condition" = "撰写 50 篇以上日志";
+"badges.b12.condition" = "解锁全部 21 枚其他徽章";
+"badges.toast.title" = "徽章已解锁!";
+"service.section.type" = "类型";
+"service.picker.type" = "保养类型";
+"service.section.record" = "记录";
+"service.date" = "日期";
+"service.center" = "服务中心";
+"service.cost" = "费用";
+"service.section.note" = "备注";
+"service.note.placeholder" = "详细内容";
+"service.title.add" = "添加保养记录";
+"service.title.edit" = "编辑保养记录";
+"stats.more" = "更多";
+"stats.entry.badges" = "徽章";
+"stats.entry.badges.subtitle" = "追踪收藏进度";
+"stats.entry.league" = "品牌联赛";
+"stats.entry.league.subtitle" = "你的阵营 vs 全球";
+"welcome.firstresult.cta" = "前往藏品";
+"welcome.firstresult.ready" = "准备就绪";
+"welcome.firstresult.body" = "现在从“藏品”中挑选一枚腕表开始测量。";
+"welcome.firstresult.tip.title" = "首次测量小贴士";
+"welcome.firstresult.tip.body" = "在安静处,将腕表底盖直接贴于手机底部麦克风 — 持续 30 秒。";
+"quickwatch.cta.pick" = "选择一枚腕表";
+"quickwatch.cta.custom" = "自定义录入 → 下一步";
+"quickwatch.cta.next" = "下一步 → 首次测量";
+"shake.title" = "今日腕表";
+"shake.cta.shaking" = "摇晃中…";
+"shake.cta.idle" = "摇一摇挑选";
+"shake.schedule.daily" = "每日 %02d:%02d";
+"shake.schedule.subtitle.active" = "已对 2 枚以上腕表启用";
+"shake.schedule.subtitle.inactive" = "当你拥有 2 枚以上腕表时生效";
+"shake.reason.1" = "今日相伴";
+"shake.reason.2" = "一枚念念不忘的腕表";
+"shake.reason.3" = "近期未曾佩戴";
+"shake.reason.4" = "清晨的问候";
+"shake.reason.5" = "美好日子的腕表";
+"shake.reason.6" = "与这枚腕表相配的一天";
+"shake.reason.7" = "重回腕间";
+"shake.reason.8" = "今天就它了";
+"league.news.suffix" = "动态";
+"league.news.headline" = "%1$@ 本 %2$@ 的佩戴次数比 %3$@ 多出 %4$@ 倍!";
+"league.myteam" = "我的阵营";
+"league.myteam.body" = "%@ 你的佩戴:%d · 全球 %@";
+"league.trend_increase" = "+%d%%";
+"league.period.day" = "今日";
+"league.period.week" = "本周";
+"league.period.month" = "本月";
+"league.period.year" = "本年";
+"league.nav.title" = "品牌联赛";
+"league.empty.title" = "尚无佩戴记录";
+"league.empty.body" = "记录佩戴,即可查看品牌榜单";
+"league.news.solo" = "%@ 在本 %3$@ 以 %2$d 次佩戴领跑!";
+"badges.nav.title" = "徽章";
+"badges.level.max" = "已达最高等级!";
+"badges.level.next" = "再 %d 即可升级";
+"battery.nav.title" = "电池监控";
+"battery.status.good" = "良好";
+"battery.status.warn" = "请及时更换";
+"battery.status.low" = "即将耗尽";
+"battery.kv.last" = "上次更换";
+"battery.kv.elapsed" = "已使用";
+"battery.kv.due" = "预计到期";
+"battery.insight.low" = "电池接近耗尽,请准备更换。";
+"battery.insight.warn" = "建议在 1–2 个月内更换。";
+"battery.insight.ok" = "电量充足。当 EOL 指示启动时,秒针会以 2 秒为间隔跳动。";
+"addwatch.model" = "型号";
+"addwatch.purchase_date" = "购入日期";
+"addwatch.choose_photo" = "添加照片";
+"addwatch.photo_source.title" = "如何添加照片?";
+"addwatch.photo_source.library" = "从相册选择";
+"addwatch.photo_source.camera" = "使用相机拍摄";
+"addwatch.discard.title" = "放弃更改?";
+"addwatch.discard.message" = "你的修改尚未保存。";
+"addwatch.discard.confirm" = "放弃";
+"addwatch.suggested" = "推荐机芯";
+"addwatch.accept_suggestion" = "使用此项";
+"addwatch.movement.picker" = "机芯";
+"addwatch.movement.manual_entry" = "手动输入";
+"addwatch.movement.bph_label" = "BPH(测量所必需)";
+"addwatch.movement.bph_required" = "需输入 BPH 方可启用测量";
+"addwatch.movement.bph_uncommon" = "%d BPH 较为罕见,请再次确认";
+"addwatch.movement.unknown" = "未知(默认 28800 BPH)";
+"addwatch.lift_angle.label" = "抬起角覆盖";
+"addwatch.lift_angle.placeholder" = "例如 52";
+"addwatch.skip_suggestion" = "手动输入";
+
+/* Watch detail */
+"watch.info.movement_specs" = "机芯规格";
+"watch.owned_since" = "自 %@ 起";
+"watch.history.title" = "测量历史";
+
+/* Confidence */
+"confidence.label" = "置信度";
+
+/* Glossary */
+"glossary.title" = "词条";
+"glossary.bph" = "BPH(每小时振次)";
+"glossary.bph.desc" = "每小时摆动的次数。28800 BPH = 每秒 8 振 (4Hz)。";
+"glossary.rate" = "走时";
+"glossary.rate.desc" = "每日的时间偏差。+5 s/day 表示腕表每日快 5 秒。";
+"glossary.beat_error" = "摆轮误差";
+"glossary.beat_error.desc" = "“滴”与“答”之间的不对称程度。越接近 0 越佳。";
+"glossary.amplitude" = "振幅";
+"glossary.amplitude.desc" = "摆轮的旋转角度。健康范围:270–315°。";
+"glossary.cosc" = "COSC";
+"glossary.cosc.desc" = "瑞士天文台认证(-4 至 +6 s/day)。";
+"glossary.lift_angle" = "抬起角";
+"glossary.lift_angle.desc" = "机芯擒纵机构特有的角度。用于计算振幅。";
+"glossary.coaxial" = "同轴擒纵";
+"glossary.coaxial.desc" = "欧米茄的擒纵设计。常规校表仪难以稳定测量其振幅。";
+"glossary.mic" = "麦克风 dB";
+"glossary.mic.desc" = "iPhone 麦克风接收的整体音量。腕表测量适宜范围 −60 至 −40 dB。低于 −80 dB 说明手机离腕表过远。";
+"glossary.onsets" = "节拍点";
+"glossary.onsets.desc" = "检测到的节拍脉冲数(12 秒窗口)。28800 BPH 腕表约 96 次,21600 BPH 约 72 次。";
+
+/* Position */
+"position.dial_up" = "表盘朝上";
+"position.dial_down" = "表盘朝下";
+"position.crown_up" = "表冠朝上";
+"position.crown_down" = "表冠朝下";
+"position.crown_left" = "表冠朝左";
+"position.crown_right" = "表冠朝右";
+"position.unknown" = "未指定";
+
+/* Measurement */
+"measurement.button.start" = "开始测量";
+"measurement.button.stop" = "停止";
+"measurement.button.see_result" = "查看结果";
+"measurement.status.permission_pending" = "正在确认麦克风权限…";
+"measurement.status.analyzing" = "分析中…";
+"measurement.permission.title" = "需要麦克风权限";
+"measurement.permission.body" = "我们需要麦克风来测量腕表精度。音频在分析后立即丢弃,绝不储存。";
+"measurement.permission.openSettings" = "打开设置";
+"measurement.position.title" = "测量表位(可选)";
+"measurement.setup.step1.title" = "1. 保持腕表静止";
+"measurement.setup.step1.body" = "测量过程中腕表移位可能造成 ±5 s/d 的偏差。请将其底盖朝上平稳放置。";
+"measurement.setup.step2.title" = "2. 麦克风对准底盖中央";
+"measurement.setup.step2.body" = "iPhone 底部麦克风(充电口旁的小孔)应接触腕表底盖中央。注意不要用手指遮挡麦克风。";
+"measurement.setup.step3.title" = "3. 安静的环境";
+"measurement.setup.step3.body" = "屏蔽环境噪声(电视、谈话、风扇)。建议 SNR ≥ 20dB。";
+"measurement.tips.average.title" = "精准测量小贴士";
+"measurement.tips.average.body" = "单次测量的方差为 ±5 s/d。**3-5 次测量取平均**可达 ±2 s/d 的精度。请在多次测量间保持相同表位。";
+"measurement.tips.average.body.free" = "单次测量的方差为 ±5 s/d。Free 版每日支持 3 次测量 — 在同一表位连续测量可让平均值更稳定。升级至 Pro 可享无限次数,并在 5 次以上测量后达到 ±2 s/d 的精度。";
+"measurement.tips.average.body.pro" = "单次测量的方差为 ±5 s/d。**3-5 次测量取平均**可达 ±2 s/d 的精度。请在多次测量间保持相同表位。";
+"measurement.disclaimer.title" = "读数仅供参考";
+"result.suspicious.title" = "可能存在测量错误";
+"result.suspicious.body" = "信号质量良好,但走时异常偏高。请尝试调整麦克风位置后重新测量。";
+"result.suspicious.retry" = "重新测量";
+"measurement.disclaimer.body" = "本 App 提供的读数仅供参考。基于麦克风的精度测量受表位、环境与底盖材质影响,不能取代专业校表仪(如 Witschi)。送修决策请咨询制表师。";
+"measurement.progress.label" = "%d / %d 秒(推荐)";
+"measurement.hint.minimum_duration" = "至少测量 5 秒以获得稳定读数。";
+"measurement.hint.move_closer" = "信号较弱。请让麦克风更靠近腕表(贴住底盖)。";
+"measurement.hint.weak.title" = "信号偏弱";
+"measurement.hint.acceptable" = "信号良好。继续测量 30 秒以上可提升置信度。";
+"measurement.button.retry" = "重试";
+"measurement.fail.too_short.title" = "测量时间过短";
+"measurement.fail.too_short.body" = "至少需要 5 秒的音频才能估算 BPH 与走时。请点按“重试”并测量 30 秒以上。";
+"measurement.fail.no_signal.title" = "未检测到腕表";
+"measurement.fail.no_signal.body" = "麦克风可能离腕表过远,或环境过于嘈杂。请将 iPhone 底部直接贴于底盖,在安静处再试一次。";
+"measurement.fail.engine.title" = "音频引擎启动失败";
+"measurement.fail.engine.body" = "可能有其他 App 占用麦克风,或蓝牙音频路由发生冲突。请关闭通话/录音类 App 后重试。";
+
+/* Result */
+"result.title" = "测量结果";
+"result.duration" = "时长";
+"result.beat_count" = "检测节拍数";
+"result.expert.metadata" = "测量条件";
+"result.verdict.ok.title" = "状态健康";
+"result.verdict.ok.body" = "你的腕表处于日常佩戴的健康范围内。";
+"result.verdict.caution.title" = "持续观察";
+"result.verdict.caution.body" = "略微超出健康范围。再观察几天;若仍持续,可考虑送检。";
+"result.verdict.service.title" = "建议送修";
+"result.verdict.service.body" = "偏差较大。建议送至制表师处检修。";
+"result.verdict.first_anomaly.title" = "再测一次?";
+"result.verdict.first_anomaly.body" = "本次读数显示出明显偏差。单次测量不足为据 — 请在不同表位或时段再次测量后再下结论。";
+"result.next_step.eyebrow" = "下一步";
+"result.next_step.body" = "机械腕表会因表位、温度与发条松紧呈现不同的走时。请在每日相近时段持续测量一周 — 走时趋势图将揭示真实情况。";
+"result.beginner.why" = "为什么会得到这个结果?";
+
+/* Reliability notes */
+"movement.reliability.generic.title" = "测量提示";
+"movement.reliability.generic.notice" = "此机芯的特性与常规瑞士杠杆式擒纵不同,测量精度可能偏低。";
+
+/* Trend */
+"trend.title" = "走时趋势";
+"trend.range.7d" = "7 天";
+"trend.range.30d" = "30 天";
+"trend.range.90d" = "90 天";
+"trend.range.1y" = "1 年";
+"trend.range.all" = "全部";
+"trend.range.a11y.7d" = "近 7 天";
+"trend.range.a11y.30d" = "近 30 天";
+"trend.range.a11y.90d" = "近 90 天";
+"trend.range.a11y.1y" = "近一年";
+"trend.range.a11y.all" = "全部时间";
+"trend.empty" = "尚无测量记录。";
+
+"pin.entry.a11y.hint" = "双击输入 6 位 PIN";
+
+"a11y.confidence_badge" = "置信度 %d%%";
+"a11y.disclosure.expanded" = "已展开";
+"a11y.disclosure.collapsed" = "已收起";
+
+"a11y.battery.gauge" = "电量 %1$d%%,%2$@,%3$@ %4$@";
+"addwatch.replace_photo" = "更换照片";
+"addwatch.remove_photo" = "移除照片";
+"speccard.play.a11y" = "播放滴答声";
+
+/* Settings */
+"settings.title" = "设置";
+"settings.section.mode" = "用户模式";
+"settings.mode.label" = "模式";
+"settings.section.measurement" = "测量";
+"settings.silent_mode_default" = "默认开启静音";
+"settings.silent_mode_default.hint" = "开始测量时自动启用静音模式,避免通知干扰。";
+"settings.section.help" = "帮助";
+"settings.glossary" = "词条";
+"settings.section.about" = "关于";
+"settings.version" = "版本";
+"settings.bundle_id" = "Bundle ID";
+"settings.section.data" = "数据";
+"settings.export.format" = "导出格式";
+"settings.export.action" = "导出测量数据";
+"settings.section.sync" = "同步";
+"settings.icloud.label" = "iCloud 同步";
+"settings.movementdb.auto_update" = "自动更新机芯数据库";
+"settings.coreml.label" = "CoreML 节拍检测器(实验性)";
+"settings.coreml.hint" = "基于机器学习的起点检测。若模型缺失,会回退至默认算法。";
+"settings.coreml.status_prefix" = "当前:";
+"settings.movementdb.privacy_note" = "开启后,新机芯将作为静态 JSON 在后台下载。你的测量数据与照片绝不会离开设备。";
+"settings.movementdb.update_now" = "检查更新";
+"settings.movementdb.checking" = "正在检查更新…";
+"settings.movementdb.ok" = "已安装版本 %@(%d 款机芯)";
+"settings.movementdb.fail" = "更新失败:%@";
+"settings.movementdb.version" = "机芯数据库版本";
+"settings.section.timeref" = "时间基准";
+"settings.audio_input.label" = "麦克风输入";
+"settings.audio_input.empty" = "无可用的输入设备";
+"settings.audio_input.system_default" = "系统默认";
+"audio.input.builtin" = "内置";
+"audio.input.wired" = "有线";
+"audio.input.bluetooth" = "Bluetooth";
+"audio.input.external" = "外部";
+
+/* Round 81 — Hard Rule 3 cleanup: inline strings removed from code */
+"notif.random.title" = "🎲 今日腕表";
+"watch.journal.empty.hint" = "在日志中标记这枚腕表,即会在此处显示。";
+"settings.coreml.status_coreml" = "CoreML";
+"settings.coreml.status_rule" = "基于规则(模型缺失)";
+
+/* Round 83 — personalisation: nickname / story / ref */
+"addwatch.section.personal" = "这枚腕表的故事";
+"addwatch.nickname" = "昵称(可选)";
+"addwatch.reference_no" = "型号编号";
+"addwatch.story.label" = "故事";
+"addwatch.story.placeholder" = "例如:祖父留下的礼物";
+
+/* Round 84 — measurement view labels localized (Jiyoung C3). */
+"measurement.eyebrow.live_rate" = "实时走时";
+"measurement.eyebrow.live_signal" = "实时信号";
+"measurement.eyebrow.metrics" = "指标";
+"measurement.metric.beat_error" = "摆轮误差";
+"measurement.metric.bph" = "BPH";
+
+/* Round 90 — Story card label */
+"watch.story.label" = "这枚腕表的故事";
+
+/* Round 92 — Today tab */
+"tab.today" = "今天";
+"today.greeting" = "今天与腕表相处得怎样?";
+"today.stat.watches" = "腕表家族";
+"today.stat.this_week" = "本周";
+"today.shake.title" = "今日腕表挑选";
+"today.shake.subtitle" = "今天打算戴哪一枚?";
+"today.fortune.title" = "今日表盘运势";
+"today.fortune.subtitle" = "幸运表盘、数字与仪式 — 由日期决定。";
+
+/* Round 93 — concept-matched pick reasons */
+"shake.reason.dress.1" = "优雅时刻的得体之选。";
+"shake.reason.dress.2" = "今日适合正式的端庄。";
+"shake.reason.dress.3" = "静谧表盘,助你专注。";
+"shake.reason.dress.4" = "低调内敛,陪伴整日。";
+"shake.reason.sport.1" = "鲜明的日子,值得一枚醒目腕表。";
+"shake.reason.sport.2" = "为眼前的冒险而生。";
+"shake.reason.sport.3" = "强而有力的一天,搭配强而有力的腕表。";
+"shake.reason.sport.4" = "户外活动的最佳伙伴。";
+"shake.reason.manual.1" = "用几下轻柔的上链开启一天。";
+"shake.reason.manual.2" = "晨间的手动上链仪式。";
+
+/* Round 96 — Journal reminder notif */
+"notif.journal.title" = "📓 今日一笔";
+"notif.journal.body" = "花点时间,写下今天佩戴的腕表。";
+
+/* Round 98 — measurement failure reasons */
+"measurement.fail.unsupported.title" = "此机芯暂不支持";
+"measurement.fail.unsupported.body" = "石英或 0 BPH 机芯无法通过声学测量。请使用自动或手动机械腕表。";
+"measurement.fail.lock.title" = "读数超出可信范围";
+"measurement.fail.lock.body" = "BPH 锁定信号偏弱 — 或腕表确实严重偏差。请尝试更换表位,或交由制表师检查。";
+
+/* Round 104 — bug + A11y corrections */
+"watch.row.just_now" = "刚刚";
+"collection.challenge.progress" = "已完成 %d/%d 天 · 还剩 %d 天";
+"aidiag.confidence.a11y" = "置信度百分之 %d";
+
+/* Round 105 — DialFortuneView inline strings (Hard Rule 3 compliance) */
+"fortune.dial.blue" = "蓝色表盘";
+"fortune.dial.black" = "黑色表盘";
+"fortune.dial.green" = "绿色表盘";
+"fortune.dial.silver" = "银色表盘";
+"fortune.dial.champagne" = "香槟色";
+"fortune.dial.panda" = "熊猫盘";
+"fortune.complication.1" = "月相";
+"fortune.complication.2" = "GMT";
+"fortune.complication.3" = "计时码表";
+"fortune.complication.4" = "星期日历";
+"fortune.complication.5" = "万年历";
+"fortune.unlucky.1" = "黑色表盘";
+"fortune.unlucky.2" = "香槟色";
+"fortune.unlucky.3" = "银色表盘";
+"fortune.unlucky.4" = "绿色表盘";
+"fortune.ritual.1" = "日出时上链 12 圈";
+"fortune.ritual.2" = "戴在右手腕";
+"fortune.ritual.3" = "午餐时来一杯蓝色饮品";
+"fortune.ritual.4" = "测量前置于表盘朝上位置";
+"fortune.ritual.5" = "傍晚让腕表休息片刻";
+"fortune.ritual.6" = "沐浴 30 分钟阳光";
+"fortune.horoscope.1" = "深蓝令人平静。今天宜启新事。";
+"fortune.horoscope.2" = "整洁表盘带来信任。最适合重要会议。";
+"fortune.horoscope.3" = "绿色是成长之色。意外的机遇正在到来。";
+"fortune.horoscope.4" = "银色让思绪清晰。完成那些一直搁置的事。";
+"fortune.horoscope.5" = "香槟色温暖人心。与旧友的相约将开启新可能。";
+"fortune.pill.lucky" = "幸运";
+"fortune.pill.unlucky" = "避之";
+"fortune.share.text" = "🔮 TickLab 表盘运势 · %@\n\n今日属于 %@\n幸运数字:%d\n\n%@\n\n幸运功能 · %@\n避之 · %@";
+"fortune.lucky_number" = "幸运数字";
+"fortune.metric.love" = "感情";
+"fortune.metric.work" = "事业";
+"fortune.metric.money" = "财运";
+"fortune.metric.health" = "健康";
+
+/* Round 109 — notification titles localized (Hard Rule 3) */
+"notif.wind.title" = "🔄 %@";
+"notif.battery.title" = "🔋 %@";
+
+/* Round 113 — Pro gate */
+"pro.limit.watch.title" = "已达腕表上限";
+"pro.limit.watch.body" = "Free 版仅支持 1 枚腕表。升级至 TickLab Pro($9.99/年)以管理你的完整收藏。";
+"pro.limit.daily_measurement.title" = "已达每日测量上限";
+"pro.limit.daily_measurement.body" = "Free 版每日支持 3 次测量。升级至 TickLab Pro($9.99/年)即可无限次测量。";
+"pro.limit.journal_monthly.title" = "已达每月日志上限";
+"pro.limit.journal_monthly.body" = "Free 版每月支持 5 篇日志。升级至 TickLab Pro($9.99/年)即可无限撰写。";
+
+/* Round 116 — A11y: ShakePick button */
+"shake.cta.a11y.label" = "选择一枚腕表";
+"shake.cta.a11y.hint" = "点按按钮或摇晃手机以挑选今日腕表";
+
+/* Round 117 — Hard Rule 9 + misc */
+"result.amplitude.low_confidence" = "已省略振幅 — 此机芯的测量置信度评级较低。";
+"result.amplitude.unavailable.title" = "未显示振幅";
+"result.amplitude.unavailable.body" = "此机芯(蓝宝石底盖、同轴擒纵等)基于麦克风的振幅测量不可靠,故已省略。";
+
+/* Round 118 — storyCard + journalTab compose */
+"watch.story.empty_prompt" = "添加这枚腕表的故事";
+"watch.journal.compose" = "撰写日志";
+
+/* Round 119 — StatsView per-watch picker */
+"stats.position.watch_picker" = "腕表";
+"stats.position.all" = "全部腕表";
+
+/* Round 121 — Glossary 5 new entries */
+"glossary.confidence" = "置信度";
+"glossary.confidence.desc" = "0-100 分,表示测量的可信程度。由 SNR、时长、BPH 锁定质量与摆轮误差综合得出。";
+"glossary.snr" = "SNR(信噪比)";
+"glossary.snr.desc" = "腕表声音相对环境噪声的比值(dB)。越高越好 — 至少需要 12 dB 才能获得可靠结果。";
+"glossary.drift" = "漂移";
+"glossary.drift.desc" = "因温度、表位或发条松紧导致走时随时间发生变化的倾向。";
+"glossary.isochronism" = "等时性";
+"glossary.isochronism.desc" = "机芯无论动力储存剩余多少,均能保持稳定走时的能力。等时性越好,精度越稳定。";
+"glossary.positional" = "方位差";
+"glossary.positional.desc" = "走时随腕表朝向(表盘朝上/朝下、表冠各方向)而变化的程度。可通过六方位测试检验。";
+
+/* Round 123 — BatteryView Rule 3 */
+"battery.caliber_life" = "Cal. %@ · 预计寿命 %d 个月";
+"battery.status.urgent" = "请尽快更换";
+"battery.status.caution" = "已到更换时间";
+"battery.status.ok" = "良好";
+"battery.reminder.off" = "关闭提醒";
+"battery.reminder.on" = "设置到期提醒";
+
+/* Round 123 — TamagotchiView Rule 3 */
+"tamagotchi.mood.energetic" = "活力充沛";
+"tamagotchi.mood.happy" = "平和";
+"tamagotchi.mood.sleepy" = "略显困倦";
+"tamagotchi.mood.dormant" = "休眠";
+"tamagotchi.mood.low_battery" = "电量不足";
+"tamagotchi.mood.needs_wind" = "需要上链";
+"tamagotchi.last_activity" = "上次活动于 %d 天前";
+"tamagotchi.no_activity" = "无活动记录";
+"tamagotchi.sleepy_hint" = "再过 48 小时将再次进入困倦";
+
+/* Round 124 — WelcomeFlowView Rule 3 */
+"welcome.hero.line1" = "一部 iPhone。";
+"welcome.hero.line2" = "测量你的腕表。";
+"welcome.hero.accent" = "记录";
+"welcome.hero.suffix" = "它。";
+"welcome.nav.back" = "← 返回";
+
+/* Round 125 — Rule 3 + share + units */
+"measurement.rec_label" = "REC";
+"measurement.snr_label" = "SNR %ddB";
+"journal.detail.beat_error" = "摆轮误差 %.2f ms";
+"unit.seconds_per_day_short" = "s/d";
+/* watch.label.rate dedup — original at line 161 */
+
+/* Round 126 — CollectionView + Pro */
+"collection.status.ok" = "良好";
+"collection.status.caution" = "注意";
+"collection.status.service" = "送修";
+"pro.limit.upgrade" = "升级至 Pro";
+
+/* TickLab Pro paywall ($9.99/yr) */
+"purchase.headline" = "TickLab Pro";
+"purchase.subtitle" = "无限收藏与测量 — 资深玩家应有的完整工具。";
+"purchase.benefit.unlimited_watches.title" = "无限腕表";
+"purchase.benefit.unlimited_watches.body" = "追踪你的全部藏品 — 不再受 1 枚限制。";
+"purchase.benefit.unlimited_measurements.title" = "无限测量";
+"purchase.benefit.unlimited_measurements.body" = "尽情测量 — 不再有每日上限。";
+"purchase.benefit.unlimited_journal.title" = "无限日志";
+"purchase.benefit.unlimited_journal.body" = "记录每一个瞬间 — 不再有每月上限。";
+"purchase.benefit.unlimited_ai.title" = "无限 AI 诊断";
+"purchase.benefit.unlimited_ai.body" = "每一次都能获得 AI 解读 — 不再有 3 次的上限。";
+"purchase.plan.yearly" = "年度订阅";
+"purchase.plan.yearly.per_year" = "/ 年 自动续订 — 随时可取消";
+"purchase.cta.subscribe" = "开启 Pro";
+"purchase.cta.processing" = "处理中…";
+"purchase.cta.restore" = "恢复购买";
+"purchase.cta.restoring" = "恢复中…";
+"purchase.legal.auto_renew" = "订阅会自动续订直至取消。可随时在“设置”中管理。";
+"purchase.legal.terms" = "使用条款";
+"purchase.legal.privacy" = "隐私政策";
+"purchase.success.title" = "Pro 已激活";
+"purchase.success.body" = "已解锁全部功能。祝你享受制表之乐!";
+"purchase.error.title" = "购买出错";
+"purchase.unavailable" = "正在连接 App Store。请稍后再试。";
+"purchase.retry" = "重试";
+"aidiag.trial.remaining" = "AI 诊断剩余 %d/%d 次";
+"aidiag.trial.exhausted_cta" = "无限 AI 诊断 — 升级至 Pro";
+"purchase.context.watch_limit" = "已达到 1 块手表上限 — Pro 解锁无限手表";
+"purchase.context.daily_measurement" = "今日测量次数已达上限 — Pro 解锁无限测量";
+"purchase.context.journal_monthly" = "本月日记已达上限 — Pro 解锁无限记录";
+"purchase.context.ai_trial" = "AI 诊断试用已用完 — Pro 每次解锁 AI";
+"cosc.bar.min" = "−12";
+"cosc.bar.max" = "+12";
+"cosc.bar.range" = "COSC −4 ~ +6";
+"aidiag.confidence.grade.high" = "高";
+"aidiag.confidence.grade.medium" = "中";
+"aidiag.confidence.grade.low" = "低";
+"unit.seconds_short" = "%d 秒";
+
+/* Round 127 — MeasurementResultView Rule 3 */
+"result.escapement.fallback" = "瑞士杠杆式";
+"result.snr_beats_hint" = "SNR %.0f dB · %d 次节拍";
+"watch.ref_label" = "Ref. %@";
+
+/* Round 129 */
+"speccard.list.empty.hint" = "前往“腕表详情” → “···”菜单 → “创建规格卡”。";
+"result.saved.hint" = "测量已保存 ✓";
+"measurement.hint.noise" = "🔊 环境噪声过大。请在安静处稳定手机后重试。";
+"measurement.hint.press_closer" = "📍 请将底盖(腕表背面)紧贴 iPhone 底部麦克风。";
+"measurement.hint.no_signal" = "🎤 几乎没有信号。请将麦克风直接贴住底盖。";
+"measurement.hint.bluetooth" = "🎧 当前使用 Bluetooth 麦克风(AirPods 等)。需 iPhone 自身的麦克风才能聆听腕表。请断开 Bluetooth 或在设置中更改输入源。";
+"measurement.hint.wired" = "🎙️ 当前使用外接有线麦克风。iPhone 内置麦克风更适合腕表测量。";
+"share.watch.fallback" = "腕表";
+
+/* Round 114 — LongTest summary */
+
+/* Round 180 (Sora) — Magnetic field measurement */
+"magnetic.title" = "磁场";
+"magnetic.header.subtitle" = "机械腕表对磁场敏感。测量前请先查看周围环境。";
+"magnetic.measure_button" = "测量";
+"magnetic.measuring" = "测量中…";
+"magnetic.level.normal" = "🟢 正常";
+"magnetic.level.slightly_high" = "🟡 略偏高";
+"magnetic.level.high" = "🟠 偏高";
+"magnetic.level.very_high" = "🔴 极高";
+"magnetic.verdict.label.ai" = "APPLE INTELLIGENCE";
+"magnetic.verdict.label.tip" = "提示";
+"magnetic.verdict.loading" = "读取磁场…";
+"magnetic.verdict.normal" = "环境磁场正常,对测量无影响。";
+"magnetic.verdict.slightly_high" = "略高于通常水平。问题应该不大 — 可换一处再测一次。";
+"magnetic.verdict.high" = "磁场偏高 — 存在受磁风险。请远离此处后再测量。";
+"magnetic.verdict.very_high" = "警告!检测到极强磁场。请立即将腕表移离此处。";
+"magnetic.result.earthfield_note" = "地磁场通常为 25–65 μT。";
+"magnetic.info.title" = "关于磁场";
+"magnetic.info.body" = "音响、耳机、磁吸表扣与平板保护套都可能使机械腕表受磁 — 导致走时变快或不稳。若腕表近期接触过磁源,制表师可在数秒内完成消磁。";
+
+/* Round 180 — Today tab magnetic check card */
+"today.card.magnetic.title" = "磁场检测";
+"today.card.magnetic.subtitle" = "查看周围环境的受磁风险";
+
+/* Round 176 — Primary watch / Wear-today UX clarification (user-requested, Hyemi) */
+"watch.set_as_primary" = "设为主表";
+"watch.set_as_primary.hint" = "将其固定在“今天”页";
+"watch.is_primary" = "主表";
+"watch.unset_primary" = "取消主表";
+"watch.unset_primary.hint" = "点按以取消";
+"watch.log_wear_today" = "记录今日佩戴";
+"watch.log_wear_today.hint" = "点按记录";
+"watch.worn_today" = "今日已佩戴";
+"watch.worn_today.hint" = "已记录今日佩戴";
+"today.primary.empty.title" = "尚未设置主表";
+"today.primary.empty.body" = "将你的日常常戴款固定于此,使其常驻“今天”页顶部。";
+"today.primary.empty.cta" = "选择一枚腕表";
+
+/* Round 133: photo source sheet */
+"photo.source.library" = "照片图库";
+"photo.source.camera" = "拍摄照片";
+"photo.source.remove" = "移除照片";
+
+/* Round 133: keep-screen-on + reminders */
+"settings.keep_screen_on" = "测量时保持屏幕常亮";
+"settings.section.reminders" = "提醒";
+"settings.section.reminders.footer" = "设定日志提醒与每日随机挑选的时间。";
+"settings.journal_reminder.time" = "日志提醒时间";
+"today.primary.picker.title" = "选择主表";
+"magnetic.chart.title" = "实时磁场";
+"magnetic.chart.live" = "LIVE";
+"wear.toast.logged" = "已记录今日佩戴";
+"today.states.title" = "腕表状态";
+/* Round (3-2 잔여): battery.expected_change/life dead. */
+"measurement.title" = "测量";
+"fortune.nav.title" = "今日表盘";
+"result.grade.eyebrow" = "测量可信度";
+"result.grade.a.claim" = "可信至 ±3 s/d — 可据此判断";
+"result.grade.b.claim" = "可信至 ±10 s/d — 适合追踪趋势";
+"result.grade.c.claim" = "可信至 ±25 s/d — 建议调整表位";
+"result.grade.f.claim" = "不可信 — 请重新测量";
+"result.grade.a.suffix" = "可信 — 可据此判断";
+"result.grade.b.suffix" = "可信 — 适合追踪趋势";
+"result.grade.c.suffix" = "可信 — 建议调整表位";
+"result.grade.f.suffix" = "— 请重新测量";
+
+// ── New badges b23-b32 ──────────────────────────────────────────────
+"badges.b23.name" = "首识机芯"; "badges.b23.desc" = "第一次留意腕表内部的瞬间"; "badges.b23.condition" = "为任何一枚腕表录入机芯";
+"badges.b24.name" = "深夜制表师"; "badges.b24.desc" = "午夜过后仍在测量"; "badges.b24.condition" = "凌晨 0–2 点之间完成 5 次测量";
+"badges.b25.name" = "腕表日记"; "badges.b25.desc" = "一周每日记录"; "badges.b25.condition" = "连续 7 天撰写日志";
+"badges.b26.name" = "耐心测量者"; "badges.b26.desc" = "等候 5 分钟者,可得最准的数据"; "badges.b26.condition" = "完成 25 次时长 5 分钟以上的测量";
+"badges.b27.name" = "完美的一天"; "badges.b27.desc" = "晨昏两次 — 在同一天对同一枚腕表测量两次"; "badges.b27.condition" = "10 天里,同一天同一枚腕表完成 2 次以上测量";
+"badges.b28.name" = "情绪光谱"; "badges.b28.desc" = "从喜悦到怀旧,皆已入笔"; "badges.b28.condition" = "20 篇以上日志,涵盖 4 种以上心情";
+"badges.b29.name" = "黄金振幅"; "badges.b29.desc" = "300° 以上 — 极佳状态的机芯证明"; "badges.b29.condition" = "5 次测量振幅 ≥300°,且置信度 ≥70";
+"badges.b30.name" = "机芯医师"; "badges.b30.desc" = "理解不同心跳频率的腕表"; "badges.b30.condition" = "测量 3 种以上 BPH(18k/21.6k/28.8k/36k)";
+"badges.b31.name" = "四季藏家"; "badges.b31.desc" = "四季皆有所测"; "badges.b31.condition" = "春夏秋冬各完成至少 1 次测量";
+"badges.b32.name" = "时间的历史"; "badges.b32.desc" = "收藏并测量 5 枚 25 年以上的古董腕表"; "badges.b32.condition" = "5 枚 2000 年前的腕表,各至少测量一次";
+
+"league.loading" = "正在加载全球榜单…";
+"league.error.body" = "网络错误。请下拉刷新。";
+"league.myteam.my_count" = " 我的佩戴";
+"league.myteam.global_count" = " 全球";
+"league.myteam.badge" = "我的阵营";
+"league.last_updated" = "更新于 %@";
+
+"result.rate.reference_only" = "仅供参考";
+"result.action.done" = "完成";
+"measurement.hint.weak_detection" = "⚠️ 节拍检测不佳。请让腕表更靠近麦克风,且不要遮挡麦克风。";
+"measurement.hint.analyzing" = "🔍 正在分析节拍 — 测量 30 秒可获得稳定结果。";
+"measurement.hint.no_lock" = "🔍 无法锁定节拍周期。请调整麦克风位置后重试。";
+"measurement.hint.no_lock_debug" = "🔍 无法锁定节拍周期。[DBG: %@]";
+
+"addwatch.brand.custom.hint" = "输入列表中没有的品牌。";
+"common.ok" = "好";
+
+"measurement.status.measuring" = "聆听中…";
+"welcome.illustration.verdict" = "🟡 略微偏快";
+
+"stats.subtitle" = "来自整个藏品的测量与佩戴数据洞察";
+"journal.subtitle" = "与腕间相伴的细微随笔";
+
+"league.myteam.rank_value" = "%@  #%d";
+"badges.summary.earned" = "已获得 %d / %d";
+"badges.summary.level" = "LV. %d";
+"stats.wear.days_value" = "%d 天";
+"watch.mood.last_active" = "距上次活动 %d 天 · 能量 %d%%";
+"collection.filter.favorites_only" = "仅收藏";
+"result.grade.a.gloss" = "结果处于可信范围内。";
+"result.grade.b.gloss" = "结果可用于趋势追踪。";
+"result.grade.c.gloss" = "信号偏弱 — 精度有所下降。建议重新测量。";
+"result.grade.f.gloss" = "信号过弱,或腕表可能存在问题。";
+"share.save.success" = "已存入照片";
+"share.save.failed" = "保存失败";
+"share.save.permission_denied" = "需要照片访问权限";
+"result.action.share" = "分享";
+
+"magnetic.unavailable.title" = "无可用磁力计";
+"magnetic.unavailable.body" = "此设备没有磁力计传感器。";
+
+"a11y.favorite.add" = "加入收藏";
+"a11y.favorite.remove" = "取消收藏";
+"a11y.wear_today" = "标记今日佩戴";
+"a11y.value.worn" = "已佩戴";
+"a11y.value.not_worn" = "未佩戴";
+"a11y.more_actions" = "更多操作";
+"a11y.change_photo" = "更换照片";
+"a11y.photo_view" = "查看照片";
+
+"measurement.diagnostic.mic" = "麦克风";
+"measurement.diagnostic.snr" = "SNR";
+"measurement.diagnostic.onsets" = "节拍点";
+"measurement.diagnostic.bph" = "BPH";
+
+"stats.eyebrow.figures" = "分析";
+"badges.rarity.common" = "普通";
+"badges.rarity.rare" = "稀有";
+"badges.rarity.epic" = "史诗";
+"badges.rarity.legendary" = "传说";
+
+"share.aspect.a11y" = "宽高比";
+"shake.schedule.toggle.a11y" = "每日挑选通知";
+"common.discard.title" = "放弃输入?";
+"common.discard.message" = "你的修改将不会被保存。";
+"common.discard.confirm" = "放弃";
+
+"watchbox.stats.occupied" = "已占用";
+"watchbox.stats.brands" = "品牌";
+"watchbox.stats.avg_rate" = "平均走时";
+"watchbox.stats.empty" = "空闲";
+"watchbox.empty.a11y_hint" = "从藏品中添加一枚腕表";
+
+"badges.locked" = "未解锁";
+
+"speccard.record.a11y.recording" = "录音中";
+"speccard.record.a11y.idle" = "空闲";
+
+"a11y.rate_value" = "走时 %1$@ %2$@";
+
+"movement.reliability.coaxial.title" = "同轴擒纵不显示振幅";
+"movement.reliability.coaxial.notice" = "同轴擒纵机芯基于麦克风的振幅估算并不可靠,故振幅栏位已隐藏。走时与摆轮误差仍按正常方式测量。";
+"movement.reliability.amplitude_unstable.title" = "振幅可能不稳定";
+"movement.reliability.amplitude_unstable.notice" = "此机芯的振幅会因表位、温度、动力储存等条件出现较大波动。请在同一表位测量 3-5 次,以平均值作为参考。";
+
+"measurement.winding_hint.title" = "测量前请先为腕表上链";
+"measurement.winding_hint.body" = "自动/手动腕表需有充足的发条以保持稳定走时。测量前请用表冠上链 40-50 圈。发条不足会导致持续偏慢(-20 s/d 或更差)。";
+"measurement.winding_hint.cta" = "知道了";
+
+"pin.entry.a11y.progress" = "已输入 %1$d / %2$d 位";
+"pin.entry.a11y.failed" = "输入错误,请重试";
+
+"speccard.spec.power_reserve" = "动力储存";
+
+"measurement.waveform.a11y.label" = "实时音频波形";
+"measurement.waveform.a11y.snr" = "信号 %.0f 分贝";
+"measurement.waveform.a11y.idle" = "聆听中";
+
+"journal.detail.delete.confirm" = "删除此条日志?";
+"journal.detail.delete.message" = "已删除的日志与照片将无法恢复。";
+
+"watchbox.slot.a11y.position" = "格位 %d";
+
+"measurement.countdown" = "剩余 %d 秒";
+"measurement.countdown.a11y" = "剩余 %d 秒";
+"a11y.rate_uncertainty" = "精度 %@";
+
+"addwatch.movement.search.prompt" = "搜索机芯(例如 2824、Rolex)";
+"addwatch.movement.section.recommended" = "为此品牌推荐";
+"addwatch.movement.section.all" = "全部机芯";
+"addwatch.movement.section.results" = "搜索结果";

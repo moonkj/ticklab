@@ -6,3 +6,4 @@
 "NSMicrophoneUsageDescription" = "TickLab needs your microphone to listen for the ticking sound and measure your watch's accuracy. Audio is processed instantly on-device and never stored or transmitted.";
 "NSMotionUsageDescription" = "TickLab uses your iPhone's magnetometer to detect ambient magnetic fields that could magnetize your mechanical watch. Readings are processed only on-device.";
 "NSPhotoLibraryUsageDescription" = "TickLab needs access to your photo library so you can add a photo of your watch to its collection entry.";
+"NSPhotoLibraryAddUsageDescription" = "TickLab needs permission to save your measurement share cards to your photo library.";

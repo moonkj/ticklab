@@ -44,7 +44,7 @@ struct ShareCardComposerView: View {
 
     private var dateString: String {
         let date = effectiveMeasurement?.timestamp ?? entry?.timestamp ?? Date()
-        return date.formatted(.dateTime.year().month(.abbreviated).day())
+        return AppDateFormat.fullDate(date)
     }
 
     private var captionText: String? {
@@ -63,6 +63,7 @@ struct ShareCardComposerView: View {
     @State private var customPhotoData: Data?
     @State private var renderedImage: UIImage?
     @State private var showingShareSheet = false
+    @State private var saveToastMessage: String?
 
     enum AspectRatio: String, CaseIterable {
         case square = "1:1", portrait = "4:5", story = "9:16"
@@ -91,6 +92,7 @@ struct ShareCardComposerView: View {
                 .padding(20)
             }
             .background(AppColors.paper0.ignoresSafeArea())
+            .presentationDragIndicator(.visible)
             .navigationTitle(String(localized: "share.title"))
             .navigationBarTitleDisplayMode(.inline)
             .onAppear { photoSource = entryPhotoData != nil ? .entry : .profile }
@@ -201,11 +203,12 @@ struct ShareCardComposerView: View {
     // MARK: - Aspect picker
 
     private var aspectPicker: some View {
-        Picker("", selection: $aspect) {
+        Picker(String(localized: "share.aspect.a11y"), selection: $aspect) {
             ForEach(AspectRatio.allCases, id: \.self) { Text($0.rawValue).tag($0) }
         }
         .pickerStyle(.segmented)
         .tint(AppColors.accent)
+        .accessibilityLabel(String(localized: "share.aspect.a11y"))
     }
 
     // MARK: - Controls
@@ -281,8 +284,22 @@ struct ShareCardComposerView: View {
 
             Button {
                 render { image in
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                    UINotificationFeedbackGenerator().notificationOccurred(.success)
+                    let saver = PhotoLibrarySaver { success in
+                        Task { @MainActor in
+                            if success {
+                                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                                saveToastMessage = String(localized: "share.save.success")
+                            } else {
+                                UINotificationFeedbackGenerator().notificationOccurred(.error)
+                                saveToastMessage = String(localized: "share.save.failed")
+                            }
+                            try? await Task.sleep(nanoseconds: 2_000_000_000)
+                            saveToastMessage = nil
+                        }
+                    }
+                    UIImageWriteToSavedPhotosAlbum(image, saver, #selector(PhotoLibrarySaver.image(_:didFinishSavingWithError:contextInfo:)), nil)
+                    // Saver 인스턴스 유지 (selector 콜백 대기)
+                    PhotoLibrarySaver.activeSavers.append(saver)
                 }
             } label: {
                 Label(String(localized: "share.save_to_photos"), systemImage: "square.and.arrow.down")
@@ -294,6 +311,19 @@ struct ShareCardComposerView: View {
             }
             .buttonStyle(.plain)
         }
+        .overlay(alignment: .top) {
+            if let msg = saveToastMessage {
+                Text(msg)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 16).padding(.vertical, 10)
+                    .background(.black.opacity(0.85))
+                    .clipShape(Capsule())
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    .padding(.top, -50)
+            }
+        }
+        .animation(.easeOut(duration: 0.2), value: saveToastMessage)
     }
 
     @MainActor
@@ -307,6 +337,19 @@ struct ShareCardComposerView: View {
 }
 
 // MARK: - ShareSheet
+
+/// 사진 라이브러리 저장 콜백 핸들러 (NSObject + @objc selector 필요).
+private final class PhotoLibrarySaver: NSObject {
+    static var activeSavers: [PhotoLibrarySaver] = []
+    let completion: (Bool) -> Void
+    init(completion: @escaping (Bool) -> Void) { self.completion = completion }
+
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        completion(error == nil)
+        // active 리스트에서 자기 자신 제거 → ARC 해제
+        Self.activeSavers.removeAll { $0 === self }
+    }
+}
 
 private struct ShareSheet: UIViewControllerRepresentable {
     let items: [Any]

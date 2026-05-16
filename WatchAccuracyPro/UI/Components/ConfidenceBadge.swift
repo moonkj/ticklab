@@ -46,6 +46,8 @@ struct ConfidenceBadge: View {
                 .font(.system(size: compact ? 11 : 13, weight: .semibold, design: .monospaced))
                 .foregroundStyle(tier.color)
         }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(String(format: NSLocalizedString("a11y.confidence_badge", comment: ""), score)))
     }
 }
 

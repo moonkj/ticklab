@@ -1,0 +1,1154 @@
+/* App */
+"app.name" = "TickLab";
+
+/* Common */
+"common.cancel" = "キャンセル";
+"common.save" = "保存";
+"common.done" = "完了";
+"common.delete" = "削除";
+"common.unspecified" = "未指定";
+"common.next" = "次へ";
+"common.continue" = "続ける";
+
+/* Tabs */
+"tab.collection" = "コレクション";
+"tab.journal" = "ジャーナル";
+"tab.stats" = "分析";
+"tab.settings" = "設定";
+
+/* Welcome */
+"welcome.tagline" = "あなたの時計と、\n日々の記録を。";
+"welcome.cta_start" = "はじめる";
+"welcome.skip" = "スキップ";
+"welcome.pick_watch" = "時計を選ぶ";
+"feature.measure.title" = "計測";
+"feature.measure.body" = "iPhoneのマイクで時計の鼓動を聴き、\n歩度とビートエラーをお届けします。";
+"feature.collect.title" = "毎日のアーカイブ";
+"feature.collect.body" = "写真・メモ・計測値をひとつの場所に。\n時計と過ごす日々の日記。";
+"feature.journal.title" = "ひと言の診断";
+"feature.journal.body" = "複雑な数値を一行に要約。\nApple Intelligence が結果を分かりやすく解説します。";
+/* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
+"welcome.subtitle" = "すべての鼓動に、正確さを。";
+"watch.primary.set" = "メインに設定";
+"watch.primary.unset" = "メインを解除";
+"stats.mood.this_month" = "今月";
+"welcome.footer" = "計測 · メンテナンス · ジャーナル · 用語集 · 4軸";
+"welcome.pick_watch.subtitle" = "詳細はあとで追加できます。まずは気軽にはじめましょう。";
+
+/* Journal */
+"journal.title" = "ジャーナル";
+"journal.view.grid" = "グリッド";
+"journal.view.feed" = "フィード";
+"journal.view.calendar" = "カレンダー";
+"journal.has_measurement" = "計測あり";
+"journal.empty.title" = "最初の記録をはじめましょう";
+"journal.empty.body" = "今日の時計、気分、ひと言メモを残しましょう。";
+"journal.compose.title" = "新規エントリー";
+"journal.compose.watch" = "時計";
+"journal.compose.no_watch" = "なし";
+"journal.compose.mood" = "気分";
+"journal.compose.body" = "本文";
+"journal.compose.placeholder" = "今日の時計はいかがでしたか?";
+"journal.compose.photos" = "写真";
+"journal.compose.photo_count" = "写真 %d 枚";
+"journal.detail.share" = "共有";
+"journal.detail.no_body" = "(本文なし)";
+"journal.detail.measurement_attached" = "この日の計測";
+"journal.detail.share_card_cta" = "シェアカードを作成";
+
+/* Mood */
+"mood.happy" = "満足";
+"mood.proud" = "誇らしい";
+"mood.curious" = "好奇心";
+"mood.neutral" = "ふつう";
+"mood.concerned" = "気がかり";
+"mood.nostalgic" = "懐かしい";
+
+/* Stats */
+"stats.title" = "分析";
+"stats.total_measurements" = "計測数";
+"stats.total_entries" = "記録数";
+"stats.mood_breakdown" = "気分の分布";
+"stats.average_rate.title" = "平均歩度";
+"stats.average_rate.subtitle" = "%d 回の計測を基準";
+"stats.average_rate.stddev" = "ばらつき ±%.1f s/d";
+"stats.empty.mood" = "記録を残すと気分の分布が表示されます。";
+"stats.empty.positions" = "計測時に姿勢を指定すると、姿勢別平均が表示されます。";
+
+/* Share Card */
+"share.title" = "シェアカード";
+"share.background" = "背景";
+"share.show_metrics" = "計測値を表示";
+"share.show_caption" = "キャプションを表示";
+"share.show_date" = "日付を表示";
+"share.photo_source" = "写真";
+"share.photo_entry" = "エントリーの写真";
+"share.photo_profile" = "プロフィール";
+"share.photo_custom" = "カスタム";
+"share.photo_pick" = "写真を選択";
+"share.photo_change" = "写真を変更";
+"share.export" = "共有";
+"share.save_to_photos" = "写真に保存";
+
+/* Glossary — old glossary.title removed (Round 128 dedup). Latest at line 582. */
+
+/* Service log */
+"service.type.fullOverhaul" = "フルオーバーホール";
+"service.type.partialService" = "部分点検";
+"service.type.checkup" = "精度チェック";
+"service.type.waterTest" = "防水テスト";
+"service.type.batteryReplace" = "電池交換";
+"service.type.crystalReplace" = "風防交換";
+"service.type.crownGasket" = "リューズ/パッキン";
+"service.type.bracelet" = "ブレスレット";
+"service.type.other" = "その他";
+
+/* App lock */
+"applock.reason" = "TickLab のロックを解除";
+
+/* PIN auth */
+"pin.setup.title" = "PIN を設定";
+"pin.setup.enter" = "6桁の PIN を入力";
+"pin.setup.confirm" = "もう一度入力して確認";
+"pin.setup.mismatch" = "PIN が一致しません";
+"pin.setup.success" = "PIN を設定しました";
+"pin.entry.title" = "PIN を入力";
+"pin.entry.remaining" = "残り %d 回";
+"pin.entry.locked_out" = "PIN ロック中 — Face ID で解除してください";
+"pin.entry.use_face_id" = "Face ID を使う";
+"settings.applock.pin_enabled" = "PIN を有効化";
+"settings.applock.pin_setup" = "PIN を設定";
+"settings.applock.pin_warning" = "5回失敗すると Face ID でのみ解除できます";
+
+"alert.store_fallback.title" = "ストアのフォールバックが有効";
+"alert.store_fallback.message" = "以前のデータベース形式が変わったため、一時的にメモリ上で動作しています。このセッションのデータはアプリ終了時に失われます。永続保存に戻すにはアプリを再インストールしてください。";
+
+/* Collection (new design) */
+"collection.eyebrow" = "The Bench";
+"collection.subtitle" = "機械式時計の精度を綴る、日々のジャーナル";
+"collection.empty.subtitle" = "時計を追加 → 30秒の計測 → 精度を確認。一回ごとの計測が、あなたの時計の物語に新しい章を刻みます。";
+"collection.search.placeholder" = "コレクションを検索";
+/* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
+"collection.section.recent" = "最近計測";
+"collection.last_rate" = "最新歩度";
+"collection.runs" = "%d 回";
+"collection.no_measurements" = "まだ計測がありません — タップして始める";
+"collection.footer" = "TICKLAB · v0.2 · 2026";
+
+/* Watch detail (new) */
+"watch.section.latest" = "最新の計測";
+"watch.section.trend" = "歩度の推移";
+"watch.history.runs" = "履歴 · %d 回";
+"collection.reorder" = "並べ替え";
+"collection.reorder.title" = "カードを並べ替え";
+"collection.add_watch" = "時計を追加";
+"watch.history.deleteOne.title" = "計測を削除";
+"watch.history.deleteOne.message" = "この計測を削除しますか?この操作は取り消せません。";
+"watch.history.showMore" = "あと %d 件を表示";
+"watch.history.collapse" = "閉じる";
+"watch.history.deleteAll.title" = "すべての計測を削除";
+"watch.history.deleteAll.message" = "この時計の計測 %d 件をすべて削除しますか?この操作は取り消せません。";
+"watch.history.deleteAll.confirm" = "すべて削除";
+
+/* Measurement note (Round 29) */
+"measurement.note.title" = "計測メモ";
+"measurement.note.placeholder" = "この計測のメモ — 姿勢、ケースの状態、環境など(任意)。";
+"watch.no_readings.title" = "まだ計測がありません";
+"watch.no_readings.body" = "下の「計測」をタップして最初の記録を残しましょう。ほとんどのムーブメントは30秒で十分です。";
+"watch.label.rate" = "歩度";
+"watch.label.beat_error" = "ビートエラー";
+"watch.label.position" = "姿勢";
+"watch.stat.mean" = "平均";
+"watch.stat.deviation" = "σ 偏差";
+"watch.stat.best" = "ベスト";
+"watch.spec.caliber" = "キャリバー";
+"watch.spec.bph" = "BPH";
+"watch.spec.lift_angle" = "リフト角";
+"watch.spec.escapement" = "脱進機";
+"position.dialup_short" = "DU";
+"position.dialdown_short" = "DD";
+"position.crownleft_short" = "CL";
+"position.crownright_short" = "CR";
+"position.pendantup_short" = "CU";
+"position.pendantdown_short" = "CD";
+
+/* Result (new) */
+"result.eyebrow.subtitle" = "%@ · %@";
+"result.section.metrics" = "すべての計測値";
+"result.section.details" = "計測の詳細";
+"result.cosc.in" = "✓ COSC 範囲内";
+"result.cosc.out" = "COSC 範囲外";
+"result.cosc.range" = "−4 / +6 s/d";
+"result.action.again" = "もう一度計測";
+/* Round 23 (Doyoon): result.amplitude.healthy/borderline/service/coaxial dead — amplitudeHint() 제거됨. */
+"result.beat.excellent" = "対称性は優秀";
+"result.beat.acceptable" = "許容範囲、経過観察を";
+"result.label.duration" = "計測時間";
+"result.label.beat_count" = "ビート数";
+"result.label.snr" = "SNR";
+"result.label.position" = "姿勢";
+
+/* Onboarding (new) */
+"onboarding.eyebrow.welcome" = "ようこそ";
+"onboarding.page1.new_title" = "ポケットに、タイムグラファーを。";
+"onboarding.page1.new_body" = "TickLab はあなたの機械式時計の鼓動を聴き、0.1秒単位で現在の状態をお伝えします。";
+"onboarding.eyebrow.howItWorks" = "使い方";
+"onboarding.page2.new_title" = "ただ置いて、聴くだけ。";
+"onboarding.page2.new_body" = "iPhone のマイクの横に時計を置きます。30秒で十分。原子時を基準に歩度・ビートエラー・振り角を抽出します。";
+"onboarding.eyebrow.archive" = "あなたのアーカイブ";
+"onboarding.page3.new_title" = "すべての計測を、残す。";
+"onboarding.page3.new_body" = "一本ごとにジャーナルを構築。数週間の変化を追い、CSV に書き出し、iCloud でプライベートに同期できます。";
+"onboarding.continue" = "続ける";
+"onboarding.begin" = "はじめる";
+"onboarding.skip" = "スキップ";
+
+/* Mode select — Round (3-2): ModeSelectView 삭제로 dead keys 제거. */
+
+/* LongTest (new) */
+
+/* Round (3-2 잔여): misc.* dead. */
+
+/* Units */
+"unit.seconds_per_day" = "s/d";
+
+/* Onboarding */
+"onboarding.title" = "あなたの時計を、正確に。";
+"onboarding.subtitle" = "iPhone で機械式時計の精度を計測。";
+"onboarding.cta.start" = "はじめる";
+"onboarding.cta.next" = "次へ";
+"onboarding.page1.title" = "iPhone で計測";
+"onboarding.page1.body" = "マイクひとつで十分。コレクション内のすべての時計を追跡できます。";
+"onboarding.page2.title" = "AI が結果を解説";
+"onboarding.page2.body" = "数値だけではなく、時計が今どんな状態かを理解できます。";
+"onboarding.page3.title" = "日本語・英語に対応";
+"onboarding.page3.body" = "用語集、ムーブメント DB、計測ガイドをあなたの言語で。";
+
+/* Mode — Round (3-2): 모두 dead. */
+
+/* Collection */
+"collection.title" = "マイウォッチ";
+"collection.empty.title" = "最初の時計を追加";
+/* collection.empty.subtitle: old version removed (Round 129 dedup). Current value at line 135. */
+"collection.empty.cta" = "時計を追加";
+
+/* Watch row */
+"watch.cta.measure" = "計測を開始";
+
+/* Add watch */
+"addwatch.title" = "時計を追加";
+"addwatch.section.photo" = "写真";
+"addwatch.section.basic" = "基本情報";
+"addwatch.section.movement" = "ムーブメント";
+"addwatch.brand" = "ブランド";
+"addwatch.brand.custom" = "リストにない場合は直接入力";
+"wear.toggle.on" = "着用中";
+"wear.toggle.off" = "今日着用";
+"watch.primary.badge" = "メイン";
+"speccard.note" = "メモ";
+"speccard.title.label" = "タイトル";
+"speccard.movement" = "ムーブメント";
+"speccard.sound.section" = "ムーブメント音 (5秒)";
+"speccard.camera" = "写真を撮る";
+"watch.journal.empty.title" = "この時計のジャーナル";
+"watch.service.empty.title" = "サービス記録がありません";
+"watch.service.empty.body" = "オーバーホール、磁気抜き、購入などのケア履歴を残しましょう。";
+"watch.service.add" = "サービス記録を追加";
+"watch.mood.empty" = "まだ計測・着用の記録がありません";
+"watch.wind.title" = "毎日の巻き上げリマインダー";
+"watch.battery.title" = "クォーツ電池";
+"watch.battery.life_months" = "想定寿命: %d ヶ月";
+"watch.battery.due_date" = "想定交換時期: %@";
+"collection.challenge.title" = "次のチャレンジ — 1週間の連続計測";
+"addwatch.movement.manual.hint" = "手巻き時計は毎日同じ時間に巻くと精度が安定します。";
+"addwatch.movement.quartz.hint" = "クォーツの電池は通常 2〜3年で交換します。交換時期の 1週間前に通知します。";
+"addwatch.serial.hint" = "シリアル番号は詳細画面から安全に追加できます (Keychain に保存)。";
+"journal.empty.no_watch" = "まずコレクションに時計を追加してください。";
+"journal.compose.cta" = "新規エントリー";
+"journal.detail.measurement_deleted" = "この計測記録は削除されました。";
+"watchdetail.photo.library" = "ライブラリから選択";
+"watchdetail.tab.measure" = "計測";
+"watchdetail.tab.journal" = "ジャーナル";
+"watchdetail.tab.service" = "サービス";
+"settings.section.journal_notif" = "ジャーナル · 通知";
+"settings.journal_reminder" = "毎日のジャーナル通知";
+"settings.time" = "時刻";
+"settings.time.default_21" = "21:00 (デフォルト)";
+"settings.random_pick.toggle" = "🎲 今日の一本をランダムに";
+"settings.random_pick.time" = "通知時刻";
+"settings.random_pick.section.header" = "今日の時計";
+"settings.random_pick.section.footer" = "登録が 2本以上のとき、指定した時刻にランダムで 1本を選びます。";
+"settings.section.security" = "セキュリティ";
+"settings.applock" = "App ロック (Face ID)";
+"settings.serial_mask" = "シリアル番号マスク";
+"settings.serial_mask.value" = "ON (デフォルト)";
+"common.close" = "閉じる";
+"common.edit" = "編集";
+"common.show_more_count" = "+%d 件";
+"common.collapse" = "閉じる";
+"menu.watchbox" = "ウォッチボックス";
+"menu.speccard" = "スペックカード";
+/* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
+"menu.speccard.create" = "スペックカードを作成";
+"watch.photo.dialog.title" = "時計の写真";
+"speccard.list.empty" = "カードはまだありません";
+"speccard.photo.add" = "写真を追加";
+"speccard.photo.change" = "写真を変更";
+"speccard.field.case_size" = "ケースサイズ (mm)";
+"speccard.field.power_reserve" = "パワーリザーブ (h)";
+"speccard.field.placeholder.case" = "例: 40";
+"speccard.field.placeholder.power" = "例: 70";
+"speccard.movement.custom_placeholder" = "例: ETA 7750、自社キャリバー";
+"speccard.movement.none" = "未選択";
+"speccard.play.label.playing" = "再生中";
+"speccard.play.label.idle" = "ムーブメント音を再生";
+"glossary.search.prompt" = "用語を検索";
+"battery.empty" = "クォーツ時計は登録されていません";
+"battery.timeline" = "想定タイムライン";
+"battery.today" = "今日";
+"battery.replace.recorded" = "交換済みとして記録";
+"shake.title.eyebrow" = "今日の時計";
+"shake.cta.retry" = "もう一度選ぶ";
+"shake.cta.wear" = "今日はこれで";
+"shake.cta.wear.done" = "今日着用中";
+"shake.tip" = "iPhone を振るかタップ。毎日の通知も設定できます。";
+"shake.section.mywatches" = "マイウォッチ";
+"league.collecting" = "%@ ランキングは現在集計中です。";
+"league.cheer" = "応援";
+"league.ranking.all" = "全ランキング";
+"badges.earned" = "獲得済み";
+// Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
+"badges.detail.header" = "獲得バッジ";
+"fortune.title.eyebrow" = "今日のダイヤル占い";
+"fortune.today_prefix" = "今日は ";
+"fortune.today_suffix" = " の日";
+"fortune.rituals.title" = "今日の時計儀式";
+"fortune.share.cta" = "今日の占いをシェア";
+"tamagotchi.empty" = "まだ登録された時計がありません";
+"tamagotchi.energy" = "エネルギー";
+"tamagotchi.measure" = "計測";
+"tamagotchi.family.title" = "ファミリー (%d)";
+"tamagotchi.wind" = "巻き上げ";
+"tamagotchi.winding" = "巻き上げ中";
+"tamagotchi.wear_today" = "今日着用";
+"tamagotchi.worn_today" = "本日記録済み";
+"welcome.carousel.final_cta" = "私の時計を追加";
+"lockscreen.app_name" = "TickLab";
+"lockscreen.faceid.unlock" = "Face ID でロック解除";
+"settings.section.ai" = "AI 診断";
+"settings.ai.toggle" = "Apple Intelligence を使う";
+"settings.ai.footer.on" = "Apple Intelligence が計測結果を一行で解釈します。iOS 26 と対応デバイスが必要で、利用できない場合はルールベースに切り替わります。";
+"settings.ai.footer.off" = "ルールベースの 3段階診断のみを使用します。";
+"settings.ai.unavailable.title" = "この端末では Apple Intelligence を利用できません";
+"settings.ai.unavailable.body" = "設定 → Apple Intelligence & Siri で有効化してください。利用不可のときは自動的にルールベース診断が表示されます。タップで設定を開きます。";
+"watchbox.slots" = "スロット";
+"watchbox.material" = "素材";
+"editwatch.title" = "時計を編集";
+"watch.menu.edit" = "詳細を編集";
+"watch.menu.favorite.add" = "お気に入りに追加";
+"watch.menu.favorite.remove" = "お気に入りから削除";
+"watch.menu.delete" = "時計を削除";
+"watch.delete.confirm.title" = "時計を削除";
+"watch.delete.confirm.body" = "この時計のすべての計測・ジャーナル・スペックカードを削除します。この操作は取り消せません。";
+"battery.empty.hint" = "コレクションタブでムーブメント種別を「クォーツ」にして時計を追加すると、ここで電池寿命を管理できます。";
+"tamagotchi.empty.hint" = "コレクションタブから時計を追加してファミリーに加えましょう。";
+"speccard.delete.title" = "スペックカードを削除";
+"speccard.delete.body" = "添付された写真とムーブメント音ファイルも削除されます。";
+"settings.account.pro_name" = "TickLab Pro メンバー";
+"settings.account.free_name" = "TickLab Free";
+"settings.account.pro_body" = "Pro · すべての機能を解放";
+"settings.account.free_body" = "Free · コア機能を利用中";
+"notification.permission.denied.title" = "通知がオフです";
+"notification.permission.denied.body" = "iOS の設定で TickLab の通知を有効にすると、リマインダーを受け取れます。";
+"notification.permission.open_settings" = "設定を開く";
+"settings.icloud.restart.title" = "iCloud 設定を変更しました";
+"settings.icloud.restart.body" = "新しい同期設定は次回のアプリ起動時に反映されます。";
+"stats.wear.this_month" = "着用 — 今月";
+"stats.wear.section" = "着用";
+"stats.wear.prev_month" = "前月";
+"stats.wear.next_month" = "翌月";
+"stats.wear.jump_current" = "今月に戻る";
+"stats.wear.next_month.disabled_hint" = "現在の月が最新です";
+"stats.wear.a11y.today_prefix" = "今日";
+"stats.wear.a11y.no_wear" = "着用記録なし";
+"stats.wear.a11y.count" = "%d 回着用";
+"stats.wear.total_days" = "%d 日";
+"stats.wear.empty" = "まだ着用記録がありません。コレクションの時計カードの ✓ ボタンをタップして今日を記録しましょう。";
+"stats.wear.cumulative" = "累計着用";
+"stats.wear.cumulative.title" = "時計別の累計着用";
+"stats.wear.cumulative.empty" = "累計着用の記録がまだありません。";
+"watch.battery.last_replaced" = "前回交換";
+"quickwatch.custom.title" = "その他";
+"quickwatch.custom.subtitle" = "カスタム入力";
+"a11y.watch_silhouette" = "%@ の時計イラスト";
+"a11y.rate_dial" = "歩度ダイヤル %.1f %@";
+
+/* AI / Mood / Movement / Notif sweep */
+"aidiag.fallback.ok.headline" = "🟢 健康";
+"aidiag.fallback.ok.body" = "COSC の許容範囲内。良好です。";
+"aidiag.fallback.warn.headline" = "🟡 やや進み気味";
+"aidiag.fallback.warn.body" = "磁気の影響かもしれません。ドライヤーやスピーカーの近くにありませんでしたか?";
+"aidiag.fallback.danger.headline" = "🔴 サービス推奨";
+"aidiag.fallback.danger.body" = "オーバーホールの時期です。時計師に相談を。";
+"aidiag.confidence.ai" = "AI 信頼度";
+"aidiag.confidence.rule" = "計測信頼度";
+"aidiag.expand.collapsed" = "なぜ? ▼";
+"aidiag.expand.expanded" = "なぜ? ▲";
+"aidiag.causes.title" = "考えられる原因";
+"aidiag.disclaimer.ai" = "AI 解析は参考情報です。診断は時計師にお任せください。";
+"aidiag.disclaimer.rule" = "ルールベースの要約です。診断は時計師にお任せください。";
+"aidiag.source.loading" = "解析中…";
+"aidiag.source.ai" = "Apple Intelligence";
+"aidiag.source.rule" = "計測";
+"aidiag.cause.ok.1" = "通常の日々の変動";
+"aidiag.cause.ok.2" = "計測条件が安定";
+"aidiag.cause.warn.1" = "磁気の影響 (ドライヤー、スピーカー)";
+"aidiag.cause.warn.2" = "同じ姿勢のまま長時間";
+"aidiag.cause.warn.3" = "オーバーホール周期が近い";
+"aidiag.cause.danger.1" = "振り角が正常範囲外";
+"aidiag.cause.danger.2" = "磁気の影響の可能性";
+"aidiag.cause.danger.3" = "サービス推奨 — 時計師に相談を";
+
+"mood.label.energetic" = "元気";
+"mood.label.happy" = "ご機嫌";
+"mood.label.sleepy" = "眠そう";
+"mood.label.dormant" = "休眠中";
+"mood.label.lowBattery" = "電池残量低下";
+"mood.label.needsWind" = "巻き上げが必要";
+
+"movementtype.automatic" = "自動巻き";
+"movementtype.manual" = "手巻き";
+"movementtype.quartz" = "クォーツ";
+
+"notif.wind.body" = "時計を巻き上げる時間です。";
+"notif.battery.body_prefix" = "電池交換時期が近づいています (想定 %@)。";
+"notif.random.body" = "今日は %@ %@ はいかがですか?";
+
+"addwatch.movement.type" = "ムーブメント種別";
+"addwatch.movement.type.label" = "種別";
+"addwatch.wind.toggle" = "毎日の巻き上げリマインダー";
+"addwatch.wind.time" = "通知時刻";
+"addwatch.battery.last_replaced" = "前回の電池交換";
+"addwatch.battery.reminder.toggle" = "交換リマインダー";
+
+"speccard.spec.movement" = "ムーブメント";
+"speccard.spec.case" = "ケース";
+"speccard.spec.registered" = "登録日";
+"speccard.nav.title" = "スペックカード";
+"speccard.movement.custom_toggle" = "カスタム入力";
+"speccard.movement.pick" = "リストから選択";
+"speccard.record.recording" = "録音中... %ds";
+"speccard.record.again" = "録り直す";
+"speccard.record.start" = "5秒録音";
+"speccard.note.placeholder" = "この時計にまつわるストーリー…";
+"speccard.record.error.prep" = "録音の準備に失敗しました";
+"speccard.record.error.start" = "録音の開始に失敗しました: %@";
+"speccard.record.error.failed" = "録音に失敗しました — もう一度お試しください";
+"speccard.record.error.short" = "録音が短すぎます (再録音してください)";
+"speccard.record.error.save" = "保存に失敗しました: %@";
+"speccard.play.error.no_file" = "再生するファイルがありません";
+"speccard.play.error.missing" = "録音ファイルが見つかりません";
+"speccard.play.error.empty" = "録音が空です (再録音してください)";
+"speccard.play.error.prep" = "再生の準備に失敗しました";
+"speccard.play.error.start" = "再生を開始できませんでした";
+"speccard.play.error.failed" = "再生に失敗しました: %@";
+"badges.filter.all" = "すべて";
+"badges.filter.earned" = "獲得済み";
+"badges.filter.locked" = "進行中";
+"badges.b1.name" = "ディープダイバー";        "badges.b1.desc" = "ダイバーズウォッチを計測";
+"badges.b2.name" = "コレクター";         "badges.b2.desc" = "5本以上の時計を登録";
+"badges.b3.name" = "ワン・トゥルー・ウォッチ";    "badges.b3.desc" = "同じ時計を30日連続で着用";
+"badges.b4.name" = "ドーンパトロール";       "badges.b4.desc" = "午前5時前に10回計測";
+"badges.b5.name" = "COSC マスター";       "badges.b5.desc" = "COSC 範囲内の結果を7日間";
+"badges.b6.name" = "ムーンウォーカー";        "badges.b6.desc" = "ムーンフェイズの時計を登録";
+"badges.b7.name" = "タイムトラベラー";       "badges.b7.desc" = "GMT 時計を計測";
+"badges.b8.name" = "センチュリオン";         "badges.b8.desc" = "1本で100回計測";
+"badges.b9.name" = "ブランドの多様性";   "badges.b9.desc" = "5つの異なるブランド";
+"badges.b10.name" = "ファースト・ティック";       "badges.b10.desc" = "初めての計測を完了";
+"badges.b11.name" = "ジャーナルキーパー";   "badges.b11.desc" = "ジャーナルを50件記録";
+"badges.b12.name" = "コレクションコンプリート"; "badges.b12.desc" = "他のすべてのバッジを解放";
+"badges.b13.name" = "COSC アチーブド";    "badges.b13.desc" = "COSC 規格内で計測";         "badges.b13.condition" = "歩度 -4 〜 +6 s/d を1回";
+"badges.b14.name" = "グレード A";          "badges.b14.desc" = "最高クラスの計測信頼度";   "badges.b14.condition" = "信頼度 ≥75";
+"badges.b15.name" = "ビート・マエストロ";     "badges.b15.desc" = "極めて精密なビート検出";  "badges.b15.condition" = "ビートエラー < 0.1ms";
+"badges.b16.name" = "ナイトオウル";        "badges.b16.desc" = "深夜過ぎの計測";            "badges.b16.condition" = "午後10時以降に5回計測";
+"badges.b17.name" = "10回計測";  "badges.b17.desc" = "一貫したデータを蓄積";           "badges.b17.condition" = "合計10回の計測";
+"badges.b18.name" = "50回計測";  "badges.b18.desc" = "本気の精度追求";             "badges.b18.condition" = "合計50回の計測";
+"badges.b19.name" = "イヤリーチャンピオン";  "badges.b19.desc" = "1本で365回の計測";      "badges.b19.condition" = "同じ時計で365回計測";
+"badges.b20.name" = "ヴィンテージラバー";    "badges.b20.desc" = "レトロムーブメントの魅力";           "badges.b20.condition" = "18000/19800 BPH の時計を登録";
+"badges.b21.name" = "クロノグラファー";    "badges.b21.desc" = "複雑機構の所有者";         "badges.b21.condition" = "クロノグラフを登録";
+"badges.b22.name" = "ダブルディジット";    "badges.b22.desc" = "10本以上のコレクション";       "badges.b22.condition" = "10本以上を登録";
+"badges.b1.condition" = "ダイバー/サブマリーナーを登録";
+"badges.b2.condition" = "5本以上を登録";
+"badges.b3.condition" = "同じ時計で30回以上の着用記録";
+"badges.b4.condition" = "午前5時前に10回計測";
+"badges.b5.condition" = "7つ以上の異なるブランド";
+"badges.b6.condition" = "ムーンフェイズの時計を登録";
+"badges.b7.condition" = "GMT 時計を登録";
+"badges.b8.condition" = "1本で100回計測";
+"badges.b9.condition" = "5つ以上の異なるブランド";
+"badges.b10.condition" = "最初の計測を完了";
+"badges.b11.condition" = "ジャーナルを50件以上記録";
+"badges.b12.condition" = "他の21個のバッジをすべて解放";
+"badges.toast.title" = "バッジ獲得!";
+"service.section.type" = "種別";
+"service.picker.type" = "サービス種別";
+"service.section.record" = "記録";
+"service.date" = "日付";
+"service.center" = "サービスセンター";
+"service.cost" = "費用";
+"service.section.note" = "メモ";
+"service.note.placeholder" = "詳細";
+"service.title.add" = "サービス記録を追加";
+"service.title.edit" = "サービス記録を編集";
+"stats.more" = "もっと見る";
+"stats.entry.badges" = "バッジ";
+"stats.entry.badges.subtitle" = "コレクションの進捗を追跡";
+"stats.entry.league" = "ブランドリーグ";
+"stats.entry.league.subtitle" = "あなたのチーム vs グローバル";
+"welcome.firstresult.cta" = "コレクションへ";
+"welcome.firstresult.ready" = "準備完了";
+"welcome.firstresult.body" = "コレクションから時計を選んで計測しましょう。";
+"welcome.firstresult.tip.title" = "最初の計測のヒント";
+"welcome.firstresult.tip.body" = "静かな場所で、時計の裏蓋を iPhone の下部マイクに直接当てて30秒。";
+"quickwatch.cta.pick" = "時計を選ぶ";
+"quickwatch.cta.custom" = "カスタム入力 → 次へ";
+"quickwatch.cta.next" = "次へ → 最初の計測";
+"shake.title" = "今日の時計";
+"shake.cta.shaking" = "シェイク中…";
+"shake.cta.idle" = "シェイクで選ぶ";
+"shake.schedule.daily" = "毎日 %02d:%02d";
+"shake.schedule.subtitle.active" = "2本以上の時計で有効";
+"shake.schedule.subtitle.inactive" = "2本以上の時計がある時に有効";
+"shake.reason.1" = "今日一日のお供に";
+"shake.reason.2" = "懐かしくなった一本";
+"shake.reason.3" = "しばらく着けていない";
+"shake.reason.4" = "朝のご挨拶";
+"shake.reason.5" = "良い一日に似合う一本";
+"shake.reason.6" = "この時計が似合う日";
+"shake.reason.7" = "再び手首の上に";
+"shake.reason.8" = "今日はこれを";
+"league.news.suffix" = "ニュース";
+"league.news.headline" = "%@ は今 %@、%@ より %@ 倍多く着用!";
+"league.myteam" = "MY TEAM";
+"league.myteam.body" = "%@ の着用: %d · グローバル %@";
+"league.trend_increase" = "+%d%%";
+"league.period.day" = "今日";
+"league.period.week" = "週";
+"league.period.month" = "月";
+"league.period.year" = "年";
+"league.nav.title" = "ブランドリーグ";
+"league.empty.title" = "まだ着用記録がありません";
+"league.empty.body" = "時計の着用を記録するとブランドランキングが表示されます";
+"league.news.solo" = "%@ は今 %@、%d 回の着用でリード中!";
+"badges.nav.title" = "バッジ";
+"badges.level.max" = "最大レベル!";
+"badges.level.next" = "次のレベルまで %d";
+"battery.nav.title" = "バッテリーモニター";
+"battery.status.good" = "良好";
+"battery.status.warn" = "そろそろ交換";
+"battery.status.low" = "間もなく終了";
+"battery.kv.last" = "前回交換";
+"battery.kv.elapsed" = "経過";
+"battery.kv.due" = "想定交換時期";
+"battery.insight.low" = "電池が残りわずかです。交換の準備を。";
+"battery.insight.warn" = "1〜2ヶ月以内の交換をおすすめします。";
+"battery.insight.ok" = "まだ十分残っています。EOL 表示が出ると秒針が2秒ごとに動きます。";
+"addwatch.model" = "モデル";
+"addwatch.purchase_date" = "購入日";
+"addwatch.choose_photo" = "写真を追加";
+"addwatch.photo_source.title" = "写真の追加方法を選んでください";
+"addwatch.photo_source.library" = "ライブラリから選択";
+"addwatch.photo_source.camera" = "カメラで撮影";
+"addwatch.discard.title" = "変更を破棄しますか?";
+"addwatch.discard.message" = "変更内容はまだ保存されていません。";
+"addwatch.discard.confirm" = "破棄";
+"addwatch.suggested" = "推奨ムーブメント";
+"addwatch.accept_suggestion" = "これを使う";
+"addwatch.movement.picker" = "ムーブメント";
+"addwatch.movement.manual_entry" = "手動で入力";
+"addwatch.movement.bph_label" = "BPH (計測に必要)";
+"addwatch.movement.bph_required" = "計測には BPH の入力が必要です";
+"addwatch.movement.bph_uncommon" = "%d BPH は一般的ではありません。再確認してください";
+"addwatch.movement.unknown" = "不明 (デフォルト 28800 BPH)";
+"addwatch.lift_angle.label" = "リフト角を上書き";
+"addwatch.lift_angle.placeholder" = "例 52";
+"addwatch.skip_suggestion" = "手動で入力";
+
+/* Watch detail */
+"watch.info.movement_specs" = "ムーブメント仕様";
+"watch.owned_since" = "SINCE %@";
+"watch.history.title" = "計測履歴";
+
+/* Confidence */
+"confidence.label" = "信頼度";
+
+/* Glossary */
+"glossary.title" = "用語集";
+"glossary.bph" = "BPH (Beats Per Hour)";
+"glossary.bph.desc" = "1時間あたりの振動数。28800 BPH = 1秒あたり8ビート (4Hz)。";
+"glossary.rate" = "歩度";
+"glossary.rate.desc" = "1日あたりの時間誤差。+5 s/day は時計が1日に5秒進むことを意味します。";
+"glossary.beat_error" = "ビートエラー";
+"glossary.beat_error.desc" = "tic と toc の間隔の非対称度。0 に近いほど良好です。";
+"glossary.amplitude" = "振り角";
+"glossary.amplitude.desc" = "テンプの振れ幅。健康な範囲は 270〜315°。";
+"glossary.cosc" = "COSC";
+"glossary.cosc.desc" = "スイスのクロノメーター認定 (-4 〜 +6 s/day)。";
+"glossary.lift_angle" = "リフト角";
+"glossary.lift_angle.desc" = "ムーブメント固有の脱進角度。振り角の計算に使用します。";
+"glossary.coaxial" = "コーアクシャル脱進機";
+"glossary.coaxial.desc" = "オメガの脱進機設計。一般的なタイムグラファーでは振り角を正確に計測できません。";
+"glossary.mic" = "マイク dB";
+"glossary.mic.desc" = "iPhone のマイクが受け取る総音量。時計の計測には −60 〜 −40 dB が最適。−80 dB を下回るとマイクが時計から離れすぎています。";
+"glossary.onsets" = "オンセット";
+"glossary.onsets.desc" = "検出された tic パルスの数 (12秒の窓)。28800 BPH の時計は約96、21600 BPH は約72。";
+
+/* Position */
+"position.dial_up" = "文字盤上";
+"position.dial_down" = "文字盤下";
+"position.crown_up" = "リューズ上";
+"position.crown_down" = "リューズ下";
+"position.crown_left" = "リューズ左";
+"position.crown_right" = "リューズ右";
+"position.unknown" = "未指定";
+
+/* Measurement */
+"measurement.button.start" = "計測を開始";
+"measurement.button.stop" = "停止";
+"measurement.button.see_result" = "結果を見る";
+"measurement.status.permission_pending" = "マイク権限を確認中…";
+"measurement.status.analyzing" = "解析中…";
+"measurement.permission.title" = "マイクへのアクセスが必要です";
+"measurement.permission.body" = "時計の精度を計測するためにマイクを使用します。音声は解析後すぐに破棄され、保存されることはありません。";
+"measurement.permission.openSettings" = "設定を開く";
+"measurement.position.title" = "計測時の姿勢 (任意)";
+"measurement.setup.step1.title" = "1. 時計を動かさない";
+"measurement.setup.step1.body" = "計測中に時計の姿勢がずれると、結果が ±5 s/d 変動することがあります。安定した平らな場所に裏蓋を上に向けて置いてください。";
+"measurement.setup.step2.title" = "2. 裏蓋の中央にマイクを当てる";
+"measurement.setup.step2.body" = "iPhone の下部マイク (充電ポート横の小さな穴) を時計の裏蓋の中央に当ててください。指でマイクを覆わないように。";
+"measurement.setup.step3.title" = "3. 静かな環境で";
+"measurement.setup.step3.body" = "テレビ、会話、扇風機などの環境音を遮断。SNR ≥ 20dB を目標に。";
+"measurement.tips.average.title" = "正確な計測のヒント";
+"measurement.tips.average.body" = "単回計測のばらつきは ±5 s/d。**3〜5回の平均**で ±2 s/d の精度になります。計測間は時計の姿勢を変えずに。";
+"measurement.tips.average.body.free" = "単回計測のばらつきは ±5 s/d。無料プランでは 1日3回まで — 同じ姿勢で続けて計測すると平均が安定します。Pro にアップグレードすると回数無制限、5回以上の平均で ±2 s/d の精度に。";
+"measurement.tips.average.body.pro" = "単回計測のばらつきは ±5 s/d。**3〜5回の平均**で ±2 s/d の精度になります。計測間は時計の姿勢を変えずに。";
+"measurement.disclaimer.title" = "計測値は参考用です";
+"result.suspicious.title" = "計測誤差の可能性";
+"result.suspicious.body" = "信号品質は良好ですが歩度が異常に高いです。マイクの位置を調整して再計測してください。";
+"result.suspicious.retry" = "再計測";
+"measurement.disclaimer.body" = "このアプリの計測値は参考用です。マイク計測の精度は時計の姿勢、環境、裏蓋の素材に左右され、専門のタイムグラファー (例: Witschi) の代わりにはなりません。サービス判断は時計師にご相談ください。";
+"measurement.progress.label" = "%d / %d 秒 (推奨)";
+"measurement.hint.minimum_duration" = "安定した結果のため、最低5秒以上計測してください。";
+"measurement.hint.move_closer" = "信号が弱いです。マイクを時計に近づけて裏蓋に当ててください。";
+"measurement.hint.weak.title" = "信号が弱い";
+"measurement.hint.acceptable" = "信号は良好です。30秒以上の計測で信頼度が上がります。";
+"measurement.button.retry" = "もう一度";
+"measurement.fail.too_short.title" = "計測時間が短すぎます";
+"measurement.fail.too_short.body" = "BPH と歩度を推定するには最低5秒の音声が必要です。「もう一度」をタップして30秒以上計測してください。";
+"measurement.fail.no_signal.title" = "時計を検出できませんでした";
+"measurement.fail.no_signal.body" = "マイクが時計から離れすぎているか、周囲が騒がしい可能性があります。iPhone の下部を裏蓋に直接当て、静かな場所でやり直してください。";
+"measurement.fail.engine.title" = "オーディオエンジンの起動に失敗";
+"measurement.fail.engine.body" = "他のアプリがマイクを使用中か、Bluetooth のルーティングで競合が発生した可能性があります。通話・録音中のアプリを閉じてやり直してください。";
+
+/* Result */
+"result.title" = "計測結果";
+"result.duration" = "計測時間";
+"result.beat_count" = "検出ビート数";
+"result.expert.metadata" = "条件";
+"result.verdict.ok.title" = "健康そうです";
+"result.verdict.ok.body" = "日常使用に問題のない範囲内です。";
+"result.verdict.caution.title" = "経過観察を";
+"result.verdict.caution.body" = "健全な範囲をわずかに外れています。数日間追跡し、続くようなら点検を検討しましょう。";
+"result.verdict.service.title" = "サービス推奨";
+"result.verdict.service.body" = "誤差が大きいです。時計師への持ち込みをおすすめします。";
+"result.verdict.first_anomaly.title" = "もう一度試しますか?";
+"result.verdict.first_anomaly.body" = "この計測は大きな誤差を示しています。1回では判断できません — 別の姿勢や時間帯で再度計測してください。";
+"result.next_step.eyebrow" = "次のステップ";
+"result.next_step.body" = "機械式時計は姿勢、温度、巻き上げ量によって誤差が変わります。1週間、毎日同じ時間に計測すると、トレンドチャートが本当の姿を映し出します。";
+"result.beginner.why" = "なぜこの結果に?";
+
+/* Reliability notes */
+"movement.reliability.generic.title" = "計測ノート";
+"movement.reliability.generic.notice" = "このムーブメントは標準的なスイスレバーと挙動が異なるため、計測精度が低くなる可能性があります。";
+
+/* Trend */
+"trend.title" = "歩度の推移";
+"trend.range.7d" = "7日";
+"trend.range.30d" = "30日";
+"trend.range.90d" = "90日";
+"trend.range.1y" = "1年";
+"trend.range.all" = "すべて";
+"trend.range.a11y.7d" = "過去7日間";
+"trend.range.a11y.30d" = "過去30日間";
+"trend.range.a11y.90d" = "過去90日間";
+"trend.range.a11y.1y" = "過去1年";
+"trend.range.a11y.all" = "全期間";
+"trend.empty" = "まだ計測がありません。";
+
+"pin.entry.a11y.hint" = "ダブルタップで6桁の PIN を入力";
+
+"a11y.confidence_badge" = "信頼度 %d パーセント";
+"a11y.disclosure.expanded" = "展開済み";
+"a11y.disclosure.collapsed" = "折りたたみ";
+
+"a11y.battery.gauge" = "バッテリー %1$d パーセント、%2$@、%3$@ %4$@";
+"addwatch.replace_photo" = "写真を差し替え";
+"addwatch.remove_photo" = "写真を削除";
+"speccard.play.a11y" = "ティック音を再生";
+
+/* Settings */
+"settings.title" = "設定";
+"settings.section.mode" = "ユーザーモード";
+"settings.mode.label" = "モード";
+"settings.section.measurement" = "計測";
+"settings.silent_mode_default" = "サイレントモードを既定に";
+"settings.silent_mode_default.hint" = "計測開始時に自動でサイレントモードを有効にし、通知で中断されないようにします。";
+"settings.section.help" = "ヘルプ";
+"settings.glossary" = "用語集";
+"settings.section.about" = "アプリ情報";
+"settings.version" = "バージョン";
+"settings.bundle_id" = "Bundle ID";
+"settings.section.data" = "データ";
+"settings.export.format" = "書き出し形式";
+"settings.export.action" = "計測データを書き出す";
+"settings.section.sync" = "同期";
+"settings.icloud.label" = "iCloud 同期";
+"settings.movementdb.auto_update" = "ムーブメント DB を自動更新";
+"settings.coreml.label" = "CoreML ビート検出 (実験的)";
+"settings.coreml.hint" = "ML ベースのオンセット検出。モデルがない場合はデフォルトアルゴリズムにフォールバックします。";
+"settings.coreml.status_prefix" = "現在:";
+"settings.movementdb.privacy_note" = "オンにすると、新しいキャリバーが静的 JSON としてバックグラウンドでダウンロードされます。計測データや写真は端末から出ません。";
+"settings.movementdb.update_now" = "更新を確認";
+"settings.movementdb.checking" = "更新を確認中…";
+"settings.movementdb.ok" = "バージョン %@ をインストール済み (%d 件のムーブメント)";
+"settings.movementdb.fail" = "更新に失敗しました: %@";
+"settings.movementdb.version" = "ムーブメント DB バージョン";
+"settings.section.timeref" = "時刻基準";
+"settings.audio_input.label" = "マイク入力";
+"settings.audio_input.empty" = "利用可能な入力デバイスがありません";
+"settings.audio_input.system_default" = "システムの既定";
+"audio.input.builtin" = "内蔵";
+"audio.input.wired" = "有線";
+"audio.input.bluetooth" = "Bluetooth";
+"audio.input.external" = "外部";
+
+/* Round 81 — Hard Rule 3 cleanup: inline strings removed from code */
+"notif.random.title" = "🎲 今日の一本";
+"watch.journal.empty.hint" = "ジャーナルでこの時計をタグ付けすると、ここに表示されます。";
+"settings.coreml.status_coreml" = "CoreML";
+"settings.coreml.status_rule" = "ルールベース (モデルなし)";
+
+/* Round 83 — personalisation: nickname / story / ref */
+"addwatch.section.personal" = "この時計のストーリー";
+"addwatch.nickname" = "ニックネーム (任意)";
+"addwatch.reference_no" = "リファレンス番号";
+"addwatch.story.label" = "ストーリー";
+"addwatch.story.placeholder" = "例: 祖父からの贈り物";
+
+/* Round 84 — measurement view labels localized (Jiyoung C3). */
+"measurement.eyebrow.live_rate" = "ライブ歩度";
+"measurement.eyebrow.live_signal" = "ライブ信号";
+"measurement.eyebrow.metrics" = "計測値";
+"measurement.metric.beat_error" = "ビートエラー";
+"measurement.metric.bph" = "BPH";
+
+/* Round 90 — Story card label */
+"watch.story.label" = "この時計のストーリー";
+
+/* Round 92 — Today tab */
+"tab.today" = "今日";
+"today.greeting" = "今日の時計はいかがでしたか?";
+"today.stat.watches" = "ウォッチファミリー";
+"today.stat.this_week" = "今週";
+"today.shake.title" = "今日の一本";
+"today.shake.subtitle" = "今日はどれを着けますか?";
+"today.fortune.title" = "今日のダイヤル占い";
+"today.fortune.subtitle" = "日付ごとのラッキーダイヤル・数字・儀式。";
+
+/* Round 93 — concept-matched pick reasons */
+"shake.reason.dress.1" = "上品な瞬間にふさわしい一本。";
+"shake.reason.dress.2" = "今日はフォーマルなエレガンスを。";
+"shake.reason.dress.3" = "静かなダイヤルで集中を。";
+"shake.reason.dress.4" = "控えめな品格を、一日中。";
+"shake.reason.sport.1" = "鮮やかな日には大胆な手首を。";
+"shake.reason.sport.2" = "これからの冒険のために。";
+"shake.reason.sport.3" = "強い日に、強いステートメント。";
+"shake.reason.sport.4" = "アウトドアの相棒に。";
+"shake.reason.manual.1" = "やさしく数回巻いて一日をはじめましょう。";
+"shake.reason.manual.2" = "手巻きの朝の儀式。";
+
+/* Round 96 — Journal reminder notif */
+"notif.journal.title" = "📓 今日の一行";
+"notif.journal.body" = "今日着けた時計のことを書き残しましょう。";
+
+/* Round 98 — measurement failure reasons */
+"measurement.fail.unsupported.title" = "このムーブメントは未対応です";
+"measurement.fail.unsupported.body" = "クォーツや 0 BPH のムーブメントは音響計測できません。自動巻きまたは手巻きの機械式時計をお使いください。";
+"measurement.fail.lock.title" = "信頼範囲を超える計測";
+"measurement.fail.lock.body" = "BPH ロックが弱い — または時計の状態が本当に良くない可能性があります。別の姿勢で試すか、時計師に診てもらいましょう。";
+
+/* Round 104 — bug + A11y corrections */
+"watch.row.just_now" = "たった今";
+"collection.challenge.progress" = "%d/%d 日完了 · 残り %d 日";
+"aidiag.confidence.a11y" = "信頼度 %d パーセント";
+
+/* Round 105 — DialFortuneView inline strings (Hard Rule 3 compliance) */
+"fortune.dial.blue" = "ブルーダイヤル";
+"fortune.dial.black" = "ブラックダイヤル";
+"fortune.dial.green" = "グリーンダイヤル";
+"fortune.dial.silver" = "シルバーダイヤル";
+"fortune.dial.champagne" = "シャンパン";
+"fortune.dial.panda" = "パンダ";
+"fortune.complication.1" = "ムーンフェイズ";
+"fortune.complication.2" = "GMT";
+"fortune.complication.3" = "クロノグラフ";
+"fortune.complication.4" = "デイデイト";
+"fortune.complication.5" = "永久カレンダー";
+"fortune.unlucky.1" = "ブラックダイヤル";
+"fortune.unlucky.2" = "シャンパン";
+"fortune.unlucky.3" = "シルバーダイヤル";
+"fortune.unlucky.4" = "グリーンダイヤル";
+"fortune.ritual.1" = "日の出に12回巻き上げる";
+"fortune.ritual.2" = "右手首に着ける";
+"fortune.ritual.3" = "昼食にブルーの飲み物を";
+"fortune.ritual.4" = "計測前は文字盤上の姿勢で";
+"fortune.ritual.5" = "夕方には時計を休ませる";
+"fortune.ritual.6" = "30分の日光浴を";
+"fortune.horoscope.1" = "深いブルーは心を落ち着けます。何かを始めるのに最適な日。";
+"fortune.horoscope.2" = "整ったダイヤルは信頼を生みます。大切な打合せに最適。";
+"fortune.horoscope.3" = "グリーンは成長の色。思いがけないチャンスが訪れるかも。";
+"fortune.horoscope.4" = "シルバーは思考を研ぎ澄まします。先延ばしを片付けて。";
+"fortune.horoscope.5" = "シャンパンは温もりをもたらします。旧友との約束が良い結果に。";
+"fortune.pill.lucky" = "ラッキー";
+"fortune.pill.unlucky" = "避ける";
+"fortune.share.text" = "🔮 TickLab ダイヤル占い · %@\n\n今日は %@ の日\nLUCKY NUMBER: %d\n\n%@\n\nラッキー複雑機構 · %@\n避ける · %@";
+"fortune.lucky_number" = "LUCKY NUMBER";
+"fortune.metric.love" = "恋愛";
+"fortune.metric.work" = "仕事";
+"fortune.metric.money" = "金運";
+"fortune.metric.health" = "健康";
+
+/* Round 109 — notification titles localized (Hard Rule 3) */
+"notif.wind.title" = "🔄 %@";
+"notif.battery.title" = "🔋 %@";
+
+/* Round 113 — Pro gate */
+"pro.limit.watch.title" = "時計の登録上限に達しました";
+"pro.limit.watch.body" = "無料プランは時計1本までです。TickLab Pro ($9.99/年) にアップグレードして、すべての時計を管理しましょう。";
+"pro.limit.daily_measurement.title" = "1日の計測上限に達しました";
+"pro.limit.daily_measurement.body" = "無料プランは1日3回までです。TickLab Pro ($9.99/年) にアップグレードして無制限に計測しましょう。";
+"pro.limit.journal_monthly.title" = "今月のジャーナル上限に達しました";
+"pro.limit.journal_monthly.body" = "無料プランは月5件までです。TickLab Pro ($9.99/年) にアップグレードして無制限に記録しましょう。";
+
+/* Round 116 — A11y: ShakePick button */
+"shake.cta.a11y.label" = "時計を選ぶ";
+"shake.cta.a11y.hint" = "ボタンをタップするか iPhone を振って今日の時計を選びます";
+
+/* Round 117 — Hard Rule 9 + misc */
+"result.amplitude.low_confidence" = "振り角は非表示 — このムーブメントは計測信頼度評価が低いためです。";
+"result.amplitude.unavailable.title" = "振り角は表示されません";
+"result.amplitude.unavailable.body" = "このムーブメント (サファイア裏蓋、コーアクシャル脱進機など) ではマイク計測の振り角が不確かなため非表示にしています。";
+
+/* Round 118 — storyCard + journalTab compose */
+"watch.story.empty_prompt" = "この時計のストーリーを追加";
+"watch.journal.compose" = "ジャーナルを書く";
+
+/* Round 119 — StatsView per-watch picker */
+"stats.position.watch_picker" = "時計";
+"stats.position.all" = "すべての時計";
+
+/* Round 121 — Glossary 5 new entries */
+"glossary.confidence" = "信頼度";
+"glossary.confidence.desc" = "計測の信頼性を 0〜100 で表すスコア。SNR、計測時間、BPH ロックの品質、ビートエラーから算出されます。";
+"glossary.snr" = "SNR (信号対雑音比)";
+"glossary.snr.desc" = "時計の音と環境ノイズの比 (dB)。高いほど良好で、信頼できる結果には最低 12 dB 以上が必要。";
+"glossary.drift" = "ドリフト";
+"glossary.drift.desc" = "温度、姿勢、ぜんまいの張力により、歩度が時間とともに変化する傾向。";
+"glossary.isochronism" = "等時性";
+"glossary.isochronism.desc" = "残りのパワーリザーブに関わらず一定の歩度を保つ能力。等時性が高いほど精度が安定。";
+"glossary.positional" = "姿勢差";
+"glossary.positional.desc" = "時計の向き (文字盤上下、リューズ各位置) により歩度がどれだけ変わるか。6姿勢テストで確認します。";
+
+/* Round 123 — BatteryView Rule 3 */
+"battery.caliber_life" = "Cal. %@ · 想定寿命 %d ヶ月";
+"battery.status.urgent" = "そろそろ交換";
+"battery.status.caution" = "交換時期";
+"battery.status.ok" = "良好";
+"battery.reminder.off" = "リマインダーをオフ";
+"battery.reminder.on" = "交換時期リマインダーを設定";
+
+/* Round 123 — TamagotchiView Rule 3 */
+"tamagotchi.mood.energetic" = "元気";
+"tamagotchi.mood.happy" = "穏やか";
+"tamagotchi.mood.sleepy" = "眠そう";
+"tamagotchi.mood.dormant" = "休眠中";
+"tamagotchi.mood.low_battery" = "電池残量低下";
+"tamagotchi.mood.needs_wind" = "巻き上げが必要";
+"tamagotchi.last_activity" = "最終活動 %d 日前";
+"tamagotchi.no_activity" = "活動の記録がありません";
+"tamagotchi.sleepy_hint" = "48時間でまた眠くなります";
+
+/* Round 124 — WelcomeFlowView Rule 3 */
+"welcome.hero.line1" = "iPhone ひとつで。";
+"welcome.hero.line2" = "あなたの時計を計測。";
+"welcome.hero.accent" = "記録";
+"welcome.hero.suffix" = "する。";
+"welcome.nav.back" = "← 戻る";
+
+/* Round 125 — Rule 3 + share + units */
+"measurement.rec_label" = "REC";
+"measurement.snr_label" = "SNR %ddB";
+"journal.detail.beat_error" = "ビートエラー %.2f ms";
+"unit.seconds_per_day_short" = "s/d";
+/* watch.label.rate dedup — original at line 161 */
+
+/* Round 126 — CollectionView + Pro */
+"collection.status.ok" = "良好";
+"collection.status.caution" = "注意";
+"collection.status.service" = "サービス";
+"pro.limit.upgrade" = "Pro にアップグレード";
+
+/* TickLab Pro paywall ($9.99/yr) */
+"purchase.headline" = "TickLab Pro";
+"purchase.subtitle" = "コレクションも計測も無制限 — 本格的な時計道楽のための装備。";
+"purchase.benefit.unlimited_watches.title" = "時計の登録無制限";
+"purchase.benefit.unlimited_watches.body" = "1本制限なし — コレクション全体を管理。";
+"purchase.benefit.unlimited_measurements.title" = "計測無制限";
+"purchase.benefit.unlimited_measurements.body" = "1日の上限なし — 好きなだけ計測。";
+"purchase.benefit.unlimited_journal.title" = "ジャーナル無制限";
+"purchase.benefit.unlimited_journal.body" = "月の上限なし — すべての瞬間を残す。";
+"purchase.benefit.unlimited_ai.title" = "AI 診断無制限";
+"purchase.benefit.unlimited_ai.body" = "3回の上限なし — 毎回 AI 解釈を取得。";
+"purchase.plan.yearly" = "年額サブスクリプション";
+"purchase.plan.yearly.per_year" = "/ 年 自動更新 — いつでも解約可能";
+"purchase.cta.subscribe" = "Pro をはじめる";
+"purchase.cta.processing" = "処理中…";
+"purchase.cta.restore" = "購入を復元";
+"purchase.cta.restoring" = "復元中…";
+"purchase.legal.auto_renew" = "サブスクリプションは解約まで自動更新されます。設定からいつでも変更できます。";
+"purchase.legal.terms" = "利用規約";
+"purchase.legal.privacy" = "プライバシーポリシー";
+"purchase.success.title" = "Pro が有効になりました";
+"purchase.success.body" = "すべての機能が解放されました。よい時計道楽を!";
+"purchase.error.title" = "購入エラー";
+"purchase.unavailable" = "App Store に接続中です。しばらくしてからお試しください。";
+"purchase.retry" = "もう一度";
+"aidiag.trial.remaining" = "AI 診断 残り %d/%d";
+"aidiag.trial.exhausted_cta" = "AI 診断を無制限に — Pro にアップグレード";
+"purchase.context.watch_limit" = "腕時計 1 個の上限に達しました — Pro で無制限登録";
+"purchase.context.daily_measurement" = "本日の測定 3 回の上限に達しました — Pro で無制限測定";
+"purchase.context.journal_monthly" = "今月の日記 5 件の上限に達しました — Pro で無制限記録";
+"purchase.context.ai_trial" = "AI 診断の trial をすべて使い切りました — Pro で毎回 AI";
+"cosc.bar.min" = "−12";
+"cosc.bar.max" = "+12";
+"cosc.bar.range" = "COSC −4 ~ +6";
+"aidiag.confidence.grade.high" = "高";
+"aidiag.confidence.grade.medium" = "中";
+"aidiag.confidence.grade.low" = "低";
+"unit.seconds_short" = "%d 秒";
+
+/* Round 127 — MeasurementResultView Rule 3 */
+"result.escapement.fallback" = "SWISS LEVER";
+"result.snr_beats_hint" = "SNR %.0f dB · %d ビート";
+"watch.ref_label" = "Ref. %@";
+
+/* Round 129 */
+"speccard.list.empty.hint" = "ウォッチ詳細 → '···' メニュー → 'スペックカードを作成' から作成できます。";
+"result.saved.hint" = "計測を保存しました ✓";
+"measurement.hint.noise" = "🔊 環境音が大きすぎます。静かな場所で iPhone を安定させてやり直してください。";
+"measurement.hint.press_closer" = "📍 時計の裏蓋を iPhone の下部マイクにしっかり押し当ててください。";
+"measurement.hint.no_signal" = "🎤 信号がほとんどありません。マイクを時計の裏蓋に直接当ててください。";
+"measurement.hint.bluetooth" = "🎧 Bluetooth マイク (AirPods など) が有効です。時計の音を拾うには iPhone 内蔵マイクが必要です。Bluetooth を切断するか設定で入力を変更してください。";
+"measurement.hint.wired" = "🎙️ 外部の有線マイクが有効です。時計の計測には iPhone 内蔵マイクが適しています。";
+"share.watch.fallback" = "時計";
+
+/* Round 114 — LongTest summary */
+
+/* Round 180 (Sora) — Magnetic field measurement */
+"magnetic.title" = "磁場";
+"magnetic.header.subtitle" = "機械式時計は磁気の影響を受けやすいです。計測前に周囲を確認しましょう。";
+"magnetic.measure_button" = "計測";
+"magnetic.measuring" = "計測中…";
+"magnetic.level.normal" = "🟢 正常";
+"magnetic.level.slightly_high" = "🟡 やや高め";
+"magnetic.level.high" = "🟠 高い";
+"magnetic.level.very_high" = "🔴 非常に高い";
+"magnetic.verdict.label.ai" = "APPLE INTELLIGENCE";
+"magnetic.verdict.label.tip" = "TIP";
+"magnetic.verdict.loading" = "磁場を読み取り中…";
+"magnetic.verdict.normal" = "周囲の磁場は正常です。計測に影響はありません。";
+"magnetic.verdict.slightly_high" = "通常よりやや高めです。問題ない可能性が高いですが、別の場所でもう一度試してみてください。";
+"magnetic.verdict.high" = "磁場が強めです — 帯磁のリスクあり。計測前にこの場所から離れてください。";
+"magnetic.verdict.very_high" = "警告!非常に強い磁場を検出。今すぐ時計をこの場所から離してください。";
+"magnetic.result.earthfield_note" = "地球磁場は通常 25〜65 μT です。";
+"magnetic.info.title" = "磁気について";
+"magnetic.info.body" = "スピーカー、ヘッドフォン、磁気留め具、タブレットカバーは機械式時計を帯磁させ、進みや不安定の原因になります。最近こうした物に触れた場合、時計師に依頼すれば数秒で消磁できます。";
+
+/* Round 180 — Today tab magnetic check card */
+"today.card.magnetic.title" = "磁気チェック";
+"today.card.magnetic.subtitle" = "周囲の帯磁リスクを確認";
+
+/* Round 176 — Primary watch / Wear-today UX clarification (user-requested, Hyemi) */
+"watch.set_as_primary" = "メインに設定";
+"watch.set_as_primary.hint" = "今日タブにピン留めします";
+"watch.is_primary" = "メインウォッチ";
+"watch.unset_primary" = "メインを解除";
+"watch.unset_primary.hint" = "タップで解除";
+"watch.log_wear_today" = "今日着用として記録";
+"watch.log_wear_today.hint" = "タップで記録";
+"watch.worn_today" = "本日着用済み";
+"watch.worn_today.hint" = "今日記録済み";
+"today.primary.empty.title" = "メインウォッチ未設定";
+"today.primary.empty.body" = "毎日のお気に入りをピン留めして、今日タブの一番上に表示しましょう。";
+"today.primary.empty.cta" = "時計を選ぶ";
+
+/* Round 133: photo source sheet */
+"photo.source.library" = "写真ライブラリ";
+"photo.source.camera" = "写真を撮る";
+"photo.source.remove" = "写真を削除";
+
+/* Round 133: keep-screen-on + reminders */
+"settings.keep_screen_on" = "計測中は画面を常時オン";
+"settings.section.reminders" = "リマインダー";
+"settings.section.reminders.footer" = "ジャーナル通知と今日の一本の通知時刻を設定します。";
+"settings.journal_reminder.time" = "ジャーナル通知の時刻";
+"today.primary.picker.title" = "メインウォッチを選ぶ";
+"magnetic.chart.title" = "ライブ磁場";
+"magnetic.chart.live" = "LIVE";
+"wear.toast.logged" = "今日着用として記録しました";
+"today.states.title" = "ウォッチのステータス";
+/* Round (3-2 잔여): battery.expected_change/life dead. */
+"measurement.title" = "計測";
+"fortune.nav.title" = "今日のダイヤル";
+"result.grade.eyebrow" = "計測信頼度";
+"result.grade.a.claim" = "±3 s/d 信頼 — 判断材料として使えます";
+"result.grade.b.claim" = "±10 s/d 信頼 — トレンド観察に十分";
+"result.grade.c.claim" = "±25 s/d 信頼 — 姿勢を変えて再計測を";
+"result.grade.f.claim" = "信頼性が低い — 再計測してください";
+"result.grade.a.suffix" = "信頼 — 判断材料として使えます";
+"result.grade.b.suffix" = "信頼 — トレンド観察に十分";
+"result.grade.c.suffix" = "信頼 — 姿勢を変えて再計測を";
+"result.grade.f.suffix" = "— 再計測してください";
+
+// ── New badges b23-b32 ──────────────────────────────────────────────
+"badges.b23.name" = "ファーストキャリバー"; "badges.b23.desc" = "中身に初めて関心を向けた瞬間"; "badges.b23.condition" = "いずれかの時計にキャリバーを入力";
+"badges.b24.name" = "ナイトウォッチメイカー"; "badges.b24.desc" = "深夜過ぎても計測中"; "badges.b24.condition" = "0時〜2時の間に5回計測";
+"badges.b25.name" = "ウォッチダイアリー"; "badges.b25.desc" = "1週間、毎日記録"; "badges.b25.condition" = "ジャーナルを7日連続で記録";
+"badges.b26.name" = "忍耐の計測者"; "badges.b26.desc" = "5分待てる人が、最も正確なデータを得る"; "badges.b26.condition" = "5分以上の計測を25回";
+"badges.b27.name" = "パーフェクトデイ"; "badges.b27.desc" = "朝と夜 — 同じ時計を1日に2回計測"; "badges.b27.condition" = "同じ時計を同じ日に2回以上 — 10日間";
+"badges.b28.name" = "感情のスペクトラム"; "badges.b28.desc" = "喜びから郷愁まで、すべての感情を記録"; "badges.b28.condition" = "4種類以上の気分でジャーナル20件以上";
+"badges.b29.name" = "ゴールデンアンプリチュード"; "badges.b29.desc" = "300度以上 — 完璧に調整されたムーブメントの証"; "badges.b29.condition" = "振り角 ≥300° かつ信頼度 ≥70 の計測を5回";
+"badges.b30.name" = "ムーブメントドクター"; "badges.b30.desc" = "異なる鼓動の時計を理解する"; "badges.b30.condition" = "3種類以上の BPH (18k/21.6k/28.8k/36k) を計測";
+"badges.b31.name" = "シーズナルコレクター"; "badges.b31.desc" = "四季すべてで計測"; "badges.b31.condition" = "4つの季節それぞれで最低1回計測";
+"badges.b32.name" = "時の歴史"; "badges.b32.desc" = "25年以上のヴィンテージ時計を5本集めて計測"; "badges.b32.condition" = "2000年以前の時計5本それぞれを最低1回計測";
+
+"league.loading" = "グローバルランキングを読み込み中...";
+"league.error.body" = "ネットワークエラー。プルで更新。";
+"league.myteam.my_count" = " 自分の着用";
+"league.myteam.global_count" = " グローバル";
+"league.myteam.badge" = "MY TEAM";
+"league.last_updated" = "更新 %@";
+
+"result.rate.reference_only" = "参考値";
+"result.action.done" = "完了";
+"measurement.hint.weak_detection" = "⚠️ ビートを十分に検出できていません。時計をマイクに近づけ、指でマイクを覆わないように。";
+"measurement.hint.analyzing" = "🔍 ビートパターンを解析中 — 安定した結果には30秒の計測を。";
+"measurement.hint.no_lock" = "🔍 ビート周期にロックできませんでした。マイク位置を調整して再試行してください。";
+"measurement.hint.no_lock_debug" = "🔍 ビート周期にロックできませんでした。[DBG: %@]";
+
+"addwatch.brand.custom.hint" = "リストにないブランドを入力します。";
+"common.ok" = "OK";
+
+"measurement.status.measuring" = "聴いています…";
+"welcome.illustration.verdict" = "🟡 やや進み気味";
+
+"stats.subtitle" = "コレクション全体の計測と着用データから得たインサイト";
+"journal.subtitle" = "手首と過ごす、小さなメモ";
+
+"league.myteam.rank_value" = "%@  #%d";
+"badges.summary.earned" = "%d / %d 獲得";
+"badges.summary.level" = "LV. %d";
+"stats.wear.days_value" = "%d 日";
+"watch.mood.last_active" = "最終活動から %d 日 · エネルギー %d%%";
+"collection.filter.favorites_only" = "お気に入りのみ";
+"result.grade.a.gloss" = "信頼できる範囲の結果です。";
+"result.grade.b.gloss" = "トレンド追跡に使える結果です。";
+"result.grade.c.gloss" = "信号が弱く精度が落ちています。再計測してみてください。";
+"result.grade.f.gloss" = "信号が弱すぎるか、時計に問題がある可能性があります。";
+"share.save.success" = "写真に保存しました";
+"share.save.failed" = "保存に失敗しました";
+"share.save.permission_denied" = "写真へのアクセスが必要です";
+"result.action.share" = "共有";
+
+"magnetic.unavailable.title" = "磁気センサーが利用できません";
+"magnetic.unavailable.body" = "この端末には磁気センサーが搭載されていません。";
+
+"a11y.favorite.add" = "お気に入りに追加";
+"a11y.favorite.remove" = "お気に入りから削除";
+"a11y.wear_today" = "今日着用として記録";
+"a11y.value.worn" = "着用済み";
+"a11y.value.not_worn" = "未着用";
+"a11y.more_actions" = "その他のアクション";
+"a11y.change_photo" = "写真を変更";
+"a11y.photo_view" = "写真を表示";
+
+"measurement.diagnostic.mic" = "マイク";
+"measurement.diagnostic.snr" = "SNR";
+"measurement.diagnostic.onsets" = "オンセット";
+"measurement.diagnostic.bph" = "BPH";
+
+"stats.eyebrow.figures" = "ANALYSIS";
+"badges.rarity.common" = "コモン";
+"badges.rarity.rare" = "レア";
+"badges.rarity.epic" = "エピック";
+"badges.rarity.legendary" = "レジェンダリー";
+
+"share.aspect.a11y" = "アスペクト比";
+"shake.schedule.toggle.a11y" = "毎日の通知";
+"common.discard.title" = "入力を破棄しますか?";
+"common.discard.message" = "変更内容は保存されません。";
+"common.discard.confirm" = "破棄";
+
+"watchbox.stats.occupied" = "使用中";
+"watchbox.stats.brands" = "ブランド数";
+"watchbox.stats.avg_rate" = "平均歩度";
+"watchbox.stats.empty" = "空き";
+"watchbox.empty.a11y_hint" = "コレクションから時計を追加";
+
+"badges.locked" = "未獲得";
+
+"speccard.record.a11y.recording" = "録音中";
+"speccard.record.a11y.idle" = "待機中";
+
+"a11y.rate_value" = "歩度 %1$@ %2$@";
+
+"movement.reliability.coaxial.title" = "コーアクシャルは振り角非表示";
+"movement.reliability.coaxial.notice" = "コーアクシャル脱進機ではマイクベースの振り角推定が不確かなため、振り角セルを非表示にしています。歩度とビートエラーは通常通り計測されます。";
+"movement.reliability.amplitude_unstable.title" = "振り角が不安定な可能性";
+"movement.reliability.amplitude_unstable.notice" = "このムーブメントは条件 (姿勢、温度、パワーリザーブ) により振り角の変動が大きいです。同じ姿勢で3〜5回計測し、平均値を参考にしてください。";
+
+"measurement.winding_hint.title" = "計測前に時計を巻き上げましょう";
+"measurement.winding_hint.body" = "自動巻き/手巻き時計は安定した精度のために十分な巻き上げが必要です。リューズで40〜50回巻いてから計測してください。巻き上げ不足は一貫した負の歩度 (-20 s/d 以下) の原因になります。";
+"measurement.winding_hint.cta" = "わかりました";
+
+"pin.entry.a11y.progress" = "%2$d 桁中 %1$d 桁入力済み";
+"pin.entry.a11y.failed" = "不正解、もう一度";
+
+"speccard.spec.power_reserve" = "パワーリザーブ";
+
+"measurement.waveform.a11y.label" = "ライブ音声波形";
+"measurement.waveform.a11y.snr" = "信号 %.0f デシベル";
+"measurement.waveform.a11y.idle" = "聴いています";
+
+"journal.detail.delete.confirm" = "このジャーナル記録を削除しますか?";
+"journal.detail.delete.message" = "削除された記録と写真は復元できません。";
+
+"watchbox.slot.a11y.position" = "スロット %d";
+
+"measurement.countdown" = "残り %d 秒";
+"measurement.countdown.a11y" = "残り %d 秒";
+"a11y.rate_uncertainty" = "精度 %@";
+
+"addwatch.movement.search.prompt" = "キャリバーを検索 (例: 2824、Rolex)";
+"addwatch.movement.section.recommended" = "このブランドの推奨";
+"addwatch.movement.section.all" = "すべてのムーブメント";
+"addwatch.movement.section.results" = "検索結果";

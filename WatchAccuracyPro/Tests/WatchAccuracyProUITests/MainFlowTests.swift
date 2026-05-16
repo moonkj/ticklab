@@ -1,100 +1,93 @@
 import XCTest
 
-/// 핵심 사용자 플로우의 회귀 방지 — 빌드 깨지지 않게.
-/// 실 측정(마이크 권한 + 신호) 이 필요한 부분은 manual QA 로 분리.
+/// 4-tab 신구조 (RootTabView) 기반 핵심 회귀 방지.
+/// Round 22 (Jay): 이전 OnboardingView/ModeSelectView 기반 테스트는 view 삭제로 stale —
+///   여기서는 collection/today/journal/stats 4탭 + Settings 진입만 verify.
 final class MainFlowTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
     }
 
-    private func freshLaunch(arguments: [String] = []) -> XCUIApplication {
+    private func launchSkippingOnboarding() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchArguments = [
-            "-ticklab.onboardingComplete", "0",
-            "-ticklab.modeChosenOnce", "0",
-            "-ticklab.userMode", "beginner",
+            "-ticklab.onboardingComplete", "1",
             "-AppleLanguages", "(en)",
             "-AppleLocale", "en_US"
-        ] + arguments
+        ]
         app.launch()
         return app
     }
 
-    func test_first_run_shows_onboarding_and_proceeds_to_mode_select() throws {
-        let app = freshLaunch()
-
-        // Onboarding "Next" 또는 "Get Started" 버튼이 보여야 함
-        let nextButton = app.buttons["Next"]
-        XCTAssertTrue(nextButton.waitForExistence(timeout: 5))
-        nextButton.tap()
-        nextButton.tap()
-
-        let getStarted = app.buttons["Get Started"]
-        XCTAssertTrue(getStarted.waitForExistence(timeout: 3))
-        getStarted.tap()
-
-        // ModeSelect 화면
-        let beginner = app.staticTexts["I'm new to this"]
-        XCTAssertTrue(beginner.waitForExistence(timeout: 3))
+    /// 첫 진입 시 collection 탭이 default 로 보임.
+    func test_first_run_lands_on_collection_tab() throws {
+        let app = launchSkippingOnboarding()
+        let collectionTab = app.tabBars.buttons["Collection"]
+        XCTAssertTrue(collectionTab.waitForExistence(timeout: 5))
+        XCTAssertTrue(collectionTab.isSelected || collectionTab.value as? String == "1")
     }
 
-    func test_skip_to_collection_when_onboarding_already_done() throws {
-        let app = XCUIApplication()
-        app.launchArguments = [
-            "-ticklab.onboardingComplete", "1",
-            "-ticklab.modeChosenOnce", "1",
-            "-AppleLanguages", "(en)",
-            "-AppleLocale", "en_US"
-        ]
-        app.launch()
-
-        // Empty Collection 화면 — "Add your first watch" 표시
-        let addFirst = app.staticTexts["Add your first watch"]
-        XCTAssertTrue(addFirst.waitForExistence(timeout: 5))
+    /// 4개 tab 모두 노출 확인 — Collection / Today / Journal / Stats.
+    func test_four_tabs_present() throws {
+        let app = launchSkippingOnboarding()
+        let tabBar = app.tabBars.firstMatch
+        XCTAssertTrue(tabBar.waitForExistence(timeout: 5))
+        XCTAssertTrue(tabBar.buttons["Collection"].exists)
+        XCTAssertTrue(tabBar.buttons["Today"].exists)
+        XCTAssertTrue(tabBar.buttons["Journal"].exists)
+        XCTAssertTrue(tabBar.buttons["Stats"].exists)
     }
 
+    /// 탭 전환 — Stats 갔다가 Collection 으로 돌아오면 root 가 보임.
+    func test_tab_switch_returns_to_collection_root() throws {
+        let app = launchSkippingOnboarding()
+        let stats = app.tabBars.buttons["Stats"]
+        let collection = app.tabBars.buttons["Collection"]
+        XCTAssertTrue(stats.waitForExistence(timeout: 5))
+        stats.tap()
+        collection.tap()
+        // Collection 의 nav settings 버튼은 root 에서만 보임 (detail/sheet 진입 X 상태)
+        let settingsBtn = app.buttons["nav.settings"]
+        XCTAssertTrue(settingsBtn.waitForExistence(timeout: 3),
+                      "Collection root 의 settings 버튼이 보여야 한다")
+    }
+
+    /// Collection root → Settings sheet 진입.
     func test_open_settings_from_collection() throws {
-        let app = XCUIApplication()
-        app.launchArguments = [
-            "-ticklab.onboardingComplete", "1",
-            "-ticklab.modeChosenOnce", "1",
-            "-AppleLanguages", "(en)",
-            "-AppleLocale", "en_US"
-        ]
-        app.launch()
-
-        let settingsButton = app.navigationBars.buttons["gearshape"]
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
-        settingsButton.tap()
-
-        // Phase 2/3 에서 Settings 가 길어져 Glossary 가 즉시 보이지 않을 수 있음 — section 헤더로 검증.
-        let modeSection = app.staticTexts["User mode"]
-        XCTAssertTrue(modeSection.waitForExistence(timeout: 5),
-                      "Settings 첫 섹션 (User mode) 가 보여야 한다")
+        let app = launchSkippingOnboarding()
+        let settingsBtn = app.buttons["nav.settings"]
+        XCTAssertTrue(settingsBtn.waitForExistence(timeout: 5))
+        settingsBtn.tap()
+        // Settings sheet 상단 nav title 검증 — 실제 키 "settings.title" -> "Settings".
+        let settingsTitle = app.navigationBars["Settings"]
+        XCTAssertTrue(settingsTitle.waitForExistence(timeout: 3))
     }
 
-    /// Round 9 (Jay): Phase 2 Sync 섹션 표면 노출 검증. 실제 OTA 호출은 안 함.
-    func test_settings_shows_phase2_sync_section() throws {
-        let app = XCUIApplication()
-        app.launchArguments = [
-            "-ticklab.onboardingComplete", "1",
-            "-ticklab.modeChosenOnce", "1",
-            "-AppleLanguages", "(en)",
-            "-AppleLocale", "en_US"
-        ]
-        app.launch()
+    /// Today 탭 진입 검증 — 화면이 죽지 않아야.
+    func test_today_tab_loads() throws {
+        let app = launchSkippingOnboarding()
+        let today = app.tabBars.buttons["Today"]
+        XCTAssertTrue(today.waitForExistence(timeout: 5))
+        today.tap()
+        // 탭바 자체는 여전히 보여야 함 — 진입 후 crash 안 한 회귀 방지 minimum.
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 3))
+    }
 
-        let settingsButton = app.navigationBars.buttons["gearshape"]
-        XCTAssertTrue(settingsButton.waitForExistence(timeout: 5))
-        settingsButton.tap()
+    /// Stats 탭 진입 검증 — empty state 노출.
+    func test_stats_tab_loads() throws {
+        let app = launchSkippingOnboarding()
+        let stats = app.tabBars.buttons["Stats"]
+        XCTAssertTrue(stats.waitForExistence(timeout: 5))
+        stats.tap()
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 3))
+    }
 
-        // Settings 안에서 Sync 섹션까지 스크롤. iCloud sync · Auto-update · Check for updates 가 노출되어야 함.
-        let syncSection = app.staticTexts["Sync"]
-        let scrollView = app.scrollViews.firstMatch
-        if !syncSection.waitForExistence(timeout: 2) {
-            scrollView.swipeUp()
-        }
-        XCTAssertTrue(syncSection.waitForExistence(timeout: 3) || app.switches["iCloud sync"].exists,
-                      "Sync 섹션 또는 iCloud sync 토글이 노출되어야 한다")
+    /// Journal 탭 진입 검증.
+    func test_journal_tab_loads() throws {
+        let app = launchSkippingOnboarding()
+        let journal = app.tabBars.buttons["Journal"]
+        XCTAssertTrue(journal.waitForExistence(timeout: 5))
+        journal.tap()
+        XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 3))
     }
 }

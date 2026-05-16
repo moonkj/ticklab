@@ -28,6 +28,16 @@ final class PINService: ObservableObject {
     /// 설정 여부. View 가 토글/상태 표시에 사용.
     @Published private(set) var hasPIN: Bool
 
+    /// Round 15 (Jay): brute-force 방어 — 직전 실패 시각. 너무 빠른 재시도 차단.
+    private var lastFailureAt: Date?
+
+    /// 직전 실패 후 재시도 가능까지 남은 시간(초). 0 이면 즉시 가능.
+    var retryAfterSeconds: TimeInterval {
+        guard let last = lastFailureAt else { return 0 }
+        let elapsed = Date().timeIntervalSince(last)
+        return max(0, 0.5 - elapsed)
+    }
+
     private init() {
         self.failureCount = UserDefaults.standard.integer(forKey: K.failureCount)
         self.hasPIN = Self.loadHash() != nil
@@ -56,15 +66,19 @@ final class PINService: ObservableObject {
     /// PIN 검증. 형식 불일치 → false (카운트 안 함). 일치 → 실패 카운터 리셋.
     func verifyPIN(_ pin: String) -> Bool {
         guard Self.isValidPINFormat(pin) else { return false }
+        // Round 15 (Jay): inter-attempt throttle — 직전 실패 후 500ms 미만이면 거부.
+        if retryAfterSeconds > 0 { return false }
         guard let stored = Self.loadHash() else { return false }
         let candidate = Self.hash(pin)
         // CryptoKit 의 Digest 비교 — constant-time 비교를 위해 byte sequence 비교.
         let match = Self.constantTimeEqual(stored, candidate)
         if match {
             resetFailureCount()
+            lastFailureAt = nil
             return true
         } else {
             incrementFailureCount()
+            lastFailureAt = Date()
             return false
         }
     }

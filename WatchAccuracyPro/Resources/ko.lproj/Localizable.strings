@@ -28,23 +28,12 @@
 "welcome.pick_watch" = "어떤 시계예요?";
 "welcome.pick_watch.subtitle" = "나중에 더 자세히 입력할 수 있어요. 우선 빠르게 시작해볼까요?";
 "feature.measure.title" = "측정";
-"feature.measure.body" = "폰 마이크로 시계 박동을 듣고\n정확도 · 비트 오차 · 진폭을 알려드려요.";
+"feature.measure.body" = "폰 마이크로 시계 박동을 듣고\n일오차 · 비트 오차를 알려드려요.";
 "feature.collect.title" = "매일의 기록";
 "feature.collect.body" = "시계마다 사진 · 메모 · 측정값을 한 곳에.\n다이어리처럼 쌓이는 시계 일상.";
 "feature.journal.title" = "한 줄 진단";
 "feature.journal.body" = "복잡한 수치를 일상 언어로.\nApple Intelligence 가 결과를 풀어 설명해줘요.";
-"welcome.first_measure.title" = "첫 측정";
-"welcome.first_measure.body" = "시계를 조용한 곳에 두세요";
-"welcome.first_measure.hint" = "마이크 근처 (10cm 이내), 다이얼을 위를 향하게.";
-"welcome.mode.title" = "진단 메시지 어떤 톤이 좋나요?";
-"welcome.mode.body" = "원하면 언제든 설정에서 변경할 수 있어요.";
-/* mode.beginner/expert.title 구버전 제거 — Round 128 중복 정리. 최신값은 line 152/154. */
-"mode.beginner.body" = "이모지 + 큰 숫자, 친절한 설명.";
-"mode.expert.body" = "전체 메트릭 + 무브먼트 사양.";
-"mode.novice.tone" = "친절히 알려주세요";
-"mode.novice.hint" = "입문자에게 추천";
-"mode.pro.tone" = "전문적으로 분석";
-"mode.pro.hint" = "모든 메트릭 노출";
+/* Round (3-2): mode.* family — ModeSelectView/OnboardingView 삭제로 dead. */
 
 /* Journal */
 "journal.title" = "기록";
@@ -76,19 +65,18 @@
 "mood.nostalgic" = "향수";
 
 /* Stats */
-"stats.title" = "통계";
+"stats.title" = "분석";
 "stats.total_measurements" = "총 측정";
 "stats.total_entries" = "총 기록";
 "stats.mood_breakdown" = "기분 분포";
-"stats.position_averages" = "자세별 평균 오차";
 "stats.average_rate.title" = "평균 오차";
 "stats.average_rate.subtitle" = "측정 %d회 기준";
+"stats.average_rate.stddev" = "표준편차 ±%.1f s/d";
 "stats.empty.mood" = "기록을 기록하면 기분 분포가 표시됩니다.";
 "stats.empty.positions" = "측정 시 자세를 지정하면 평균이 표시됩니다.";
 
 /* Share Card */
 "share.title" = "공유 카드";
-"share.style" = "스타일";
 "share.background" = "배경";
 "share.show_metrics" = "측정값 표시";
 "share.show_caption" = "본문 표시";
@@ -101,25 +89,8 @@
 "share.photo_change" = "사진 변경";
 "share.export" = "공유";
 "share.save_to_photos" = "사진에 저장";
-"share.style.minimal" = "미니멀";
-"share.style.polaroid" = "폴라로이드";
-"share.style.magazine" = "매거진";
-"share.style.stats" = "스탯";
-"share.style.noir" = "누아르";
 
 /* Glossary — glossary.title 구버전 "용어집" 제거. 최신값은 line 515 "용어 사전". */
-"glossary.rate.title" = "Rate (오차)";
-"glossary.rate.body" = "시계가 하루에 빠르거나 느린 정도. 단위 초/일. 시계의 정확도를 나타내는 가장 중요한 지표.";
-"glossary.beat_error.title" = "Beat Error (비트 에러)";
-"glossary.beat_error.body" = "tic 과 toc 사이의 간격 비대칭. 0.5ms 이하 권장. 1ms 이상이면 조정 필요.";
-"glossary.amplitude.title" = "Amplitude (진폭)";
-"glossary.amplitude.body" = "밸런스 휠의 진동 각도. 정상 230-310도. 낮으면 power 또는 lubrication 문제.";
-"glossary.bph.title" = "BPH";
-"glossary.bph.body" = "Beats Per Hour. 시계 movement 의 진동 횟수. 28800 BPH = 4Hz 가 가장 일반적.";
-"glossary.cosc.title" = "COSC";
-"glossary.cosc.body" = "Contrôle Officiel Suisse des Chronomètres. 스위스 크로노미터 인증. -4 ~ +6 s/d 통과 기준.";
-"glossary.magnetism.title" = "자성 (Magnetism)";
-"glossary.magnetism.body" = "시계 부품이 자기장에 노출되면 rate 가 빨라짐. 헤어스프링/balance staff 의 자화 가능성.";
 
 /* Service log */
 "service.type.fullOverhaul" = "전체 오버홀";
@@ -153,7 +124,7 @@
 "alert.store_fallback.message" = "이전 측정 데이터 형식이 변경되어 임시 메모리 저장소로 동작 중입니다. 앱을 종료하면 이번 세션의 데이터는 사라집니다. 영구 저장하려면 앱을 삭제 후 재설치해 주세요.";
 
 /* Units */
-"unit.seconds_per_day" = "초/일";
+"unit.seconds_per_day" = "s/d";
 
 /* Onboarding */
 "onboarding.title" = "당신의 시계, 매일의 기록";
@@ -167,24 +138,17 @@
 "onboarding.page3.title" = "모든 측정, 보관됩니다";
 "onboarding.page3.body" = "시계마다 trend · 기록 · 스펙 카드 · 사운드 녹음. CSV 내보내기와 iCloud 동기화 지원.";
 
-/* Mode */
-"mode.select.title" = "어떤 모드로 사용할까요?";
-"mode.select.subtitle" = "언제든 설정에서 다시 변경할 수 있어요.";
-"mode.beginner.title" = "처음입니다";
-"mode.beginner.subtitle" = "정상 / 주의 / 서비스 권장 3단계로 알려드려요";
-"mode.expert.title" = "익숙합니다";
-"mode.expert.subtitle" = "rate, beat error, amplitude, BPH 모든 데이터";
+/* Mode — Round (3-2): 모두 dead. */
 
 /* Collection (홈) */
 "collection.title" = "컬렉션";
 "collection.eyebrow" = "The Bench";
-"collection.subtitle" = "시계의 상태를 기록하는 매일의 저널";
+"collection.subtitle" = "손목 위의 작은 시간들";
 "collection.empty.title" = "첫 시계를 등록해 보세요.";
 "collection.empty.subtitle" = "시계 추가 → 30초 측정 → 정확도 결과 확인. 매번의 측정이 시계의 시간을 기록하는 한 챕터가 됩니다.";
 "collection.empty.cta" = "시계 추가";
 "collection.search.placeholder" = "컬렉션 검색";
-"collection.tab.all" = "전체";
-"collection.tab.fav" = "즐겨찾기";
+/* Round (3-2 잔여): collection.tab.* dead. */
 "collection.section.recent" = "최근 측정";
 "collection.last_rate" = "최근 rate";
 "collection.runs" = "%d회 측정";
@@ -243,16 +207,13 @@
 "settings.serial_mask.value" = "기본 ON";
 "common.close" = "닫기";
 "common.edit" = "편집";
+"common.show_more_count" = "+%d개 더보기";
+"common.collapse" = "접기";
 "menu.watchbox" = "시계 보관함";
 "menu.speccard" = "스펙 카드";
-"menu.shakepick" = "오늘의 시계 (흔들어 뽑기)";
-"menu.tamagotchi" = "숨쉬는 시계";
-"menu.battery" = "배터리 모니터 (쿼츠)";
-"menu.fortune" = "오늘의 다이얼 운세";
+/* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합. */
 "menu.speccard.create" = "스펙 카드 만들기";
 "watch.photo.dialog.title" = "시계 이미지";
-"watch.photo.take" = "사진 찍기";
-"watch.photo.remove" = "사진 제거";
 "speccard.list.empty" = "아직 카드가 없어요";
 "speccard.photo.add" = "사진 추가";
 "speccard.photo.change" = "사진 변경";
@@ -279,7 +240,7 @@
 "league.cheer" = "응원하기";
 "league.ranking.all" = "전체 순위";
 "badges.earned" = "획득";
-"badges.locked" = "아직 잠겨 있어요";
+// Round 19: 중복 key "badges.locked" 삭제 — line 1137 의 "잠김" 이 long variant 를 silently 마스킹하던 버그.
 "badges.detail.header" = "획득한 뱃지";
 "fortune.title.eyebrow" = "오늘의 다이얼 운세";
 "fortune.today_prefix" = "오늘은 ";
@@ -295,8 +256,6 @@
 "tamagotchi.wear_today" = "오늘 착용";
 "tamagotchi.worn_today" = "착용 기록됨";
 "welcome.carousel.final_cta" = "내 시계 등록하기";
-"welcome.founder.title" = "Founder 가입";
-"welcome.founder.subtitle" = "Pro 1년 무료 · 한정판 배지";
 "lockscreen.app_name" = "TickLab";
 "lockscreen.faceid.unlock" = "Face ID로 잠금 해제";
 "settings.section.ai" = "AI 진단";
@@ -309,6 +268,8 @@
 "watchbox.material" = "마감재";
 "editwatch.title" = "시계 정보 수정";
 "watch.menu.edit" = "정보 수정";
+"watch.menu.favorite.add" = "즐겨찾기 추가";
+"watch.menu.favorite.remove" = "즐겨찾기 해제";
 "watch.menu.delete" = "시계 삭제";
 "watch.delete.confirm.title" = "시계 삭제";
 "watch.delete.confirm.body" = "이 시계와 함께 모든 측정 기록, 기록, 스펙 카드도 삭제됩니다. 되돌릴 수 없어요.";
@@ -325,7 +286,15 @@
 "notification.permission.open_settings" = "설정 열기";
 "settings.icloud.restart.title" = "iCloud 설정 변경";
 "settings.icloud.restart.body" = "다음 앱 실행 시 새 동기화 설정이 적용됩니다.";
-"stats.wear.last14days" = "착용 — 지난 14일";
+"stats.wear.this_month" = "착용 — 이번 달";
+"stats.wear.section" = "착용";
+"stats.wear.prev_month" = "이전 달";
+"stats.wear.next_month" = "다음 달";
+"stats.wear.jump_current" = "이번 달로";
+"stats.wear.next_month.disabled_hint" = "이번 달이 마지막입니다";
+"stats.wear.a11y.today_prefix" = "오늘";
+"stats.wear.a11y.no_wear" = "착용 기록 없음";
+"stats.wear.a11y.count" = "%d 회 착용";
 "stats.wear.total_days" = "%d 일";
 "stats.wear.empty" = "아직 착용 기록이 없어요. 컬렉션에서 시계 카드의 ✓ 버튼으로 오늘 착용을 기록하세요.";
 "stats.wear.cumulative" = "누적 착용";
@@ -541,7 +510,6 @@
 "watch.history.title" = "측정 이력";
 "watch.section.latest" = "최근 측정";
 "watch.section.trend" = "Rate 트렌드";
-"watch.section.history" = "이력";
 "watch.history.runs" = "이력 · %d회 측정";
 "collection.reorder" = "순서 변경";
 "collection.reorder.title" = "시계 순서 변경";
@@ -561,7 +529,6 @@
 "watch.no_readings.body" = "아래 측정 버튼을 눌러 첫 기록을 만드세요. 대부분의 무브먼트는 30초면 충분합니다.";
 "watch.label.rate" = "RATE";
 "watch.label.beat_error" = "BEAT ERROR";
-"watch.label.amplitude" = "AMPLITUDE";
 "watch.label.position" = "POSITION";
 "watch.stat.mean" = "평균";
 "watch.stat.deviation" = "σ 편차";
@@ -574,8 +541,8 @@
 "position.dialdown_short" = "DD";
 "position.crownleft_short" = "CL";
 "position.crownright_short" = "CR";
-"position.pendantup_short" = "PU";
-"position.pendantdown_short" = "PD";
+"position.pendantup_short" = "CU";
+"position.pendantdown_short" = "CD";
 
 /* Confidence */
 "confidence.label" = "측정 신뢰도";
@@ -619,9 +586,7 @@
 "measurement.permission.title" = "마이크 권한이 필요해요";
 "measurement.permission.body" = "시계 정확도를 측정하려면 마이크가 필요합니다. 오디오 데이터는 분석 즉시 폐기되며 저장되지 않습니다.";
 "measurement.permission.openSettings" = "설정에서 권한 켜기";
-"measurement.guidance.title" = "측정 준비";
 "measurement.position.title" = "측정 자세 (선택)";
-"measurement.guidance.body" = "iPhone 하단 마이크를 시계 케이스백(뒷면)에 가까이 대주세요. 직접 닿게 놓을수록 신뢰도가 올라가요. 권장 측정 시간은 30초이며 조용한 곳에서 측정하면 결과가 가장 정확합니다.";
 "measurement.setup.step1.title" = "1. 시계 자세 고정";
 "measurement.setup.step1.body" = "측정 동안 시계 자세가 바뀌면 결과 변동 ±5 s/d 가능. 테이블 위 평평한 면에 케이스백 정중앙이 위로 향하게 놓으세요.";
 "measurement.setup.step2.title" = "2. 마이크 정중앙 접촉";
@@ -630,6 +595,8 @@
 "measurement.setup.step3.body" = "주변 소음 (TV, 대화, 환풍기) 차단. 권장 SNR 20dB 이상.";
 "measurement.tips.average.title" = "정확한 측정 팁";
 "measurement.tips.average.body" = "단일 측정 분산 ±5 s/d. **3-5회 측정 평균** 으로 ±2 s/d 정밀도 도달 가능. 측정 사이엔 시계 위치 그대로 유지 권장.";
+"measurement.tips.average.body.free" = "단일 측정 분산 ±5 s/d. 무료 플랜은 하루 3회 측정 가능 — 같은 자세로 연달아 측정하면 평균값이 안정돼요. Pro 로 업그레이드하면 ±2 s/d 정밀도(5회+ 평균) 도달이 쉬워져요.";
+"measurement.tips.average.body.pro" = "단일 측정 분산 ±5 s/d. **3-5회 측정 평균** 으로 ±2 s/d 정밀도 도달 가능. 측정 사이엔 시계 위치 그대로 유지 권장.";
 "measurement.disclaimer.title" = "참고용 측정값";
 "result.suspicious.title" = "측정 오류일 수 있어요";
 "result.suspicious.body" = "신호 품질은 양호하지만 rate 값이 비정상적으로 큽니다. 마이크와 시계 위치를 조정 후 재측정을 권장합니다.";
@@ -653,34 +620,25 @@
 "result.duration" = "측정 시간";
 "result.beat_count" = "검출된 비트";
 "result.expert.metadata" = "측정 환경";
-"result.action.measure_again" = "다시 측정";
-"result.verdict.ok.title" = "정상이에요";
+"result.verdict.ok.title" = "건강한 박동입니다";
 "result.verdict.ok.body" = "이 시계는 일상 사용에 충분히 정확합니다.";
-"result.verdict.caution.title" = "조금 신경 써주세요";
+"result.verdict.caution.title" = "리듬이 조금 어긋났습니다";
 "result.verdict.caution.body" = "정상 범위를 약간 벗어났어요. 며칠 더 추적해보고 변화가 없으면 점검을 고려해보세요.";
-"result.verdict.service.title" = "서비스를 권장합니다";
+"result.verdict.service.title" = "정비사를 만날 때가 되었습니다";
 "result.verdict.service.body" = "오차가 큽니다. 워치메이커에게 점검을 받아보시는 것을 권장합니다.";
 "result.verdict.first_anomaly.title" = "한 번 더 측정해 볼까요?";
 "result.verdict.first_anomaly.body" = "이번 측정에서 오차가 다소 컸어요. 한 번의 측정으로 단정하기 어려우니, 다른 자세나 시간대에 다시 측정해 평균을 확인해 보세요.";
 "result.next_step.eyebrow" = "다음 단계";
 "result.next_step.body" = "기계식 시계는 자세 · 온도 · 태엽 감김 정도에 따라 정확도가 달라집니다. 일주일 정도 비슷한 시간대에 측정해서 평균을 보세요. 이력 그래프가 진짜 모습을 보여줍니다.";
 "result.beginner.why" = "이 결과가 왜 나왔을까?";
-"result.beginner.detail.rate" = "정확도";
-"result.beginner.detail.beat_error" = "비트 오차";
-"result.beginner.detail.amplitude" = "진폭";
-"result.beginner.detail.bph" = "BPH";
 "result.eyebrow.subtitle" = "%@ · %@";
 "result.section.metrics" = "전체 메트릭";
 "result.section.details" = "측정 상세";
 "result.cosc.in" = "✓ COSC 범위";
 "result.cosc.out" = "COSC 외";
 "result.cosc.range" = "−4 / +6 s/d";
-"result.action.save" = "완료";
 "result.action.again" = "다시 측정";
-"result.amplitude.healthy" = "건강한 swing";
-"result.amplitude.borderline" = "경계선";
-"result.amplitude.service" = "서비스 권장";
-"result.amplitude.coaxial" = "코악시얼: 추정 불가";
+/* Round 23: result.amplitude.healthy/borderline/service/coaxial dead — amplitudeHint() 제거됨. */
 "result.beat.excellent" = "탁월한 대칭";
 "result.beat.acceptable" = "양호 — 추적 권장";
 "result.label.duration" = "측정 시간";
@@ -702,21 +660,11 @@
 "onboarding.begin" = "시작";
 "onboarding.skip" = "건너뛰기";
 
-/* Mode select (new) */
-"mode.eyebrow" = "측정 모드";
-"mode.title" = "측정값을 어떻게 보여드릴까요?";
-"mode.subtitle" = "언제든 설정에서 변경할 수 있습니다.";
-"mode.beginner.new_title" = "초보자";
-"mode.beginner.new_body" = "쉬운 언어의 평가 + 안내된 저널. 기술적 메타데이터는 준비될 때까지 숨김.";
-"mode.expert.new_title" = "전문가";
-"mode.expert.new_body" = "전체 진단 — SNR, beat count, lift angle, 자세 추적, raw export.";
-"mode.continue" = "계속";
+/* Mode select — Round (3-2): ModeSelectView 삭제로 dead keys 제거. */
 
 /* LongTest (new design) */
 
-/* Misc */
-"misc.brand.unknown" = "—";
-"misc.never" = "—";
+/* Misc — Round (3-2 잔여): misc.* dead. */
 
 /* Reliability notes */
 "movement.reliability.generic.title" = "측정 환경 안내";
@@ -726,7 +674,26 @@
 "trend.title" = "정확도 추이";
 "trend.range.7d" = "7일";
 "trend.range.30d" = "30일";
+"trend.range.90d" = "90일";
+"trend.range.1y" = "1년";
+"trend.range.all" = "전체";
+"trend.range.a11y.7d" = "최근 7일";
+"trend.range.a11y.30d" = "최근 30일";
+"trend.range.a11y.90d" = "최근 90일";
+"trend.range.a11y.1y" = "최근 1년";
+"trend.range.a11y.all" = "전체 기간";
 "trend.empty" = "측정 기록이 없습니다.";
+
+"pin.entry.a11y.hint" = "PIN 6자리를 입력하려면 두 번 탭하세요";
+
+"a11y.confidence_badge" = "신뢰도 %d 퍼센트";
+"a11y.disclosure.expanded" = "펼침";
+"a11y.disclosure.collapsed" = "접힘";
+
+"a11y.battery.gauge" = "배터리 %1$d 퍼센트, %2$@, %3$@ %4$@";
+"addwatch.replace_photo" = "사진 변경";
+"addwatch.remove_photo" = "사진 제거";
+"speccard.play.a11y" = "째깍 소리 재생";
 
 /* Settings */
 "settings.title" = "설정";
@@ -756,10 +723,6 @@
 "settings.movementdb.fail" = "업데이트 실패: %@";
 "settings.movementdb.version" = "무브먼트 DB 버전";
 "settings.section.timeref" = "시간 기준";
-"settings.atomic_time.check" = "원자시계 시각 확인";
-"settings.atomic_time.checking" = "원자시계 서버 조회 중…";
-"settings.atomic_time.ok" = "오프셋 %.0fms · 왕복 %.0fms";
-"settings.atomic_time.fail" = "조회 실패: %@";
 "settings.audio_input.label" = "마이크 입력";
 "settings.audio_input.empty" = "사용 가능한 입력 장치가 없습니다";
 "settings.audio_input.system_default" = "시스템 기본";
@@ -782,27 +745,24 @@
 "addwatch.story.placeholder" = "예: 할아버지가 첫 월급으로 사신 시계";
 
 /* Round 84 — 측정 화면 라벨 한국어화 (박지영 C3). */
-"measurement.eyebrow.live_rate" = "실시간 정확도";
+"measurement.eyebrow.live_rate" = "실시간 박동";
 "measurement.eyebrow.live_signal" = "실시간 신호";
 "measurement.eyebrow.metrics" = "측정 지표";
 "measurement.metric.beat_error" = "박동 오차";
-"measurement.metric.amplitude" = "진폭";
 "measurement.metric.bph" = "진동수";
-"measurement.metric.confidence" = "신뢰도";
 
 /* Round 90 — Story card label */
 "watch.story.label" = "이 시계의 이야기";
 
 /* Round 92 — Today tab (사용자 요청: 설정 탭 제거 + 오늘 탭) */
 "tab.today" = "오늘";
-"today.greeting" = "오늘의 시계는 어떠셨나요?";
+"today.greeting" = "오늘의 손목, 무엇을 두를까요";
 "today.stat.watches" = "시계 가족";
 "today.stat.this_week" = "이번 주 측정";
 "today.shake.title" = "오늘의 시계 뽑기";
 "today.shake.subtitle" = "오늘 손목 위에 무엇을 차볼까요?";
 "today.fortune.title" = "오늘의 다이얼 운세";
 "today.fortune.subtitle" = "날짜별로 바뀌는 행운의 다이얼·번호·복장.";
-"today.family.title" = "숨쉬는 시계";
 
 /* Round 93 — 시계 컨셉별 시계뽑기 멘트 */
 "shake.reason.dress.1" = "단정한 자리에 잘 어울려요";
@@ -872,8 +832,12 @@
 "notif.battery.title" = "🔋 %@";
 
 /* Round 113 — Pro 게이팅 */
-"pro.limit.watch.title" = "시계 2개 한도 도달";
-"pro.limit.watch.body" = "무료 플랜은 시계 2개까지 등록할 수 있어요. TickLab Pro로 업그레이드하면 제한 없이 컬렉션을 관리할 수 있습니다.";
+"pro.limit.watch.title" = "시계 1개 한도 도달";
+"pro.limit.watch.body" = "무료 플랜은 시계 1개까지 등록할 수 있어요. TickLab Pro (연 $9.99) 로 업그레이드하면 제한 없이 컬렉션을 관리할 수 있습니다.";
+"pro.limit.daily_measurement.title" = "오늘 측정 한도 도달";
+"pro.limit.daily_measurement.body" = "무료 플랜은 하루에 3회까지 측정할 수 있어요. TickLab Pro (연 $9.99) 로 업그레이드하면 무제한으로 측정할 수 있습니다.";
+"pro.limit.journal_monthly.title" = "이달 일기 한도 도달";
+"pro.limit.journal_monthly.body" = "무료 플랜은 한 달에 5개의 일기를 작성할 수 있어요. TickLab Pro (연 $9.99) 로 업그레이드하면 무제한으로 기록할 수 있습니다.";
 
 /* Round 116 — A11y: ShakePick 버튼 레이블 */
 "shake.cta.a11y.label" = "시계 뽑기";
@@ -943,6 +907,45 @@
 "collection.status.service" = "서비스";
 "pro.limit.upgrade" = "Pro로 업그레이드";
 
+/* TickLab Pro 구독 페이월 (연 9.99$) */
+"purchase.headline" = "TickLab Pro";
+"purchase.subtitle" = "컬렉션과 측정을 무제한으로 — 진정한 워치메이커의 도구를 누려보세요.";
+"purchase.benefit.unlimited_watches.title" = "무제한 시계 등록";
+"purchase.benefit.unlimited_watches.body" = "1개 한도 없이 컬렉션 전체를 관리하세요.";
+"purchase.benefit.unlimited_measurements.title" = "무제한 측정";
+"purchase.benefit.unlimited_measurements.body" = "하루 3회 제한 없이 언제든 측정하세요.";
+"purchase.benefit.unlimited_journal.title" = "무제한 일기";
+"purchase.benefit.unlimited_journal.body" = "월 5개 제한 없이 모든 순간을 기록하세요.";
+"purchase.benefit.unlimited_ai.title" = "무제한 AI 진단";
+"purchase.benefit.unlimited_ai.body" = "시계별 3회 trial 없이 매번 AI 해석을 받아보세요.";
+"purchase.plan.yearly" = "연간 구독";
+"purchase.plan.yearly.per_year" = "/ 년 자동 갱신 — 언제든 취소 가능";
+"purchase.cta.subscribe" = "Pro 시작하기";
+"purchase.cta.processing" = "처리 중…";
+"purchase.cta.restore" = "이전 구매 복원";
+"purchase.cta.restoring" = "복원 중…";
+"purchase.legal.auto_renew" = "구독은 취소 전까지 자동 갱신됩니다. 언제든 설정에서 관리할 수 있어요.";
+"purchase.legal.terms" = "이용 약관";
+"purchase.legal.privacy" = "개인정보 처리방침";
+"purchase.success.title" = "Pro 활성화 완료";
+"purchase.success.body" = "모든 기능이 잠금 해제됐어요. 즐거운 워치메이킹 되세요!";
+"purchase.error.title" = "구매 오류";
+"purchase.unavailable" = "App Store 에 연결 중이에요. 잠시 후 다시 시도해 주세요.";
+"purchase.retry" = "다시 시도";
+"aidiag.trial.remaining" = "AI 진단 %d/%d 남음";
+"aidiag.trial.exhausted_cta" = "AI 진단 무제한으로 — Pro 업그레이드";
+"purchase.context.watch_limit" = "시계 1개 한도에 도달했어요 — Pro 면 무제한 등록";
+"purchase.context.daily_measurement" = "오늘 측정 3회 한도에 도달했어요 — Pro 면 무제한 측정";
+"purchase.context.journal_monthly" = "이번 달 일기 5개 한도에 도달했어요 — Pro 면 무제한 기록";
+"purchase.context.ai_trial" = "AI 진단 trial 을 모두 사용했어요 — Pro 면 매번 AI";
+"cosc.bar.min" = "−12";
+"cosc.bar.max" = "+12";
+"cosc.bar.range" = "COSC −4 ~ +6";
+"aidiag.confidence.grade.high" = "높음";
+"aidiag.confidence.grade.medium" = "중간";
+"aidiag.confidence.grade.low" = "낮음";
+"unit.seconds_short" = "%d 초";
+
 /* Round 127 — MeasurementResultView Hard Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";
 "result.snr_beats_hint" = "SNR %.0f dB · %d beats";
@@ -998,7 +1001,6 @@
 "today.primary.empty.cta" = "시계 선택";
 
 /* Round 133: 사진 소스 선택 시트 */
-"photo.source.title" = "사진 선택";
 "photo.source.library" = "사진 보관함";
 "photo.source.camera" = "사진 찍기";
 "photo.source.remove" = "사진 삭제";
@@ -1012,14 +1014,10 @@
 "magnetic.chart.title" = "실시간 자기장";
 "magnetic.chart.live" = "LIVE";
 "wear.toast.logged" = "오늘 착용 기록됨";
-"today.family.see_state" = "시계 상태";
 "today.states.title" = "시계 상태";
-"battery.expected_change" = "예상 교체일";
-"battery.expected_life" = "예상 수명";
-"measurement.title" = "측정";
+/* Round (3-2 잔여): battery.expected_change/life dead. */
+"measurement.title" = "박동 듣기";
 "fortune.nav.title" = "오늘의 다이얼 운세";
-"measurement.coaching.contact" = "마이크 접촉";
-"measurement.coaching.stability" = "락 안정";
 "result.grade.eyebrow" = "측정 신뢰도";
 "result.grade.a.claim" = "±3 s/d 신뢰 — 곧바로 활용 가능";
 "result.grade.b.claim" = "±10 s/d 신뢰 — 추세 참고 OK";
@@ -1048,3 +1046,108 @@
 "league.myteam.global_count" = "회 글로벌";
 "league.myteam.badge" = "MY TEAM";
 "league.last_updated" = "%@ 업데이트";
+
+"result.rate.reference_only" = "참고용 수치";
+"result.action.done" = "완료";
+"measurement.hint.weak_detection" = "⚠️ 시계 박동이 잘 감지되지 않아요. 마이크에 더 가까이 대고 손가락이 마이크를 가리지 않게 해주세요.";
+"measurement.hint.analyzing" = "🔍 박동 패턴 분석 중 — 30초 정도 측정하면 결과가 안정됩니다.";
+"measurement.hint.no_lock" = "🔍 박동 주기를 잡지 못했어요. 마이크 위치를 조정하고 다시 시도해주세요.";
+"measurement.hint.no_lock_debug" = "🔍 박동 주기 잡히지 않아요. [DBG: %@]";
+
+"addwatch.brand.custom.hint" = "목록에 없는 브랜드명을 직접 입력하세요.";
+"common.ok" = "확인";
+
+"measurement.status.measuring" = "박동 듣는 중…";
+"welcome.illustration.verdict" = "🟡 약간 빠릅니다";
+
+"stats.subtitle" = "측정과 착용 데이터를 분석해 컬렉션의 흐름을 읽어요";
+"journal.subtitle" = "손목과 함께한 작은 메모";
+
+"league.myteam.rank_value" = "%@  %d위";
+"badges.summary.earned" = "%d / %d 획득";
+"badges.summary.level" = "LV. %d";
+"stats.wear.days_value" = "%d일";
+"watch.mood.last_active" = "%d일 전 마지막 활동 · 에너지 %d%%";
+"collection.filter.favorites_only" = "즐겨찾기만";
+"result.grade.a.gloss" = "측정 결과가 신뢰할 수 있는 범위 안에 있어요.";
+"result.grade.b.gloss" = "측정 결과를 활용할 수 있는 수준이에요.";
+"result.grade.c.gloss" = "측정 신호가 약해 정확도가 낮아요. 다시 측정해보세요.";
+"result.grade.f.gloss" = "측정 신호가 너무 약하거나 시계 상태에 문제가 있을 수 있어요.";
+"share.save.success" = "사진에 저장되었습니다";
+"share.save.failed" = "저장에 실패했어요";
+"share.save.permission_denied" = "사진 접근 권한이 필요해요";
+"result.action.share" = "공유";
+
+"magnetic.unavailable.title" = "자기장 센서 미지원";
+"magnetic.unavailable.body" = "이 기기에는 자기장 센서가 없어 측정할 수 없습니다.";
+
+"a11y.favorite.add" = "즐겨찾기에 추가";
+"a11y.favorite.remove" = "즐겨찾기 해제";
+"a11y.wear_today" = "오늘 착용 표시";
+"a11y.value.worn" = "착용함";
+"a11y.value.not_worn" = "착용 안 함";
+"a11y.more_actions" = "더 보기";
+"a11y.change_photo" = "사진 변경";
+"a11y.photo_view" = "사진 크게 보기";
+
+"measurement.diagnostic.mic" = "마이크";
+"measurement.diagnostic.snr" = "잡음비";
+"measurement.diagnostic.onsets" = "박동";
+"measurement.diagnostic.bph" = "BPH";
+
+"stats.eyebrow.figures" = "ANALYSIS";
+"badges.rarity.common" = "일반";
+"badges.rarity.rare" = "레어";
+"badges.rarity.epic" = "에픽";
+"badges.rarity.legendary" = "전설";
+
+"share.aspect.a11y" = "비율 선택";
+"shake.schedule.toggle.a11y" = "매일 추천 알림";
+"common.discard.title" = "작성 중인 내용을 버릴까요?";
+"common.discard.message" = "입력한 내용은 저장되지 않습니다.";
+"common.discard.confirm" = "버리기";
+
+"watchbox.stats.occupied" = "보관 중";
+"watchbox.stats.brands" = "브랜드";
+"watchbox.stats.avg_rate" = "평균 오차";
+"watchbox.stats.empty" = "빈자리";
+"watchbox.empty.a11y_hint" = "컬렉션에서 시계를 추가하세요";
+
+"badges.locked" = "잠김";
+
+"speccard.record.a11y.recording" = "녹음 중";
+"speccard.record.a11y.idle" = "대기 상태";
+
+"a11y.rate_value" = "오차율 %1$@ %2$@";
+
+"movement.reliability.coaxial.title" = "코액시얼 진폭은 표시되지 않습니다";
+"movement.reliability.coaxial.notice" = "코액시얼 escapement 무브먼트는 마이크 기반 amplitude 추정이 부정확해 amplitude 셀이 숨겨집니다. rate / beat error 는 정상 측정됩니다.";
+"movement.reliability.amplitude_unstable.title" = "진폭이 불안정할 수 있습니다";
+"movement.reliability.amplitude_unstable.notice" = "이 무브먼트는 측정 환경 (자세·온도·power reserve) 에 따라 진폭 값 변동이 큽니다. 같은 자세에서 3-5회 측정 후 평균값을 참고하세요.";
+
+"measurement.winding_hint.title" = "측정 전 풀와인딩 권장";
+"measurement.winding_hint.body" = "오토매틱/매뉴얼 시계는 충분히 감겨 있어야 정확도가 안정합니다. 크라운 40-50회 감은 뒤 측정하세요. 충전 부족 시 일관된 음수 오차 (-20 s/d 이상) 가 나올 수 있습니다.";
+"measurement.winding_hint.cta" = "확인했어요";
+
+"pin.entry.a11y.progress" = "%1$d / %2$d 자리 입력됨";
+"pin.entry.a11y.failed" = "올바르지 않습니다";
+
+"speccard.spec.power_reserve" = "파워리저브";
+
+"measurement.waveform.a11y.label" = "실시간 음파";
+"measurement.waveform.a11y.snr" = "신호 %.0f 데시벨";
+"measurement.waveform.a11y.idle" = "듣는 중";
+
+"journal.detail.delete.confirm" = "일기를 삭제할까요?";
+"journal.detail.delete.message" = "삭제한 일기와 사진은 복구할 수 없습니다.";
+
+"watchbox.slot.a11y.position" = "%d번 슬롯";
+
+"measurement.countdown" = "%d초 남음";
+"measurement.countdown.a11y" = "남은 시간 %d초";
+"a11y.rate_uncertainty" = "정밀도 %@";
+
+"addwatch.movement.search.prompt" = "캘리버 검색 (예: 2824, Rolex)";
+"addwatch.movement.section.recommended" = "브랜드 기반 추천";
+"addwatch.movement.section.all" = "전체 무브먼트";
+"addwatch.movement.section.results" = "검색 결과";

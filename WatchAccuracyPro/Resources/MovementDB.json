@@ -504,7 +504,7 @@
       "Breguet 5177",
       "Breguet Classique"
     ],
-    "bph": 35800,
+    "bph": 21600,
     "liftAngleDegrees": 52.0,
     "escapement": "siliconEscapement",
     "typicalAmplitudeMin": 270.0,
@@ -965,7 +965,7 @@
       "AS calibre 1902",
       "vintage Swiss automatic"
     ],
-    "bph": 21000,
+    "bph": 21600,
     "liftAngleDegrees": 52.0,
     "escapement": "swissLever",
     "typicalAmplitudeMin": 230.0,
@@ -979,7 +979,7 @@
     "brandFamilies": [
       "Hamilton vintage Electric/manual"
     ],
-    "bph": 14400,
+    "bph": 18000,
     "liftAngleDegrees": 52.0,
     "escapement": "swissLever",
     "typicalAmplitudeMin": 220.0,

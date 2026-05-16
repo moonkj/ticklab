@@ -12,6 +12,8 @@ final class MovementDBOTAService {
         case invalidPayload
         case checksumMismatch
         case payloadTooLarge
+        /// Round 16 (Jay): host whitelist 위반 — MITM/redirect 의심.
+        case untrustedHost
     }
 
     /// MITM 공격으로 거대한 payload 폭탄을 던지는 시나리오 방지. 5MB 상한.
@@ -64,7 +66,7 @@ final class MovementDBOTAService {
         // Round 104 (Swift): URL.host property deprecated iOS 16+ → URL.host() 메서드 사용.
         guard let dataHost = manifest.dataURL.host(),
               dataHost == "ticklab.app" || dataHost.hasSuffix(".ticklab.app") else {
-            throw OTAError.checksumMismatch
+            throw OTAError.untrustedHost
         }
         let payload = try await fetchData(url: manifest.dataURL)
         // sha256 이 제공됐으면 반드시 검증. 없어도 host 가드 통과했으면 진행 (legacy manifest 호환).

@@ -47,8 +47,10 @@ final class AppLockService: ObservableObject {
                 .deviceOwnerAuthenticationWithBiometrics,
                 localizedReason: String(localized: "applock.reason")
             )
-            unlocked = success
+            // Round 15 (Min): 인증 취소/실패 시 unlocked = false 로 덮어쓰지 않음.
+            //   이미 unlocked 인 세션이 biometric 재인증 실패로 락 되는 회귀 차단.
             if success {
+                unlocked = true
                 lastUnlockedAt = Date()
                 // Face ID 성공은 PIN 실패 카운터를 리셋 (사용자가 본인임을 입증).
                 pinService.resetFailureCount()
@@ -66,8 +68,8 @@ final class AppLockService: ObservableObject {
                 .deviceOwnerAuthentication,
                 localizedReason: String(localized: "applock.reason")
             )
-            unlocked = success
             if success {
+                unlocked = true
                 lastUnlockedAt = Date()
                 pinService.resetFailureCount()
             }

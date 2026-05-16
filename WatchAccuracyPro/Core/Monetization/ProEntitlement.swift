@@ -1,50 +1,57 @@
 import Foundation
 import StoreKit
 
-/// $9.99 one-time IAP — TickLab Pro.
-/// Pivot Hard Rule: Subscription 금지, one-time only.
+/// $9.99/yr 구독 — TickLab Pro. (사용자 결정: one-time → yearly subscription 으로 변경)
 ///
 /// Free tier 제한:
-/// - 워치 최대 2개
+/// - 시계 등록 최대 1개
+/// - 측정 하루 3회
 /// - 일기 월 5개
 /// - AI Diagnosis trial 3회/시계
 /// Pro: 모든 제한 해제 + Share Card 고급 스타일 + Service log 무제한.
-///
-/// Phase 1: Stub. Phase 2 에서 StoreKit 2 product fetch + purchase 흐름 구현.
 @MainActor
 final class ProEntitlement: ObservableObject {
     static let shared = ProEntitlement()
 
-    static let productId = "com.ticklab.app.pro.lifetime"
-    static let freeWatchLimit = 2
+    static let productId = "com.ticklab.app.pro.yearly"
+    static let freeWatchLimit = 1
+    static let freeDailyMeasurementLimit = 3
     static let freeJournalMonthLimit = 5
     static let freeAITrialPerWatch = 3
 
     @Published private(set) var isPro: Bool = false
+
+    /// Round 15 (Jay): 중복 listener 방지. iPad multi-window scene rebuild 시
+    ///   startTransactionListener 가 두 번 호출되면 double-finish 위험.
+    private var listenerTask: Task<Void, Never>?
 
     private init() {
         // UserDefaults 에서 빠른 lookup (UserPreferences.isPro 와 sync).
         self.isPro = UserDefaults.standard.bool(forKey: "ticklab.isPro")
     }
 
-    /// StoreKit 2 transaction listener — app launch 시 한 번 시작.
+    /// StoreKit 2 transaction listener — app launch 시 한 번 시작. 중복 호출은 no-op.
     func startTransactionListener() {
-        Task {
+        guard listenerTask == nil else { return }
+        listenerTask = Task { [weak self] in
             for await update in Transaction.updates {
-                await handle(update)
+                await self?.handle(update)
             }
         }
     }
 
     private func handle(_ result: VerificationResult<Transaction>) async {
-        guard case .verified(let transaction) = result,
-              transaction.productID == Self.productId else { return }
+        guard case .verified(let transaction) = result else { return }
+        // Round 18 (Doyoon): productID 가 다른 transaction 도 반드시 finish() — 미finish 시
+        //   Transaction.updates 가 매 부팅마다 같은 record 를 다시 던져 listener 무한 replay.
+        //   App Review 가 unfinished queue 잔존을 거절 사유로 잡는 케이스 있음.
+        defer { Task { await transaction.finish() } }
+        guard transaction.productID == Self.productId else { return }
         if transaction.revocationDate == nil {
             storeKitMarkPro(true)
         } else {
             storeKitMarkPro(false)
         }
-        await transaction.finish()
     }
 
     /// Purchase entry — Phase 2 에 PurchaseView 가 호출.

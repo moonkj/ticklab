@@ -23,6 +23,28 @@ enum WatchDetailTrendRange: String, CaseIterable {
         case .year: return 365; case .all: return 9999
         }
     }
+
+    /// Round 11: localized tab label (rawValue 영문 유지 — analytics/test 호환).
+    var localizedLabel: String {
+        switch self {
+        case .week:    return String(localized: "trend.range.7d")
+        case .month:   return String(localized: "trend.range.30d")
+        case .quarter: return String(localized: "trend.range.90d")
+        case .year:    return String(localized: "trend.range.1y")
+        case .all:     return String(localized: "trend.range.all")
+        }
+    }
+
+    /// VoiceOver용 자연어 라벨.
+    var accessibilityLabel: String {
+        switch self {
+        case .week:    return String(localized: "trend.range.a11y.7d")
+        case .month:   return String(localized: "trend.range.a11y.30d")
+        case .quarter: return String(localized: "trend.range.a11y.90d")
+        case .year:    return String(localized: "trend.range.a11y.1y")
+        case .all:     return String(localized: "trend.range.a11y.all")
+        }
+    }
 }
 
 /// Round 73: 외부 컨테이너(WatchDetailView)의 range picker 가 이미 filter 한 measurements 를 받아 그리는 dumb presenter.
@@ -38,18 +60,34 @@ struct TrendChartView: View {
     }
 
     private var xDomain: ClosedRange<Date> {
-        let end = Date()
+        let now = Date()
+        // 사용자 보고: 30d/1y range 에서 마지막 axis label (오늘) 이 chart 오른쪽 edge 에서 절반 잘려 "..." 표시.
+        //   domain upperBound 에 trailing padding 추가 → 마지막 mark 가 chart 안쪽으로 위치, 라벨 완전 표시.
         guard let r = range else {
-            let start = sorted.first?.timestamp ?? end.addingTimeInterval(-7 * 86400)
-            return start...end
+            let start = sorted.first?.timestamp ?? now.addingTimeInterval(-7 * 86400)
+            return start...trailingPaddedEnd(now, range: nil)
         }
         switch r {
         case .all:
-            let start = sorted.first?.timestamp ?? end.addingTimeInterval(-7 * 86400)
-            return start...end
+            let start = sorted.first?.timestamp ?? now.addingTimeInterval(-7 * 86400)
+            return start...trailingPaddedEnd(now, range: r)
         default:
-            return r.cutoffDate...end
+            return r.cutoffDate...trailingPaddedEnd(now, range: r)
         }
+    }
+
+    /// range 별 적정 trailing padding — 마지막 axis label 잘림 차단.
+    /// week: 0.5 day, month: 1.5 day, quarter: 4 day, year: 15 day, all: 동적.
+    private func trailingPaddedEnd(_ now: Date, range: WatchDetailTrendRange?) -> Date {
+        let pad: TimeInterval
+        switch range ?? .week {
+        case .week:    pad = 86400 * 0.5
+        case .month:   pad = 86400 * 1.5
+        case .quarter: pad = 86400 * 4
+        case .year:    pad = 86400 * 15
+        case .all:     pad = 86400 * 2
+        }
+        return now.addingTimeInterval(pad)
     }
 
     var body: some View {
@@ -105,11 +143,13 @@ struct TrendChartView: View {
             return AnyAxisContent(AxisMarks(values: .stride(by: .day, count: 1)) { _ in
                 AxisGridLine()
                 AxisValueLabel(format: .dateTime.month(.defaultDigits).day())
+                    .font(.system(size: 9, design: .monospaced))
             })
         case .month:
             return AnyAxisContent(AxisMarks(values: .stride(by: .day, count: 7)) { _ in
                 AxisGridLine()
                 AxisValueLabel(format: .dateTime.month(.defaultDigits).day())
+                    .font(.system(size: 9, design: .monospaced))
             })
         case .quarter:
             return AnyAxisContent(AxisMarks(values: .stride(by: .month, count: 1)) { _ in
@@ -132,11 +172,13 @@ struct TrendChartView: View {
                 return AnyAxisContent(AxisMarks(values: .stride(by: .day, count: 1)) { _ in
                     AxisGridLine()
                     AxisValueLabel(format: .dateTime.month(.defaultDigits).day())
+                        .font(.system(size: 9, design: .monospaced))
                 })
             } else if spanDays <= 60 {
                 return AnyAxisContent(AxisMarks(values: .stride(by: .day, count: 7)) { _ in
                     AxisGridLine()
                     AxisValueLabel(format: .dateTime.month(.defaultDigits).day())
+                        .font(.system(size: 9, design: .monospaced))
                 })
             } else if spanDays <= 365 {
                 return AnyAxisContent(AxisMarks(values: .stride(by: .month, count: 1)) { _ in

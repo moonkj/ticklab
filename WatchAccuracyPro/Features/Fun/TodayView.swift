@@ -13,7 +13,8 @@ struct TodayView: View {
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.modelContext) private var modelContext
 
-    private let today = Date()
+    /// Round 12: 자정 넘어가도 stale 안 되도록 computed.
+    private var today: Date { Date() }
 
     /// Round 176: RootTabView 가 주입하는 NavigationStack path.
     private let externalPath: Binding<NavigationPath>?
@@ -44,9 +45,11 @@ struct TodayView: View {
                     // Round 176 (사용자 UX 요청 #2): 대표 시계 명확화. 설정 됐으면 큰 카드, 아니면 빈 상태 CTA.
                     primaryWatchSection
                     todaysWatchCard
-                    fortuneCard
-                    // Round 134 사용자 요청: 자기장 카드 항상 노출 (설정 토글 제거).
-                    magneticCheckCard
+                    // 시각적 리듬: fortune + magnetic 을 2-col grid 로 묶어 hero card 와 차별화
+                    HStack(spacing: 10) {
+                        fortuneCard
+                        magneticCheckCard
+                    }
                     watchFamilySection
                 }
                 .padding(.horizontal, 16)
@@ -123,23 +126,20 @@ struct TodayView: View {
                     .lineLimit(1)
             }
             Spacer()
-            // 오늘 착용 표시 (탭으로 토글하진 않음 — 상세에서 토글).
-            if worn {
-                HStack(spacing: 4) {
-                    Image(systemName: "checkmark.seal.fill")
-                        .font(.system(size: 11))
-                    Text(String(localized: "watch.worn_today"))
-                        .font(.system(size: 11, weight: .semibold))
+            // 오늘 착용 토글 (탭 가능)
+            Button {
+                UISelectionFeedbackGenerator().selectionChanged()
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                    WearLogService.toggleToday(watch, in: modelContext)
                 }
-                .foregroundStyle(AppColors.accent)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 4)
-                .background(AppColors.accent50)
-                .clipShape(Capsule())
+            } label: {
+                Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
+                    .font(.system(size: 22, weight: worn ? .semibold : .regular))
+                    .foregroundStyle(worn ? AppColors.accent : AppColors.ink3)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundStyle(AppColors.ink3)
+            .buttonStyle(.plain)
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -178,12 +178,14 @@ struct TodayView: View {
                     showingPrimaryPicker = true
                 } label: {
                     Text(String(localized: "today.primary.empty.cta"))
-                        .font(.system(size: 12, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(AppColors.paper0)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .frame(minHeight: 44)
                         .background(AppColors.accent)
                         .clipShape(Capsule())
+                        .contentShape(Capsule())
                 }
                 .buttonStyle(.plain)
             }
@@ -299,83 +301,68 @@ struct TodayView: View {
     // MARK: - Fortune
 
     private var fortuneCard: some View {
-        NavigationLink {
-            DialFortuneView()
-        } label: {
-            HStack(spacing: 14) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(LinearGradient(
-                            colors: [Color(red: 0.10, green: 0.13, blue: 0.22),
-                                     Color(red: 0.17, green: 0.20, blue: 0.32)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .frame(width: 64, height: 64)
-                    Image(systemName: "sparkles")
-                        .font(.system(size: 26))
-                        .foregroundStyle(Color(red: 0.95, green: 0.85, blue: 0.55))
-                }
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "today.fortune.title"))
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(AppColors.ink0)
-                    Text(String(localized: "today.fortune.subtitle"))
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.ink2)
-                        .multilineTextAlignment(.leading)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(AppColors.ink3)
-            }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColors.paper1)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+        NavigationLink { DialFortuneView() } label: {
+            compactSquareCard(
+                title: String(localized: "today.fortune.title"),
+                subtitle: String(localized: "today.fortune.subtitle"),
+                icon: "sparkles",
+                iconColor: Color(red: 0.95, green: 0.85, blue: 0.55),
+                gradient: [Color(red: 0.10, green: 0.13, blue: 0.22),
+                           Color(red: 0.17, green: 0.20, blue: 0.32)]
+            )
         }
         .buttonStyle(.plain)
     }
 
-    // MARK: - Magnetic Field Check (Round 180, Sora)
+    // MARK: - Magnetic Field Check
 
     private var magneticCheckCard: some View {
-        NavigationLink {
-            MagneticFieldView()
-        } label: {
-            HStack(spacing: 14) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14)
-                        .fill(LinearGradient(
-                            colors: [Color(red: 0.18, green: 0.32, blue: 0.55),
-                                     Color(red: 0.30, green: 0.46, blue: 0.72)],
-                            startPoint: .topLeading, endPoint: .bottomTrailing))
-                        .frame(width: 64, height: 64)
-                    Image(systemName: "dot.radiowaves.left.and.right")
-                        .font(.system(size: 26))
-                        .foregroundStyle(.white)
-                }
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "today.card.magnetic.title"))
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(AppColors.ink0)
-                    Text(String(localized: "today.card.magnetic.subtitle"))
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.ink2)
-                        .multilineTextAlignment(.leading)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(AppColors.ink3)
-            }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColors.paper1)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+        NavigationLink { MagneticFieldView() } label: {
+            compactSquareCard(
+                title: String(localized: "today.card.magnetic.title"),
+                subtitle: String(localized: "today.card.magnetic.subtitle"),
+                icon: "dot.radiowaves.left.and.right",
+                iconColor: .white,
+                gradient: [Color(red: 0.18, green: 0.32, blue: 0.55),
+                           Color(red: 0.30, green: 0.46, blue: 0.72)]
+            )
         }
         .buttonStyle(.plain)
+    }
+
+    /// 2-col grid 용 컴팩트 정사각형 카드.
+    private func compactSquareCard(title: String, subtitle: String, icon: String,
+                                    iconColor: Color, gradient: [Color]) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(LinearGradient(colors: gradient,
+                                         startPoint: .topLeading, endPoint: .bottomTrailing))
+                    .frame(width: 48, height: 48)
+                Image(systemName: icon)
+                    .font(.system(size: 22))
+                    .foregroundStyle(iconColor)
+            }
+            VStack(alignment: .leading, spacing: 3) {
+                Text(title)
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                    .lineLimit(1)
+                Text(subtitle)
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppColors.ink2)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, minHeight: 140, alignment: .topLeading)
+        .background(AppColors.paper1)
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+        .contentShape(RoundedRectangle(cornerRadius: 14))
     }
 
     // MARK: - Watch Family

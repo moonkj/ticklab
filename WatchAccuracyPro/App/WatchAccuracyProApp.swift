@@ -1,12 +1,27 @@
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 @main
 struct WatchAccuracyProApp: App {
-    @State private var preferences = UserPreferences()
+    @State private var preferences: UserPreferences
     let container: ModelContainer
 
     init() {
+        // Round 14 (Doyoon): @State var preferences + let prefs = UserPreferences() 두 instance 의
+        //   divergent state 위험 — 단일 instance 만 만들고 @State 와 container init 양쪽에 공유.
+        let prefs = UserPreferences()
+        _preferences = State(initialValue: prefs)
+        // Round 19 (사용자 보고: "오늘의 시계 뽑기 알람 안 옴"):
+        //   foreground 시 알림 banner 가 보이지 않던 원인 — UNUserNotificationCenterDelegate 미등록.
+        //   willPresent 에서 [.banner, .sound, .list] 반환해야 노출됨.
+        UNUserNotificationCenter.current().delegate = TickLabNotificationDelegate.shared
+        // 사용자 보고: 풀와인딩 안내 토스트가 직전 빌드의 인라인 dismiss 로 24h 차단됨.
+        //   일회성 migration: timestamp reset → 새 modal 카드 1회 표시 후 정상 정책 적용.
+        if !UserDefaults.standard.bool(forKey: "ticklab.windingHintMigrationV2Done") {
+            UserDefaults.standard.removeObject(forKey: "ticklab.windingHintShownAt")
+            UserDefaults.standard.set(true, forKey: "ticklab.windingHintMigrationV2Done")
+        }
         // Round 133 사용자 보고: 오늘/일기 탭 상단 제목이 흰색으로 보이지 않음.
         // SwiftUI 의 toolbarColorScheme 만으론 large title 색상이 시스템 default(흰색) 로 잡히는 케이스 발견.
         // UINavigationBarAppearance 로 large/inline 제목 색을 명시적으로 검은색 강제.
@@ -20,7 +35,6 @@ struct WatchAccuracyProApp: App {
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
         UINavigationBar.appearance().compactAppearance = appearance
 
-        let prefs = UserPreferences()
         // 1차: 디스크 store. 실패하면(Phase 2 schema 변경 + 기존 store mismatch 등) in-memory 로 폴백.
         // 폴백은 사용자가 시뮬레이터/디바이스 데이터 정리하기 전까지 임시 유지.
         let attempted: ModelContainer
@@ -28,8 +42,10 @@ struct WatchAccuracyProApp: App {
         do {
             attempted = try Self.makeContainer(iCloud: prefs.iCloudSyncEnabled, inMemory: false)
         } catch {
+            #if DEBUG
             print("⚠️ Disk ModelContainer failed (\(error)) — falling back to in-memory store. " +
                   "Erase the app/simulator data to recover persistent storage.")
+            #endif
             didFallback = true
             attempted = (try? Self.makeContainer(iCloud: false, inMemory: true))
                 ?? Self.emergencyInMemoryContainer()
@@ -107,26 +123,28 @@ struct WatchAccuracyProApp: App {
     /// (실 시계는 |rate| ≤ 60 s/d, beat error ≤ 5 ms 가 정상.)
     private static func cleanupAnomalousMeasurements(in container: ModelContainer) {
         let context = ModelContext(container)
-        let descriptor = FetchDescriptor<WatchMeasurement>()
-        guard let all = try? context.fetch(descriptor) else { return }
-        var deleted = 0
-        for m in all where abs(m.rateSecondsPerDay) > 300 || m.beatErrorMs > 100 {
+        // Round 14 (Sora): no-predicate full fetch + in-memory scan → SwiftData predicate push-down.
+        // 5000 row 시 cold launch I/O 대폭 감소.
+        let descriptor = FetchDescriptor<WatchMeasurement>(
+            predicate: #Predicate { $0.rateSecondsPerDay > 300 || $0.rateSecondsPerDay < -300 || $0.beatErrorMs > 100 }
+        )
+        guard let anomalies = try? context.fetch(descriptor), !anomalies.isEmpty else { return }
+        for m in anomalies {
             context.delete(m)
-            deleted += 1
         }
-        if deleted > 0 {
-            try? context.save()
-            print("ℹ️ Cleaned up \(deleted) anomalous measurements from previous build.")
-        }
+        try? context.save()
+        #if DEBUG
+        print("ℹ️ Cleaned up \(anomalies.count) anomalous measurements from previous build.")
+        #endif
     }
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(preferences)
-                // Round 51: 앱 전체 light mode 강제 — paper0 배경 + 시스템 dark 텍스트 흰색 conflict 해결.
-                // DialFortuneView 와 LockScreenView 는 자체 .preferredColorScheme(.dark) 로 override.
                 .preferredColorScheme(.light)
+                // 매우 큰 Dynamic Type 에서 layout 깨짐 방지 — accessibility3 까지 허용.
+                .dynamicTypeSize(.xSmall ... .accessibility3)
         }
         .modelContainer(container)
     }
@@ -139,7 +157,7 @@ private struct RootView: View {
     @State private var showFallbackAlert = UserDefaults.standard.bool(forKey: "ticklab.lastLaunchUsedInMemoryFallback")
     @State private var isUnlocked: Bool = false
     @State private var lastBackgroundedAt: Date?
-    @Query private var allWatches: [Watch]
+    @Query(sort: \Watch.createdAt, order: .reverse) private var allWatches: [Watch]
 
     private var needsLock: Bool {
         preferences.appLockEnabled && !isUnlocked

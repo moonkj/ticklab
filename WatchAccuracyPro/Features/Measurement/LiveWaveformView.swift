@@ -31,6 +31,12 @@ struct LiveWaveformView: View {
         .frame(maxWidth: .infinity)
         .background(AppColors.surface)
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(String(localized: "measurement.waveform.a11y.label")))
+        .accessibilityValue(
+            snrDB.map { Text(String(format: NSLocalizedString("measurement.waveform.a11y.snr", comment: ""), $0)) }
+                ?? Text(String(localized: "measurement.waveform.a11y.idle"))
+        )
     }
 }
 

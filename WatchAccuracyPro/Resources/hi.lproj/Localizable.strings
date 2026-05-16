@@ -1,0 +1,1154 @@
+/* App */
+"app.name" = "TickLab";
+
+/* Common */
+"common.cancel" = "रद्द करें";
+"common.save" = "सहेजें";
+"common.done" = "हो गया";
+"common.delete" = "हटाएँ";
+"common.unspecified" = "अनिर्दिष्ट";
+"common.next" = "आगे";
+"common.continue" = "जारी रखें";
+
+/* Tabs */
+"tab.collection" = "संग्रह";
+"tab.journal" = "जर्नल";
+"tab.stats" = "इनसाइट्स";
+"tab.settings" = "सेटिंग्स";
+
+/* Welcome */
+"welcome.tagline" = "रोज़ का रिकॉर्ड,\nआपकी घड़ी के साथ।";
+"welcome.cta_start" = "शुरू करें";
+"welcome.skip" = "छोड़ें";
+"welcome.pick_watch" = "एक घड़ी चुनें";
+"feature.measure.title" = "मापें";
+"feature.measure.body" = "फ़ोन के माइक से अपनी घड़ी की टिक सुनें।\nदैनिक रेट और बीट एरर पाएँ।";
+"feature.collect.title" = "रोज़ाना आर्काइव";
+"feature.collect.body" = "तस्वीरें, नोट्स और माप — सब एक जगह।\nअपनी घड़ियों के साथ जीवन की डायरी।";
+"feature.journal.title" = "सरल भाषा में निष्कर्ष";
+"feature.journal.body" = "जटिल आँकड़े एक पंक्ति में।\nउपलब्ध होने पर Apple Intelligence परिणाम समझाएगा।";
+/* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
+"welcome.subtitle" = "हर टिक में परिशुद्धता।";
+"watch.primary.set" = "फ़ीचर्ड बनाएँ";
+"watch.primary.unset" = "फ़ीचर्ड हटाएँ";
+"stats.mood.this_month" = "इस महीने";
+"welcome.footer" = "मापें · संभालें · जर्नल · शब्दावली · 4 अक्ष";
+"welcome.pick_watch.subtitle" = "विवरण बाद में जोड़ सकते हैं। जल्दी शुरू करना चाहेंगे?";
+
+/* Journal */
+"journal.title" = "जर्नल";
+"journal.view.grid" = "ग्रिड";
+"journal.view.feed" = "फ़ीड";
+"journal.view.calendar" = "कैलेंडर";
+"journal.has_measurement" = "माप संलग्न";
+"journal.empty.title" = "अपनी पहली प्रविष्टि शुरू करें";
+"journal.empty.body" = "आज की घड़ी, मनोदशा और एक छोटा नोट दर्ज करें।";
+"journal.compose.title" = "नई प्रविष्टि";
+"journal.compose.watch" = "घड़ी";
+"journal.compose.no_watch" = "कोई नहीं";
+"journal.compose.mood" = "मनोदशा";
+"journal.compose.body" = "विवरण";
+"journal.compose.placeholder" = "आज की घड़ी कैसी रही?";
+"journal.compose.photos" = "तस्वीरें";
+"journal.compose.photo_count" = "%d तस्वीर(ें)";
+"journal.detail.share" = "साझा करें";
+"journal.detail.no_body" = "(कोई विवरण नहीं)";
+"journal.detail.measurement_attached" = "दिन की माप";
+"journal.detail.share_card_cta" = "शेयर कार्ड बनाएँ";
+
+/* Mood */
+"mood.happy" = "ख़ुश";
+"mood.proud" = "गर्व";
+"mood.curious" = "जिज्ञासु";
+"mood.neutral" = "तटस्थ";
+"mood.concerned" = "चिंतित";
+"mood.nostalgic" = "पुरानी यादों भरा";
+
+/* Stats */
+"stats.title" = "विश्लेषण";
+"stats.total_measurements" = "कुल माप";
+"stats.total_entries" = "प्रविष्टियाँ";
+"stats.mood_breakdown" = "मनोदशा का विभाजन";
+"stats.average_rate.title" = "औसत रेट";
+"stats.average_rate.subtitle" = "%d माप पर आधारित";
+"stats.average_rate.stddev" = "विचलन ±%.1f s/d";
+"stats.empty.mood" = "मनोदशा का विभाजन देखने के लिए प्रविष्टियाँ दर्ज करें।";
+"stats.empty.positions" = "माप पर पोज़ीशन सेट करने पर पोज़ीशन का औसत दिखेगा।";
+
+/* Share Card */
+"share.title" = "शेयर कार्ड";
+"share.background" = "बैकग्राउंड";
+"share.show_metrics" = "मेट्रिक्स दिखाएँ";
+"share.show_caption" = "कैप्शन दिखाएँ";
+"share.show_date" = "तारीख़ दिखाएँ";
+"share.photo_source" = "तस्वीर";
+"share.photo_entry" = "प्रविष्टि की तस्वीर";
+"share.photo_profile" = "प्रोफ़ाइल";
+"share.photo_custom" = "कस्टम";
+"share.photo_pick" = "तस्वीर चुनें";
+"share.photo_change" = "तस्वीर बदलें";
+"share.export" = "साझा करें";
+"share.save_to_photos" = "फ़ोटोज़ में सहेजें";
+
+/* Glossary — old glossary.title removed (Round 128 dedup). Latest at line 582. */
+
+/* Service log */
+"service.type.fullOverhaul" = "पूर्ण ओवरहॉल";
+"service.type.partialService" = "आंशिक सर्विस";
+"service.type.checkup" = "एक्यूरेसी जाँच";
+"service.type.waterTest" = "वॉटर टेस्ट";
+"service.type.batteryReplace" = "बैटरी बदलना";
+"service.type.crystalReplace" = "क्रिस्टल बदलना";
+"service.type.crownGasket" = "क्राउन/गैस्केट";
+"service.type.bracelet" = "ब्रेसलेट";
+"service.type.other" = "अन्य";
+
+/* App lock */
+"applock.reason" = "TickLab अनलॉक करें";
+
+/* PIN auth */
+"pin.setup.title" = "PIN सेट करें";
+"pin.setup.enter" = "6-अंकीय PIN दर्ज करें";
+"pin.setup.confirm" = "पुष्टि के लिए फिर से दर्ज करें";
+"pin.setup.mismatch" = "PIN मेल नहीं खाते";
+"pin.setup.success" = "PIN सफलतापूर्वक सेट हो गया";
+"pin.entry.title" = "PIN दर्ज करें";
+"pin.entry.remaining" = "%d प्रयास शेष";
+"pin.entry.locked_out" = "PIN लॉक हो गया — Face ID का उपयोग करें";
+"pin.entry.use_face_id" = "Face ID का उपयोग करें";
+"settings.applock.pin_enabled" = "PIN सक्षम करें";
+"settings.applock.pin_setup" = "PIN सेट करें";
+"settings.applock.pin_warning" = "5 असफल प्रयासों के बाद, केवल Face ID से अनलॉक होगा";
+
+"alert.store_fallback.title" = "स्टोर फ़ॉलबैक सक्रिय";
+"alert.store_fallback.message" = "पिछला डेटाबेस फ़ॉर्मैट बदल गया है, इसलिए हम अस्थायी इन-मेमोरी स्टोरेज पर चल रहे हैं। इस सत्र का डेटा ऐप बंद होने पर खो जाएगा। स्थायी स्टोरेज पुनर्स्थापित करने के लिए ऐप पुनः स्थापित करें।";
+
+/* Collection (new design) */
+"collection.eyebrow" = "द बेंच";
+"collection.subtitle" = "यांत्रिक परिशुद्धता की दैनिक डायरी";
+"collection.empty.subtitle" = "घड़ी जोड़ें → 30-सेकंड का माप → एक्यूरेसी देखें। हर रीडिंग आपकी घड़ी की कहानी में एक नया अध्याय लिखती है।";
+"collection.search.placeholder" = "संग्रह में खोजें";
+/* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
+"collection.section.recent" = "हाल ही में मापे गए";
+"collection.last_rate" = "अंतिम रेट";
+"collection.runs" = "%d रन";
+"collection.no_measurements" = "अभी कोई माप नहीं — शुरू करने के लिए टैप करें";
+"collection.footer" = "TICKLAB · v0.2 · 2026";
+
+/* Watch detail (new) */
+"watch.section.latest" = "नवीनतम रीडिंग";
+"watch.section.trend" = "समय के साथ रेट";
+"watch.history.runs" = "इतिहास · %d रन";
+"collection.reorder" = "पुनः क्रमित करें";
+"collection.reorder.title" = "कार्ड पुनः क्रमित करें";
+"collection.add_watch" = "घड़ी जोड़ें";
+"watch.history.deleteOne.title" = "माप हटाएँ";
+"watch.history.deleteOne.message" = "यह माप हटाएँ? यह वापस नहीं किया जा सकता।";
+"watch.history.showMore" = "%d और दिखाएँ";
+"watch.history.collapse" = "कम दिखाएँ";
+"watch.history.deleteAll.title" = "सभी माप हटाएँ";
+"watch.history.deleteAll.message" = "इस घड़ी की सभी %d माप हटाएँ? यह वापस नहीं किया जा सकता।";
+"watch.history.deleteAll.confirm" = "सभी हटाएँ";
+
+/* Measurement note (Round 29) */
+"measurement.note.title" = "माप नोट";
+"measurement.note.placeholder" = "इस रन के लिए नोट्स — पोज़ीशन, केस की स्थिति, वातावरण (वैकल्पिक)।";
+"watch.no_readings.title" = "अभी कोई रीडिंग नहीं";
+"watch.no_readings.body" = "अपनी पहली रीडिंग दर्ज करने के लिए नीचे 'मापें' दबाएँ। अधिकांश मूवमेंट के लिए 30 सेकंड पर्याप्त हैं।";
+"watch.label.rate" = "रेट";
+"watch.label.beat_error" = "बीट एरर";
+"watch.label.position" = "पोज़ीशन";
+"watch.stat.mean" = "औसत";
+"watch.stat.deviation" = "σ विचलन";
+"watch.stat.best" = "सर्वश्रेष्ठ";
+"watch.spec.caliber" = "कैलिबर";
+"watch.spec.bph" = "BPH";
+"watch.spec.lift_angle" = "लिफ़्ट एंगल";
+"watch.spec.escapement" = "एस्केपमेंट";
+"position.dialup_short" = "DU";
+"position.dialdown_short" = "DD";
+"position.crownleft_short" = "CL";
+"position.crownright_short" = "CR";
+"position.pendantup_short" = "CU";
+"position.pendantdown_short" = "CD";
+
+/* Result (new) */
+"result.eyebrow.subtitle" = "%@ · %@";
+"result.section.metrics" = "सभी मेट्रिक्स";
+"result.section.details" = "रीडिंग विवरण";
+"result.cosc.in" = "✓ COSC बैंड";
+"result.cosc.out" = "COSC से बाहर";
+"result.cosc.range" = "−4 / +6 s/d";
+"result.action.again" = "फिर से मापें";
+/* Round 23 (Doyoon): result.amplitude.healthy/borderline/service/coaxial dead — amplitudeHint() 제거됨. */
+"result.beat.excellent" = "उत्कृष्ट सममिति";
+"result.beat.acceptable" = "स्वीकार्य, समय के साथ नज़र रखें";
+"result.label.duration" = "अवधि";
+"result.label.beat_count" = "बीट संख्या";
+"result.label.snr" = "SNR";
+"result.label.position" = "पोज़ीशन";
+
+/* Onboarding (new) */
+"onboarding.eyebrow.welcome" = "स्वागत है";
+"onboarding.page1.new_title" = "आपकी जेब में टाइमग्राफ़र।";
+"onboarding.page1.new_body" = "TickLab आपकी यांत्रिक घड़ी की धड़कन सुनता है और एक सेकंड के दसवें भाग तक बताता है कि वह कैसा प्रदर्शन कर रही है।";
+"onboarding.eyebrow.howItWorks" = "यह कैसे काम करता है";
+"onboarding.page2.new_title" = "बस रखें। बस सुनें।";
+"onboarding.page2.new_body" = "अपनी घड़ी को iPhone माइक्रोफ़ोन के पास रखें। तीस सेकंड पर्याप्त हैं। हम परमाण्विक समय के संदर्भ में रेट, बीट एरर और एम्प्लीट्यूड निकालते हैं।";
+"onboarding.eyebrow.archive" = "आपका आर्काइव";
+"onboarding.page3.new_title" = "हर रीडिंग, सुरक्षित।";
+"onboarding.page3.new_body" = "हर घड़ी के लिए जर्नल बनाएँ। हफ़्तों में उसका ड्रिफ़्ट देखें। CSV में निर्यात करें। iCloud के माध्यम से निजी तौर पर डिवाइसों के बीच सिंक करें।";
+"onboarding.continue" = "जारी रखें";
+"onboarding.begin" = "शुरू करें";
+"onboarding.skip" = "छोड़ें";
+
+/* Mode select — Round (3-2): ModeSelectView 삭제로 dead keys 제거. */
+
+/* LongTest (new) */
+
+/* Round (3-2 잔여): misc.* dead. */
+
+/* Units */
+"unit.seconds_per_day" = "s/d";
+
+/* Onboarding */
+"onboarding.title" = "आपकी घड़ी, सटीक समय पर।";
+"onboarding.subtitle" = "अपने iPhone से यांत्रिक घड़ी की एक्यूरेसी मापें।";
+"onboarding.cta.start" = "शुरू करें";
+"onboarding.cta.next" = "आगे";
+"onboarding.page1.title" = "अपने iPhone से मापें";
+"onboarding.page1.body" = "बस माइक्रोफ़ोन ही चाहिए। अपने संग्रह की हर घड़ी पर नज़र रखें।";
+"onboarding.page2.title" = "AI परिणाम समझाता है";
+"onboarding.page2.body" = "सिर्फ़ आँकड़ों से अधिक — समझें कि आपकी घड़ी क्या कर रही है।";
+"onboarding.page3.title" = "कोरियाई और अंग्रेज़ी समर्थन";
+"onboarding.page3.body" = "शब्दावली, घड़ी डेटाबेस और माप मार्गदर्शिका आपकी भाषा में।";
+
+/* Mode — Round (3-2): 모두 dead. */
+
+/* Collection */
+"collection.title" = "मेरी घड़ियाँ";
+"collection.empty.title" = "अपनी पहली घड़ी जोड़ें";
+/* collection.empty.subtitle: old version removed (Round 129 dedup). Current value at line 135. */
+"collection.empty.cta" = "घड़ी जोड़ें";
+
+/* Watch row */
+"watch.cta.measure" = "मापना शुरू करें";
+
+/* Add watch */
+"addwatch.title" = "घड़ी जोड़ें";
+"addwatch.section.photo" = "तस्वीर";
+"addwatch.section.basic" = "बुनियादी जानकारी";
+"addwatch.section.movement" = "मूवमेंट";
+"addwatch.brand" = "ब्रांड";
+"addwatch.brand.custom" = "अगर सूची में नहीं है तो ब्रांड लिखें";
+"wear.toggle.on" = "पहन रहे हैं";
+"wear.toggle.off" = "आज पहनें";
+"watch.primary.badge" = "फ़ीचर्ड";
+"speccard.note" = "नोट";
+"speccard.title.label" = "शीर्षक";
+"speccard.movement" = "मूवमेंट";
+"speccard.sound.section" = "मूवमेंट ध्वनि (5 सेकंड)";
+"speccard.camera" = "तस्वीर लें";
+"watch.journal.empty.title" = "इस घड़ी के लिए जर्नल";
+"watch.service.empty.title" = "कोई सर्विस रिकॉर्ड नहीं";
+"watch.service.empty.body" = "ओवरहॉल, डीमैग्नेटाइज़ेशन, ख़रीद और अन्य देखभाल इवेंट दर्ज करें।";
+"watch.service.add" = "सर्विस लॉग जोड़ें";
+"watch.mood.empty" = "अभी कोई माप या वियर रिकॉर्ड नहीं";
+"watch.wind.title" = "रोज़ाना वाइंडिंग रिमाइंडर";
+"watch.battery.title" = "क्वार्ट्ज़ बैटरी";
+"watch.battery.life_months" = "अपेक्षित जीवन: %d महीने";
+"watch.battery.due_date" = "अपेक्षित समाप्ति: %@";
+"collection.challenge.title" = "अगली चुनौती — एक हफ़्ते की माप";
+"addwatch.movement.manual.hint" = "स्थिरता के लिए मैनुअल घड़ी को रोज़ एक ही समय पर वाइंड करें।";
+"addwatch.movement.quartz.hint" = "क्वार्ट्ज़ बैटरियाँ आमतौर पर 2–3 साल चलती हैं। समाप्ति से एक हफ़्ता पहले हम सूचित करेंगे।";
+"addwatch.serial.hint" = "विवरण स्क्रीन से सीरियल नंबर सुरक्षित रूप से जोड़ें (Keychain में संग्रहीत)।";
+"journal.empty.no_watch" = "पहले अपने संग्रह में एक घड़ी जोड़ें।";
+"journal.compose.cta" = "नई प्रविष्टि";
+"journal.detail.measurement_deleted" = "यह माप रिकॉर्ड हटा दिया गया है।";
+"watchdetail.photo.library" = "लाइब्रेरी से चुनें";
+"watchdetail.tab.measure" = "मापें";
+"watchdetail.tab.journal" = "जर्नल";
+"watchdetail.tab.service" = "सर्विस";
+"settings.section.journal_notif" = "जर्नल · सूचनाएँ";
+"settings.journal_reminder" = "रोज़ाना जर्नल रिमाइंडर";
+"settings.time" = "समय";
+"settings.time.default_21" = "21:00 (डिफ़ॉल्ट)";
+"settings.random_pick.toggle" = "🎲 रोज़ की रैंडम घड़ी";
+"settings.random_pick.time" = "इस समय सूचित करें";
+"settings.random_pick.section.header" = "आज की घड़ी";
+"settings.random_pick.section.footer" = "जब आपके पास 2+ घड़ियाँ हों, तब आपके निर्धारित समय पर हम एक को रैंडम चुनेंगे।";
+"settings.section.security" = "सुरक्षा";
+"settings.applock" = "ऐप लॉक (Face ID)";
+"settings.serial_mask" = "सीरियल मास्क";
+"settings.serial_mask.value" = "चालू (डिफ़ॉल्ट)";
+"common.close" = "बंद करें";
+"common.edit" = "संपादित करें";
+"common.show_more_count" = "+%d और";
+"common.collapse" = "समेटें";
+"menu.watchbox" = "वॉच बॉक्स";
+"menu.speccard" = "स्पेक कार्ड";
+/* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
+"menu.speccard.create" = "स्पेक कार्ड बनाएँ";
+"watch.photo.dialog.title" = "घड़ी की तस्वीर";
+"speccard.list.empty" = "अभी कोई कार्ड नहीं";
+"speccard.photo.add" = "तस्वीर जोड़ें";
+"speccard.photo.change" = "तस्वीर बदलें";
+"speccard.field.case_size" = "केस आकार (mm)";
+"speccard.field.power_reserve" = "पावर रिज़र्व (h)";
+"speccard.field.placeholder.case" = "उदा., 40";
+"speccard.field.placeholder.power" = "उदा., 70";
+"speccard.movement.custom_placeholder" = "उदा., ETA 7750, इन-हाउस कैलिबर";
+"speccard.movement.none" = "चयनित नहीं";
+"speccard.play.label.playing" = "चल रहा है";
+"speccard.play.label.idle" = "मूवमेंट ध्वनि बजाएँ";
+"glossary.search.prompt" = "शब्द खोजें";
+"battery.empty" = "कोई क्वार्ट्ज़ घड़ी पंजीकृत नहीं";
+"battery.timeline" = "अपेक्षित टाइमलाइन";
+"battery.today" = "आज";
+"battery.replace.recorded" = "बदले गए के रूप में चिह्नित करें";
+"shake.title.eyebrow" = "आज की घड़ी";
+"shake.cta.retry" = "फिर से चुनें";
+"shake.cta.wear" = "इसे पहन कर निकलें";
+"shake.cta.wear.done" = "आज पहन रहे हैं";
+"shake.tip" = "अपना फ़ोन हिलाएँ या टैप करें। आप रोज़ाना सूचना भी निर्धारित कर सकते हैं।";
+"shake.section.mywatches" = "मेरी घड़ियाँ";
+"league.collecting" = "यह %@ रैंकिंग अभी एकत्रित की जा रही है।";
+"league.cheer" = "उत्साह दें";
+"league.ranking.all" = "सभी रैंकिंग";
+"badges.earned" = "अर्जित";
+// Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
+"badges.detail.header" = "अनलॉक किया गया बैज";
+"fortune.title.eyebrow" = "आज की डायल राशिफल";
+"fortune.today_prefix" = "आज है ";
+"fortune.today_suffix" = " का दिन";
+"fortune.rituals.title" = "आज के घड़ी रिवाज";
+"fortune.share.cta" = "आज की राशिफल साझा करें";
+"tamagotchi.empty" = "अभी कोई घड़ी पंजीकृत नहीं";
+"tamagotchi.energy" = "ऊर्जा";
+"tamagotchi.measure" = "मापें";
+"tamagotchi.family.title" = "परिवार (%d)";
+"tamagotchi.wind" = "वाइंड";
+"tamagotchi.winding" = "वाइंडिंग";
+"tamagotchi.wear_today" = "आज पहनें";
+"tamagotchi.worn_today" = "आज दर्ज";
+"welcome.carousel.final_cta" = "मेरी घड़ी जोड़ें";
+"lockscreen.app_name" = "TickLab";
+"lockscreen.faceid.unlock" = "Face ID से अनलॉक करें";
+"settings.section.ai" = "AI निदान";
+"settings.ai.toggle" = "Apple Intelligence का उपयोग करें";
+"settings.ai.footer.on" = "Apple Intelligence माप परिणामों को एक पंक्ति में व्याख्या करता है। iOS 26 और एक समर्थित डिवाइस आवश्यक है; अन्यथा रूल-आधारित पर वापस जाता है।";
+"settings.ai.footer.off" = "केवल रूल-आधारित निदान (3 स्तर) का उपयोग किया जाएगा।";
+"settings.ai.unavailable.title" = "इस डिवाइस पर Apple Intelligence उपलब्ध नहीं है";
+"settings.ai.unavailable.body" = "इसे Settings → Apple Intelligence & Siri में सक्षम करें। अनुपलब्ध होने पर रूल-आधारित निदान स्वचालित रूप से दिखाया जाता है। Settings खोलने के लिए टैप करें।";
+"watchbox.slots" = "स्लॉट";
+"watchbox.material" = "सामग्री";
+"editwatch.title" = "घड़ी संपादित करें";
+"watch.menu.edit" = "विवरण संपादित करें";
+"watch.menu.favorite.add" = "पसंदीदा में जोड़ें";
+"watch.menu.favorite.remove" = "पसंदीदा से हटाएँ";
+"watch.menu.delete" = "घड़ी हटाएँ";
+"watch.delete.confirm.title" = "घड़ी हटाएँ";
+"watch.delete.confirm.body" = "यह इस घड़ी की सभी माप, जर्नल प्रविष्टियाँ और स्पेक कार्ड हटा देगा। यह वापस नहीं किया जा सकता।";
+"battery.empty.hint" = "बैटरी जीवन यहाँ ट्रैक करने के लिए Collection टैब से 'Quartz' मूवमेंट टाइप वाली घड़ी जोड़ें।";
+"tamagotchi.empty.hint" = "परिवार का सदस्य जोड़ने के लिए Collection टैब से एक घड़ी जोड़ें।";
+"speccard.delete.title" = "स्पेक कार्ड हटाएँ";
+"speccard.delete.body" = "इससे संलग्न तस्वीर और मूवमेंट ध्वनि फ़ाइल भी हट जाएगी।";
+"settings.account.pro_name" = "TickLab Pro सदस्य";
+"settings.account.free_name" = "TickLab Free";
+"settings.account.pro_body" = "Pro · सभी सुविधाएँ अनलॉक";
+"settings.account.free_body" = "Free · कोर सुविधाएँ उपयोग में";
+"notification.permission.denied.title" = "सूचनाएँ बंद हैं";
+"notification.permission.denied.body" = "रिमाइंडर पाने के लिए iOS Settings में TickLab सूचनाएँ सक्षम करें।";
+"notification.permission.open_settings" = "सेटिंग्स खोलें";
+"settings.icloud.restart.title" = "iCloud सेटिंग बदली गई";
+"settings.icloud.restart.body" = "नई सिंक सेटिंग ऐप के अगले लॉन्च पर प्रभावी होगी।";
+"stats.wear.this_month" = "वियर — इस महीने";
+"stats.wear.section" = "वियर";
+"stats.wear.prev_month" = "पिछला महीना";
+"stats.wear.next_month" = "अगला महीना";
+"stats.wear.jump_current" = "इस महीने पर जाएँ";
+"stats.wear.next_month.disabled_hint" = "वर्तमान महीना नवीनतम है";
+"stats.wear.a11y.today_prefix" = "आज";
+"stats.wear.a11y.no_wear" = "कोई वियर लॉग नहीं";
+"stats.wear.a11y.count" = "%d बार पहना गया";
+"stats.wear.total_days" = "%d दिन";
+"stats.wear.empty" = "अभी कोई वियर लॉग नहीं। आज दर्ज करने के लिए Collection में घड़ी कार्ड पर ✓ बटन दबाएँ।";
+"stats.wear.cumulative" = "संचयी वियर";
+"stats.wear.cumulative.title" = "घड़ी के हिसाब से संचयी वियर";
+"stats.wear.cumulative.empty" = "अभी कोई संचयी वियर रिकॉर्ड नहीं।";
+"watch.battery.last_replaced" = "अंतिम बार बदली गई";
+"quickwatch.custom.title" = "अन्य";
+"quickwatch.custom.subtitle" = "कस्टम प्रविष्टि";
+"a11y.watch_silhouette" = "%@ घड़ी का चित्रण";
+"a11y.rate_dial" = "रेट डायल %.1f %@";
+
+/* AI / Mood / Movement / Notif sweep */
+"aidiag.fallback.ok.headline" = "🟢 स्वस्थ";
+"aidiag.fallback.ok.body" = "COSC सहनशीलता के भीतर। बहुत अच्छा लग रहा है।";
+"aidiag.fallback.warn.headline" = "🟡 थोड़ी तेज़";
+"aidiag.fallback.warn.body" = "संभावित चुंबकीय प्रभाव। क्या हेयर ड्रायर या स्पीकर के पास थी?";
+"aidiag.fallback.danger.headline" = "🔴 सर्विस की सलाह";
+"aidiag.fallback.danger.body" = "ओवरहॉल का समय है। किसी वॉचमेकर से सलाह लें।";
+"aidiag.confidence.ai" = "AI विश्वास";
+"aidiag.confidence.rule" = "माप विश्वास";
+"aidiag.expand.collapsed" = "क्यों? ▼";
+"aidiag.expand.expanded" = "क्यों? ▲";
+"aidiag.causes.title" = "संभावित कारण";
+"aidiag.disclaimer.ai" = "AI विश्लेषण सूचनात्मक है। निदान के लिए वॉचमेकर पर भरोसा करें।";
+"aidiag.disclaimer.rule" = "यह रूल-आधारित सारांश है। निदान के लिए वॉचमेकर पर भरोसा करें।";
+"aidiag.source.loading" = "विश्लेषण किया जा रहा है…";
+"aidiag.source.ai" = "Apple Intelligence";
+"aidiag.source.rule" = "माप";
+"aidiag.cause.ok.1" = "सामान्य दैनिक उतार-चढ़ाव";
+"aidiag.cause.ok.2" = "स्थिर माप परिस्थितियाँ";
+"aidiag.cause.warn.1" = "चुंबकीय संपर्क (हेयर ड्रायर, स्पीकर)";
+"aidiag.cause.warn.2" = "लंबे समय तक एक ही पोज़ीशन";
+"aidiag.cause.warn.3" = "ओवरहॉल चक्र निकट";
+"aidiag.cause.danger.1" = "एम्प्लीट्यूड सामान्य सीमा से बाहर";
+"aidiag.cause.danger.2" = "संभावित चुंबकीय प्रभाव";
+"aidiag.cause.danger.3" = "सर्विस की सलाह — वॉचमेकर से परामर्श लें";
+
+"mood.label.energetic" = "ऊर्जावान";
+"mood.label.happy" = "ख़ुश";
+"mood.label.sleepy" = "नींद में";
+"mood.label.dormant" = "सुप्त";
+"mood.label.lowBattery" = "कम बैटरी";
+"mood.label.needsWind" = "वाइंडिंग ज़रूरी";
+
+"movementtype.automatic" = "ऑटोमैटिक";
+"movementtype.manual" = "मैनुअल";
+"movementtype.quartz" = "क्वार्ट्ज़";
+
+"notif.wind.body" = "अपनी घड़ी को वाइंड करने का समय।";
+"notif.battery.body_prefix" = "बैटरी बदलना नज़दीक (अपेक्षित %@)।";
+"notif.random.body" = "आज %@ %@ कैसी रहेगी?";
+
+"addwatch.movement.type" = "मूवमेंट प्रकार";
+"addwatch.movement.type.label" = "प्रकार";
+"addwatch.wind.toggle" = "रोज़ाना वाइंडिंग रिमाइंडर";
+"addwatch.wind.time" = "इस समय सूचित करें";
+"addwatch.battery.last_replaced" = "अंतिम बैटरी बदली गई";
+"addwatch.battery.reminder.toggle" = "बदलाव रिमाइंडर";
+
+"speccard.spec.movement" = "मूवमेंट";
+"speccard.spec.case" = "केस";
+"speccard.spec.registered" = "पंजीकृत";
+"speccard.nav.title" = "स्पेक कार्ड";
+"speccard.movement.custom_toggle" = "कस्टम प्रविष्टि";
+"speccard.movement.pick" = "सूची से चुनें";
+"speccard.record.recording" = "रिकॉर्ड हो रहा है... %ds";
+"speccard.record.again" = "फिर से रिकॉर्ड करें";
+"speccard.record.start" = "5 सेकंड रिकॉर्ड करें";
+"speccard.note.placeholder" = "इस घड़ी की कहानी...";
+"speccard.record.error.prep" = "रिकॉर्डिंग तैयारी विफल";
+"speccard.record.error.start" = "रिकॉर्डिंग शुरू नहीं हुई: %@";
+"speccard.record.error.failed" = "रिकॉर्डिंग विफल — कृपया फिर से प्रयास करें";
+"speccard.record.error.short" = "रिकॉर्डिंग बहुत छोटी (फिर से प्रयास करें)";
+"speccard.record.error.save" = "सहेजना विफल: %@";
+"speccard.play.error.no_file" = "बजाने के लिए कोई फ़ाइल नहीं";
+"speccard.play.error.missing" = "रिकॉर्डिंग फ़ाइल नहीं मिली";
+"speccard.play.error.empty" = "रिकॉर्डिंग ख़ाली है (फिर से रिकॉर्ड करें)";
+"speccard.play.error.prep" = "प्लेबैक तैयारी विफल";
+"speccard.play.error.start" = "प्लेबैक शुरू नहीं हो सका";
+"speccard.play.error.failed" = "प्लेबैक विफल: %@";
+"badges.filter.all" = "सभी";
+"badges.filter.earned" = "अर्जित";
+"badges.filter.locked" = "प्रगति में";
+"badges.b1.name" = "डीप डाइवर";        "badges.b1.desc" = "एक डाइवर घड़ी मापें";
+"badges.b2.name" = "कलेक्टर";         "badges.b2.desc" = "5+ घड़ियाँ पंजीकृत करें";
+"badges.b3.name" = "एक सच्ची घड़ी";    "badges.b3.desc" = "एक घड़ी लगातार 30 दिन पहनें";
+"badges.b4.name" = "डॉन पट्रोल";       "badges.b4.desc" = "सुबह 5 बजे से पहले 10 माप";
+"badges.b5.name" = "COSC मास्टर";       "badges.b5.desc" = "7 दिन COSC परिणाम";
+"badges.b6.name" = "मूनवॉकर";        "badges.b6.desc" = "एक मूनफ़ेज़ घड़ी पंजीकृत करें";
+"badges.b7.name" = "टाइम ट्रैवलर";     "badges.b7.desc" = "एक GMT घड़ी मापें";
+"badges.b8.name" = "सेंचुरियन";         "badges.b8.desc" = "एक घड़ी पर 100 माप";
+"badges.b9.name" = "ब्रांड विविधता";   "badges.b9.desc" = "5 अलग ब्रांड";
+"badges.b10.name" = "पहली टिक";       "badges.b10.desc" = "अपनी पहली माप पूरी करें";
+"badges.b11.name" = "जर्नल कीपर";   "badges.b11.desc" = "50 जर्नल प्रविष्टियाँ लिखें";
+"badges.b12.name" = "संग्रह पूर्ण"; "badges.b12.desc" = "बाकी सभी बैज अनलॉक करें";
+"badges.b13.name" = "COSC उपलब्धि";    "badges.b13.desc" = "COSC विनिर्देश के भीतर मापा गया";         "badges.b13.condition" = "रेट -4 ~ +6 s/d एक बार";
+"badges.b14.name" = "ग्रेड A";          "badges.b14.desc" = "सर्वोच्च माप विश्वसनीयता";   "badges.b14.condition" = "विश्वास ≥75";
+"badges.b15.name" = "बीट मास्ट्रो";     "badges.b15.desc" = "अत्यंत सटीक बीट डिटेक्शन";  "badges.b15.condition" = "बीट एरर < 0.1ms";
+"badges.b16.name" = "नाइट आउल";        "badges.b16.desc" = "आधी रात के बाद माप";            "badges.b16.condition" = "रात 10 बजे के बाद 5 माप";
+"badges.b17.name" = "10 माप";  "badges.b17.desc" = "लगातार डेटा बना रहे हैं";           "badges.b17.condition" = "कुल 10 माप";
+"badges.b18.name" = "50 माप";  "badges.b18.desc" = "एक्यूरेसी के बारे में गंभीर";             "badges.b18.condition" = "कुल 50 माप";
+"badges.b19.name" = "वार्षिक चैंपियन";  "badges.b19.desc" = "एक घड़ी पर 365 माप";      "badges.b19.condition" = "एक ही घड़ी पर 365 रन";
+"badges.b20.name" = "विंटेज प्रेमी";    "badges.b20.desc" = "रेट्रो मूवमेंट का आकर्षण";           "badges.b20.condition" = "18000/19800 BPH घड़ी पंजीकृत करें";
+"badges.b21.name" = "क्रोनोग्राफ़र";    "badges.b21.desc" = "जटिल कॉम्प्लिकेशंस के मालिक";         "badges.b21.condition" = "एक क्रोनोग्राफ़ घड़ी पंजीकृत करें";
+"badges.b22.name" = "डबल डिजिट्स";    "badges.b22.desc" = "10 या अधिक घड़ियाँ संग्रहीत";       "badges.b22.condition" = "10+ घड़ियाँ पंजीकृत करें";
+"badges.b1.condition" = "एक डाइवर/सबमरीनर घड़ी पंजीकृत करें";
+"badges.b2.condition" = "5+ घड़ियाँ पंजीकृत करें";
+"badges.b3.condition" = "एक घड़ी पर 30+ वियर लॉग";
+"badges.b4.condition" = "सुबह 5 बजे से पहले 10 माप";
+"badges.b5.condition" = "7+ अलग ब्रांड";
+"badges.b6.condition" = "एक मूनफ़ेज़ घड़ी पंजीकृत करें";
+"badges.b7.condition" = "एक GMT घड़ी पंजीकृत करें";
+"badges.b8.condition" = "एक घड़ी पर 100 माप";
+"badges.b9.condition" = "5+ अलग ब्रांड";
+"badges.b10.condition" = "पहली माप पूरी करें";
+"badges.b11.condition" = "50+ जर्नल प्रविष्टियाँ लिखें";
+"badges.b12.condition" = "सभी 21 अन्य बैज अनलॉक करें";
+"badges.toast.title" = "बैज अनलॉक हुआ!";
+"service.section.type" = "प्रकार";
+"service.picker.type" = "सर्विस प्रकार";
+"service.section.record" = "रिकॉर्ड";
+"service.date" = "तारीख़";
+"service.center" = "सर्विस सेंटर";
+"service.cost" = "लागत";
+"service.section.note" = "नोट्स";
+"service.note.placeholder" = "विवरण";
+"service.title.add" = "सर्विस लॉग जोड़ें";
+"service.title.edit" = "सर्विस लॉग संपादित करें";
+"stats.more" = "और";
+"stats.entry.badges" = "बैज";
+"stats.entry.badges.subtitle" = "संग्रह की प्रगति ट्रैक करें";
+"stats.entry.league" = "ब्रांड लीग";
+"stats.entry.league.subtitle" = "आपकी टीम बनाम वैश्विक";
+"welcome.firstresult.cta" = "संग्रह पर जाएँ";
+"welcome.firstresult.ready" = "तैयार";
+"welcome.firstresult.body" = "अब संग्रह से एक घड़ी चुनें और मापें।";
+"welcome.firstresult.tip.title" = "पहली माप का सुझाव";
+"welcome.firstresult.tip.body" = "एक शांत जगह में अपनी घड़ी के केसबैक को सीधे फ़ोन के नीचे वाले माइक पर रखें — 30 सेकंड।";
+"quickwatch.cta.pick" = "एक घड़ी चुनें";
+"quickwatch.cta.custom" = "कस्टम प्रविष्टि → आगे";
+"quickwatch.cta.next" = "आगे → पहली माप";
+"shake.title" = "आज की घड़ी";
+"shake.cta.shaking" = "हिल रहा है…";
+"shake.cta.idle" = "चुनने के लिए हिलाएँ";
+"shake.schedule.daily" = "रोज़ %02d:%02d";
+"shake.schedule.subtitle.active" = "2+ घड़ियों के साथ सक्रिय";
+"shake.schedule.subtitle.inactive" = "2+ घड़ियाँ होने पर सक्रिय";
+"shake.reason.1" = "दिन भर साथ";
+"shake.reason.2" = "एक घड़ी जिसे आपने मिस किया";
+"shake.reason.3" = "कुछ समय से नहीं पहनी";
+"shake.reason.4" = "सुबह का अभिवादन";
+"shake.reason.5" = "एक अच्छे दिन के लिए घड़ी";
+"shake.reason.6" = "इस घड़ी के लिए उपयुक्त दिन";
+"shake.reason.7" = "फिर से आपकी कलाई पर";
+"shake.reason.8" = "आज यही";
+"league.news.suffix" = "समाचार";
+"league.news.headline" = "%@ ने इस %@ में %@ से %@x अधिक पहना!";
+"league.myteam" = "मेरी टीम";
+"league.myteam.body" = "%@ आपके वियर: %d · वैश्विक %@";
+"league.trend_increase" = "+%d%%";
+"league.period.day" = "आज";
+"league.period.week" = "सप्ताह";
+"league.period.month" = "महीना";
+"league.period.year" = "साल";
+"league.nav.title" = "ब्रांड लीग";
+"league.empty.title" = "अभी कोई वियर लॉग नहीं";
+"league.empty.body" = "ब्रांड रैंकिंग देखने के लिए अपनी घड़ियाँ लॉग करें";
+"league.news.solo" = "%@ इस %@ में %d वियर के साथ अग्रणी है!";
+"badges.nav.title" = "बैज";
+"badges.level.max" = "अधिकतम स्तर!";
+"badges.level.next" = "अगले स्तर तक %d";
+"battery.nav.title" = "बैटरी मॉनिटर";
+"battery.status.good" = "अच्छी";
+"battery.status.warn" = "जल्द बदलें";
+"battery.status.low" = "लगभग ख़त्म";
+"battery.kv.last" = "अंतिम बार बदली गई";
+"battery.kv.elapsed" = "बीता समय";
+"battery.kv.due" = "अपेक्षित समाप्ति";
+"battery.insight.low" = "बैटरी लगभग ख़ाली है। बदलाव की तैयारी करें।";
+"battery.insight.warn" = "1–2 महीने में बदलाव की सलाह।";
+"battery.insight.ok" = "अभी भरपूर बाक़ी है। EOL संकेतक सक्रिय होने पर सेकंड हैंड एक बार में 2 सेकंड कूदता है।";
+"addwatch.model" = "मॉडल";
+"addwatch.purchase_date" = "ख़रीद की तारीख़";
+"addwatch.choose_photo" = "तस्वीर जोड़ें";
+"addwatch.photo_source.title" = "तस्वीर कैसे जोड़ना चाहेंगे?";
+"addwatch.photo_source.library" = "लाइब्रेरी से चुनें";
+"addwatch.photo_source.camera" = "कैमरा से लें";
+"addwatch.discard.title" = "बदलाव छोड़ें?";
+"addwatch.discard.message" = "आपके बदलाव अभी सहेजे नहीं गए हैं।";
+"addwatch.discard.confirm" = "छोड़ें";
+"addwatch.suggested" = "सुझाया गया मूवमेंट";
+"addwatch.accept_suggestion" = "इसे चुनें";
+"addwatch.movement.picker" = "मूवमेंट";
+"addwatch.movement.manual_entry" = "मैन्युअल रूप से दर्ज करें";
+"addwatch.movement.bph_label" = "BPH (माप के लिए आवश्यक)";
+"addwatch.movement.bph_required" = "माप सक्षम करने के लिए BPH आवश्यक है";
+"addwatch.movement.bph_uncommon" = "%d BPH असामान्य है। कृपया दोबारा जाँचें";
+"addwatch.movement.unknown" = "अज्ञात (डिफ़ॉल्ट 28800 BPH)";
+"addwatch.lift_angle.label" = "लिफ़्ट एंगल ओवरराइड";
+"addwatch.lift_angle.placeholder" = "उदा. 52";
+"addwatch.skip_suggestion" = "मैन्युअल रूप से दर्ज करें";
+
+/* Watch detail */
+"watch.info.movement_specs" = "मूवमेंट विनिर्देश";
+"watch.owned_since" = "%@ से";
+"watch.history.title" = "माप इतिहास";
+
+/* Confidence */
+"confidence.label" = "विश्वास";
+
+/* Glossary */
+"glossary.title" = "शब्दावली";
+"glossary.bph" = "BPH (बीट्स प्रति घंटा)";
+"glossary.bph.desc" = "प्रति घंटा कंपन। 28800 BPH = 8 बीट/सेकंड (4Hz)।";
+"glossary.rate" = "रेट";
+"glossary.rate.desc" = "दैनिक समय विचलन। +5 s/day का मतलब है कि घड़ी प्रतिदिन 5 सेकंड आगे है।";
+"glossary.beat_error" = "बीट एरर";
+"glossary.beat_error.desc" = "टिक और टॉक अंतरालों के बीच असममिति। 0 के क़रीब बेहतर है।";
+"glossary.amplitude" = "एम्प्लीट्यूड";
+"glossary.amplitude.desc" = "बैलेंस व्हील घूर्णन कोण। स्वस्थ सीमा: 270–315°।";
+"glossary.cosc" = "COSC";
+"glossary.cosc.desc" = "स्विस क्रोनोमीटर प्रमाणन (-4 से +6 s/day)।";
+"glossary.lift_angle" = "लिफ़्ट एंगल";
+"glossary.lift_angle.desc" = "मूवमेंट-विशिष्ट एस्केपमेंट कोण। एम्प्लीट्यूड गणना के लिए उपयोग होता है।";
+"glossary.coaxial" = "को-एक्सियल एस्केपमेंट";
+"glossary.coaxial.desc" = "Omega का एस्केपमेंट डिज़ाइन। मानक टाइमग्राफ़र इसका एम्प्लीट्यूड भरोसेमंद नहीं माप सकते।";
+"glossary.mic" = "माइक dB";
+"glossary.mic.desc" = "iPhone माइक्रोफ़ोन को मिल रहा कुल वॉल्यूम। घड़ी माप के लिए −60 से −40 dB अच्छा है। −80 dB से नीचे का मतलब है फ़ोन घड़ी से बहुत दूर है।";
+"glossary.onsets" = "ऑनसेट";
+"glossary.onsets.desc" = "पता लगाई गई टिक पल्स की संख्या (12-सेकंड विंडो)। 28800 BPH घड़ियाँ ~96, 21600 BPH ~72 देती हैं।";
+
+/* Position */
+"position.dial_up" = "डायल अप";
+"position.dial_down" = "डायल डाउन";
+"position.crown_up" = "क्राउन अप";
+"position.crown_down" = "क्राउन डाउन";
+"position.crown_left" = "क्राउन लेफ़्ट";
+"position.crown_right" = "क्राउन राइट";
+"position.unknown" = "अनिर्दिष्ट";
+
+/* Measurement */
+"measurement.button.start" = "मापना शुरू करें";
+"measurement.button.stop" = "रोकें";
+"measurement.button.see_result" = "परिणाम देखें";
+"measurement.status.permission_pending" = "माइक्रोफ़ोन अनुमति जाँच रहे हैं…";
+"measurement.status.analyzing" = "विश्लेषण किया जा रहा है…";
+"measurement.permission.title" = "माइक्रोफ़ोन एक्सेस आवश्यक";
+"measurement.permission.body" = "आपकी घड़ी की एक्यूरेसी मापने के लिए हमें माइक्रोफ़ोन की आवश्यकता है। विश्लेषण के तुरंत बाद ऑडियो हटा दिया जाता है और कभी संग्रहीत नहीं होता।";
+"measurement.permission.openSettings" = "सेटिंग्स खोलें";
+"measurement.position.title" = "माप पोज़ीशन (वैकल्पिक)";
+"measurement.setup.step1.title" = "1. घड़ी को स्थिर रखें";
+"measurement.setup.step1.body" = "माप के दौरान घड़ी की पोज़ीशन में बदलाव परिणाम को ±5 s/d तक बदल सकता है। केसबैक ऊपर की ओर रखकर स्थिर सतह पर समतल रखें।";
+"measurement.setup.step2.title" = "2. केसबैक के केंद्र पर माइक रखें";
+"measurement.setup.step2.body" = "iPhone का नीचे वाला माइक (चार्ज पोर्ट के बगल का छोटा छेद) घड़ी के केसबैक के केंद्र को छूना चाहिए। माइक को उँगलियों से ढकने से बचें।";
+"measurement.setup.step3.title" = "3. शांत वातावरण";
+"measurement.setup.step3.body" = "परिवेशीय शोर (TV, बातचीत, पंखे) रोकें। SNR ≥ 20dB का लक्ष्य रखें।";
+"measurement.tips.average.title" = "सटीक माप के लिए सुझाव";
+"measurement.tips.average.body" = "एकल माप का विचरण ±5 s/d होता है। ±2 s/d परिशुद्धता के लिए **3-5 मापों** का औसत लें। मापों के बीच घड़ी को एक ही पोज़ीशन में रखें।";
+"measurement.tips.average.body.free" = "एकल माप का विचरण ±5 s/d होता है। मुफ़्त योजना प्रति दिन 3 माप की अनुमति देती है — एक ही पोज़ीशन में लगातार रन औसत को स्थिर करते हैं। 5+ मापों के साथ असीमित रन और ±2 s/d परिशुद्धता के लिए Pro पर अपग्रेड करें।";
+"measurement.tips.average.body.pro" = "एकल माप का विचरण ±5 s/d होता है। ±2 s/d परिशुद्धता के लिए **3-5 मापों** का औसत लें। मापों के बीच घड़ी को एक ही पोज़ीशन में रखें।";
+"measurement.disclaimer.title" = "रीडिंग केवल संदर्भ के लिए";
+"result.suspicious.title" = "संभावित माप त्रुटि";
+"result.suspicious.body" = "सिग्नल की गुणवत्ता अच्छी लगती है पर रेट असामान्य रूप से अधिक है। माइक्रोफ़ोन की पोज़ीशन समायोजित करके फिर से मापें।";
+"result.suspicious.retry" = "फिर से मापें";
+"measurement.disclaimer.body" = "इस ऐप से माप केवल संदर्भ के लिए हैं। माइक-आधारित एक्यूरेसी घड़ी की पोज़ीशन, वातावरण और केसबैक सामग्री पर निर्भर करती है, और पेशेवर टाइमग्राफ़र (जैसे, Witschi) का स्थान नहीं ले सकती। सर्विस निर्णयों के लिए वॉचमेकर से सलाह लें।";
+"measurement.progress.label" = "%d / %d s (अनुशंसित)";
+"measurement.hint.minimum_duration" = "स्थिर रीडिंग के लिए कम से कम 5 सेकंड मापें।";
+"measurement.hint.move_closer" = "सिग्नल कमज़ोर है। माइक्रोफ़ोन को घड़ी के क़रीब लाएँ (केसबैक छूते हुए)।";
+"measurement.hint.weak.title" = "कमज़ोर सिग्नल";
+"measurement.hint.acceptable" = "सिग्नल अच्छा है। विश्वास बढ़ाने के लिए 30s+ मापते रहें।";
+"measurement.button.retry" = "फिर से प्रयास करें";
+"measurement.fail.too_short.title" = "माप बहुत छोटा";
+"measurement.fail.too_short.body" = "BPH और रेट का अनुमान लगाने के लिए हमें कम से कम 5 सेकंड का ऑडियो चाहिए। 'फिर से प्रयास करें' दबाएँ और 30+ सेकंड मापें।";
+"measurement.fail.no_signal.title" = "घड़ी का पता नहीं चला";
+"measurement.fail.no_signal.body" = "हो सकता है माइक्रोफ़ोन घड़ी से बहुत दूर हो या कमरा बहुत शोर भरा हो। iPhone का तल केसबैक पर सीधे रखें और शांत जगह में फिर से प्रयास करें।";
+"measurement.fail.engine.title" = "ऑडियो इंजन शुरू नहीं हुआ";
+"measurement.fail.engine.body" = "कोई अन्य ऐप माइक्रोफ़ोन का उपयोग कर रहा हो सकता है, या Bluetooth रूटिंग टकराव हुआ हो। कोई कॉल/रिकॉर्डिंग ऐप बंद करके फिर से प्रयास करें।";
+
+/* Result */
+"result.title" = "माप परिणाम";
+"result.duration" = "अवधि";
+"result.beat_count" = "पता लगाई गई बीट्स";
+"result.expert.metadata" = "स्थितियाँ";
+"result.verdict.ok.title" = "स्वस्थ लग रही है";
+"result.verdict.ok.body" = "आपकी घड़ी रोज़ाना उपयोग के लिए स्वस्थ सीमा में है।";
+"result.verdict.caution.title" = "इस पर नज़र रखें";
+"result.verdict.caution.body" = "स्वस्थ सीमा से थोड़ी बाहर। कुछ और दिनों तक ट्रैक करें; अगर बना रहे तो जाँच पर विचार करें।";
+"result.verdict.service.title" = "सर्विस की सलाह";
+"result.verdict.service.body" = "विचलन महत्वपूर्ण है। हम वॉचमेकर के पास ले जाने की सलाह देते हैं।";
+"result.verdict.first_anomaly.title" = "एक बार और प्रयास करें?";
+"result.verdict.first_anomaly.body" = "इस रीडिंग में महत्वपूर्ण ड्रिफ़्ट दिख रहा है। एक माप निर्णायक नहीं है — निर्णय लेने से पहले अलग पोज़ीशन या किसी और समय पर फिर से प्रयास करें।";
+"result.next_step.eyebrow" = "अगला क़दम";
+"result.next_step.body" = "यांत्रिक घड़ियाँ पोज़ीशन, तापमान और वाइंडिंग स्तर के अनुसार अलग ड्रिफ़्ट करती हैं। एक हफ़्ते तक रोज़ लगभग एक ही समय पर मापें — ट्रेंड चार्ट असली तस्वीर दिखाएगा।";
+"result.beginner.why" = "मुझे यह परिणाम क्यों मिला?";
+
+/* Reliability notes */
+"movement.reliability.generic.title" = "माप नोट";
+"movement.reliability.generic.notice" = "यह मूवमेंट मानक स्विस लीवर से अलग व्यवहार करता है, इसलिए माप की एक्यूरेसी कम हो सकती है।";
+
+/* Trend */
+"trend.title" = "रेट ट्रेंड";
+"trend.range.7d" = "7d";
+"trend.range.30d" = "30d";
+"trend.range.90d" = "90d";
+"trend.range.1y" = "1y";
+"trend.range.all" = "सभी";
+"trend.range.a11y.7d" = "पिछले 7 दिन";
+"trend.range.a11y.30d" = "पिछले 30 दिन";
+"trend.range.a11y.90d" = "पिछले 90 दिन";
+"trend.range.a11y.1y" = "पिछला साल";
+"trend.range.a11y.all" = "हर समय";
+"trend.empty" = "अभी कोई माप नहीं।";
+
+"pin.entry.a11y.hint" = "अपना 6-अंकीय PIN दर्ज करने के लिए डबल-टैप करें";
+
+"a11y.confidence_badge" = "विश्वास %d प्रतिशत";
+"a11y.disclosure.expanded" = "विस्तारित";
+"a11y.disclosure.collapsed" = "समेटा";
+
+"a11y.battery.gauge" = "बैटरी %1$d प्रतिशत, %2$@, %3$@ %4$@";
+"addwatch.replace_photo" = "तस्वीर बदलें";
+"addwatch.remove_photo" = "तस्वीर हटाएँ";
+"speccard.play.a11y" = "टिक ध्वनि बजाएँ";
+
+/* Settings */
+"settings.title" = "सेटिंग्स";
+"settings.section.mode" = "उपयोगकर्ता मोड";
+"settings.mode.label" = "मोड";
+"settings.section.measurement" = "माप";
+"settings.silent_mode_default" = "साइलेंट मोड डिफ़ॉल्ट";
+"settings.silent_mode_default.hint" = "माप शुरू करते समय स्वचालित रूप से साइलेंट मोड सक्षम करें ताकि सूचनाएँ बाधित न करें।";
+"settings.section.help" = "सहायता";
+"settings.glossary" = "शब्दावली";
+"settings.section.about" = "विवरण";
+"settings.version" = "वर्शन";
+"settings.bundle_id" = "Bundle ID";
+"settings.section.data" = "डेटा";
+"settings.export.format" = "निर्यात स्वरूप";
+"settings.export.action" = "माप निर्यात करें";
+"settings.section.sync" = "सिंक";
+"settings.icloud.label" = "iCloud सिंक";
+"settings.movementdb.auto_update" = "मूवमेंट डेटाबेस स्वतः अपडेट";
+"settings.coreml.label" = "CoreML बीट डिटेक्टर (प्रायोगिक)";
+"settings.coreml.hint" = "ML-आधारित ऑनसेट डिटेक्शन। मॉडल न होने पर डिफ़ॉल्ट एल्गोरिथ्म पर वापस जाता है।";
+"settings.coreml.status_prefix" = "वर्तमान में:";
+"settings.movementdb.privacy_note" = "चालू होने पर, नए कैलिबर पृष्ठभूमि में स्थिर JSON के रूप में डाउनलोड होते हैं। आपकी माप और तस्वीरें कभी भी आपका डिवाइस नहीं छोड़तीं।";
+"settings.movementdb.update_now" = "अपडेट की जाँच करें";
+"settings.movementdb.checking" = "अपडेट की जाँच की जा रही है…";
+"settings.movementdb.ok" = "वर्शन %@ स्थापित (%d मूवमेंट)";
+"settings.movementdb.fail" = "अपडेट विफल: %@";
+"settings.movementdb.version" = "मूवमेंट DB वर्शन";
+"settings.section.timeref" = "समय संदर्भ";
+"settings.audio_input.label" = "माइक्रोफ़ोन इनपुट";
+"settings.audio_input.empty" = "कोई इनपुट डिवाइस उपलब्ध नहीं";
+"settings.audio_input.system_default" = "सिस्टम डिफ़ॉल्ट";
+"audio.input.builtin" = "बिल्ट-इन";
+"audio.input.wired" = "वायर्ड";
+"audio.input.bluetooth" = "Bluetooth";
+"audio.input.external" = "बाहरी";
+
+/* Round 81 — Hard Rule 3 cleanup: inline strings removed from code */
+"notif.random.title" = "🎲 दिन की घड़ी";
+"watch.journal.empty.hint" = "किसी जर्नल प्रविष्टि में इस घड़ी को टैग करें — यहाँ दिख जाएगी।";
+"settings.coreml.status_coreml" = "CoreML";
+"settings.coreml.status_rule" = "रूल-आधारित (मॉडल अनुपस्थित)";
+
+/* Round 83 — personalisation: nickname / story / ref */
+"addwatch.section.personal" = "इस घड़ी की कहानी";
+"addwatch.nickname" = "उपनाम (वैकल्पिक)";
+"addwatch.reference_no" = "रेफ़रेंस नं.";
+"addwatch.story.label" = "कहानी";
+"addwatch.story.placeholder" = "उदा., मेरे दादाजी की दी हुई";
+
+/* Round 84 — measurement view labels localized (Jiyoung C3). */
+"measurement.eyebrow.live_rate" = "लाइव रेट";
+"measurement.eyebrow.live_signal" = "लाइव सिग्नल";
+"measurement.eyebrow.metrics" = "मेट्रिक्स";
+"measurement.metric.beat_error" = "बीट एरर";
+"measurement.metric.bph" = "BPH";
+
+/* Round 90 — Story card label */
+"watch.story.label" = "इस घड़ी की कहानी";
+
+/* Round 92 — Today tab */
+"tab.today" = "आज";
+"today.greeting" = "आज आपकी घड़ी के साथ कैसा रहा?";
+"today.stat.watches" = "घड़ी परिवार";
+"today.stat.this_week" = "इस सप्ताह";
+"today.shake.title" = "आज की घड़ी चुनाव";
+"today.shake.subtitle" = "आज कौन-सी पहनेंगे?";
+"today.fortune.title" = "आज की डायल राशिफल";
+"today.fortune.subtitle" = "तारीख़ के अनुसार लकी डायल, संख्या और रिवाज।";
+
+/* Round 93 — concept-matched pick reasons */
+"shake.reason.dress.1" = "संजीदा पलों के लिए मनोहर साथी।";
+"shake.reason.dress.2" = "आज औपचारिक लालित्य की पुकार है।";
+"shake.reason.dress.3" = "ध्यान केंद्रित करने के लिए शांत डायल।";
+"shake.reason.dress.4" = "दिन भर सादगी भरी गरिमा।";
+"shake.reason.sport.1" = "चटख दिन साहसी कलाई के हक़दार।";
+"shake.reason.sport.2" = "आने वाले रोमांच के लिए बना।";
+"shake.reason.sport.3" = "मज़बूत दिन पर मज़बूत बयान।";
+"shake.reason.sport.4" = "खुले माहौल का आपका साथी।";
+"shake.reason.manual.1" = "दिन की शुरुआत कुछ मृदु वाइंडिंग से करें।";
+"shake.reason.manual.2" = "हाथ से वाइंडिंग की सुबह की रस्म।";
+
+/* Round 96 — Journal reminder notif */
+"notif.journal.title" = "📓 आज की पंक्ति";
+"notif.journal.body" = "आज पहनी गई घड़ी के बारे में एक पल लिखें।";
+
+/* Round 98 — measurement failure reasons */
+"measurement.fail.unsupported.title" = "यह मूवमेंट समर्थित नहीं";
+"measurement.fail.unsupported.body" = "क्वार्ट्ज़ या 0 BPH मूवमेंट को ध्वनिक रूप से नहीं मापा जा सकता। ऑटोमैटिक या मैनुअल यांत्रिक घड़ी का उपयोग करें।";
+"measurement.fail.lock.title" = "विश्वसनीय सीमा से बाहर रीडिंग";
+"measurement.fail.lock.body" = "BPH लॉक कमज़ोर है — या घड़ी सच में ख़राब चल रही है। अलग पोज़ीशन आज़माएँ, या वॉचमेकर से दिखवाएँ।";
+
+/* Round 104 — bug + A11y corrections */
+"watch.row.just_now" = "अभी-अभी";
+"collection.challenge.progress" = "%d/%d दिन पूरे · %d दिन शेष";
+"aidiag.confidence.a11y" = "विश्वास %d प्रतिशत";
+
+/* Round 105 — DialFortuneView inline strings (Hard Rule 3 compliance) */
+"fortune.dial.blue" = "नीला डायल";
+"fortune.dial.black" = "काला डायल";
+"fortune.dial.green" = "हरा डायल";
+"fortune.dial.silver" = "चाँदी डायल";
+"fortune.dial.champagne" = "शैम्पेन";
+"fortune.dial.panda" = "पांडा";
+"fortune.complication.1" = "मूनफ़ेज़";
+"fortune.complication.2" = "GMT";
+"fortune.complication.3" = "क्रोनोग्राफ़";
+"fortune.complication.4" = "डे-डेट";
+"fortune.complication.5" = "परपेचुअल कैलेंडर";
+"fortune.unlucky.1" = "काला डायल";
+"fortune.unlucky.2" = "शैम्पेन";
+"fortune.unlucky.3" = "चाँदी डायल";
+"fortune.unlucky.4" = "हरा डायल";
+"fortune.ritual.1" = "सूर्योदय पर 12 बार वाइंड करें";
+"fortune.ritual.2" = "दाहिनी कलाई पर पहनें";
+"fortune.ritual.3" = "दोपहर के भोजन में नीला पेय";
+"fortune.ritual.4" = "मापने से पहले डायल-अप पोज़ीशन";
+"fortune.ritual.5" = "शाम तक घड़ी को आराम दें";
+"fortune.ritual.6" = "30 मिनट धूप";
+"fortune.horoscope.1" = "गहरा नीला मन को शांत करता है। कुछ नया शुरू करने का अच्छा दिन।";
+"fortune.horoscope.2" = "सादा डायल विश्वास लाता है। महत्वपूर्ण बैठक के लिए उत्तम।";
+"fortune.horoscope.3" = "हरा वृद्धि का रंग है। एक अप्रत्याशित अवसर आपकी ओर आता है।";
+"fortune.horoscope.4" = "चाँदी विचारों को तेज़ करती है। जो टाला है उसे पूरा करें।";
+"fortune.horoscope.5" = "शैम्पेन गर्माहट लाती है। पुराने मित्र के साथ बनी योजना कहीं अच्छी ले जाती है।";
+"fortune.pill.lucky" = "शुभ";
+"fortune.pill.unlucky" = "त्याज्य";
+"fortune.share.text" = "🔮 TickLab डायल राशिफल · %@\n\nआज है %@ का दिन\nLUCKY NUMBER: %d\n\n%@\n\nशुभ कॉम्प्लिकेशन · %@\nत्याज्य · %@";
+"fortune.lucky_number" = "LUCKY NUMBER";
+"fortune.metric.love" = "प्रेम";
+"fortune.metric.work" = "करियर";
+"fortune.metric.money" = "धन";
+"fortune.metric.health" = "स्वास्थ्य";
+
+/* Round 109 — notification titles localized (Hard Rule 3) */
+"notif.wind.title" = "🔄 %@";
+"notif.battery.title" = "🔋 %@";
+
+/* Round 113 — Pro gate */
+"pro.limit.watch.title" = "घड़ी सीमा तक पहुँच गए";
+"pro.limit.watch.body" = "मुफ़्त योजना 1 घड़ी का समर्थन करती है। अपना पूरा संग्रह प्रबंधित करने के लिए TickLab Pro ($9.99/yr) पर अपग्रेड करें।";
+"pro.limit.daily_measurement.title" = "दैनिक माप सीमा तक पहुँच गए";
+"pro.limit.daily_measurement.body" = "मुफ़्त योजना प्रति दिन 3 माप की अनुमति देती है। असीमित मापों के लिए TickLab Pro ($9.99/yr) पर अपग्रेड करें।";
+"pro.limit.journal_monthly.title" = "मासिक जर्नल सीमा तक पहुँच गए";
+"pro.limit.journal_monthly.body" = "मुफ़्त योजना प्रति माह 5 जर्नल प्रविष्टियों की अनुमति देती है। असीमित प्रविष्टियों के लिए TickLab Pro ($9.99/yr) पर अपग्रेड करें।";
+
+/* Round 116 — A11y: ShakePick button */
+"shake.cta.a11y.label" = "एक घड़ी चुनें";
+"shake.cta.a11y.hint" = "आज की घड़ी चुनने के लिए बटन टैप करें या फ़ोन हिलाएँ";
+
+/* Round 117 — Hard Rule 9 + misc */
+"result.amplitude.low_confidence" = "एम्प्लीट्यूड छोड़ दिया गया — इस मूवमेंट की माप विश्वास रेटिंग कम है।";
+"result.amplitude.unavailable.title" = "एम्प्लीट्यूड नहीं दिखाया गया";
+"result.amplitude.unavailable.body" = "इस मूवमेंट के लिए माइक-आधारित एम्प्लीट्यूड अविश्वसनीय है (सैफ़ायर केसबैक, को-एक्सियल एस्केपमेंट, आदि) और छोड़ा जाता है।";
+
+/* Round 118 — storyCard + journalTab compose */
+"watch.story.empty_prompt" = "इस घड़ी की कहानी जोड़ें";
+"watch.journal.compose" = "जर्नल प्रविष्टि लिखें";
+
+/* Round 119 — StatsView per-watch picker */
+"stats.position.watch_picker" = "घड़ी";
+"stats.position.all" = "सभी घड़ियाँ";
+
+/* Round 121 — Glossary 5 new entries */
+"glossary.confidence" = "विश्वास";
+"glossary.confidence.desc" = "0-100 स्कोर जो बताता है कि माप कितनी भरोसेमंद है। SNR, अवधि, BPH लॉक गुणवत्ता और बीट एरर से निर्धारित।";
+"glossary.snr" = "SNR (सिग्नल-टू-नॉइज़ अनुपात)";
+"glossary.snr.desc" = "घड़ी की ध्वनि और परिवेशीय शोर का अनुपात (dB)। अधिक बेहतर है — विश्वसनीय परिणाम के लिए कम से कम 12 dB चाहिए।";
+"glossary.drift" = "ड्रिफ़्ट";
+"glossary.drift.desc" = "तापमान, पोज़ीशन, या मेनस्प्रिंग तनाव के कारण समय के साथ रेट में बदलाव की प्रवृत्ति।";
+"glossary.isochronism" = "आइसोक्रोनिज़्म";
+"glossary.isochronism.desc" = "मूवमेंट की वह क्षमता जो पावर रिज़र्व चाहे जितना भी बचा हो, समान रेट बनाए रखे। उच्च आइसोक्रोनिज़्म का मतलब अधिक स्थिर एक्यूरेसी।";
+"glossary.positional" = "पोज़ीशनल विचलन";
+"glossary.positional.desc" = "घड़ी की दिशा (डायल-अप, डायल-डाउन, क्राउन पोज़ीशन) के अनुसार रेट कितना बदलता है। 6-पोज़ीशन टेस्ट से जाँचा जाता है।";
+
+/* Round 123 — BatteryView Rule 3 */
+"battery.caliber_life" = "Cal. %@ · अपेक्षित जीवन %d महीने";
+"battery.status.urgent" = "जल्द बदलें";
+"battery.status.caution" = "बदलाव बाक़ी";
+"battery.status.ok" = "अच्छी";
+"battery.reminder.off" = "रिमाइंडर बंद करें";
+"battery.reminder.on" = "समाप्ति रिमाइंडर सेट करें";
+
+/* Round 123 — TamagotchiView Rule 3 */
+"tamagotchi.mood.energetic" = "ऊर्जावान";
+"tamagotchi.mood.happy" = "शांत";
+"tamagotchi.mood.sleepy" = "नींद में";
+"tamagotchi.mood.dormant" = "सुप्त";
+"tamagotchi.mood.low_battery" = "कम बैटरी";
+"tamagotchi.mood.needs_wind" = "वाइंडिंग ज़रूरी";
+"tamagotchi.last_activity" = "अंतिम गतिविधि %d दिन पहले";
+"tamagotchi.no_activity" = "कोई गतिविधि दर्ज नहीं";
+"tamagotchi.sleepy_hint" = "48h में फिर नींद आ जाएगी";
+
+/* Round 124 — WelcomeFlowView Rule 3 */
+"welcome.hero.line1" = "एक iPhone।";
+"welcome.hero.line2" = "अपनी घड़ी मापें।";
+"welcome.hero.accent" = "दर्ज करें";
+"welcome.hero.suffix" = "।";
+"welcome.nav.back" = "← पीछे";
+
+/* Round 125 — Rule 3 + share + units */
+"measurement.rec_label" = "REC";
+"measurement.snr_label" = "SNR %ddB";
+"journal.detail.beat_error" = "बीट एरर %.2f ms";
+"unit.seconds_per_day_short" = "s/d";
+/* watch.label.rate dedup — original at line 161 */
+
+/* Round 126 — CollectionView + Pro */
+"collection.status.ok" = "ठीक";
+"collection.status.caution" = "सावधान";
+"collection.status.service" = "सर्विस";
+"pro.limit.upgrade" = "Pro पर अपग्रेड करें";
+
+/* TickLab Pro paywall ($9.99/yr) */
+"purchase.headline" = "TickLab Pro";
+"purchase.subtitle" = "असीमित संग्रह और माप — गंभीर वॉचमेकिंग के लिए सही टूलकिट।";
+"purchase.benefit.unlimited_watches.title" = "असीमित घड़ियाँ";
+"purchase.benefit.unlimited_watches.body" = "अपना पूरा संग्रह ट्रैक करें — 1-घड़ी की सीमा नहीं।";
+"purchase.benefit.unlimited_measurements.title" = "असीमित माप";
+"purchase.benefit.unlimited_measurements.body" = "जितना चाहें मापें — कोई दैनिक सीमा नहीं।";
+"purchase.benefit.unlimited_journal.title" = "असीमित जर्नल";
+"purchase.benefit.unlimited_journal.body" = "हर पल दर्ज करें — कोई मासिक सीमा नहीं।";
+"purchase.benefit.unlimited_ai.title" = "असीमित AI निदान";
+"purchase.benefit.unlimited_ai.body" = "हर बार AI व्याख्या पाएँ — 3-ट्रायल की सीमा नहीं।";
+"purchase.plan.yearly" = "वार्षिक सदस्यता";
+"purchase.plan.yearly.per_year" = "/ वर्ष स्वतः नवीनीकरण — कभी भी रद्द करें";
+"purchase.cta.subscribe" = "Pro शुरू करें";
+"purchase.cta.processing" = "प्रोसेसिंग…";
+"purchase.cta.restore" = "ख़रीद पुनर्स्थापित करें";
+"purchase.cta.restoring" = "पुनर्स्थापित किया जा रहा है…";
+"purchase.legal.auto_renew" = "रद्द होने तक सदस्यता स्वतः नवीनीकृत होती है। Settings में कभी भी प्रबंधित करें।";
+"purchase.legal.terms" = "उपयोग की शर्तें";
+"purchase.legal.privacy" = "गोपनीयता नीति";
+"purchase.success.title" = "Pro सक्रिय";
+"purchase.success.body" = "सभी सुविधाएँ अनलॉक। शुभ वॉचमेकिंग!";
+"purchase.error.title" = "ख़रीद त्रुटि";
+"purchase.unavailable" = "App Store से कनेक्ट कर रहे हैं। कृपया थोड़ी देर में फिर से प्रयास करें।";
+"purchase.retry" = "फिर से प्रयास करें";
+"aidiag.trial.remaining" = "AI निदान %d/%d शेष";
+"aidiag.trial.exhausted_cta" = "असीमित AI निदान — Pro पर अपग्रेड करें";
+"purchase.context.watch_limit" = "1 घड़ी की सीमा पूरी — Pro में असीमित घड़ियाँ";
+"purchase.context.daily_measurement" = "दैनिक माप सीमा पूरी — Pro में असीमित माप";
+"purchase.context.journal_monthly" = "मासिक डायरी सीमा पूरी — Pro में असीमित प्रविष्टियाँ";
+"purchase.context.ai_trial" = "AI डायग्नोसिस ट्रायल समाप्त — Pro में हर बार AI";
+"cosc.bar.min" = "−12";
+"cosc.bar.max" = "+12";
+"cosc.bar.range" = "COSC −4 ~ +6";
+"aidiag.confidence.grade.high" = "उच्च";
+"aidiag.confidence.grade.medium" = "मध्यम";
+"aidiag.confidence.grade.low" = "कम";
+"unit.seconds_short" = "%d सेकंड";
+
+/* Round 127 — MeasurementResultView Rule 3 */
+"result.escapement.fallback" = "स्विस लीवर";
+"result.snr_beats_hint" = "SNR %.0f dB · %d बीट्स";
+"watch.ref_label" = "Ref. %@";
+
+/* Round 129 */
+"speccard.list.empty.hint" = "Watch Detail → '···' मेन्यू → 'Create Spec Card' पर जाएँ।";
+"result.saved.hint" = "माप सहेजा गया ✓";
+"measurement.hint.noise" = "🔊 परिवेशीय शोर बहुत अधिक। फ़ोन को शांत जगह में स्थिर करें और फिर से प्रयास करें।";
+"measurement.hint.press_closer" = "📍 केसबैक (घड़ी का पिछला हिस्सा) को iPhone के नीचे वाले माइक पर मज़बूती से दबाएँ।";
+"measurement.hint.no_signal" = "🎤 लगभग कोई सिग्नल नहीं। माइक को सीधे घड़ी के केसबैक पर रखें।";
+"measurement.hint.bluetooth" = "🎧 Bluetooth माइक (AirPods आदि) सक्रिय है। घड़ी सुनने के लिए iPhone का अपना माइक चाहिए। Bluetooth डिस्कनेक्ट करें या Settings में इनपुट बदलें।";
+"measurement.hint.wired" = "🎙️ एक बाहरी वायर्ड माइक सक्रिय है। घड़ी माप के लिए iPhone का बिल्ट-इन माइक बेहतर काम करता है।";
+"share.watch.fallback" = "घड़ी";
+
+/* Round 114 — LongTest summary */
+
+/* Round 180 (Sora) — Magnetic field measurement */
+"magnetic.title" = "चुंबकीय क्षेत्र";
+"magnetic.header.subtitle" = "यांत्रिक घड़ियाँ चुंबकत्व के प्रति संवेदनशील होती हैं। मापने से पहले अपना परिवेश जाँच लें।";
+"magnetic.measure_button" = "मापें";
+"magnetic.measuring" = "मापा जा रहा है…";
+"magnetic.level.normal" = "🟢 सामान्य";
+"magnetic.level.slightly_high" = "🟡 थोड़ा अधिक";
+"magnetic.level.high" = "🟠 अधिक";
+"magnetic.level.very_high" = "🔴 बहुत अधिक";
+"magnetic.verdict.label.ai" = "APPLE INTELLIGENCE";
+"magnetic.verdict.label.tip" = "सुझाव";
+"magnetic.verdict.loading" = "क्षेत्र पढ़ा जा रहा है…";
+"magnetic.verdict.normal" = "परिवेशीय क्षेत्र सामान्य है। माप पर कोई प्रभाव नहीं।";
+"magnetic.verdict.slightly_high" = "सामान्य से थोड़ा ऊपर। शायद ठीक है — अलग जगह में एक और रीडिंग आज़माएँ।";
+"magnetic.verdict.high" = "चुंबकीय क्षेत्र बढ़ा हुआ — चुंबकीकरण का जोखिम। मापने से पहले दूर हटें।";
+"magnetic.verdict.very_high" = "चेतावनी! बहुत मज़बूत क्षेत्र पाया गया। अपनी घड़ी को तुरंत इस स्थान से दूर ले जाएँ।";
+"magnetic.result.earthfield_note" = "पृथ्वी का क्षेत्र सामान्यतः 25–65 μT होता है।";
+"magnetic.info.title" = "चुंबकत्व के बारे में";
+"magnetic.info.body" = "स्पीकर, हेडफ़ोन, चुंबकीय क्लैस्प और टैबलेट कवर यांत्रिक घड़ी को चुंबकित कर सकते हैं — जिससे वह तेज़ या अस्थिर चलने लगती है। यदि आपकी घड़ी हाल ही में संपर्क में आई है, तो वॉचमेकर सेकंडों में डीमैग्नेटाइज़ कर सकता है।";
+
+/* Round 180 — Today tab magnetic check card */
+"today.card.magnetic.title" = "चुंबकीय जाँच";
+"today.card.magnetic.subtitle" = "अपने आस-पास चुंबकीकरण जोखिम जाँचें";
+
+/* Round 176 — Primary watch / Wear-today UX clarification (user-requested, Hyemi) */
+"watch.set_as_primary" = "प्राथमिक के रूप में सेट करें";
+"watch.set_as_primary.hint" = "इसे Today टैब पर पिन करता है";
+"watch.is_primary" = "प्राथमिक घड़ी";
+"watch.unset_primary" = "प्राथमिक हटाएँ";
+"watch.unset_primary.hint" = "हटाने के लिए टैप करें";
+"watch.log_wear_today" = "आज पहनी के रूप में दर्ज करें";
+"watch.log_wear_today.hint" = "दर्ज करने के लिए टैप करें";
+"watch.worn_today" = "आज पहनी";
+"watch.worn_today.hint" = "आज के लिए दर्ज";
+"today.primary.empty.title" = "कोई प्राथमिक घड़ी नहीं";
+"today.primary.empty.body" = "अपनी रोज़ की पसंदीदा को पिन करें ताकि वह Today के शीर्ष पर रहे।";
+"today.primary.empty.cta" = "एक घड़ी चुनें";
+
+/* Round 133: photo source sheet */
+"photo.source.library" = "तस्वीर लाइब्रेरी";
+"photo.source.camera" = "तस्वीर लें";
+"photo.source.remove" = "तस्वीर हटाएँ";
+
+/* Round 133: keep-screen-on + reminders */
+"settings.keep_screen_on" = "माप के दौरान स्क्रीन चालू रखें";
+"settings.section.reminders" = "रिमाइंडर";
+"settings.section.reminders.footer" = "जर्नल अलर्ट और रैंडम घड़ी चुनाव के लिए समय निर्धारित करें।";
+"settings.journal_reminder.time" = "जर्नल रिमाइंडर समय";
+"today.primary.picker.title" = "प्राथमिक घड़ी चुनें";
+"magnetic.chart.title" = "लाइव चुंबकीय क्षेत्र";
+"magnetic.chart.live" = "LIVE";
+"wear.toast.logged" = "आज पहनी के रूप में दर्ज";
+"today.states.title" = "घड़ी की स्थितियाँ";
+/* Round (3-2 잔여): battery.expected_change/life dead. */
+"measurement.title" = "माप";
+"fortune.nav.title" = "आज का डायल";
+"result.grade.eyebrow" = "माप विश्वसनीयता";
+"result.grade.a.claim" = "±3 s/d आत्मविश्वास — कार्रवाई के लिए तैयार";
+"result.grade.b.claim" = "±10 s/d आत्मविश्वास — ट्रेंड-ग्रेड";
+"result.grade.c.claim" = "±25 s/d आत्मविश्वास — पुनः स्थान आज़माएँ";
+"result.grade.f.claim" = "भरोसेमंद नहीं — कृपया फिर से मापें";
+"result.grade.a.suffix" = "आत्मविश्वास — कार्रवाई के लिए तैयार";
+"result.grade.b.suffix" = "आत्मविश्वास — ट्रेंड-ग्रेड";
+"result.grade.c.suffix" = "आत्मविश्वास — पुनः स्थान आज़माएँ";
+"result.grade.f.suffix" = "— कृपया फिर से मापें";
+
+// ── New badges b23-b32 ──────────────────────────────────────────────
+"badges.b23.name" = "पहला कैलिबर"; "badges.b23.desc" = "वह पल जब आपने पहली बार अंदर की चीज़ की परवाह की"; "badges.b23.condition" = "किसी भी घड़ी के लिए कैलिबर दर्ज करें";
+"badges.b24.name" = "नाइट वॉचमेकर"; "badges.b24.desc" = "आधी रात के बाद भी माप"; "badges.b24.condition" = "आधी रात से सुबह 2 बजे के बीच 5 माप";
+"badges.b25.name" = "वॉच डायरी"; "badges.b25.desc" = "एक हफ़्ते तक रोज़ दर्ज किया"; "badges.b25.condition" = "लगातार 7 दिनों की जर्नल प्रविष्टियाँ";
+"badges.b26.name" = "धैर्यवान मापक"; "badges.b26.desc" = "जो 5 मिनट प्रतीक्षा करते हैं, उन्हें सबसे सटीक डेटा मिलता है"; "badges.b26.condition" = "5+ मिनट की 25 माप";
+"badges.b27.name" = "परफेक्ट डे"; "badges.b27.desc" = "सुबह और शाम — एक दिन में एक ही घड़ी को दो बार मापना"; "badges.b27.condition" = "एक ही दिन में एक ही घड़ी 2+ बार मापी — 10 दिन";
+"badges.b28.name" = "भावनात्मक स्पेक्ट्रम"; "badges.b28.desc" = "ख़ुशी से पुरानी यादों तक हर भाव लिखा"; "badges.b28.condition" = "4+ अलग मूड के साथ 20+ जर्नल";
+"badges.b29.name" = "स्वर्णिम एम्प्लीट्यूड"; "badges.b29.desc" = "300+ डिग्री — सही ढंग से ट्यून किए मूवमेंट का प्रमाण"; "badges.b29.condition" = "एम्प्लीट्यूड ≥300° और विश्वास ≥70 के साथ 5 माप";
+"badges.b30.name" = "मूवमेंट डॉक्टर"; "badges.b30.desc" = "अलग धड़कनों वाली घड़ियों को समझना"; "badges.b30.condition" = "3+ अलग BPH प्रकार मापें (18k/21.6k/28.8k/36k)";
+"badges.b31.name" = "ऋतु संग्रहकर्ता"; "badges.b31.desc" = "साल की चारों ऋतुओं में मापा"; "badges.b31.condition" = "हर 4 ऋतुओं में कम से कम 1 माप";
+"badges.b32.name" = "समय का इतिहास"; "badges.b32.desc" = "25 साल से पुरानी 5 विंटेज घड़ियाँ इकट्ठा और मापीं"; "badges.b32.condition" = "5 pre-2000 घड़ियाँ कम से कम एक बार मापी गईं";
+
+"league.loading" = "वैश्विक रैंकिंग लोड हो रही है...";
+"league.error.body" = "नेटवर्क त्रुटि। ताज़ा करने के लिए खींचें।";
+"league.myteam.my_count" = " मेरे वियर";
+"league.myteam.global_count" = " वैश्विक";
+"league.myteam.badge" = "मेरी टीम";
+"league.last_updated" = "अपडेट %@";
+
+"result.rate.reference_only" = "केवल संदर्भ के लिए";
+"result.action.done" = "हो गया";
+"measurement.hint.weak_detection" = "⚠️ घड़ी की बीट्स ठीक से नहीं पकड़ी जा रहीं। घड़ी को माइक के क़रीब लाएँ और उँगलियाँ माइक से दूर रखें।";
+"measurement.hint.analyzing" = "🔍 बीट पैटर्न का विश्लेषण — स्थिर परिणाम के लिए 30 सेकंड मापें।";
+"measurement.hint.no_lock" = "🔍 बीट अवधि पर लॉक नहीं हो सका। माइक की पोज़ीशन समायोजित करें और फिर से प्रयास करें।";
+"measurement.hint.no_lock_debug" = "🔍 बीट अवधि पर लॉक नहीं हो सका। [DBG: %@]";
+
+"addwatch.brand.custom.hint" = "सूची में न होने वाला ब्रांड लिखें।";
+"common.ok" = "ठीक है";
+
+"measurement.status.measuring" = "सुन रहे हैं…";
+"welcome.illustration.verdict" = "🟡 थोड़ी तेज़";
+
+"stats.subtitle" = "अपने संग्रह से माप और वियर डेटा की इनसाइट्स";
+"journal.subtitle" = "आपकी कलाई के साथ छोटे नोट्स";
+
+"league.myteam.rank_value" = "%@  #%d";
+"badges.summary.earned" = "%d / %d अर्जित";
+"badges.summary.level" = "LV. %d";
+"stats.wear.days_value" = "%d दिन";
+"watch.mood.last_active" = "अंतिम गतिविधि के बाद %d दिन · ऊर्जा %d%%";
+"collection.filter.favorites_only" = "केवल पसंदीदा";
+"result.grade.a.gloss" = "परिणाम भरोसेमंद सीमा के भीतर है।";
+"result.grade.b.gloss" = "परिणाम ट्रैकिंग के लिए उपयोग योग्य है।";
+"result.grade.c.gloss" = "सिग्नल कमज़ोर है — एक्यूरेसी कम है। फिर से मापने का प्रयास करें।";
+"result.grade.f.gloss" = "सिग्नल बहुत कमज़ोर या घड़ी में समस्या हो सकती है।";
+"share.save.success" = "Photos में सहेजा गया";
+"share.save.failed" = "सहेजना विफल";
+"share.save.permission_denied" = "Photos एक्सेस आवश्यक";
+"result.action.share" = "साझा करें";
+
+"magnetic.unavailable.title" = "मैग्नेटोमीटर उपलब्ध नहीं";
+"magnetic.unavailable.body" = "इस डिवाइस में मैग्नेटोमीटर सेंसर नहीं है।";
+
+"a11y.favorite.add" = "पसंदीदा में जोड़ें";
+"a11y.favorite.remove" = "पसंदीदा से हटाएँ";
+"a11y.wear_today" = "आज पहनी के रूप में चिह्नित करें";
+"a11y.value.worn" = "पहनी";
+"a11y.value.not_worn" = "नहीं पहनी";
+"a11y.more_actions" = "अधिक क्रियाएँ";
+"a11y.change_photo" = "तस्वीर बदलें";
+"a11y.photo_view" = "तस्वीर देखें";
+
+"measurement.diagnostic.mic" = "माइक";
+"measurement.diagnostic.snr" = "SNR";
+"measurement.diagnostic.onsets" = "ऑनसेट";
+"measurement.diagnostic.bph" = "BPH";
+
+"stats.eyebrow.figures" = "विश्लेषण";
+"badges.rarity.common" = "सामान्य";
+"badges.rarity.rare" = "दुर्लभ";
+"badges.rarity.epic" = "एपिक";
+"badges.rarity.legendary" = "लीजेंडरी";
+
+"share.aspect.a11y" = "पहलू अनुपात";
+"shake.schedule.toggle.a11y" = "रोज़ की चुनाव सूचना";
+"common.discard.title" = "अपना इनपुट छोड़ें?";
+"common.discard.message" = "आपके बदलाव सहेजे नहीं जाएँगे।";
+"common.discard.confirm" = "छोड़ें";
+
+"watchbox.stats.occupied" = "भरे हुए";
+"watchbox.stats.brands" = "ब्रांड";
+"watchbox.stats.avg_rate" = "औसत रेट";
+"watchbox.stats.empty" = "ख़ाली";
+"watchbox.empty.a11y_hint" = "संग्रह से एक घड़ी जोड़ें";
+
+"badges.locked" = "लॉक";
+
+"speccard.record.a11y.recording" = "रिकॉर्ड हो रहा है";
+"speccard.record.a11y.idle" = "निष्क्रिय";
+
+"a11y.rate_value" = "रेट %1$@ %2$@";
+
+"movement.reliability.coaxial.title" = "को-एक्सियल के लिए एम्प्लीट्यूड नहीं दिखाया गया";
+"movement.reliability.coaxial.notice" = "को-एक्सियल एस्केपमेंट मूवमेंट माइक-आधारित एम्प्लीट्यूड अनुमान अविश्वसनीय देते हैं, इसलिए एम्प्लीट्यूड सेल छिपा हुआ है। रेट और बीट एरर सामान्य रूप से मापे जाते हैं।";
+"movement.reliability.amplitude_unstable.title" = "एम्प्लीट्यूड अस्थिर हो सकता है";
+"movement.reliability.amplitude_unstable.notice" = "यह मूवमेंट परिस्थितियों (पोज़ीशन, तापमान, पावर रिज़र्व) के अनुसार बड़ा एम्प्लीट्यूड विचलन दिखाता है। एक ही पोज़ीशन में 3-5 माप लें और औसत देखें।";
+
+"measurement.winding_hint.title" = "मापने से पहले अपनी घड़ी वाइंड करें";
+"measurement.winding_hint.body" = "ऑटोमैटिक/मैनुअल घड़ियों को स्थिर एक्यूरेसी के लिए पर्याप्त वाइंडिंग चाहिए। मापने से पहले क्राउन से 40-50 बार वाइंड करें। अपर्याप्त वाइंडिंग लगातार ऋणात्मक रेट (-20 s/d या अधिक ख़राब) का कारण बन सकती है।";
+"measurement.winding_hint.cta" = "समझ गया";
+
+"pin.entry.a11y.progress" = "%2$d में से %1$d अंक दर्ज किए";
+"pin.entry.a11y.failed" = "ग़लत, फिर से प्रयास करें";
+
+"speccard.spec.power_reserve" = "पावर रिज़र्व";
+
+"measurement.waveform.a11y.label" = "लाइव ऑडियो वेवफ़ॉर्म";
+"measurement.waveform.a11y.snr" = "सिग्नल %.0f डेसिबल";
+"measurement.waveform.a11y.idle" = "सुन रहे हैं";
+
+"journal.detail.delete.confirm" = "इस जर्नल प्रविष्टि को हटाएँ?";
+"journal.detail.delete.message" = "हटाई गई प्रविष्टियाँ और तस्वीरें पुनर्प्राप्त नहीं की जा सकतीं।";
+
+"watchbox.slot.a11y.position" = "स्लॉट %d";
+
+"measurement.countdown" = "%ds शेष";
+"measurement.countdown.a11y" = "%d सेकंड शेष";
+"a11y.rate_uncertainty" = "परिशुद्धता %@";
+
+"addwatch.movement.search.prompt" = "कैलिबर खोजें (उदा. 2824, Rolex)";
+"addwatch.movement.section.recommended" = "इस ब्रांड के लिए सुझाया गया";
+"addwatch.movement.section.all" = "सभी मूवमेंट";
+"addwatch.movement.section.results" = "खोज परिणाम";

@@ -43,9 +43,17 @@ final class Watch {
     /// 페르소나 (김재철, 워치메이커) wish: movement DB lookup 의 lift angle 을 watch 단위로 override.
     /// nil 이면 movement DB 의 default 사용. 워치메이커가 직접 측정한 값이 있을 때만 사용.
     var liftAngleOverride: Double?
-    /// 무브먼트 직접입력 시 BPH. caliber == "__manual__" 일 때 사용.
+    /// 무브먼트 직접입력 시 BPH. caliber == Watch.manualCaliberTag 일 때 사용.
     /// lightweight migration — optional + default nil. 측정 시 movement DB 보다 우선 적용.
     var customBph: Int? = nil
+
+    /// Round 2-3 (Doyoon): sentinel 정의를 model layer 로 이동 — 다른 caller 가 magic string
+    ///   "__manual__" 을 직접 type 하는 것을 막고 single source-of-truth 보장.
+    ///   caliber == Watch.manualCaliberTag → 사용자가 customBph 로 직접입력한 무브먼트.
+    static let manualCaliberTag = "__manual__"
+
+    /// caliber 가 manual sentinel 인지 검증 — view 코드가 직접 비교 대신 이 helper 사용.
+    var isCaliberManualEntry: Bool { caliber == Watch.manualCaliberTag }
     /// 무브먼트 타입 — "automatic" / "manual" / "quartz". 기본 automatic.
     /// String 저장 — SwiftData enum 마이그레이션 risk 회피.
     var movementTypeRaw: String = "automatic"
@@ -82,6 +90,16 @@ final class Watch {
         nickname: String? = nil,
         story: String? = nil,
         referenceNumber: String? = nil,
+        // Round 19 (Min): 기존엔 default 만 의존하고 init 노출 X → 호출자가 후속 mutate 해야 했음.
+        //   inconsistent — 모든 stored property 를 init 으로 set 가능하도록 추가.
+        sortOrder: Double? = nil,
+        customBph: Int? = nil,
+        windReminderEnabled: Bool = false,
+        windReminderHour: Int = 9,
+        windReminderMinute: Int = 0,
+        batteryLastReplaced: Date? = nil,
+        batteryExpectedLifeMonths: Int = 30,
+        batteryReminderEnabled: Bool = false,
         createdAt: Date = .init()
     ) {
         self.id = id
@@ -98,6 +116,14 @@ final class Watch {
         self.nickname = nickname
         self.story = story
         self.referenceNumber = referenceNumber
+        self.sortOrder = sortOrder
+        self.customBph = customBph
+        self.windReminderEnabled = windReminderEnabled
+        self.windReminderHour = windReminderHour
+        self.windReminderMinute = windReminderMinute
+        self.batteryLastReplaced = batteryLastReplaced
+        self.batteryExpectedLifeMonths = batteryExpectedLifeMonths
+        self.batteryReminderEnabled = batteryReminderEnabled
         self.createdAt = createdAt
     }
 

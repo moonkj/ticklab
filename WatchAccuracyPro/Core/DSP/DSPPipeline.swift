@@ -74,6 +74,9 @@ final class DSPPipeline {
     /// 마지막으로 성공한 분석 결과 + 시각. lockMemorySeconds 안에선 이걸 유지 emit.
     private var lastLockedSnapshot: MeasurementResult?
     private var lastLockedAt: Date?
+    /// 사용자 요청 (실시간 tic/toc 점): 최근 검출 onset timestamps (측정 시작 기준 seconds).
+    ///   visualization 전용 — 알고리즘 자체는 unchanged. 매 analyze() 마다 갱신.
+    private var liveOnsetTimes: [Double] = []
     /// Round 132c (사용자 보고: 같은 조건 측정마다 편차 큼):
     /// 측정 내내 신뢰도 가장 높았던 snapshot 기억. 최종 분석 결과 약하면 이걸 사용.
     /// "운 좋은 한 순간" 도 결과에 반영해 사용자 경험 안정화.
@@ -503,7 +506,8 @@ final class DSPPipeline {
                 snrDB: snapshot.snrDB,
                 rawRMSDB: diagnostic.rawRMSDB,
                 onsetCount: snapshot.beatCount,
-                envelopeDynamicRange: diagnostic.dynamicRange
+                envelopeDynamicRange: diagnostic.dynamicRange,
+                recentOnsetTimes: liveOnsetTimes
             )
         }
         // 락 실패 — 메모리 안에 있으면 retain.
@@ -520,7 +524,8 @@ final class DSPPipeline {
                 rawRMSDB: diagnostic.rawRMSDB,
                 onsetCount: diagnostic.onsetCount,
                 envelopeDynamicRange: diagnostic.dynamicRange,
-                lockFailReason: lastAnalyzeFailReason
+                lockFailReason: lastAnalyzeFailReason,
+                recentOnsetTimes: liveOnsetTimes
             )
         }
         // 메모리도 만료 — 진단만 emit.
@@ -531,7 +536,8 @@ final class DSPPipeline {
             rawRMSDB: diagnostic.rawRMSDB,
             onsetCount: diagnostic.onsetCount,
             envelopeDynamicRange: diagnostic.dynamicRange,
-            lockFailReason: lastAnalyzeFailReason
+            lockFailReason: lastAnalyzeFailReason,
+            recentOnsetTimes: liveOnsetTimes.isEmpty ? nil : liveOnsetTimes
         )
     }
 
@@ -665,6 +671,19 @@ final class DSPPipeline {
             envelopeSampleRate: source.sampleRate
         )
         let onsets: [Double] = refined.map { $0.timestampSeconds }
+        // 사용자 요청 (실시간 tic/toc 점): cumulative append + **measurement-start 기준 timestamp**.
+        //   onset.timestampSeconds 는 envSlice 안 offset → envSlice 시작 시각을 더해 절대 시점으로 변환.
+        //   envSliceStartTime = envStartIdx / sampleRate (measurement start 기준).
+        let envSliceStartTime = Double(envStartIdx) / source.sampleRate
+        let absoluteOnsets = onsets.map { $0 + envSliceStartTime }
+        let lastSeen = liveOnsetTimes.last ?? -Double.infinity
+        let fresh = absoluteOnsets.filter { $0 > lastSeen + 0.001 }
+        if !fresh.isEmpty {
+            liveOnsetTimes.append(contentsOf: fresh)
+            if liveOnsetTimes.count > 200 {
+                liveOnsetTimes.removeFirst(liveOnsetTimes.count - 200)
+            }
+        }
 
         // 5) Rate = autocorrelation rawBph 기반 (unbiased).
         let rate = RateCalculator.secondsPerDay(measuredBph: bphEst.rawBph, nominalBph: nominalBph)

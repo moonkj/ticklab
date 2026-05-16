@@ -13,6 +13,11 @@ struct CollectionView: View {
     @State private var showingWatchBox = false
     /// Round 113 (수익화 Critical): Pro 게이팅 - 무료 한계 초과 시 안내.
     @State private var showingProLimit = false
+    /// shell-level paywall.
+    @Environment(\.purchaseRouter) private var purchaseRouter
+    /// 사용자 보고 fix: collectionSummary 가 body 마다 watches.measurements.max 호출 → 20시계×200측정=4k scan.
+    ///   @State 캐시 + watches/measurement-change 시점에만 재계산.
+    @State private var cachedSummary: (total: Int, healthy: Int, caution: Int, service: Int, fav: Int) = (0, 0, 0, 0, 0)
     /// Round 173: 컬렉션 카드에서 삭제 확인 alert.
     @State private var deletingWatch: Watch?
     /// Round 170: reorder sheet 표시.
@@ -30,8 +35,22 @@ struct CollectionView: View {
         self.externalPath = path
     }
 
-    /// Round 170: 정렬 = 사용자 정의 sortOrder. nil 이면 createdAt 기준. primary 는 항상 맨 위.
-    /// tab/query filter 모두 비활성화 (Round 134/170 사용자 요청). dead code 제거.
+    /// 검색 query (power user 20+ 시계 대응).
+    @State private var searchQuery: String = ""
+    /// 즐겨찾기 필터.
+    @State private var favoritesOnly: Bool = false
+
+    /// Round 16 (Sora): row 마다 isWornToday fetch 폭주 차단. @Query wearLogs 에서
+    ///   오늘자 (startOfDay) 인 watch.id 셋을 한 번 계산해 row 에 prop 으로 전달.
+    private var wornTodayWatchIDs: Set<UUID> {
+        let today = Calendar.current.startOfDay(for: Date())
+        var ids: Set<UUID> = []
+        for log in wearLogs where Calendar.current.startOfDay(for: log.date) == today {
+            if let id = log.watch?.id { ids.insert(id) }
+        }
+        return ids
+    }
+
     private var filtered: [Watch] {
         let sorted = watches.sorted { a, b in
             switch (a.sortOrder, b.sortOrder) {
@@ -41,21 +60,28 @@ struct CollectionView: View {
             case (nil, nil): return a.createdAt > b.createdAt
             }
         }
-        if let primary = sorted.first(where: { $0.isPrimary }) {
-            return [primary] + sorted.filter { $0.id != primary.id }
+        // 검색·즐겨찾기 필터
+        let q = searchQuery.trimmingCharacters(in: .whitespaces).lowercased()
+        let searched: [Watch] = sorted.filter { w in
+            if favoritesOnly && !w.isFavorite { return false }
+            guard !q.isEmpty else { return true }
+            return w.brand.lowercased().contains(q)
+                || w.model.lowercased().contains(q)
+                || (w.nickname?.lowercased().contains(q) ?? false)
+                || (w.caliber?.lowercased().contains(q) ?? false)
         }
-        return sorted
+        if let primary = searched.first(where: { $0.isPrimary }) {
+            return [primary] + searched.filter { $0.id != primary.id }
+        }
+        return searched
     }
 
     // Round 170: reorder 로직은 ReorderableWatchList 내부 localOrder 와 onCommit 으로 이전됨.
 
     /// 한 시계만 대표로 — 다른 시계의 isPrimary 는 false 로 reset.
+    /// Round 19 (Min): Watch.setPrimary 헬퍼 호출 — invariant 통일.
     private func setPrimary(_ watch: Watch) {
-        for w in watches where w.id != watch.id && w.isPrimary {
-            w.isPrimary = false
-        }
-        watch.isPrimary = true
-        try? modelContext.save()
+        Watch.setPrimary(watch, in: modelContext)
     }
 
     var body: some View {
@@ -122,15 +148,13 @@ struct CollectionView: View {
                             // Round 170: tap → detail, long-press → reorder sheet 열림.
                             // NavigationLink 가 long-press 가로채므로 Button 으로 명시 분리.
                             LazyVStack(spacing: 14) {
+                                // Round 16 (Sora): row 마다 fetch 하지 않도록 wornTodayIds set 한 번 계산해서 주입.
+                                let wornTodayIds = wornTodayWatchIDs
                                 ForEach(othersOnly, id: \.id) { watch in
-                                    WatchListRow(watch: watch)
+                                    WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
                                         .contentShape(Rectangle())
                                         .onTapGesture {
                                             pathBinding.wrappedValue.append(watch)
-                                        }
-                                        .onLongPressGesture(minimumDuration: 0.4) {
-                                            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-                                            showingReorderSheet = true
                                         }
                                 }
                             }
@@ -191,12 +215,17 @@ struct CollectionView: View {
                             .foregroundStyle(AppColors.ink1)
                     }
                     .accessibilityLabel(String(localized: "tab.settings"))
+                    .accessibilityIdentifier("nav.settings")
                 }
             }
             .toolbarBackground(AppColors.paper0, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
+            // 검색 — 시계 20개+ 사용자 대응
+            .searchable(text: $searchQuery,
+                        placement: .navigationBarDrawer(displayMode: .automatic),
+                        prompt: Text(String(localized: "collection.search.placeholder")))
             .sheet(isPresented: $showingWatchBox) {
                 WatchBoxView()
             }
@@ -223,15 +252,20 @@ struct CollectionView: View {
                 WatchDetailView(watch: watch)
             }
             // Round 113: Pro 게이팅 alert. Round 126: 업그레이드 CTA 추가.
+            // 사용자 보고 fix: 업그레이드는 shell-level PurchaseRouter 로 위임 (4 분산 sheet 통합).
             .alert(String(localized: "pro.limit.watch.title"), isPresented: $showingProLimit) {
                 Button(String(localized: "pro.limit.upgrade")) {
-                    if let url = URL(string: UIApplication.openSettingsURLString) {
-                        UIApplication.shared.open(url)
-                    }
+                    purchaseRouter?.intend(.watchLimit)
                 }
                 Button(String(localized: "common.cancel"), role: .cancel) {}
             } message: {
                 Text(String(localized: "pro.limit.watch.body"))
+            }
+            .onAppear { refreshCollectionSummary() }
+            .onChange(of: watches.count) { _, _ in refreshCollectionSummary() }
+            // 측정 종료 시점에 최신 rate 반영 — body 매 render scan 제거.
+            .onReceive(NotificationCenter.default.publisher(for: .ticklabMeasurementDidEnd)) { _ in
+                refreshCollectionSummary()
             }
             // Round 173: 삭제 확인 alert — cascade 범위 사용자에게 알림.
             .alert(
@@ -294,13 +328,36 @@ struct CollectionView: View {
             if counts.total >= 3 {
                 HStack(spacing: 12) {
                     summaryItem(value: "\(counts.healthy)", label: NSLocalizedString("collection.status.ok", comment: ""), tone: .success)
-                    Rectangle().fill(AppColors.rule).frame(width: 1, height: 18)
+                    Rectangle().fill(AppColors.rule).frame(width: 1, height: 18).accessibilityHidden(true)
                     summaryItem(value: "\(counts.caution)", label: NSLocalizedString("collection.status.caution", comment: ""), tone: .warning)
-                    Rectangle().fill(AppColors.rule).frame(width: 1, height: 18)
+                    Rectangle().fill(AppColors.rule).frame(width: 1, height: 18).accessibilityHidden(true)
                     summaryItem(value: "\(counts.service)", label: NSLocalizedString("collection.status.service", comment: ""), tone: .danger)
                     if counts.fav > 0 {
-                        Rectangle().fill(AppColors.rule).frame(width: 1, height: 18)
-                        summaryItem(value: "\(counts.fav)", label: "FAV", tone: .neutral)
+                        Rectangle().fill(AppColors.rule).frame(width: 1, height: 18).accessibilityHidden(true)
+                        Button {
+                            UISelectionFeedbackGenerator().selectionChanged()
+                            withAnimation(.easeOut(duration: 0.18)) { favoritesOnly.toggle() }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Image(systemName: favoritesOnly ? "star.fill" : "star")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(favoritesOnly ? AppColors.accent : AppColors.ink1)
+                                Text("\(counts.fav)")
+                                    .font(.system(size: 16, weight: .medium, design: .monospaced))
+                                    .foregroundStyle(favoritesOnly ? AppColors.accent : AppColors.ink1)
+                                Text("FAV")
+                                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                                    .tracking(1.2)
+                                    .foregroundStyle(AppColors.ink2)
+                            }
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(favoritesOnly ? AppColors.accent50 : Color.clear)
+                            .clipShape(Capsule())
+                            .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(String(localized: "collection.filter.favorites_only"))
                     }
                     Spacer(minLength: 0)
                     Text("\(counts.total) WATCHES")
@@ -340,8 +397,11 @@ struct CollectionView: View {
     }
 
     private var collectionSummary: (total: Int, healthy: Int, caution: Int, service: Int, fav: Int) {
-        // 페르소나 (Sora) 피드백: 매 view rebuild 시 sort 비용 큼. max 만 찾으면 O(N).
-        // Round 91 (이재현 #5): fav count 추가 — dashboard chip 으로 필터 트리거.
+        cachedSummary
+    }
+
+    /// watches.count 또는 측정 종료 시점에만 재계산.
+    private func refreshCollectionSummary() {
         var h = 0, c = 0, s = 0, f = 0
         for w in watches {
             if w.isFavorite { f += 1 }
@@ -351,41 +411,21 @@ struct CollectionView: View {
             else if absRate <= 20 { c += 1 }
             else { s += 1 }
         }
-        return (watches.count, h, c, s, f)
+        cachedSummary = (watches.count, h, c, s, f)
     }
 
     // MARK: - Empty / Footer
 
 
     private var emptyState: some View {
-        VStack(spacing: 16) {
-            Circle()
-                .fill(AppColors.paper1)
-                .overlay(Circle().stroke(AppColors.rule, lineWidth: 1))
-                .frame(width: 72, height: 72)
-                .overlay(
-                    Image(systemName: "waveform")
-                        .font(.system(size: 28))
-                        .foregroundStyle(AppColors.ink2)
-                )
-                .padding(.top, 60)
-            Text(String(localized: "collection.empty.title"))
-                .font(.system(size: 26, weight: .medium, design: .serif).italic())
-                .foregroundStyle(AppColors.ink0)
-            Text(String(localized: "collection.empty.subtitle"))
-                .font(.system(size: 14))
-                .foregroundStyle(AppColors.ink2)
-                .multilineTextAlignment(.center)
-                .lineSpacing(3)
-                .padding(.horizontal, 32)
-            PrimaryButton(String(localized: "collection.empty.cta"), icon: "plus") {
+        EmptyState(
+            icon: "waveform",
+            title: String(localized: "collection.empty.title"),
+            message: String(localized: "collection.empty.subtitle"),
+            cta: .init(label: String(localized: "collection.empty.cta")) {
                 showingAdd = true
             }
-            .padding(.horizontal, 60)
-            .padding(.top, 8)
-        }
-        .frame(maxWidth: .infinity)
-        .padding(.bottom, 80)
+        )
     }
 
     /// Round 62: 디자인 SSOT 의 challenge card — 다음 도전 progress.
@@ -511,6 +551,8 @@ struct HeroWatchCard: View {
                         Text(watch.model)
                             .font(.system(size: 20, weight: .medium, design: .serif))
                             .foregroundStyle(AppColors.ink0)
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.85)
                     }
                     Spacer()
                     // Round 152/70: 다마고치 mood emoji — Hero/List 동일 16pt.
@@ -598,6 +640,13 @@ struct HeroWatchCard: View {
 
 struct WatchListRow: View {
     let watch: Watch
+    /// Round 16 (Sora): parent 가 한 번 계산한 결과를 prop 으로 받음 — row 마다 fetch 방지.
+    let wornToday: Bool
+
+    init(watch: Watch, wornToday: Bool) {
+        self.watch = watch
+        self.wornToday = wornToday
+    }
 
     // Round 174: sorted() O(N log N) → max(by:) O(N).
     private var lastMeasurement: WatchMeasurement? {
@@ -632,10 +681,14 @@ struct WatchListRow: View {
                 Text(watch.brand)
                     .font(.system(size: 13))
                     .foregroundStyle(AppColors.ink2)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.75)
+                    .truncationMode(.tail)
                 Text(watch.model)
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
                 HStack(spacing: 8) {
                     if let last = lastMeasurement {
                         Text("\(formatRate(last.rateSecondsPerDay)) s/d")
@@ -654,26 +707,23 @@ struct WatchListRow: View {
             let mood = WatchMoodService.status(of: watch, in: modelContext).mood
             Text(mood.emoji)
                 .font(.system(size: 16))
-            // Round 131 + UX audit: wear toggle pill styling (HeroCard 와 통일).
-            let worn = WearLogService.isWornToday(watch, in: modelContext)
+            // 컴팩트 wear toggle — chevron 제거로 SE 폭 확보 (NavigationLink 가 row 전체 tap 처리).
+            let worn = wornToday
             Button {
                 UISelectionFeedbackGenerator().selectionChanged()
-                WearLogService.toggleToday(watch, in: modelContext)
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                    WearLogService.toggleToday(watch, in: modelContext)
+                }
             } label: {
                 Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
-                    .font(.system(size: 16))
+                    .font(.system(size: 22, weight: worn ? .semibold : .regular))
                     .foregroundStyle(worn ? AppColors.accent : AppColors.ink3)
-                    .frame(minWidth: 44, minHeight: 44)
-                    .background(worn ? AppColors.accent50 : Color.clear)
-                    .overlay(Capsule().stroke(worn ? AppColors.accentLight : AppColors.rule, lineWidth: 1))
-                    .clipShape(Capsule())
-                    .contentShape(Capsule())
+                    .symbolEffect(.bounce.up, value: worn)
+                    .frame(width: 44, height: 44)
+                    .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: worn ? "wear.toggle.on" : "wear.toggle.off"))
-            Image(systemName: "chevron.right")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundStyle(AppColors.ink3)
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 14)
@@ -741,12 +791,18 @@ private struct ReorderSheet: View {
                     .padding(.vertical, 4)
                     .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                         Button(role: .destructive) {
+                            // Round 21 (Min): 진행 중 reorder 도 함께 commit — swipe delete 가 sheet 닫지
+                            //   않는 동안 사용자가 옮긴 순서가 보존되도록.
+                            onCommit(ordered)
                             onDelete(watch)
                             ordered.removeAll { $0.id == watch.id }
                         } label: {
                             Label(String(localized: "common.delete"), systemImage: "trash")
                         }
                         Button {
+                            // Round 21 (Min): primary 변경 시 reorder 도 commit — 두 액션을 동시 적용한 사용자
+                            //   기대 충족 (이전엔 setPrimary 만 살고 순서 버려짐).
+                            onCommit(ordered)
                             onSetPrimary(watch)
                             dismiss()
                         } label: {

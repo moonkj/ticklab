@@ -6,7 +6,6 @@ import SwiftUI
 /// - PIN 미설정 또는 5회 실패 lockout → 기존 Face ID 흐름
 struct LockScreenView: View {
     let onUnlock: () -> Void
-    @State private var biometryAvailable: Bool = true
     @ObservedObject private var appLock = AppLockService.shared
     @ObservedObject private var pinService = PINService.shared
 

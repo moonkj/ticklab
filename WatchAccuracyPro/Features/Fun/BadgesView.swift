@@ -4,10 +4,11 @@ import SwiftUI
 // MARK: - BadgesView
 
 struct BadgesView: View {
-    @Query private var watches: [Watch]
-    @Query private var measurements: [WatchMeasurement]
-    @Query private var journals: [JournalEntry]
-    @Query private var wearLogs: [WearLog]
+    // Round 22 (Min): unsorted @Query 4개 — array identity 가 변동 시 .onChange 비결정적 fire.
+    @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
+    @Query(sort: \WatchMeasurement.timestamp, order: .reverse) private var measurements: [WatchMeasurement]
+    @Query(sort: \JournalEntry.timestamp, order: .reverse) private var journals: [JournalEntry]
+    @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
 
     @State private var filter: BadgeFilter = .all
     @State private var selectedBadge: Badge? = nil
@@ -31,10 +32,10 @@ struct BadgesView: View {
         case common, rare, epic, legendary
         var label: String {
             switch self {
-            case .common:    return "COMMON"
-            case .rare:      return "RARE"
-            case .epic:      return "EPIC"
-            case .legendary: return "LEGENDARY"
+            case .common:    return String(localized: "badges.rarity.common").uppercased()
+            case .rare:      return String(localized: "badges.rarity.rare").uppercased()
+            case .epic:      return String(localized: "badges.rarity.epic").uppercased()
+            case .legendary: return String(localized: "badges.rarity.legendary").uppercased()
             }
         }
         var color: Color {
@@ -332,11 +333,11 @@ struct BadgesView: View {
         let earned = badges.filter(\.earned).count
         let total  = badges.count
         return HStack {
-            Text("\(earned) / \(total) 획득")
+            Text(String(format: NSLocalizedString("badges.summary.earned", comment: ""), earned, total))
                 .font(.system(size: 15, weight: .medium))
                 .foregroundStyle(AppColors.ink0)
             Spacer()
-            Text("LV. \(max(1, earned / 3 + 1))")
+            Text(String(format: NSLocalizedString("badges.summary.level", comment: ""), max(1, earned / 3 + 1)))
                 .font(.system(size: 12, weight: .semibold, design: .monospaced))
                 .foregroundStyle(AppColors.accent)
         }
@@ -354,12 +355,14 @@ struct BadgesView: View {
                     Text(f.label)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(filter == f ? .white : AppColors.ink0)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, minHeight: 44)
                         .background(filter == f ? AppColors.primaryDeep : AppColors.paper2)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
+                        .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
                 .buttonStyle(.plain)
+                .accessibilityLabel(f.label)
+                .accessibilityAddTraits(filter == f ? .isSelected : [])
             }
         }
     }
@@ -392,7 +395,13 @@ struct BadgesView: View {
             } label: { cellBody }
                 .buttonStyle(.plain)
         } else {
-            cellBody
+            Button {
+                UISelectionFeedbackGenerator().selectionChanged()
+                withAnimation(.easeIn(duration: 0.15)) { selectedBadge = badge }
+            } label: { cellBody }
+                .buttonStyle(.plain)
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel("\(badge.name). \(String(localized: "badges.locked")). \(badge.desc)")
         }
     }
 }
@@ -458,6 +467,9 @@ private struct BadgeDetailCardView: View {
             Color.black.opacity(0.62)
                 .ignoresSafeArea()
                 .onTapGesture { onClose() }
+                .accessibilityAddTraits(.isButton)
+                .accessibilityLabel(String(localized: "common.close"))
+                .accessibilityAction(.escape) { onClose() }
 
             VStack(spacing: 18) {
                 Text(String(localized: "badges.detail.header"))
