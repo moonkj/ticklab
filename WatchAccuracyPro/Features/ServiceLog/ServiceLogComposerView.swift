@@ -7,6 +7,7 @@ struct ServiceLogComposerView: View {
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(UserPreferences.self) private var preferences
 
     @State private var type: ServiceType = .checkup
     @State private var date: Date = .init()
@@ -92,6 +93,15 @@ struct ServiceLogComposerView: View {
         }
         if existing == nil { modelContext.insert(log) }
         try? modelContext.save()
+        // 사용자 요청: fullOverhaul ServiceLog 추가 시 해당 시계 오버홀 알림 재예약.
+        if type == .fullOverhaul {
+            NotificationService.scheduleOverhaulReminder(
+                for: watch,
+                lastOverhaulDate: date,
+                years: preferences.overhaulReminderYears,
+                enabled: preferences.overhaulReminderEnabled
+            )
+        }
         dismiss()
     }
 }

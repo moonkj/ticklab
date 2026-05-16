@@ -193,6 +193,29 @@ struct SettingsView: View {
                             }
                         ), displayedComponents: .hourAndMinute)
                     }
+                    // 사용자 요청: 오버홀 정비 리마인더 — 기본 ON, 주기 사용자 설정 (2~7년).
+                    Toggle(String(localized: "settings.overhaul_reminder"), isOn: Binding(
+                        get: { preferences.overhaulReminderEnabled },
+                        set: { newValue in
+                            preferences.overhaulReminderEnabled = newValue
+                            rescheduleOverhaulReminders()
+                        }
+                    ))
+                    if preferences.overhaulReminderEnabled {
+                        Picker(String(localized: "settings.overhaul_reminder.years"),
+                               selection: Binding(
+                                get: { preferences.overhaulReminderYears },
+                                set: { newValue in
+                                    preferences.overhaulReminderYears = newValue
+                                    rescheduleOverhaulReminders()
+                                }
+                               )) {
+                            ForEach(2...7, id: \.self) { y in
+                                Text(String(format: NSLocalizedString("settings.overhaul_reminder.years.value", comment: ""), y))
+                                    .tag(y)
+                            }
+                        }
+                    }
                 } header: {
                     Text(String(localized: "settings.section.reminders"))
                 } footer: {
@@ -233,15 +256,10 @@ struct SettingsView: View {
                     NavigationLink(String(localized: "settings.glossary"), destination: GlossaryView())
                 }
                 Section(String(localized: "settings.section.about")) {
+                    // 사용자 요청: Bundle ID + Movement DB Version 제거. 버전 10번 클릭으로 관리자 모드 진입.
                     LabeledContent(
                         String(localized: "settings.version"),
                         value: Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "—"
-                    )
-                    LabeledContent(String(localized: "settings.bundle_id"), value: "com.ticklab.watchaccuracypro")
-                    // Round 138 (관리자 모드 — 10번 연속 클릭 → PIN prompt). git commit 시 제외할 영역.
-                    LabeledContent(
-                        String(localized: "settings.movementdb.version"),
-                        value: MovementDBOTAService.shared.installedVersion() ?? "bundled"
                     )
                     .contentShape(Rectangle())
                     #if DEBUG
@@ -425,6 +443,16 @@ struct SettingsView: View {
             enabled: preferences.randomPickEnabled
         )
     }
+
+    /// 사용자 요청: 오버홀 토글/주기 변경 시 모든 시계 재스케줄.
+    private func rescheduleOverhaulReminders() {
+        NotificationService.rescheduleAllOverhaulReminders(
+            watches: allWatches,
+            years: preferences.overhaulReminderYears,
+            enabled: preferences.overhaulReminderEnabled,
+            in: modelContext
+        )
+    }
 }
 
 struct GlossaryView: View {
@@ -447,6 +475,11 @@ struct GlossaryView: View {
         ("glossary.drift", "glossary.drift.desc", "arrow.left.and.right"),
         ("glossary.isochronism", "glossary.isochronism.desc", "clock.arrow.2.circlepath"),
         ("glossary.positional", "glossary.positional.desc", "rotate.3d"),
+        // 사용자 요청: 자주 등장하지만 미수록 — power reserve / overhaul / magnetism / escapement.
+        ("glossary.power_reserve", "glossary.power_reserve.desc", "battery.75"),
+        ("glossary.overhaul", "glossary.overhaul.desc", "wrench.and.screwdriver"),
+        ("glossary.magnetism", "glossary.magnetism.desc", "bolt.fill"),
+        ("glossary.escapement", "glossary.escapement.desc", "gearshape"),
     ]
 
     private var filtered: [(key: String, descKey: String, icon: String)] {

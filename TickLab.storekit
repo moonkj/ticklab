@@ -1,0 +1,107 @@
+{
+  "identifier" : "C42E5BA1-TICKLAB-STOREKIT-CONFIG",
+  "nonRenewingSubscriptions" : [],
+  "products" : [],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ]
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "TICKLAB-PRO-GROUP",
+      "localizations" : [
+        {
+          "description" : "TickLab Pro 무제한 컬렉션 + 측정 + 일기 + AI 진단",
+          "displayName" : "TickLab Pro",
+          "locale" : "ko"
+        },
+        {
+          "description" : "TickLab Pro — unlimited collection, measurements, journal, and AI diagnosis",
+          "displayName" : "TickLab Pro",
+          "locale" : "en_US"
+        }
+      ],
+      "name" : "TickLab Pro Subscription",
+      "subscriptions" : [
+        {
+          "adamId" : "",
+          "codeOffers" : [],
+          "displayPrice" : "9.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "TICKLAB-PRO-YEARLY",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "TickLab Pro 연간 구독 — 모든 기능 무제한",
+              "displayName" : "TickLab Pro (연간)",
+              "locale" : "ko"
+            },
+            {
+              "description" : "TickLab Pro yearly subscription — all features unlimited",
+              "displayName" : "TickLab Pro (Yearly)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.ticklab.app.pro.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "TickLab Pro Yearly",
+          "subscriptionGroupID" : "TICKLAB-PRO-GROUP",
+          "type" : "RecurringSubscription"
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

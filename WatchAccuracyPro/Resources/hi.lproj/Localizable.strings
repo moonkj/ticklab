@@ -667,8 +667,8 @@
 "result.beginner.why" = "मुझे यह परिणाम क्यों मिला?";
 
 /* Reliability notes */
-"movement.reliability.generic.title" = "माप नोट";
-"movement.reliability.generic.notice" = "यह मूवमेंट मानक स्विस लीवर से अलग व्यवहार करता है, इसलिए माप की एक्यूरेसी कम हो सकती है।";
+"movement.reliability.generic.title" = "एम्प्लीट्यूड नहीं दिखाई जाएगी";
+"movement.reliability.generic.notice" = "इस मूवमेंट में माइक-आधारित एम्प्लीट्यूड माप विश्वसनीय नहीं है (केस संरचना, सैफ़ायर बैक आदि), इसलिए एम्प्लीट्यूड सेल छिपी है। रेट और बीट एरर सामान्य रूप से मापे जाते हैं।";
 
 /* Trend */
 "trend.title" = "रेट ट्रेंड";
@@ -706,7 +706,6 @@
 "settings.glossary" = "शब्दावली";
 "settings.section.about" = "विवरण";
 "settings.version" = "वर्शन";
-"settings.bundle_id" = "Bundle ID";
 "settings.section.data" = "डेटा";
 "settings.export.format" = "निर्यात स्वरूप";
 "settings.export.action" = "माप निर्यात करें";
@@ -721,7 +720,6 @@
 "settings.movementdb.checking" = "अपडेट की जाँच की जा रही है…";
 "settings.movementdb.ok" = "वर्शन %@ स्थापित (%d मूवमेंट)";
 "settings.movementdb.fail" = "अपडेट विफल: %@";
-"settings.movementdb.version" = "मूवमेंट DB वर्शन";
 "settings.section.timeref" = "समय संदर्भ";
 "settings.audio_input.label" = "माइक्रोफ़ोन इनपुट";
 "settings.audio_input.empty" = "कोई इनपुट डिवाइस उपलब्ध नहीं";
@@ -833,11 +831,11 @@
 
 /* Round 113 — Pro gate */
 "pro.limit.watch.title" = "घड़ी सीमा तक पहुँच गए";
-"pro.limit.watch.body" = "मुफ़्त योजना 1 घड़ी का समर्थन करती है। अपना पूरा संग्रह प्रबंधित करने के लिए TickLab Pro ($9.99/yr) पर अपग्रेड करें।";
+"pro.limit.watch.body" = "मुफ़्त योजना 1 घड़ी का समर्थन करती है। अपना पूरा संग्रह प्रबंधित करने के लिए TickLab Pro पर अपग्रेड करें।";
 "pro.limit.daily_measurement.title" = "दैनिक माप सीमा तक पहुँच गए";
-"pro.limit.daily_measurement.body" = "मुफ़्त योजना प्रति दिन 3 माप की अनुमति देती है। असीमित मापों के लिए TickLab Pro ($9.99/yr) पर अपग्रेड करें।";
+"pro.limit.daily_measurement.body" = "मुफ़्त योजना प्रति दिन 3 माप की अनुमति देती है। असीमित मापों के लिए TickLab Pro पर अपग्रेड करें।";
 "pro.limit.journal_monthly.title" = "मासिक जर्नल सीमा तक पहुँच गए";
-"pro.limit.journal_monthly.body" = "मुफ़्त योजना प्रति माह 5 जर्नल प्रविष्टियों की अनुमति देती है। असीमित प्रविष्टियों के लिए TickLab Pro ($9.99/yr) पर अपग्रेड करें।";
+"pro.limit.journal_monthly.body" = "मुफ़्त योजना प्रति माह 5 जर्नल प्रविष्टियों की अनुमति देती है। असीमित प्रविष्टियों के लिए TickLab Pro पर अपग्रेड करें।";
 
 /* Round 116 — A11y: ShakePick button */
 "shake.cta.a11y.label" = "एक घड़ी चुनें";
@@ -867,6 +865,14 @@
 "glossary.isochronism.desc" = "मूवमेंट की वह क्षमता जो पावर रिज़र्व चाहे जितना भी बचा हो, समान रेट बनाए रखे। उच्च आइसोक्रोनिज़्म का मतलब अधिक स्थिर एक्यूरेसी।";
 "glossary.positional" = "पोज़ीशनल विचलन";
 "glossary.positional.desc" = "घड़ी की दिशा (डायल-अप, डायल-डाउन, क्राउन पोज़ीशन) के अनुसार रेट कितना बदलता है। 6-पोज़ीशन टेस्ट से जाँचा जाता है।";
+"glossary.power_reserve" = "पावर रिज़र्व (Power Reserve)";
+"glossary.power_reserve.desc" = "फ़ुल वाइंडिंग के बाद घड़ी कितने समय तक चलती है। आमतौर पर 38–80 घंटे। पावर कम होने पर एम्प्लीट्यूड गिरती है और रेट −20s/d से नीचे जा सकता है।";
+"glossary.overhaul" = "ओवरहॉल (Overhaul)";
+"glossary.overhaul.desc" = "मूवमेंट को खोलकर साफ़ करना, फिर से तेल लगाना और जोड़ना — फ़ुल सर्विस। हर 4–6 साल में अनुशंसित।";
+"glossary.magnetism" = "चुंबकीयता (Magnetism)";
+"glossary.magnetism.desc" = "हेयर ड्रायर, स्पीकर या MagSafe सहायक उपकरणों के पास रखने से हेयरस्प्रिंग चुंबकित हो जाती है और रेट असामान्य रूप से तेज़ हो जाती है। डीमैग्नेटाइज़ करें।";
+"glossary.escapement" = "एस्केपमेंट (Escapement)";
+"glossary.escapement.desc" = "मेनस्प्रिंग की ऊर्जा को नियमित अंतराल पर मुक्त करने वाला मुख्य पुर्ज़ा। Swiss lever (अधिकतर), Co-axial (Omega), Spring drive (Seiko) आदि।";
 
 /* Round 123 — BatteryView Rule 3 */
 "battery.caliber_life" = "Cal. %@ · अपेक्षित जीवन %d महीने";
@@ -907,7 +913,7 @@
 "collection.status.service" = "सर्विस";
 "pro.limit.upgrade" = "Pro पर अपग्रेड करें";
 
-/* TickLab Pro paywall ($9.99/yr) */
+/* TickLab Pro paywall*/
 "purchase.headline" = "TickLab Pro";
 "purchase.subtitle" = "असीमित संग्रह और माप — गंभीर वॉचमेकिंग के लिए सही टूलकिट।";
 "purchase.benefit.unlimited_watches.title" = "असीमित घड़ियाँ";
@@ -932,6 +938,7 @@
 "purchase.error.title" = "ख़रीद त्रुटि";
 "purchase.unavailable" = "App Store से कनेक्ट कर रहे हैं। कृपया थोड़ी देर में फिर से प्रयास करें।";
 "purchase.retry" = "फिर से प्रयास करें";
+"purchase.restore.none" = "कोई खरीद नहीं मिली। सुनिश्चित करें कि आप उसी Apple ID से App Store में साइन-इन हैं।";
 "aidiag.trial.remaining" = "AI निदान %d/%d शेष";
 "aidiag.trial.exhausted_cta" = "असीमित AI निदान — Pro पर अपग्रेड करें";
 "purchase.context.watch_limit" = "1 घड़ी की सीमा पूरी — Pro में असीमित घड़ियाँ";
@@ -945,6 +952,14 @@
 "aidiag.confidence.grade.medium" = "मध्यम";
 "aidiag.confidence.grade.low" = "कम";
 "unit.seconds_short" = "%d सेकंड";
+"settings.overhaul_reminder" = "ओवरहॉल रिमाइंडर";
+"settings.overhaul_reminder.years" = "अनुशंसित चक्र";
+"settings.overhaul_reminder.years.value" = "%d वर्ष";
+"notif.overhaul.title" = "🔧 %@ का ओवरहॉल समय निकट है";
+"notif.overhaul.body" = "पिछले ओवरहॉल से अनुशंसित चक्र के नज़दीक हैं। सुझाई गई तारीख़: %@";
+"watch.overhaul.next_due" = "अगला ओवरहॉल अनुशंसित";
+"watch.overhaul.remaining_days" = "लगभग %d दिन शेष";
+"watch.overhaul.overdue_days" = "%d दिन देरी — सर्विस अनुशंसित";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "स्विस लीवर";

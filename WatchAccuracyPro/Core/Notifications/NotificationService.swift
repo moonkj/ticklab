@@ -228,6 +228,75 @@ enum NotificationService {
     static func cancelJournalReminder() {
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [journalReminderID])
     }
+
+    // MARK: - Overhaul reminder (오버홀 정비 알림)
+
+    private static func overhaulID(_ watch: Watch) -> String { "overhaul-\(watch.id.uuidString)" }
+
+    /// 시계 1개에 대해 오버홀 알림 스케줄.
+    /// 알림 시점 = lastOverhaulDate(또는 createdAt) + (years*365 - 180) 일 @ 09:00 local.
+    /// 사용자 설정: 6개월 전 사전 안내 1회.
+    /// quartz 제외 (battery service 가 다름).
+    static func scheduleOverhaulReminder(for watch: Watch, lastOverhaulDate: Date, years: Int, enabled: Bool) {
+        guard enabled, watch.movementType != .quartz else {
+            cancelOverhaulReminder(for: watch)
+            return
+        }
+        // 권장일 = lastOverhaulDate + years 년. 알림은 6개월 전.
+        let cal = Calendar.current
+        guard let dueDate = cal.date(byAdding: .year, value: years, to: lastOverhaulDate),
+              let notifyDate = cal.date(byAdding: .month, value: -6, to: dueDate)
+        else { return }
+        // 과거 시점이면 알림 안 의미 — 이미 지난 권장일은 7일 후 1회 발송 (사용자가 등록 후 즉시 인지).
+        let fireDate = notifyDate < Date() ? cal.date(byAdding: .day, value: 7, to: Date()) ?? Date() : notifyDate
+        // 9시 정각으로 보정.
+        var comps = cal.dateComponents([.year, .month, .day], from: fireDate)
+        comps.hour = 9
+        comps.minute = 0
+        guard let finalFire = cal.date(from: comps), finalFire > Date() else {
+            cancelOverhaulReminder(for: watch)
+            return
+        }
+        Task {
+            guard await requestAuthorizationIfNeeded() else { return }
+            let content = UNMutableNotificationContent()
+            let watchName = watch.nickname ?? "\(watch.brand) \(watch.model)"
+            content.title = String(format: NSLocalizedString("notif.overhaul.title", comment: ""), watchName)
+            content.body = String(format: NSLocalizedString("notif.overhaul.body", comment: ""), shortDate(dueDate))
+            content.sound = .default
+            let trigger = UNCalendarNotificationTrigger(
+                dateMatching: cal.dateComponents([.year, .month, .day, .hour, .minute], from: finalFire),
+                repeats: false
+            )
+            let request = UNNotificationRequest(identifier: overhaulID(watch), content: content, trigger: trigger)
+            try? await UNUserNotificationCenter.current().add(request)
+        }
+    }
+
+    static func cancelOverhaulReminder(for watch: Watch) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [overhaulID(watch)])
+    }
+
+    /// 모든 시계에 대해 오버홀 알림 일괄 (re-)schedule. App launch / Settings 변경 / ServiceLog 변경 시 호출.
+    static func rescheduleAllOverhaulReminders(watches: [Watch], years: Int, enabled: Bool, in context: ModelContext) {
+        for watch in watches {
+            let lastDate = lastOverhaulDate(for: watch, in: context) ?? watch.createdAt
+            scheduleOverhaulReminder(for: watch, lastOverhaulDate: lastDate, years: years, enabled: enabled)
+        }
+    }
+
+    /// 시계의 마지막 fullOverhaul ServiceLog timestamp. 없으면 nil → caller 가 createdAt fallback.
+    static func lastOverhaulDate(for watch: Watch, in context: ModelContext) -> Date? {
+        let watchId = watch.id
+        let overhaulRaw = ServiceType.fullOverhaul.rawValue
+        let descriptor = FetchDescriptor<ServiceLog>(
+            predicate: #Predicate { log in
+                log.watch?.id == watchId && log.typeRaw == overhaulRaw
+            },
+            sortBy: [SortDescriptor(\.timestamp, order: .reverse)]
+        )
+        return (try? context.fetch(descriptor))?.first?.timestamp
+    }
 }
 
 /// Round 19 (사용자 보고): foreground 일 때 알림 banner 가 표시 안 됨 — iOS 기본 동작.

@@ -620,12 +620,52 @@ struct WatchDetailView: View {
         }
     }
 
+    /// 사용자 요청: 다음 오버홀 권장일 표시. quartz 제외.
+    @ViewBuilder
+    private var overhaulDueRow: some View {
+        if watch.movementType != .quartz, preferences.overhaulReminderEnabled {
+            let lastDate = NotificationService.lastOverhaulDate(for: watch, in: modelContext) ?? watch.createdAt
+            if let dueDate = Calendar.current.date(byAdding: .year, value: preferences.overhaulReminderYears, to: lastDate) {
+                let daysLeft = Calendar.current.dateComponents([.day], from: Date(), to: dueDate).day ?? 0
+                let isOverdue = daysLeft < 0
+                HStack(spacing: 12) {
+                    Image(systemName: isOverdue ? "exclamationmark.triangle.fill" : "wrench.and.screwdriver")
+                        .font(.system(size: 18))
+                        .foregroundStyle(isOverdue ? AppColors.warning : AppColors.accent)
+                        .frame(width: 28)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "watch.overhaul.next_due"))
+                            .font(.system(size: 11, weight: .semibold))
+                            .tracking(1)
+                            .foregroundStyle(AppColors.ink2)
+                        Text(AppDateFormat.fullDate(dueDate))
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(isOverdue ? AppColors.warning : AppColors.ink0)
+                        Text(isOverdue
+                             ? String(format: NSLocalizedString("watch.overhaul.overdue_days", comment: ""), abs(daysLeft))
+                             : String(format: NSLocalizedString("watch.overhaul.remaining_days", comment: ""), daysLeft))
+                            .font(.system(size: 11))
+                            .foregroundStyle(AppColors.ink3)
+                    }
+                    Spacer()
+                }
+                .padding(14)
+                .background(AppColors.paper1)
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+            }
+        }
+    }
+
     /// Round 129 fix: 실제 ServiceLog @Model 사용 + ServiceLogComposer 진입.
     /// Round 125 (성능 H10): @State 캐시 사용.
     @ViewBuilder
     private var serviceTab: some View {
         let logs = cachedServiceLogs
         VStack(alignment: .leading, spacing: 0) {
+            overhaulDueRow
             if logs.isEmpty {
                 VStack(spacing: 12) {
                     Image(systemName: "wrench.adjustable")
@@ -1152,10 +1192,17 @@ struct WatchDetailView: View {
                             value: movement.escapement.rawValue)
                 }
                 if !movement.shouldDisplayAmplitude {
+                    // 사용자 보고 fix: 이전엔 amplitude hide 시 무조건 coaxial 카피 → IWC swissLever
+                    //   medium confidence 시계도 "코액시얼" 안내가 떠서 오해. escapement 별 분기.
+                    let isCoaxial = movement.escapement == .coAxial
                     HelpCard(
                         icon: "info.circle",
-                        title: String(localized: "movement.reliability.coaxial.title"),
-                        body: String(localized: "movement.reliability.coaxial.notice")
+                        title: String(localized: isCoaxial
+                                      ? "movement.reliability.coaxial.title"
+                                      : "movement.reliability.generic.title"),
+                        body: String(localized: isCoaxial
+                                     ? "movement.reliability.coaxial.notice"
+                                     : "movement.reliability.generic.notice")
                     )
                 }
             }

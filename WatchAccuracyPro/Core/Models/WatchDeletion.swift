@@ -106,9 +106,10 @@ extension Watch {
                 entry.deleteWithFiles(in: context)
             }
         }
-        // 7) Notification identifier 정리 — wind / battery reminder.
+        // 7) Notification identifier 정리 — wind / battery / overhaul reminder.
         NotificationService.cancelWindReminder(for: self)
         NotificationService.cancelBatteryReminder(for: self)
+        NotificationService.cancelOverhaulReminder(for: self)
 
         // 8) Watch 자체 삭제
         context.delete(self)

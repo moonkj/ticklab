@@ -667,8 +667,8 @@
 "result.beginner.why" = "¿Por qué obtuve este resultado?";
 
 /* Reliability notes */
-"movement.reliability.generic.title" = "Nota de medición";
-"movement.reliability.generic.notice" = "Este movimiento se comporta de forma distinta al escape suizo estándar, por lo que la precisión de la medición puede ser menor.";
+"movement.reliability.generic.title" = "No se muestra la amplitud";
+"movement.reliability.generic.notice" = "La medición de amplitud por micrófono no es fiable en este movimiento (caja, fondo de zafiro, etc.), por lo que la celda de amplitud se oculta. La marcha y el error de marcha se miden normalmente.";
 
 /* Trend */
 "trend.title" = "Tendencia de marcha";
@@ -706,7 +706,6 @@
 "settings.glossary" = "Glosario";
 "settings.section.about" = "Acerca de";
 "settings.version" = "Versión";
-"settings.bundle_id" = "Bundle ID";
 "settings.section.data" = "Datos";
 "settings.export.format" = "Formato de exportación";
 "settings.export.action" = "Exportar mediciones";
@@ -721,7 +720,6 @@
 "settings.movementdb.checking" = "Buscando actualizaciones…";
 "settings.movementdb.ok" = "Versión %@ instalada (%d movimientos)";
 "settings.movementdb.fail" = "Actualización fallida: %@";
-"settings.movementdb.version" = "Versión de la BD de movimientos";
 "settings.section.timeref" = "Referencia horaria";
 "settings.audio_input.label" = "Entrada de micrófono";
 "settings.audio_input.empty" = "No hay dispositivos de entrada disponibles";
@@ -833,11 +831,11 @@
 
 /* Round 113 — Pro gate */
 "pro.limit.watch.title" = "Has alcanzado el límite de relojes";
-"pro.limit.watch.body" = "El plan gratuito admite 1 reloj. Actualiza a TickLab Pro (9,99 $/año) para gestionar toda tu colección.";
+"pro.limit.watch.body" = "El plan gratuito admite 1 reloj. Actualiza a TickLab Pro para gestionar toda tu colección.";
 "pro.limit.daily_measurement.title" = "Has alcanzado el límite diario de mediciones";
-"pro.limit.daily_measurement.body" = "El plan gratuito permite 3 mediciones por día. Actualiza a TickLab Pro (9,99 $/año) para mediciones ilimitadas.";
+"pro.limit.daily_measurement.body" = "El plan gratuito permite 3 mediciones por día. Actualiza a TickLab Pro para mediciones ilimitadas.";
 "pro.limit.journal_monthly.title" = "Has alcanzado el límite mensual del diario";
-"pro.limit.journal_monthly.body" = "El plan gratuito permite 5 entradas de diario al mes. Actualiza a TickLab Pro (9,99 $/año) para entradas ilimitadas.";
+"pro.limit.journal_monthly.body" = "El plan gratuito permite 5 entradas de diario al mes. Actualiza a TickLab Pro para entradas ilimitadas.";
 
 /* Round 116 — A11y: ShakePick button */
 "shake.cta.a11y.label" = "Elegir un reloj";
@@ -867,6 +865,14 @@
 "glossary.isochronism.desc" = "Capacidad de un movimiento para mantener una marcha constante sin importar la reserva de marcha restante. Mayor isocronismo significa precisión más estable.";
 "glossary.positional" = "Variación posicional";
 "glossary.positional.desc" = "Cuánto cambia la marcha según la orientación del reloj (esfera arriba, esfera abajo, posiciones de corona). Se comprueba con el test de 6 posiciones.";
+"glossary.power_reserve" = "Reserva de Marcha";
+"glossary.power_reserve.desc" = "Tiempo que el reloj funciona tras la cuerda completa. Habitualmente 38–80 h. Con poca energía baja la amplitud y la marcha puede caer por debajo de −20s/d.";
+"glossary.overhaul" = "Revisión Completa (Overhaul)";
+"glossary.overhaul.desc" = "Servicio completo — desmontar, limpiar, relubricar y volver a montar el movimiento. Recomendado cada 4–6 años.";
+"glossary.magnetism" = "Magnetismo";
+"glossary.magnetism.desc" = "Secadores, altavoces o accesorios MagSafe cerca pueden magnetizar la espiral, haciendo que la marcha vaya muy rápida. Desmagnetiza para restablecer.";
+"glossary.escapement" = "Escape";
+"glossary.escapement.desc" = "Pieza clave que libera la energía del muelle real a un ritmo constante. Áncora suiza (la mayoría), Coaxial (Omega), Spring drive (Seiko), etc.";
 
 /* Round 123 — BatteryView Rule 3 */
 "battery.caliber_life" = "Cal. %@ · Vida útil estimada %d meses";
@@ -907,7 +913,7 @@
 "collection.status.service" = "Servicio";
 "pro.limit.upgrade" = "Actualizar a Pro";
 
-/* TickLab Pro paywall ($9.99/yr) */
+/* TickLab Pro paywall*/
 "purchase.headline" = "TickLab Pro";
 "purchase.subtitle" = "Colección y mediciones ilimitadas — la caja de herramientas adecuada para la relojería seria.";
 "purchase.benefit.unlimited_watches.title" = "Relojes ilimitados";
@@ -932,6 +938,7 @@
 "purchase.error.title" = "Error de compra";
 "purchase.unavailable" = "Conectando con la App Store. Inténtalo de nuevo en un momento.";
 "purchase.retry" = "Reintentar";
+"purchase.restore.none" = "No se encontraron compras. Verifica que estés con el mismo Apple ID en la App Store.";
 "aidiag.trial.remaining" = "Diagnóstico con IA %d/%d restantes";
 "aidiag.trial.exhausted_cta" = "Diagnóstico con IA ilimitado — Actualiza a Pro";
 "purchase.context.watch_limit" = "Has alcanzado el límite de 1 reloj — Pro desbloquea relojes ilimitados";
@@ -945,6 +952,14 @@
 "aidiag.confidence.grade.medium" = "media";
 "aidiag.confidence.grade.low" = "baja";
 "unit.seconds_short" = "%d s";
+"settings.overhaul_reminder" = "Recordatorio de revisión";
+"settings.overhaul_reminder.years" = "Ciclo recomendado";
+"settings.overhaul_reminder.years.value" = "%d años";
+"notif.overhaul.title" = "🔧 Se acerca la revisión de %@";
+"notif.overhaul.body" = "Te acercas al ciclo recomendado desde la última revisión. Fecha sugerida: %@";
+"watch.overhaul.next_due" = "Próxima revisión recomendada";
+"watch.overhaul.remaining_days" = "en unos %d días";
+"watch.overhaul.overdue_days" = "%d días vencido — revisión recomendada";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "ESCAPE SUIZO";

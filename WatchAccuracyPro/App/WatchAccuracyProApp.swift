@@ -228,6 +228,13 @@ private struct RootView: View {
                     minute: preferences.journalReminderMinute
                 )
             }
+            // 사용자 요청: 오버홀 정비 리마인더 — launch 시 모든 시계 재스케줄.
+            NotificationService.rescheduleAllOverhaulReminders(
+                watches: allWatches,
+                years: preferences.overhaulReminderYears,
+                enabled: preferences.overhaulReminderEnabled,
+                in: modelContext
+            )
         }
     }
 

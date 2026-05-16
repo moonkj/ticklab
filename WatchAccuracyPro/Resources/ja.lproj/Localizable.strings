@@ -667,8 +667,8 @@
 "result.beginner.why" = "なぜこの結果に?";
 
 /* Reliability notes */
-"movement.reliability.generic.title" = "計測ノート";
-"movement.reliability.generic.notice" = "このムーブメントは標準的なスイスレバーと挙動が異なるため、計測精度が低くなる可能性があります。";
+"movement.reliability.generic.title" = "振り角は表示されません";
+"movement.reliability.generic.notice" = "このムーブメントはケース構造やサファイアバックなどの特性により、マイクベースの振り角測定の信頼性が低いため振り角セルを非表示にします。歩度・ビートエラーは通常通り測定されます。";
 
 /* Trend */
 "trend.title" = "歩度の推移";
@@ -706,7 +706,6 @@
 "settings.glossary" = "用語集";
 "settings.section.about" = "アプリ情報";
 "settings.version" = "バージョン";
-"settings.bundle_id" = "Bundle ID";
 "settings.section.data" = "データ";
 "settings.export.format" = "書き出し形式";
 "settings.export.action" = "計測データを書き出す";
@@ -721,7 +720,6 @@
 "settings.movementdb.checking" = "更新を確認中…";
 "settings.movementdb.ok" = "バージョン %@ をインストール済み (%d 件のムーブメント)";
 "settings.movementdb.fail" = "更新に失敗しました: %@";
-"settings.movementdb.version" = "ムーブメント DB バージョン";
 "settings.section.timeref" = "時刻基準";
 "settings.audio_input.label" = "マイク入力";
 "settings.audio_input.empty" = "利用可能な入力デバイスがありません";
@@ -833,11 +831,11 @@
 
 /* Round 113 — Pro gate */
 "pro.limit.watch.title" = "時計の登録上限に達しました";
-"pro.limit.watch.body" = "無料プランは時計1本までです。TickLab Pro ($9.99/年) にアップグレードして、すべての時計を管理しましょう。";
+"pro.limit.watch.body" = "無料プランは時計1本までです。TickLab Pro にアップグレードして、すべての時計を管理しましょう。";
 "pro.limit.daily_measurement.title" = "1日の計測上限に達しました";
-"pro.limit.daily_measurement.body" = "無料プランは1日3回までです。TickLab Pro ($9.99/年) にアップグレードして無制限に計測しましょう。";
+"pro.limit.daily_measurement.body" = "無料プランは1日3回までです。TickLab Pro にアップグレードして無制限に計測しましょう。";
 "pro.limit.journal_monthly.title" = "今月のジャーナル上限に達しました";
-"pro.limit.journal_monthly.body" = "無料プランは月5件までです。TickLab Pro ($9.99/年) にアップグレードして無制限に記録しましょう。";
+"pro.limit.journal_monthly.body" = "無料プランは月5件までです。TickLab Pro にアップグレードして無制限に記録しましょう。";
 
 /* Round 116 — A11y: ShakePick button */
 "shake.cta.a11y.label" = "時計を選ぶ";
@@ -867,6 +865,14 @@
 "glossary.isochronism.desc" = "残りのパワーリザーブに関わらず一定の歩度を保つ能力。等時性が高いほど精度が安定。";
 "glossary.positional" = "姿勢差";
 "glossary.positional.desc" = "時計の向き (文字盤上下、リューズ各位置) により歩度がどれだけ変わるか。6姿勢テストで確認します。";
+"glossary.power_reserve" = "パワーリザーブ (Power Reserve)";
+"glossary.power_reserve.desc" = "フル巻上げ後に時計が動く時間。通常 38〜80 時間。動力不足になると振り角が下がり、歩度が −20s/d 以下まで落ちることがあります。";
+"glossary.overhaul" = "オーバーホール (Overhaul)";
+"glossary.overhaul.desc" = "ムーブメントを分解し、洗浄・注油・再組立てするフルサービス。通常 4〜6 年ごとに推奨されます。";
+"glossary.magnetism" = "帯磁 (Magnetism)";
+"glossary.magnetism.desc" = "ヘアドライヤー、スピーカー、MagSafe アクセサリーの近くに置くと髭ゼンマイが帯磁し、歩度が異常に速くなります。脱磁器で除去できます。";
+"glossary.escapement" = "脱進機 (Escapement)";
+"glossary.escapement.desc" = "ゼンマイのエネルギーを一定間隔で解放する中核部品。Swiss lever (大半)、Co-axial (Omega)、Spring Drive (Seiko) など。";
 
 /* Round 123 — BatteryView Rule 3 */
 "battery.caliber_life" = "Cal. %@ · 想定寿命 %d ヶ月";
@@ -907,7 +913,7 @@
 "collection.status.service" = "サービス";
 "pro.limit.upgrade" = "Pro にアップグレード";
 
-/* TickLab Pro paywall ($9.99/yr) */
+/* TickLab Pro paywall*/
 "purchase.headline" = "TickLab Pro";
 "purchase.subtitle" = "コレクションも計測も無制限 — 本格的な時計道楽のための装備。";
 "purchase.benefit.unlimited_watches.title" = "時計の登録無制限";
@@ -932,6 +938,7 @@
 "purchase.error.title" = "購入エラー";
 "purchase.unavailable" = "App Store に接続中です。しばらくしてからお試しください。";
 "purchase.retry" = "もう一度";
+"purchase.restore.none" = "復元できる購入が見つかりません。App Store に同じ Apple ID でサインインしているか確認してください。";
 "aidiag.trial.remaining" = "AI 診断 残り %d/%d";
 "aidiag.trial.exhausted_cta" = "AI 診断を無制限に — Pro にアップグレード";
 "purchase.context.watch_limit" = "腕時計 1 個の上限に達しました — Pro で無制限登録";
@@ -945,6 +952,14 @@
 "aidiag.confidence.grade.medium" = "中";
 "aidiag.confidence.grade.low" = "低";
 "unit.seconds_short" = "%d 秒";
+"settings.overhaul_reminder" = "オーバーホール リマインダー";
+"settings.overhaul_reminder.years" = "推奨周期";
+"settings.overhaul_reminder.years.value" = "%d 年";
+"notif.overhaul.title" = "🔧 %@ のオーバーホール時期が近づいています";
+"notif.overhaul.body" = "前回のオーバーホールから推奨周期に近づいています。推奨日: %@";
+"watch.overhaul.next_due" = "次のオーバーホール推奨";
+"watch.overhaul.remaining_days" = "約 %d 日後";
+"watch.overhaul.overdue_days" = "推奨日から %d 日経過 — 点検をおすすめします";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";

@@ -667,8 +667,8 @@
 "result.beginner.why" = "Why did I get this result?";
 
 /* Reliability notes */
-"movement.reliability.generic.title" = "Measurement Note";
-"movement.reliability.generic.notice" = "This movement behaves differently from a standard Swiss lever, so measurement accuracy may be lower.";
+"movement.reliability.generic.title" = "Amplitude is not shown";
+"movement.reliability.generic.notice" = "Mic-based amplitude is unreliable for this movement (case construction, sapphire caseback, etc.) so the amplitude cell is hidden. Rate / beat error are measured normally.";
 
 /* Trend */
 "trend.title" = "Rate trend";
@@ -706,7 +706,6 @@
 "settings.glossary" = "Glossary";
 "settings.section.about" = "About";
 "settings.version" = "Version";
-"settings.bundle_id" = "Bundle ID";
 "settings.section.data" = "Data";
 "settings.export.format" = "Export format";
 "settings.export.action" = "Export measurements";
@@ -721,7 +720,6 @@
 "settings.movementdb.checking" = "Checking for updates…";
 "settings.movementdb.ok" = "Version %@ installed (%d movements)";
 "settings.movementdb.fail" = "Update failed: %@";
-"settings.movementdb.version" = "Movement DB version";
 "settings.section.timeref" = "Time reference";
 "settings.audio_input.label" = "Microphone input";
 "settings.audio_input.empty" = "No input devices available";
@@ -833,11 +831,11 @@
 
 /* Round 113 — Pro gate */
 "pro.limit.watch.title" = "Watch limit reached";
-"pro.limit.watch.body" = "The free plan supports 1 watch. Upgrade to TickLab Pro ($9.99/yr) to manage your full collection.";
+"pro.limit.watch.body" = "The free plan supports 1 watch. Upgrade to TickLab Pro to manage your full collection.";
 "pro.limit.daily_measurement.title" = "Daily measurement limit reached";
-"pro.limit.daily_measurement.body" = "The free plan allows 3 measurements per day. Upgrade to TickLab Pro ($9.99/yr) for unlimited measurements.";
+"pro.limit.daily_measurement.body" = "The free plan allows 3 measurements per day. Upgrade to TickLab Pro for unlimited measurements.";
 "pro.limit.journal_monthly.title" = "Monthly journal limit reached";
-"pro.limit.journal_monthly.body" = "The free plan allows 5 journal entries per month. Upgrade to TickLab Pro ($9.99/yr) for unlimited entries.";
+"pro.limit.journal_monthly.body" = "The free plan allows 5 journal entries per month. Upgrade to TickLab Pro for unlimited entries.";
 
 /* Round 116 — A11y: ShakePick button */
 "shake.cta.a11y.label" = "Pick a watch";
@@ -867,6 +865,14 @@
 "glossary.isochronism.desc" = "A movement's ability to keep consistent rate regardless of how much power reserve remains. Higher isochronism means more stable accuracy.";
 "glossary.positional" = "Positional Variation";
 "glossary.positional.desc" = "How much rate changes depending on the watch's orientation (dial-up, dial-down, crown positions). Checked with a 6-position test.";
+"glossary.power_reserve" = "Power Reserve";
+"glossary.power_reserve.desc" = "How long the watch runs after a full wind. Typically 38–80 hours. Low power drops amplitude and can push rate below −20s/d.";
+"glossary.overhaul" = "Overhaul";
+"glossary.overhaul.desc" = "Full service — disassembling, cleaning, re-oiling, and reassembling the movement. Usually recommended every 4–6 years.";
+"glossary.magnetism" = "Magnetism";
+"glossary.magnetism.desc" = "Hair dryers, speakers, and MagSafe accessories can magnetize the hairspring, making rate run abnormally fast. Demagnetize to restore.";
+"glossary.escapement" = "Escapement";
+"glossary.escapement.desc" = "The component that releases mainspring energy at a fixed cadence. Swiss lever (most), Co-axial (Omega), Spring drive (Seiko), etc.";
 
 /* Round 123 — BatteryView Rule 3 */
 "battery.caliber_life" = "Cal. %@ · Expected life %d months";
@@ -907,7 +913,7 @@
 "collection.status.service" = "Service";
 "pro.limit.upgrade" = "Upgrade to Pro";
 
-/* TickLab Pro paywall ($9.99/yr) */
+/* TickLab Pro paywall*/
 "purchase.headline" = "TickLab Pro";
 "purchase.subtitle" = "Unlimited collection and measurements — the proper toolkit for serious watch enthusiasts.";
 "purchase.benefit.unlimited_watches.title" = "Unlimited watches";
@@ -932,6 +938,7 @@
 "purchase.error.title" = "Purchase Error";
 "purchase.unavailable" = "Connecting to the App Store. Please try again shortly.";
 "purchase.retry" = "Try Again";
+"purchase.restore.none" = "No purchases found. Make sure you're signed in to the App Store with the same Apple ID.";
 "aidiag.trial.remaining" = "AI diagnosis %d/%d remaining";
 "aidiag.trial.exhausted_cta" = "Unlimited AI diagnosis — Upgrade to Pro";
 "purchase.context.watch_limit" = "Watch limit reached — Pro unlocks unlimited watches";
@@ -945,6 +952,14 @@
 "aidiag.confidence.grade.medium" = "medium";
 "aidiag.confidence.grade.low" = "low";
 "unit.seconds_short" = "%d s";
+"settings.overhaul_reminder" = "Overhaul reminder";
+"settings.overhaul_reminder.years" = "Recommended cycle";
+"settings.overhaul_reminder.years.value" = "%d years";
+"notif.overhaul.title" = "🔧 %@ overhaul is approaching";
+"notif.overhaul.body" = "Approaching the recommended service cycle since last overhaul. Suggested date: %@";
+"watch.overhaul.next_due" = "Next overhaul recommended";
+"watch.overhaul.remaining_days" = "in about %d days";
+"watch.overhaul.overdue_days" = "%d days overdue — service recommended";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";

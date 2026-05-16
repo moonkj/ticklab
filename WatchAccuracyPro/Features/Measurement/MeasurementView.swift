@@ -112,10 +112,16 @@ struct MeasurementView: View {
                     introHint
                     positionPicker
                     if let movement = viewModel.movement, !movement.shouldDisplayAmplitude {
+                        // 사용자 보고 fix: escapement 별 분기 — swissLever medium 시계가 "코액시얼" 안내 받던 버그.
+                        let isCoaxial = movement.escapement == .coAxial
                         HelpCard(
                             icon: "info.circle",
-                            title: String(localized: "movement.reliability.coaxial.title"),
-                            body: String(localized: "movement.reliability.coaxial.notice")
+                            title: String(localized: isCoaxial
+                                          ? "movement.reliability.coaxial.title"
+                                          : "movement.reliability.generic.title"),
+                            body: String(localized: isCoaxial
+                                         ? "movement.reliability.coaxial.notice"
+                                         : "movement.reliability.generic.notice")
                         )
                     }
                 }

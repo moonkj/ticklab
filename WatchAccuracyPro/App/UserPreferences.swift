@@ -117,18 +117,34 @@ final class UserPreferences {
         didSet { defaults.set(useSimplifiedDSP, forKey: Keys.useSimplifiedDSP) }
     }
 
+    /// 사용자 요청: 오버홀 정비 리마인더 — 기계식 시계 한정. 기본 ON.
+    /// lastOverhaulDate (ServiceLog.fullOverhaul) 또는 createdAt 기준 +N년 -6개월 시점 알림.
+    var overhaulReminderEnabled: Bool {
+        didSet { defaults.set(overhaulReminderEnabled, forKey: Keys.overhaulReminder) }
+    }
+    /// 오버홀 권장 주기 (년). 사용자 설정 — 기본 4년, range 2~7.
+    var overhaulReminderYears: Int {
+        didSet { defaults.set(overhaulReminderYears, forKey: Keys.overhaulReminderYears) }
+    }
+
     init() {
         // Round 23 (Min): defaults.register — 외부 reader (Settings.app) / 다른 process 에서도
         //   ON-by-default 키들이 일관된 fallback. didSet 으로 한 번이라도 write 한 값은 우선 유지.
+        // 사용자 요청: 설치 시 silent/keepScreenOn/aiVerdict/journalReminder/randomPick 모두 기본 ON.
         defaults.register(defaults: [
             Keys.autoOTA: false,
-            Keys.aiVerdict: true,
+            Keys.silentMode: true,
             Keys.keepScreenOn: true,
+            Keys.aiVerdict: true,
+            Keys.journalReminder: true,
             Keys.journalReminderHour: 21,
             Keys.journalReminderMinute: 0,
+            Keys.randomPick: true,
             Keys.randomPickHour: 8,
             Keys.randomPickMinute: 0,
-            Keys.useSimplifiedDSP: true
+            Keys.useSimplifiedDSP: true,
+            Keys.overhaulReminder: true,
+            Keys.overhaulReminderYears: 4
         ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
         // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
@@ -136,7 +152,8 @@ final class UserPreferences {
         //   lift-angle override 등 5곳이 모든 유저에게 영구 hidden 이었음.
         let modeString = defaults.string(forKey: Keys.mode) ?? UserMode.pro.rawValue
         self.userMode = UserMode(rawValue: modeString) ?? .pro
-        self.silentModeDefault = defaults.bool(forKey: Keys.silentMode)
+        // 사용자 요청: silent / keepScreenOn 기본 ON.
+        self.silentModeDefault = (defaults.object(forKey: Keys.silentMode) as? Bool) ?? true
         self.iCloudSyncEnabled = defaults.bool(forKey: Keys.iCloud)
         // Round 6 (Hyemi): 외부 호출 사용자 동의는 명시적 opt-in 으로. 기본 OFF.
         // Settings 에서 사용자가 토글하면 그 후로만 manifest 를 fetch.
@@ -144,12 +161,13 @@ final class UserPreferences {
         self.useCoreMLBeatDetector = defaults.bool(forKey: Keys.coreML)
         self.isPro = defaults.bool(forKey: Keys.isPro)
         self.appLockEnabled = defaults.bool(forKey: Keys.appLock)
-        self.journalReminderEnabled = defaults.bool(forKey: Keys.journalReminder)
+        // 사용자 요청: journalReminder / randomPick 기본 ON.
+        self.journalReminderEnabled = (defaults.object(forKey: Keys.journalReminder) as? Bool) ?? true
         self.journalReminderHour = (defaults.object(forKey: Keys.journalReminderHour) as? Int) ?? 21
         self.journalReminderMinute = (defaults.object(forKey: Keys.journalReminderMinute) as? Int) ?? 0
         // 기본 ON — 사용자가 명시 OFF 안 했으면 AI 시도.
         self.aiVerdictEnabled = (defaults.object(forKey: Keys.aiVerdict) as? Bool) ?? true
-        self.randomPickEnabled = defaults.bool(forKey: Keys.randomPick)
+        self.randomPickEnabled = (defaults.object(forKey: Keys.randomPick) as? Bool) ?? true
         self.randomPickHour = (defaults.object(forKey: Keys.randomPickHour) as? Int) ?? 8
         self.randomPickMinute = (defaults.object(forKey: Keys.randomPickMinute) as? Int) ?? 0
         // 기본 ON — 사용자 요청 (측정 중 잠금 화면 진입 방지).
@@ -158,6 +176,9 @@ final class UserPreferences {
         self.pinEnabled = defaults.bool(forKey: Keys.pinEnabled)
         // Round 170: simplified DSP — 기본 ON. 사용자가 명시 OFF 해야 legacy 경로 사용.
         self.useSimplifiedDSP = (defaults.object(forKey: Keys.useSimplifiedDSP) as? Bool) ?? true
+        // 사용자 요청: 오버홀 리마인더 — 기본 ON, 기본 주기 4년.
+        self.overhaulReminderEnabled = (defaults.object(forKey: Keys.overhaulReminder) as? Bool) ?? true
+        self.overhaulReminderYears = (defaults.object(forKey: Keys.overhaulReminderYears) as? Int) ?? 4
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
         // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
         proEntitlementObserver = NotificationCenter.default.addObserver(
@@ -194,6 +215,8 @@ final class UserPreferences {
         static let magneticField = "ticklab.magneticFieldMeasurementEnabled"
         static let pinEnabled = "ticklab.pinEnabled"
         static let useSimplifiedDSP = "ticklab.useSimplifiedDSP"
+        static let overhaulReminder = "ticklab.overhaulReminderEnabled"
+        static let overhaulReminderYears = "ticklab.overhaulReminderYears"
         /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
         /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.
         static let windingHintShownAt = "ticklab.windingHintShownAt"

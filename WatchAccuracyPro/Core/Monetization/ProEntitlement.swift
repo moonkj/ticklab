@@ -45,13 +45,16 @@ final class ProEntitlement: ObservableObject {
         // Round 18 (Doyoon): productID 가 다른 transaction 도 반드시 finish() — 미finish 시
         //   Transaction.updates 가 매 부팅마다 같은 record 를 다시 던져 listener 무한 replay.
         //   App Review 가 unfinished queue 잔존을 거절 사유로 잡는 케이스 있음.
-        defer { Task { await transaction.finish() } }
-        guard transaction.productID == Self.productId else { return }
-        if transaction.revocationDate == nil {
-            storeKitMarkPro(true)
-        } else {
-            storeKitMarkPro(false)
+        // 사용자 보고 fix: defer { Task { ... } } 가 finish 를 fire-and-forget 으로 던져서 같은 transaction 이
+        //   Transaction.updates 로 재 delivery 될 수 있는 race. await 로 동기 처리.
+        if transaction.productID == Self.productId {
+            if transaction.revocationDate == nil {
+                storeKitMarkPro(true)
+            } else {
+                storeKitMarkPro(false)
+            }
         }
+        await transaction.finish()
     }
 
     /// Purchase entry — Phase 2 에 PurchaseView 가 호출.
@@ -71,8 +74,20 @@ final class ProEntitlement: ObservableObject {
     }
 
     func restore() async {
+        var foundActiveEntitlement = false
         for await result in Transaction.currentEntitlements {
+            // 활성 entitlement 가 우리 productID 인지 검사 (revocation 검출용).
+            if case .verified(let transaction) = result,
+               transaction.productID == Self.productId,
+               transaction.revocationDate == nil {
+                foundActiveEntitlement = true
+            }
             await handle(result)
+        }
+        // 사용자 보고 fix: 환불/구독 만료 시 currentEntitlements 에 우리 productID 없음 → silent
+        //   하게 isPro=true 유지하던 버그. 활성 entitlement 없으면 명시적으로 false 처리.
+        if !foundActiveEntitlement {
+            storeKitMarkPro(false)
         }
     }
 
@@ -88,6 +103,9 @@ final class ProEntitlement: ObservableObject {
     /// StoreKit 검증된 transaction 만 호출 — private.
     @MainActor
     private func storeKitMarkPro(_ on: Bool) {
+        // 사용자 보고 fix: 같은 상태 중복 set 방지 — Transaction.updates 와 purchase() 가 같은 tx 를
+        //   모두 처리해 중복 notification post 되던 race 차단.
+        guard isPro != on else { return }
         isPro = on
         UserDefaults.standard.set(on, forKey: "ticklab.isPro")
         // Round 149 (Hyemi 7 H1): UserPreferences 인스턴스 갱신 — observer 들이 즉시 반응.

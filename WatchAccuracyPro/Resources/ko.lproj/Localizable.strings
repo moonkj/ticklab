@@ -667,8 +667,8 @@
 /* Misc — Round (3-2 잔여): misc.* dead. */
 
 /* Reliability notes */
-"movement.reliability.generic.title" = "측정 환경 안내";
-"movement.reliability.generic.notice" = "이 무브먼트는 일반 swiss lever와 다른 작동 방식을 가져 측정 정확도가 낮을 수 있습니다.";
+"movement.reliability.generic.title" = "진폭은 표시되지 않습니다";
+"movement.reliability.generic.notice" = "이 무브먼트는 케이스·사파이어 백 등 특성으로 마이크 기반 진폭 측정 신뢰도가 낮아 진폭 셀을 숨겨요. rate / beat error 는 정상 측정됩니다.";
 
 /* Trend */
 "trend.title" = "정확도 추이";
@@ -706,7 +706,6 @@
 "settings.glossary" = "용어 사전";
 "settings.section.about" = "정보";
 "settings.version" = "버전";
-"settings.bundle_id" = "Bundle ID";
 "settings.section.data" = "데이터";
 "settings.export.format" = "내보내기 형식";
 "settings.export.action" = "측정 이력 내보내기";
@@ -721,7 +720,6 @@
 "settings.movementdb.checking" = "업데이트 확인 중…";
 "settings.movementdb.ok" = "버전 %@ 적용됨 (%d개 무브먼트)";
 "settings.movementdb.fail" = "업데이트 실패: %@";
-"settings.movementdb.version" = "무브먼트 DB 버전";
 "settings.section.timeref" = "시간 기준";
 "settings.audio_input.label" = "마이크 입력";
 "settings.audio_input.empty" = "사용 가능한 입력 장치가 없습니다";
@@ -833,11 +831,11 @@
 
 /* Round 113 — Pro 게이팅 */
 "pro.limit.watch.title" = "시계 1개 한도 도달";
-"pro.limit.watch.body" = "무료 플랜은 시계 1개까지 등록할 수 있어요. TickLab Pro (연 $9.99) 로 업그레이드하면 제한 없이 컬렉션을 관리할 수 있습니다.";
+"pro.limit.watch.body" = "무료 플랜은 시계 1개까지 등록할 수 있어요. TickLab Pro로 업그레이드하면 제한 없이 컬렉션을 관리할 수 있습니다.";
 "pro.limit.daily_measurement.title" = "오늘 측정 한도 도달";
-"pro.limit.daily_measurement.body" = "무료 플랜은 하루에 3회까지 측정할 수 있어요. TickLab Pro (연 $9.99) 로 업그레이드하면 무제한으로 측정할 수 있습니다.";
+"pro.limit.daily_measurement.body" = "무료 플랜은 하루에 3회까지 측정할 수 있어요. TickLab Pro로 업그레이드하면 무제한으로 측정할 수 있습니다.";
 "pro.limit.journal_monthly.title" = "이달 일기 한도 도달";
-"pro.limit.journal_monthly.body" = "무료 플랜은 한 달에 5개의 일기를 작성할 수 있어요. TickLab Pro (연 $9.99) 로 업그레이드하면 무제한으로 기록할 수 있습니다.";
+"pro.limit.journal_monthly.body" = "무료 플랜은 한 달에 5개의 일기를 작성할 수 있어요. TickLab Pro로 업그레이드하면 무제한으로 기록할 수 있습니다.";
 
 /* Round 116 — A11y: ShakePick 버튼 레이블 */
 "shake.cta.a11y.label" = "시계 뽑기";
@@ -867,6 +865,14 @@
 "glossary.isochronism.desc" = "태엽 감긴 정도와 무관하게 일정한 빠르기를 유지하는 능력. 높을수록 안정적인 정확도를 보입니다.";
 "glossary.positional" = "위치별 편차 (Positional Variation)";
 "glossary.positional.desc" = "시계를 놓는 자세(다이얼 업/다운/크라운 방향)에 따라 rate가 달라지는 정도. 6포지션 테스트로 확인합니다.";
+"glossary.power_reserve" = "파워 리저브 (Power Reserve)";
+"glossary.power_reserve.desc" = "풀와인딩 후 시계가 동작하는 시간. 일반적으로 38~80시간. 동력이 부족하면 진폭이 떨어져 rate 가 -20s/d 이상으로 떨어질 수 있어요.";
+"glossary.overhaul" = "오버홀 (Overhaul)";
+"glossary.overhaul.desc" = "무브먼트를 분해해 세척·재조립·재오일링하는 풀 서비스. 보통 4~6년마다 권장.";
+"glossary.magnetism" = "자성화 (Magnetism)";
+"glossary.magnetism.desc" = "헤어 드라이어·스피커·MagSafe 액세서리 근처에 두면 헤어스프링이 자성화돼 rate 가 비정상적으로 빨라집니다. 자성 제거기로 demagnetize.";
+"glossary.escapement" = "이스케이프먼트 (Escapement)";
+"glossary.escapement.desc" = "스프링 에너지를 일정한 간격으로 풀어주는 핵심 부품. Swiss lever (대부분), Co-axial (Omega), Spring drive (Seiko) 등.";
 
 /* Round 123 — BatteryView Hard Rule 3 */
 "battery.caliber_life" = "Cal. %@ · 예상 수명 %d개월";
@@ -932,6 +938,7 @@
 "purchase.error.title" = "구매 오류";
 "purchase.unavailable" = "App Store 에 연결 중이에요. 잠시 후 다시 시도해 주세요.";
 "purchase.retry" = "다시 시도";
+"purchase.restore.none" = "복원할 구매가 없어요. App Store 에서 같은 Apple ID 로 로그인됐는지 확인해 주세요.";
 "aidiag.trial.remaining" = "AI 진단 %d/%d 남음";
 "aidiag.trial.exhausted_cta" = "AI 진단 무제한으로 — Pro 업그레이드";
 "purchase.context.watch_limit" = "시계 1개 한도에 도달했어요 — Pro 면 무제한 등록";
@@ -945,6 +952,14 @@
 "aidiag.confidence.grade.medium" = "중간";
 "aidiag.confidence.grade.low" = "낮음";
 "unit.seconds_short" = "%d 초";
+"settings.overhaul_reminder" = "오버홀 정비 리마인더";
+"settings.overhaul_reminder.years" = "권장 주기";
+"settings.overhaul_reminder.years.value" = "%d 년";
+"notif.overhaul.title" = "🔧 %@ 오버홀 점검 시점이 다가와요";
+"notif.overhaul.body" = "마지막 오버홀 후 권장 주기에 가까워졌어요. 권장일: %@";
+"watch.overhaul.next_due" = "다음 오버홀 권장";
+"watch.overhaul.remaining_days" = "약 %d 일 남음";
+"watch.overhaul.overdue_days" = "권장일 %d 일 경과 — 점검 권장";
 
 /* Round 127 — MeasurementResultView Hard Rule 3 */
 "result.escapement.fallback" = "SWISS LEVER";

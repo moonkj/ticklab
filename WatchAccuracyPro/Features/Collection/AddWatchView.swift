@@ -619,6 +619,17 @@ struct AddWatchView: View {
         if movementType == .quartz && watch.batteryReminderEnabled {
             NotificationService.scheduleBatteryReminder(for: watch)
         }
+        // 사용자 요청: 시계 추가/편집 시 오버홀 리마인더도 같이 스케줄.
+        //   기계식 (auto/manual) 만 대상. 첫 등록 시 createdAt 기준으로 +N년 후 알림.
+        if movementType != .quartz {
+            let lastDate = NotificationService.lastOverhaulDate(for: watch, in: modelContext) ?? watch.createdAt
+            NotificationService.scheduleOverhaulReminder(
+                for: watch,
+                lastOverhaulDate: lastDate,
+                years: preferences.overhaulReminderYears,
+                enabled: preferences.overhaulReminderEnabled
+            )
+        }
         // 캐시 무효화 — 모델 변경이 collection / detail 에 즉시 반영.
         WatchMoodService.invalidate(for: watch)
         dismiss()

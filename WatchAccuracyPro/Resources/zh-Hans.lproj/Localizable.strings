@@ -667,8 +667,8 @@
 "result.beginner.why" = "为什么会得到这个结果?";
 
 /* Reliability notes */
-"movement.reliability.generic.title" = "测量提示";
-"movement.reliability.generic.notice" = "此机芯的特性与常规瑞士杠杆式擒纵不同,测量精度可能偏低。";
+"movement.reliability.generic.title" = "不显示振幅";
+"movement.reliability.generic.notice" = "此机芯(表壳结构、蓝宝石背等特性)的麦克风振幅测量可靠性较低,故隐藏振幅单元。走时与摆轮误差仍正常测量。";
 
 /* Trend */
 "trend.title" = "走时趋势";
@@ -706,7 +706,6 @@
 "settings.glossary" = "词条";
 "settings.section.about" = "关于";
 "settings.version" = "版本";
-"settings.bundle_id" = "Bundle ID";
 "settings.section.data" = "数据";
 "settings.export.format" = "导出格式";
 "settings.export.action" = "导出测量数据";
@@ -721,7 +720,6 @@
 "settings.movementdb.checking" = "正在检查更新…";
 "settings.movementdb.ok" = "已安装版本 %@(%d 款机芯)";
 "settings.movementdb.fail" = "更新失败:%@";
-"settings.movementdb.version" = "机芯数据库版本";
 "settings.section.timeref" = "时间基准";
 "settings.audio_input.label" = "麦克风输入";
 "settings.audio_input.empty" = "无可用的输入设备";
@@ -833,11 +831,11 @@
 
 /* Round 113 — Pro gate */
 "pro.limit.watch.title" = "已达腕表上限";
-"pro.limit.watch.body" = "Free 版仅支持 1 枚腕表。升级至 TickLab Pro($9.99/年)以管理你的完整收藏。";
+"pro.limit.watch.body" = "Free 版仅支持 1 枚腕表。升级至 TickLab Pro以管理你的完整收藏。";
 "pro.limit.daily_measurement.title" = "已达每日测量上限";
-"pro.limit.daily_measurement.body" = "Free 版每日支持 3 次测量。升级至 TickLab Pro($9.99/年)即可无限次测量。";
+"pro.limit.daily_measurement.body" = "Free 版每日支持 3 次测量。升级至 TickLab Pro即可无限次测量。";
 "pro.limit.journal_monthly.title" = "已达每月日志上限";
-"pro.limit.journal_monthly.body" = "Free 版每月支持 5 篇日志。升级至 TickLab Pro($9.99/年)即可无限撰写。";
+"pro.limit.journal_monthly.body" = "Free 版每月支持 5 篇日志。升级至 TickLab Pro即可无限撰写。";
 
 /* Round 116 — A11y: ShakePick button */
 "shake.cta.a11y.label" = "选择一枚腕表";
@@ -867,6 +865,14 @@
 "glossary.isochronism.desc" = "机芯无论动力储存剩余多少,均能保持稳定走时的能力。等时性越好,精度越稳定。";
 "glossary.positional" = "方位差";
 "glossary.positional.desc" = "走时随腕表朝向(表盘朝上/朝下、表冠各方向)而变化的程度。可通过六方位测试检验。";
+"glossary.power_reserve" = "动力储存 (Power Reserve)";
+"glossary.power_reserve.desc" = "上满弦后腕表可持续运行的时间。通常 38–80 小时。动力不足时振幅下降,走时可能跌至 −20s/d 以下。";
+"glossary.overhaul" = "大保养 (Overhaul)";
+"glossary.overhaul.desc" = "拆解、清洗、加油、重组机芯的全套保养。通常建议每 4–6 年进行一次。";
+"glossary.magnetism" = "磁化 (Magnetism)";
+"glossary.magnetism.desc" = "靠近吹风机、扬声器或 MagSafe 配件会使游丝磁化,导致走时异常变快。需用消磁器消磁。";
+"glossary.escapement" = "擒纵机构 (Escapement)";
+"glossary.escapement.desc" = "以固定节奏释放主发条能量的核心部件。瑞士杠杆式(最常见)、同轴式 (Omega)、Spring drive (Seiko) 等。";
 
 /* Round 123 — BatteryView Rule 3 */
 "battery.caliber_life" = "Cal. %@ · 预计寿命 %d 个月";
@@ -907,7 +913,7 @@
 "collection.status.service" = "送修";
 "pro.limit.upgrade" = "升级至 Pro";
 
-/* TickLab Pro paywall ($9.99/yr) */
+/* TickLab Pro paywall*/
 "purchase.headline" = "TickLab Pro";
 "purchase.subtitle" = "无限收藏与测量 — 资深玩家应有的完整工具。";
 "purchase.benefit.unlimited_watches.title" = "无限腕表";
@@ -932,6 +938,7 @@
 "purchase.error.title" = "购买出错";
 "purchase.unavailable" = "正在连接 App Store。请稍后再试。";
 "purchase.retry" = "重试";
+"purchase.restore.none" = "未找到可恢复的购买。请确认 App Store 已使用相同的 Apple ID 登录。";
 "aidiag.trial.remaining" = "AI 诊断剩余 %d/%d 次";
 "aidiag.trial.exhausted_cta" = "无限 AI 诊断 — 升级至 Pro";
 "purchase.context.watch_limit" = "已达到 1 块手表上限 — Pro 解锁无限手表";
@@ -945,6 +952,14 @@
 "aidiag.confidence.grade.medium" = "中";
 "aidiag.confidence.grade.low" = "低";
 "unit.seconds_short" = "%d 秒";
+"settings.overhaul_reminder" = "大保养提醒";
+"settings.overhaul_reminder.years" = "建议周期";
+"settings.overhaul_reminder.years.value" = "%d 年";
+"notif.overhaul.title" = "🔧 %@ 即将到大保养时间";
+"notif.overhaul.body" = "距离上次大保养已接近建议周期。建议日期: %@";
+"watch.overhaul.next_due" = "下次大保养建议";
+"watch.overhaul.remaining_days" = "约 %d 天后";
+"watch.overhaul.overdue_days" = "已逾期 %d 天 — 建议保养";
 
 /* Round 127 — MeasurementResultView Rule 3 */
 "result.escapement.fallback" = "瑞士杠杆式";

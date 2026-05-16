@@ -179,19 +179,21 @@ struct PurchaseView: View {
                 Text(String(localized: "purchase.plan.yearly.per_year"))
                     .font(.system(size: 13))
                     .foregroundStyle(AppColors.ink2)
-            } else {
-                // StoreKit 미연결/sandbox 미설정 시 fallback 가격 + 안내 + 재시도.
-                Text("$9.99")
-                    .font(.system(size: scaledPriceSize, weight: .bold))
-                    .foregroundStyle(AppColors.ink0)
-                Text(String(localized: "purchase.plan.yearly.per_year"))
-                    .font(.system(size: 13))
-                    .foregroundStyle(AppColors.ink2)
-                Text(String(localized: "purchase.unavailable"))
+                // Apple Schedule 2: 가격/주기/자동갱신 안내가 CTA 위에 함께 노출되어야 함.
+                Text(String(localized: "purchase.legal.auto_renew"))
                     .font(.system(size: 11))
+                    .foregroundStyle(AppColors.ink2)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 16)
+                    .padding(.top, 2)
+            } else {
+                // StoreKit 미연결/sandbox 미설정 시 — 하드코딩 가격 표시 X (non-USD storefront 오해 방지).
+                //   안내 + 재시도만 노출. Subscribe CTA 는 product==nil 일 때 disabled.
+                Text(String(localized: "purchase.unavailable"))
+                    .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(AppColors.warning)
                     .multilineTextAlignment(.center)
-                    .padding(.top, 4)
+                    .padding(.horizontal, 12)
                 Button {
                     Task { await loadProduct() }
                 } label: {
@@ -255,7 +257,7 @@ struct PurchaseView: View {
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppColors.ink2)
                 }
-                Link(destination: URL(string: "https://ticklab.app/privacy")!) {
+                Link(destination: URL(string: "https://moonkj.github.io/ticklab/privacy.html")!) {
                     Text(String(localized: "purchase.legal.privacy"))
                         .font(.system(size: 12, weight: .medium))
                         .foregroundStyle(AppColors.ink2)
@@ -300,6 +302,10 @@ struct PurchaseView: View {
         //   ProEntitlement.shared.isPro 를 직접 read (StoreKit 검증 후 즉시 set 됨).
         if ProEntitlement.shared.isPro {
             purchaseSuccess = true
+        } else {
+            // Apple guideline 3.1.1: Restore 탭 후 사용자에게 명시적 결과 안내 필수.
+            //   복원할 구매 없을 때 silent 면 review reject 리스크.
+            purchaseError = String(localized: "purchase.restore.none")
         }
     }
 }
