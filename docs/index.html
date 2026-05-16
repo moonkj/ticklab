@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TickLab — 내 시계의 모든 기록</title>
+<meta name="description" content="iPhone 으로 기계식 시계의 정확도 측정. 컬렉션·일기·서비스·분석을 한 곳에. $9.99/년 Pro 구독.">
+<meta property="og:title" content="TickLab">
+<meta property="og:description" content="내 시계의 모든 기록 — iPhone 기반 시계 다이어리">
+<style>
+:root {
+  --paper0: #FAFAF7;
+  --paper1: #FFFFFF;
+  --ink0: #1A1B2E;
+  --ink2: #404040;
+  --ink3: #737373;
+  --accent: #C9A961;
+  --accent-dark: #A08842;
+  --rule: #E5E5E5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Pretendard", "Apple SD Gothic Neo", sans-serif;
+  background: var(--paper0);
+  color: var(--ink0);
+  line-height: 1.55;
+}
+.container { max-width: 720px; margin: 0 auto; padding: 80px 24px; }
+.eyebrow {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--accent-dark);
+  margin-bottom: 16px;
+}
+h1 {
+  font-family: "Times New Roman", "Noto Serif KR", serif;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 12px;
+}
+.subtitle { font-size: 18px; color: var(--ink2); margin-bottom: 40px; }
+.hero {
+  background: linear-gradient(135deg, var(--ink0) 0%, #2A2C4F 100%);
+  color: white;
+  padding: 60px 32px;
+  border-radius: 24px;
+  margin-bottom: 40px;
+  text-align: center;
+}
+.hero .eyebrow { color: var(--accent); }
+.hero h1 { color: white; }
+.hero .subtitle { color: rgba(255,255,255,0.75); margin-bottom: 24px; }
+.appstore-btn {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--ink0);
+  padding: 14px 28px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 15px;
+}
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 40px 0;
+}
+.feature {
+  background: var(--paper1);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 24px;
+}
+.feature h3 { font-size: 16px; margin-bottom: 8px; }
+.feature p { font-size: 14px; color: var(--ink2); }
+.icon { font-size: 28px; margin-bottom: 12px; }
+footer {
+  border-top: 1px solid var(--rule);
+  margin-top: 80px;
+  padding-top: 32px;
+  color: var(--ink3);
+  font-size: 13px;
+}
+footer a { color: var(--ink2); margin-right: 16px; text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <div class="eyebrow">TICKLAB · EST. 2026</div>
+    <h1>내 시계의 모든 기록</h1>
+    <p class="subtitle">iPhone 으로 측정하고 · 기록하고 · 분석하는<br>시계 컬렉터의 다이어리</p>
+    <a href="https://apps.apple.com/app/id" class="appstore-btn">App Store 에서 받기</a>
+  </div>
+
+  <div class="feature-grid">
+    <div class="feature">
+      <div class="icon">📐</div>
+      <h3>정확도 측정</h3>
+      <p>iPhone 마이크로 일오차 · 비트 오차를 ±0.5 s/d 정밀도로 측정.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📓</div>
+      <h3>컬렉션 다이어리</h3>
+      <p>시계마다 사진 · 스펙 · 측정 · 일기 · 서비스 이력을 한 곳에.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📊</div>
+      <h3>트렌드 분석</h3>
+      <p>주간·월간·연간 추세, 월별 착용 heatmap, 브랜드 리그.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">🔧</div>
+      <h3>오버홀 알림</h3>
+      <p>마지막 오버홀로부터 권장 주기 도래 시 자동 안내.</p>
+    </div>
+  </div>
+
+  <h2 style="font-family: 'Times New Roman', serif; font-size: 28px; margin: 40px 0 16px;">지원 · 문의</h2>
+  <p style="color: var(--ink2);">앱 사용 중 문제가 있거나 기능 제안이 있으시면 이메일로 연락주세요.</p>
+  <p style="margin-top: 12px;"><a href="mailto:support@ticklab.app" style="color: var(--accent-dark); font-weight: 600;">support@ticklab.app</a></p>
+
+  <footer>
+    <a href="privacy.html">개인정보처리방침</a>
+    <a href="support.html">지원</a>
+    <a href="terms.html">이용약관</a>
+    <br><br>
+    © 2026 TickLab. All rights reserved.
+  </footer>
+</div>
+</body>
+</html>

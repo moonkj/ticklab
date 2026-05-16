@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개인정보처리방침 — TickLab</title>
+<style>
+:root {
+  --paper0: #FAFAF7; --paper1: #FFFFFF;
+  --ink0: #1A1B2E; --ink2: #404040; --ink3: #737373;
+  --accent-dark: #A08842; --rule: #E5E5E5;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif; background: var(--paper0); color: var(--ink0); line-height: 1.7; }
+.container { max-width: 760px; margin: 0 auto; padding: 60px 24px; }
+.eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 2px; color: var(--accent-dark); margin-bottom: 12px; }
+h1 { font-family: "Times New Roman", "Noto Serif KR", serif; font-size: 36px; margin-bottom: 8px; }
+.subtitle { color: var(--ink3); font-size: 14px; margin-bottom: 40px; }
+h2 { font-size: 20px; margin: 32px 0 12px; color: var(--ink0); }
+p, li { color: var(--ink2); font-size: 15px; }
+ul { padding-left: 24px; margin-bottom: 16px; }
+li { margin-bottom: 6px; }
+strong { color: var(--ink0); }
+a { color: var(--accent-dark); }
+footer { border-top: 1px solid var(--rule); margin-top: 60px; padding-top: 24px; color: var(--ink3); font-size: 13px; }
+footer a { color: var(--ink2); margin-right: 16px; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="eyebrow">TICKLAB</div>
+  <h1>개인정보처리방침</h1>
+  <p class="subtitle">최종 업데이트: 2026년 5월 16일</p>
+
+  <p>TickLab (이하 "본 앱") 은 사용자의 개인정보 보호를 매우 중요하게 생각합니다. 본 방침은 본 앱이 수집하는 정보의 종류, 사용 목적, 보관 방식, 사용자의 권리를 설명합니다.</p>
+
+  <h2>1. 수집하는 정보</h2>
+  <p>본 앱은 <strong>개인정보를 외부로 전송하거나 수집하지 않습니다</strong>. 모든 데이터는 사용자의 기기 내부에만 저장됩니다.</p>
+  <ul>
+    <li><strong>마이크 입력:</strong> 측정 중 실시간으로 시계 박동을 분석하는 데만 사용됩니다. 오디오는 즉시 폐기되며 녹음·저장·전송되지 않습니다.</li>
+    <li><strong>사진:</strong> 사용자가 직접 선택한 시계 사진은 EXIF 위치 정보 제거 후 기기 내 SwiftData 에 저장됩니다.</li>
+    <li><strong>측정 데이터·일기·서비스 기록:</strong> 모두 기기 내부의 로컬 데이터베이스에만 저장됩니다.</li>
+    <li><strong>자기장 센서:</strong> 시계 자성화 위험 확인용. 측정값은 기기 내부에서만 처리됩니다.</li>
+  </ul>
+
+  <h2>2. 외부 전송 데이터</h2>
+  <p>다음 항목만 사용자 동의 하에 외부로 전송될 수 있습니다.</p>
+  <ul>
+    <li><strong>브랜드 리그 (선택):</strong> 사용자가 등록한 시계 브랜드명과 착용 빈도가 익명으로 글로벌 랭킹 서버에 전송됩니다. 개인 식별 정보·시리얼·사진은 일절 전송되지 않습니다.</li>
+    <li><strong>무브먼트 DB 업데이트 (선택):</strong> 설정에서 활성화한 경우에만 최신 무브먼트 데이터를 다운로드합니다.</li>
+  </ul>
+
+  <h2>3. 결제 정보</h2>
+  <p>TickLab Pro 연간 구독 (9.99 USD/년) 결제는 <strong>Apple App Store</strong> 가 모두 처리합니다. 본 앱은 사용자의 결제 카드 정보·청구 주소·Apple ID 에 직접 접근하지 않습니다. 자세한 내용은 <a href="https://www.apple.com/legal/privacy/">Apple 개인정보처리방침</a> 을 참조하세요.</p>
+
+  <h2>4. AI 진단</h2>
+  <p>측정 결과 AI 진단은 <strong>Apple Intelligence (FoundationModels)</strong> 를 사용해 기기 내부에서 처리됩니다. 측정 데이터는 Apple 또는 OpenAI 등 외부 서버로 전송되지 않습니다. Apple Intelligence 미지원 디바이스에서는 규칙 기반 fallback 이 동작합니다.</p>
+
+  <h2>5. 데이터 보관 및 삭제</h2>
+  <p>모든 데이터는 기기 내부 SwiftData 에 저장됩니다. 앱을 삭제하면 모든 데이터가 함께 영구 삭제됩니다. 설정 → 데이터 관리에서 개별 시계·측정·일기·서비스 기록을 언제든 삭제할 수 있습니다.</p>
+
+  <h2>6. 권한</h2>
+  <p>본 앱은 다음 권한을 요청할 수 있습니다.</p>
+  <ul>
+    <li>마이크 — 시계 박동 측정</li>
+    <li>카메라 — 시계 사진 촬영</li>
+    <li>사진 라이브러리 — 기존 사진 선택 / 공유 카드 저장</li>
+    <li>알림 — 일기·정비·랜덤 시계 추천 알림</li>
+    <li>Face ID — 앱 잠금 (선택)</li>
+  </ul>
+
+  <h2>7. 아동 보호</h2>
+  <p>본 앱은 13세 미만 아동의 개인정보를 의도적으로 수집하지 않습니다.</p>
+
+  <h2>8. 방침 변경</h2>
+  <p>본 방침은 필요 시 업데이트될 수 있으며, 변경 사항은 본 페이지를 통해 공지됩니다.</p>
+
+  <h2>9. 문의</h2>
+  <p>개인정보처리방침에 대한 문의는 <a href="mailto:support@ticklab.app">support@ticklab.app</a> 으로 연락주세요.</p>
+
+  <footer>
+    <a href="index.html">홈</a>
+    <a href="support.html">지원</a>
+    <a href="terms.html">이용약관</a>
+    <br><br>
+    © 2026 TickLab. All rights reserved.
+  </footer>
+</div>
+</body>
+</html>
