@@ -11,8 +11,8 @@ final class SupabaseBrandLeagueService: ObservableObject {
 
     // MARK: - Config
 
-    private let baseURL = "https://tknicqhhgqfviuqczctl.supabase.co"
-    private let anonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRrbmljcWhoZ3Fmdml1cWN6Y3RsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg4NDI1NzUsImV4cCI6MjA5NDQxODU3NX0.fwrT5Sl3H9PxHp5cKG6r80e_Wsc0KTHYcqFhdHYRfZs"
+    private let baseURL = Secrets.supabaseURL
+    private let anonKey = Secrets.supabaseAnonKey
 
     // MARK: - State
 

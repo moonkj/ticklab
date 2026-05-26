@@ -95,6 +95,7 @@
 		80A433977287750B9080D2AB /* SpectralFluxExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227978A140CA929AA168F9CD /* SpectralFluxExtractorTests.swift */; };
 		83ADE22AA89CEA2028CB6F42 /* ProEntitlement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41F6299A97CA2A50A55E4A /* ProEntitlement.swift */; };
 		B7E15D9C00ABC123DEF45701 /* PurchaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7E15D9C00ABC123DEF45700 /* PurchaseRouter.swift */; };
+		CF6001801800180018001801 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF6001802800180018001802 /* Secrets.swift */; };
 		85CC6E1B805415BF20D21CC7 /* MeasurementLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F23C24460A6D08DB54AE4D /* MeasurementLiveActivityWidget.swift */; };
 		8629EB70487A13566F4103C7 /* AppleIntelligenceVerdictService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686561FE30C447D3AA4707A /* AppleIntelligenceVerdictService.swift */; };
 		B18001801800180018001800 /* MagneticFieldService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B18001801800180018001801 /* MagneticFieldService.swift */; };
@@ -385,6 +386,8 @@
 		FA09F8C4A5F535A21D8C8AEF /* ServiceLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLog.swift; sourceTree = "<group>"; };
 		FC41F6299A97CA2A50A55E4A /* ProEntitlement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProEntitlement.swift; sourceTree = "<group>"; };
 		B7E15D9C00ABC123DEF45700 /* PurchaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseRouter.swift; sourceTree = "<group>"; };
+		CF6001802800180018001802 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		CF6001803800180018001803 /* Secrets.swift.template */ = {isa = PBXFileReference; lastKnownFileType = text; path = Secrets.swift.template; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -514,11 +517,21 @@
 			path = ServiceLog;
 			sourceTree = "<group>";
 		};
+		CF6001804800180018001804 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				CF6001802800180018001802 /* Secrets.swift */,
+				CF6001803800180018001803 /* Secrets.swift.template */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
 		318A8F71BA2B1178D277BA19 /* Core */ = {
 			isa = PBXGroup;
 			children = (
 				492E2ED26FE59CFA1DC8C2AB /* AI */,
 				BRND001801800180018001810 /* Branding */,
+				CF6001804800180018001804 /* Config */,
 				0A56FE9948780638DE650918 /* DSP */,
 				727AF183BD3B9D1E2A1711E2 /* Export */,
 				CC7DDE83DECE91295273403C /* LiveActivity */,
@@ -1200,6 +1213,7 @@
 				01A4D17A191E91CFBE2D6F1D /* PrimaryButton.swift in Sources */,
 				83ADE22AA89CEA2028CB6F42 /* ProEntitlement.swift in Sources */,
 				B7E15D9C00ABC123DEF45701 /* PurchaseRouter.swift in Sources */,
+				CF6001801800180018001801 /* Secrets.swift in Sources */,
 				FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */,
 				E39D5900FF1267A2A375198C /* RateDial.swift in Sources */,
 				B40194B40194B19401B40194 /* FullscreenPhotoViewer.swift in Sources */,
