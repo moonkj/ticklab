@@ -57,6 +57,11 @@ struct WatchDetailView: View {
     @State private var detailTab: DetailTab = .measure
     enum DetailTab: String, CaseIterable { case measure, journal, service }
 
+    @State private var serialNumber: String = ""
+    @State private var serialInput: String = ""
+    @State private var showingSerialEdit: Bool = false
+    @State private var serialRevealed: Bool = false
+
     typealias TrendRange = WatchDetailTrendRange
 
     // Round 104 (Swift Critical): DateFormatter 는 생성 비용이 높으므로 static 캐시.
@@ -102,8 +107,8 @@ struct WatchDetailView: View {
         .onAppear {
             sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
             refreshJournalAndServiceCache()
-            // Round 20 (Sora): isWornToday body 안 fetch 차단용 캐시 초기화.
             cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
+            serialNumber = KeychainService.serial(for: watch.id) ?? ""
         }
         .onChange(of: watch.measurements.count) { _, _ in
             sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
@@ -1185,12 +1190,12 @@ struct WatchDetailView: View {
                     SpecRow(label: String(localized: "watch.spec.caliber"), value: movement.id)
                     SpecRow(label: String(localized: "watch.spec.bph"),
                             value: "\(movement.bph)")
-                    // Round 86 (이재현 H6): liftAngleOverride 가 있으면 워치메이커 측정값 우선.
                     SpecRow(label: String(localized: "watch.spec.lift_angle"),
                             value: "\(Int(watch.liftAngleOverride ?? movement.liftAngleDegrees))°")
                     SpecRow(label: String(localized: "watch.spec.escapement"),
                             value: movement.escapement.rawValue)
                 }
+                serialRow
                 if !movement.shouldDisplayAmplitude {
                     // 사용자 보고 fix: 이전엔 amplitude hide 시 무조건 coaxial 카피 → IWC swissLever
                     //   medium confidence 시계도 "코액시얼" 안내가 떠서 오해. escapement 별 분기.
@@ -1213,6 +1218,70 @@ struct WatchDetailView: View {
             .padding(.horizontal, 20)
         }
         .padding(.top, 20)
+    }
+
+    // MARK: - Serial
+
+    private var serialRow: some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(String(localized: "watch.spec.serial"))
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(AppColors.ink3)
+                if serialNumber.isEmpty {
+                    Text(String(localized: "watch.spec.serial.empty"))
+                        .font(.system(size: 13, design: .monospaced))
+                        .foregroundStyle(AppColors.ink2)
+                } else {
+                    Text(serialRevealed ? serialNumber : String(repeating: "•", count: min(serialNumber.count, 8)))
+                        .font(.system(size: 13, design: .monospaced))
+                        .foregroundStyle(AppColors.ink0)
+                }
+            }
+            Spacer()
+            HStack(spacing: 12) {
+                if !serialNumber.isEmpty {
+                    Button {
+                        serialRevealed.toggle()
+                    } label: {
+                        Image(systemName: serialRevealed ? "eye.slash" : "eye")
+                            .font(.system(size: 14))
+                            .foregroundStyle(AppColors.ink2)
+                    }
+                    .buttonStyle(.plain)
+                }
+                Button {
+                    serialInput = serialNumber
+                    showingSerialEdit = true
+                } label: {
+                    Text(serialNumber.isEmpty
+                         ? String(localized: "watch.spec.serial.add")
+                         : String(localized: "watch.spec.serial.edit"))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(AppColors.accentDark)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .alert(String(localized: "watch.spec.serial.edit_title"), isPresented: $showingSerialEdit) {
+            TextField(String(localized: "watch.spec.serial.placeholder"), text: $serialInput)
+                .textInputAutocapitalization(.characters)
+                .autocorrectionDisabled()
+            Button(String(localized: "common.save")) {
+                let trimmed = serialInput.trimmingCharacters(in: .whitespaces)
+                if trimmed.isEmpty {
+                    KeychainService.deleteSerial(for: watch.id)
+                    serialNumber = ""
+                } else {
+                    KeychainService.setSerial(trimmed, for: watch.id)
+                    serialNumber = trimmed
+                }
+                serialRevealed = false
+            }
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "watch.spec.serial.edit_message"))
+        }
     }
 
     // MARK: - History

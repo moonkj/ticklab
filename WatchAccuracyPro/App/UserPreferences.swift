@@ -184,8 +184,7 @@ final class UserPreferences {
         // 사용자 요청: 오버홀 리마인더 — 기본 ON, 기본 주기 4년.
         self.overhaulReminderEnabled = (defaults.object(forKey: Keys.overhaulReminder) as? Bool) ?? true
         self.overhaulReminderYears = (defaults.object(forKey: Keys.overhaulReminderYears) as? Int) ?? 4
-        // Apple guideline fix: Brand League 옵트인 — 기본 OFF.
-        self.brandLeagueOptIn = defaults.bool(forKey: Keys.brandLeagueOptIn)
+        self.brandLeagueOptIn = (defaults.object(forKey: Keys.brandLeagueOptIn) as? Bool) ?? true
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
         // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
         proEntitlementObserver = NotificationCenter.default.addObserver(

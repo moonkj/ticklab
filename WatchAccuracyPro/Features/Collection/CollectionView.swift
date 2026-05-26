@@ -467,8 +467,7 @@ struct CollectionView: View {
         // 페르소나 (cross-cutting) 피드백: hardcoded "v0.2" 와 settings 버전 drift 위험.
         // Bundle 에서 동적으로 가져옴.
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.0.0"
-        let year = Calendar.current.component(.year, from: Date())
-        return Text("TICKLAB · v\(version) · \(year)")
+        return Text("TICKLAB · v\(version)")
             .font(.system(size: 9.5, weight: .regular, design: .monospaced))
             .tracking(3)
             .foregroundStyle(AppColors.ink3)

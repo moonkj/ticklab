@@ -438,7 +438,6 @@ struct SettingsView: View {
             )
         )
         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-        .padding(.horizontal, 16)
         .padding(.vertical, 8)
     }
 

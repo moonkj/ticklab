@@ -1,7 +1,7 @@
 import Foundation
 import StoreKit
 
-/// $9.99/yr 구독 — TickLab Pro. (사용자 결정: one-time → yearly subscription 으로 변경)
+/// 월 $1.99 / 연 $9.99 구독 — TickLab Pro.
 ///
 /// Free tier 제한:
 /// - 시계 등록 최대 1개
@@ -13,7 +13,9 @@ import StoreKit
 final class ProEntitlement: ObservableObject {
     static let shared = ProEntitlement()
 
-    static let productId = "com.ticklab.app.pro.yearly"
+    static let monthlyProductId = "com.ticklab.watchaccuracypro.pro.monthly"
+    static let yearlyProductId  = "com.ticklab.app.pro.yearly"
+    static let allProductIds: Set<String> = [monthlyProductId, yearlyProductId]
     static let freeWatchLimit = 1
     static let freeDailyMeasurementLimit = 3
     static let freeJournalMonthLimit = 5
@@ -47,7 +49,7 @@ final class ProEntitlement: ObservableObject {
         //   App Review 가 unfinished queue 잔존을 거절 사유로 잡는 케이스 있음.
         // 사용자 보고 fix: defer { Task { ... } } 가 finish 를 fire-and-forget 으로 던져서 같은 transaction 이
         //   Transaction.updates 로 재 delivery 될 수 있는 race. await 로 동기 처리.
-        if transaction.productID == Self.productId {
+        if Self.allProductIds.contains(transaction.productID) {
             if transaction.revocationDate == nil {
                 storeKitMarkPro(true)
             } else {
@@ -57,10 +59,8 @@ final class ProEntitlement: ObservableObject {
         await transaction.finish()
     }
 
-    /// Purchase entry — Phase 2 에 PurchaseView 가 호출.
-    func purchase() async throws -> Bool {
-        let products = try await Product.products(for: [Self.productId])
-        guard let product = products.first else { return false }
+    /// Purchase entry — PurchaseView 가 선택한 Product 를 넘김.
+    func purchase(_ product: Product) async throws -> Bool {
         let result = try await product.purchase()
         switch result {
         case .success(let verification):
@@ -76,9 +76,8 @@ final class ProEntitlement: ObservableObject {
     func restore() async {
         var foundActiveEntitlement = false
         for await result in Transaction.currentEntitlements {
-            // 활성 entitlement 가 우리 productID 인지 검사 (revocation 검출용).
             if case .verified(let transaction) = result,
-               transaction.productID == Self.productId,
+               Self.allProductIds.contains(transaction.productID),
                transaction.revocationDate == nil {
                 foundActiveEntitlement = true
             }

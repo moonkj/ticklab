@@ -74,6 +74,32 @@
         {
           "adamId" : "",
           "codeOffers" : [],
+          "displayPrice" : "1.99",
+          "familyShareable" : false,
+          "groupNumber" : 2,
+          "internalID" : "TICKLAB-PRO-MONTHLY",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "TickLab Pro 월간 구독 — 모든 기능 무제한",
+              "displayName" : "TickLab Pro (월간)",
+              "locale" : "ko"
+            },
+            {
+              "description" : "TickLab Pro monthly subscription — all features unlimited",
+              "displayName" : "TickLab Pro (Monthly)",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.ticklab.watchaccuracypro.pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "TickLab Pro Monthly",
+          "subscriptionGroupID" : "TICKLAB-PRO-GROUP",
+          "type" : "RecurringSubscription"
+        },
+        {
+          "adamId" : "",
+          "codeOffers" : [],
           "displayPrice" : "9.99",
           "familyShareable" : false,
           "groupNumber" : 1,

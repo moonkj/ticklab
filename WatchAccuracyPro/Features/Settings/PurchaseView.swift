@@ -1,23 +1,38 @@
 import StoreKit
 import SwiftUI
 
-/// TickLab Pro 연 9.99$ 구독 페이월.
+/// TickLab Pro 페이월 — 월 $1.99 / 연 $9.99.
 /// Free → Pro 업그레이드 진입점. Settings.accountHero 에서 시트로 진입.
 struct PurchaseView: View {
+    enum Plan { case monthly, yearly }
+
     @Environment(\.dismiss) private var dismiss
     @Environment(UserPreferences.self) private var preferences
-    /// 어떤 한도가 트리거됐는지 PurchaseView 가 알아서 context banner 표시.
     @Environment(\.purchaseRouter) private var purchaseRouter
 
-    @State private var product: Product?
+    @State private var monthlyProduct: Product?
+    @State private var yearlyProduct: Product?
+    @State private var selectedPlan: Plan = .yearly
     @State private var isLoadingProduct = true
     @State private var isPurchasing = false
     @State private var isRestoring = false
     @State private var purchaseError: String?
     @State private var purchaseSuccess = false
-    /// 사용자 보고 fix: 가격 텍스트 Dynamic Type — 시각 장애 / 노안 사용자 가격 정보 인지 보장.
     @ScaledMetric(relativeTo: .largeTitle) private var scaledPriceSize: CGFloat = 34
     @ScaledMetric(relativeTo: .title) private var scaledHeadlineSize: CGFloat = 26
+
+    private var selectedProduct: Product? {
+        selectedPlan == .monthly ? monthlyProduct : yearlyProduct
+    }
+
+    private var yearlyDiscountBadge: String {
+        let monthlyPrice = monthlyProduct.map { NSDecimalNumber(decimal: $0.price).doubleValue } ?? 1.99
+        let yearlyPrice  = yearlyProduct.map  { NSDecimalNumber(decimal: $0.price).doubleValue } ?? 9.99
+        let annualIfMonthly = monthlyPrice * 12
+        guard annualIfMonthly > 0 else { return "" }
+        let pct = Int(((annualIfMonthly - yearlyPrice) / annualIfMonthly * 100).rounded())
+        return "\(pct)% 할인"
+    }
 
     var body: some View {
         NavigationStack {
@@ -25,6 +40,7 @@ struct PurchaseView: View {
                 VStack(spacing: 24) {
                     contextBanner
                     hero
+                    planToggle
                     benefitsList
                     pricingCard
                     actionButtons
@@ -42,7 +58,7 @@ struct PurchaseView: View {
                     Button(String(localized: "common.close")) { dismiss() }
                 }
             }
-            .task { await loadProduct() }
+            .task { await loadProducts() }
             .alert(String(localized: "purchase.error.title"),
                    isPresented: Binding(get: { purchaseError != nil },
                                         set: { if !$0 { purchaseError = nil } })) {
@@ -160,52 +176,91 @@ struct PurchaseView: View {
         }
     }
 
+    private var planToggle: some View {
+        HStack(spacing: 0) {
+            planToggleButton(.monthly,
+                             label: String(localized: "purchase.plan.toggle.monthly"),
+                             price: monthlyProduct?.displayPrice ?? "$1.99")
+            planToggleButton(.yearly,
+                             label: String(localized: "purchase.plan.toggle.yearly"),
+                             price: yearlyProduct?.displayPrice ?? "$9.99",
+                             badge: yearlyDiscountBadge)
+        }
+        .frame(maxWidth: .infinity)
+        .background(AppColors.paper1)
+        .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+        .overlay(RoundedRectangle(cornerRadius: AppRadius.md).stroke(AppColors.rule, lineWidth: 1))
+    }
+
+    private func planToggleButton(_ plan: Plan, label: String, price: String?, badge: String? = nil) -> some View {
+        Button {
+            withAnimation(.easeInOut(duration: 0.18)) { selectedPlan = plan }
+        } label: {
+            VStack(spacing: 2) {
+                HStack(spacing: 6) {
+                    Text(label)
+                        .font(.system(size: 14, weight: .semibold))
+                    if let badge {
+                        Text(badge)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppColors.primaryDeep)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 2)
+                            .background(AppColors.accentDark)
+                            .clipShape(Capsule())
+                    }
+                }
+                if let price {
+                    Text(price)
+                        .font(.system(size: 13, weight: .bold))
+                } else if isLoadingProduct {
+                    ProgressView().scaleEffect(0.6).tint(selectedPlan == plan ? AppColors.primaryDeep : AppColors.ink3)
+                }
+            }
+            .foregroundStyle(selectedPlan == plan ? AppColors.primaryDeep : AppColors.ink2)
+            .frame(maxWidth: .infinity, minHeight: 52)
+            .background(selectedPlan == plan
+                ? LinearGradient(colors: [AppColors.accent, AppColors.accentDark], startPoint: .topLeading, endPoint: .bottomTrailing)
+                : LinearGradient(colors: [Color.clear, Color.clear], startPoint: .topLeading, endPoint: .bottomTrailing)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
     private var pricingCard: some View {
         VStack(spacing: 8) {
-            Text(String(localized: "purchase.plan.yearly"))
+            let planKey = selectedPlan == .monthly ? "purchase.plan.monthly" : "purchase.plan.yearly"
+            Text(String(localized: String.LocalizationValue(planKey)))
                 .font(.system(size: 11, weight: .semibold))
                 .tracking(1.5)
                 .foregroundStyle(AppColors.accentDark)
 
             if isLoadingProduct {
-                // 사용자 보고 fix: 글로벌 indigo tint 가 gold 배경에 indigo 점 → tint(accentDark) override.
                 ProgressView()
                     .tint(AppColors.accentDark)
                     .padding(.vertical, 6)
-            } else if let product {
-                Text(product.displayPrice)
+            } else {
+                let displayPrice = selectedProduct?.displayPrice ?? (selectedPlan == .monthly ? "$1.99" : "$9.99")
+                Text(displayPrice)
                     .font(.system(size: scaledPriceSize, weight: .bold))
                     .foregroundStyle(AppColors.ink0)
-                Text(String(localized: "purchase.plan.yearly.per_year"))
+                let perKey = selectedPlan == .monthly ? "purchase.plan.monthly.per_month" : "purchase.plan.yearly.per_year"
+                Text(String(localized: String.LocalizationValue(perKey)))
                     .font(.system(size: 13))
                     .foregroundStyle(AppColors.ink2)
-                // Apple Schedule 2: 가격/주기/자동갱신 안내가 CTA 위에 함께 노출되어야 함.
-                Text(String(localized: "purchase.legal.auto_renew"))
+                let legalKey = selectedPlan == .monthly ? "purchase.legal.auto_renew.monthly" : "purchase.legal.auto_renew"
+                Text(String(localized: String.LocalizationValue(legalKey)))
                     .font(.system(size: 11))
                     .foregroundStyle(AppColors.ink2)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
                     .padding(.top, 2)
-            } else {
-                // StoreKit 미연결/sandbox 미설정 시 — 하드코딩 가격 표시 X (non-USD storefront 오해 방지).
-                //   안내 + 재시도만 노출. Subscribe CTA 는 product==nil 일 때 disabled.
-                Text(String(localized: "purchase.unavailable"))
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(AppColors.warning)
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 12)
-                Button {
-                    Task { await loadProduct() }
-                } label: {
-                    Label(String(localized: "purchase.retry"), systemImage: "arrow.clockwise")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(AppColors.accentDark)
-                }
-                .buttonStyle(.plain)
             }
         }
-        .frame(maxWidth: .infinity)
         .padding(.vertical, 18)
+        .frame(maxWidth: .infinity)
         .background(
             LinearGradient(
                 colors: [AppColors.accent50, AppColors.accent100],
@@ -226,7 +281,7 @@ struct PurchaseView: View {
                     ? String(localized: "purchase.cta.processing")
                     : String(localized: "purchase.cta.subscribe"),
                 style: .accent,
-                isEnabled: !isPurchasing && !isRestoring && product != nil
+                isEnabled: !isPurchasing && !isRestoring && selectedProduct != nil
             ) {
                 Task { await buy() }
             }
@@ -269,26 +324,28 @@ struct PurchaseView: View {
 
     // MARK: - StoreKit
 
-    private func loadProduct() async {
+    private func loadProducts() async {
         isLoadingProduct = true
         defer { isLoadingProduct = false }
         do {
-            let products = try await Product.products(for: [ProEntitlement.productId])
-            product = products.first
+            let loaded = try await Product.products(for: ProEntitlement.allProductIds)
+            for p in loaded {
+                if p.id == ProEntitlement.monthlyProductId { monthlyProduct = p }
+                if p.id == ProEntitlement.yearlyProductId  { yearlyProduct  = p }
+            }
         } catch {
-            // Sandbox 미연결이면 nil 유지 — fallback 가격 표시.
-            product = nil
+            monthlyProduct = nil
+            yearlyProduct  = nil
         }
     }
 
     private func buy() async {
+        guard let product = selectedProduct else { return }
         isPurchasing = true
         defer { isPurchasing = false }
         do {
-            let ok = try await ProEntitlement.shared.purchase()
-            if ok {
-                purchaseSuccess = true
-            }
+            let ok = try await ProEntitlement.shared.purchase(product)
+            if ok { purchaseSuccess = true }
         } catch {
             purchaseError = error.localizedDescription
         }
