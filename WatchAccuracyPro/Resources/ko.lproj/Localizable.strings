@@ -272,6 +272,7 @@
 "settings.ai.unavailable.title" = "이 기기에서 Apple Intelligence 를 사용할 수 없어요";
 "settings.ai.unavailable.body" = "설정 → Apple Intelligence & Siri 에서 활성화해야 동작합니다. 비활성 상태에서는 자동으로 규칙 기반 진단이 표시됩니다. 탭해서 설정을 여세요.";
 "watchbox.slots" = "슬롯 수";
+"watchbox.slot_count" = "%d칸";
 "watchbox.material" = "마감재";
 "editwatch.title" = "시계 정보 수정";
 "watch.menu.edit" = "정보 수정";

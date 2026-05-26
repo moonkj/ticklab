@@ -81,13 +81,13 @@ struct BadgesView: View {
         let journalCount     = journals.count
         // Bug Fix: count distinct calendar days per watch (not raw row count).
         let longestWear: Int = {
-            let grouped = Dictionary(grouping: wearLogs, by: { $0.watch?.id })
+            let grouped = Dictionary(grouping: wearLogs.filter { $0.watch != nil }, by: { $0.watch!.id })
             return grouped.values.map { logs in
                 Set(logs.map { Calendar.current.startOfDay(for: $0.date) }).count
             }.max() ?? 0
         }()
         let maxRuns: Int = {
-            let grouped = Dictionary(grouping: measurements, by: { $0.watch?.id })
+            let grouped = Dictionary(grouping: measurements.filter { $0.watch != nil }, by: { $0.watch!.id })
             return grouped.values.map { $0.count }.max() ?? 0
         }()
         let hasGMT        = watches.contains { $0.model.lowercased().contains("gmt") }

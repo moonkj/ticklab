@@ -348,6 +348,7 @@
 "settings.ai.unavailable.title" = "Apple Intelligence is not available on this device";
 "settings.ai.unavailable.body" = "Enable it in Settings → Apple Intelligence & Siri. When unavailable, rule-based diagnosis is shown automatically. Tap to open Settings.";
 "watchbox.slots" = "Slots";
+"watchbox.slot_count" = "%d slots";
 "watchbox.material" = "Material";
 "editwatch.title" = "Edit watch";
 "watch.menu.edit" = "Edit details";

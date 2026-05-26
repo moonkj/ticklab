@@ -149,7 +149,8 @@ final class UserPreferences {
             Keys.randomPickMinute: 0,
             Keys.useSimplifiedDSP: true,
             Keys.overhaulReminder: true,
-            Keys.overhaulReminderYears: 4
+            Keys.overhaulReminderYears: 4,
+            Keys.brandLeagueOptIn: true
         ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
         // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
