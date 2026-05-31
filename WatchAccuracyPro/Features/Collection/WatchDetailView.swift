@@ -69,6 +69,9 @@ struct WatchDetailView: View {
 
     @State private var serialNumber: String = ""
     @State private var serialInput: String = ""
+    /// Sprint 7 (P3-6): 케이스백 OCR 상태
+    @State private var isRunningOCR: Bool = false
+    @State private var ocrResultText: String?
     @State private var showingSerialEdit: Bool = false
     @State private var serialRevealed: Bool = false
 
@@ -649,6 +652,25 @@ struct WatchDetailView: View {
             .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
             .clipShape(RoundedRectangle(cornerRadius: 12))
             .padding(.horizontal, 20)
+        }
+    }
+
+    private func runOCR() {
+        guard let data = watch.photoData, !isRunningOCR else { return }
+        isRunningOCR = true
+        Task {
+            let result = await CasebackOCRService.recognizeText(from: data)
+            await MainActor.run {
+                isRunningOCR = false
+                if let serial = result?.serialCandidate {
+                    // 시리얼 후보 있으면 바로 편집창에 채워서 표시
+                    serialInput = serial
+                    showingSerialEdit = true
+                    ocrResultText = serial
+                } else {
+                    ocrResultText = String(localized: "watch.ocr.no_serial")
+                }
+            }
         }
     }
 
@@ -1473,6 +1495,22 @@ struct WatchDetailView: View {
                         .foregroundStyle(AppColors.accentDark)
                 }
                 .buttonStyle(.plain)
+                // Sprint 7 (P3-6): 케이스백 사진 있으면 OCR 버튼
+                if watch.photoData != nil {
+                    Button {
+                        runOCR()
+                    } label: {
+                        if isRunningOCR {
+                            ProgressView().scaleEffect(0.7)
+                        } else {
+                            Image(systemName: "text.viewfinder")
+                                .font(.system(size: 14))
+                                .foregroundStyle(AppColors.info)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(String(localized: "watch.ocr.button"))
+                }
             }
         }
         .alert(String(localized: "watch.spec.serial.edit_title"), isPresented: $showingSerialEdit) {

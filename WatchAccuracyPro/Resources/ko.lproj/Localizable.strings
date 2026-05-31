@@ -1425,3 +1425,7 @@
 "notif.rotation.title" = "%@을(를) 꺼내보는 건 어떨까요?";
 "notif.rotation.body_standard" = "오랫동안 쉬고 있어요. 오늘 함께 나가보세요.";
 "notif.rotation.body_formal" = "내일 중요한 일정이 있네요. 이 시계와 함께하면 어떨까요?";
+
+/* Sprint 7 — P3-6 케이스백 OCR */
+"watch.ocr.button" = "케이스백 OCR 스캔";
+"watch.ocr.no_serial" = "시리얼 번호를 인식하지 못했어요. 케이스백 사진을 선명하게 다시 찍어보세요.";

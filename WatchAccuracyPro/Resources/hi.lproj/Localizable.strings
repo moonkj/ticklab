@@ -1397,3 +1397,5 @@
 "notif.rotation.title" = "How about wearing %@?";
 "notif.rotation.body_standard" = "It's been resting for a while. Take it out today.";
 "notif.rotation.body_formal" = "You have an event tomorrow. This watch would be perfect.";
+"watch.ocr.button" = "Scan caseback with OCR";
+"watch.ocr.no_serial" = "No serial number detected. Try a clearer photo.";

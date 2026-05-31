@@ -82,6 +82,7 @@
 		4DA99E823280A8742B3140A4 /* Sparkline.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */; };
 		4EF79B15B3D74BE01CF9A2D9 /* SpecCardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */; };
 		5060F80D248B19D2A07705CA /* TemplateMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB63D3C7FEDA364C607D1131 /* TemplateMatcher.swift */; };
+		520B0BC0AA32863772A9865A /* CasebackOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8472F0954A87FCC24459476F /* CasebackOCRService.swift */; };
 		53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2276895B7370448EDD723736 /* SyntheticAudioSource.swift */; };
 		53C406BC47FD0266CBFCBC40 /* WrappedReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */; };
 		5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */; };
@@ -357,6 +358,7 @@
 		7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlowTests.swift; sourceTree = "<group>"; };
 		814BB874EA00DC74C916110A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepsGuideCard.swift; sourceTree = "<group>"; };
+		8472F0954A87FCC24459476F /* CasebackOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasebackOCRService.swift; sourceTree = "<group>"; };
 		878DAD75031707410CFB1D7B /* RotationNudgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationNudgeService.swift; sourceTree = "<group>"; };
 		89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProApp.swift; sourceTree = "<group>"; };
 		8A43345D263140B82EC044BC /* WatchAccuracyProWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchAccuracyProWidget.entitlements; sourceTree = "<group>"; };
@@ -921,6 +923,7 @@
 		BF87B83BD6CF43CB81B6C389 /* Image */ = {
 			isa = PBXGroup;
 			children = (
+				8472F0954A87FCC24459476F /* CasebackOCRService.swift */,
 				DDD694460270D95643C92DEE /* DialColorExtractor.swift */,
 				028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */,
 			);
@@ -1306,6 +1309,7 @@
 				2E65F8B30D3042AD28B9261F /* BrandLeagueView.swift in Sources */,
 				45BEA8592C353A4A3F03722D /* COSCBar.swift in Sources */,
 				4AB6F1F297397E9A6D0620DE /* CameraImagePicker.swift in Sources */,
+				520B0BC0AA32863772A9865A /* CasebackOCRService.swift in Sources */,
 				4DA466650FB44A1B4458FD84 /* Chip.swift in Sources */,
 				42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */,
 				4213E52F2A52302167A13CD8 /* Colors.swift in Sources */,
@@ -1570,7 +1574,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 136;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1737,7 +1741,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 135;
+				CURRENT_PROJECT_VERSION = 136;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
