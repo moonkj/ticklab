@@ -95,8 +95,25 @@ struct WishlistComposerView: View {
     @State private var note = ""
     @State private var photoItem: PhotosPickerItem?
     @State private var imageData: Data?
+    @State private var showingBrandInputSheet = false
+    @State private var brandInputText = ""
+    @State private var modelSuggestions: [String] = []
+    @State private var showModelSuggestions = false
 
     private static let currencies = ["KRW", "USD", "EUR", "JPY", "GBP", "CHF"]
+
+    // AddWatchView와 동일한 브랜드 목록
+    private let popularBrands = [
+        "A. Lange & Söhne", "Audemars Piguet", "Ball", "Bell & Ross", "Blancpain",
+        "Breguet", "Breitling", "Bulgari", "Cartier", "Casio", "Chopard",
+        "Christopher Ward", "Citizen", "F.P. Journe", "Girard-Perregaux",
+        "Glashütte Original", "Grand Seiko", "Greubel Forsey", "Hamilton",
+        "Hermès", "Hublot", "IWC", "Jaeger-LeCoultre", "Longines",
+        "Maurice Lacroix", "MB&F", "Mido", "Montblanc", "Nomos", "Omega", "Oris",
+        "Panerai", "Patek Philippe", "Piaget", "Rado", "Richard Mille",
+        "Roger Dubuis", "Rolex", "Seiko", "Sinn", "Swatch", "TAG Heuer",
+        "Tissot", "Tudor", "Ulysse Nardin", "Vacheron Constantin", "Zenith"
+    ]
 
     var body: some View {
         NavigationStack {
@@ -116,8 +133,81 @@ struct WishlistComposerView: View {
                     }
                 }
                 Section(String(localized: "addwatch.section.required")) {
-                    TextField(String(localized: "addwatch.brand"), text: $brand)
-                    TextField(String(localized: "addwatch.model"), text: $model)
+                    // 브랜드 — AddWatchView와 동일한 Menu 방식
+                    HStack {
+                        Text(String(localized: "addwatch.brand"))
+                        Spacer()
+                        Menu {
+                            ForEach(popularBrands, id: \.self) { b in
+                                Button {
+                                    brand = b
+                                    modelSuggestions = WatchModelSuggestionService.models(for: b)
+                                    showModelSuggestions = !modelSuggestions.isEmpty
+                                } label: {
+                                    if brand == b {
+                                        Label(b, systemImage: "checkmark")
+                                    } else {
+                                        Text(b)
+                                    }
+                                }
+                            }
+                            Divider()
+                            Button {
+                                showingBrandInputSheet = true
+                            } label: {
+                                Label(String(localized: "addwatch.brand.custom"), systemImage: "square.and.pencil")
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(brand.isEmpty ? String(localized: "common.unspecified") : brand)
+                                    .foregroundStyle(brand.isEmpty ? AppColors.ink3 : AppColors.ink0)
+                                Image(systemName: "chevron.up.chevron.down")
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(AppColors.ink3)
+                            }
+                            .frame(minHeight: 44, alignment: .trailing)
+                            .contentShape(Rectangle())
+                        }
+                    }
+                    // 모델 — 자동완성 드롭다운
+                    VStack(alignment: .leading, spacing: 0) {
+                        TextField(String(localized: "addwatch.model"), text: $model)
+                            .onChange(of: model) { _, _ in
+                                modelSuggestions = WatchModelSuggestionService.suggestions(brand: brand, partialModel: model)
+                                showModelSuggestions = !modelSuggestions.isEmpty && !model.isEmpty
+                            }
+                        if showModelSuggestions && !modelSuggestions.isEmpty {
+                            Divider().padding(.top, 4)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(modelSuggestions.prefix(8), id: \.self) { suggestion in
+                                        Button(suggestion) {
+                                            model = suggestion
+                                            showModelSuggestions = false
+                                        }
+                                        .font(.system(size: 12))
+                                        .padding(.horizontal, 10).padding(.vertical, 5)
+                                        .background(AppColors.accent50)
+                                        .clipShape(Capsule())
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    }
+                }
+                .alert(String(localized: "addwatch.brand.custom"), isPresented: $showingBrandInputSheet) {
+                    TextField(String(localized: "addwatch.brand"), text: $brandInputText)
+                        .textInputAutocapitalization(.words)
+                    Button(String(localized: "common.cancel"), role: .cancel) { brandInputText = "" }
+                    Button(String(localized: "common.ok")) {
+                        let trimmed = brandInputText.trimmingCharacters(in: .whitespaces)
+                        if !trimmed.isEmpty { brand = trimmed }
+                        brandInputText = ""
+                    }
+                } message: {
+                    Text(String(localized: "addwatch.brand.custom.hint"))
                 }
                 Section(String(localized: "addwatch.section.optional")) {
                     TextField(String(localized: "addwatch.reference_no"), text: $refNo).autocorrectionDisabled()
