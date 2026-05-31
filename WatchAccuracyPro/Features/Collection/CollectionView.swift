@@ -60,6 +60,10 @@ struct CollectionView: View {
     @State private var sortOption: SortOption = .custom
     /// Sprint 12 (UX1): 측정 단축 sheet 대상 시계.
     @State private var measureWatch: Watch?
+    /// Sprint 13 (F5): 일괄 선택 모드 (5개+).
+    @State private var selectMode: Bool = false
+    @State private var selectedIDs: Set<UUID> = []
+    @State private var showingBulkDeleteAlert: Bool = false
 
     /// Round 16 (Sora): row 마다 isWornToday fetch 폭주 차단. @Query wearLogs 에서
     ///   오늘자 (startOfDay) 인 watch.id 셋을 한 번 계산해 row 에 prop 으로 전달.
@@ -197,8 +201,23 @@ struct CollectionView: View {
                             // Round 170: drag-reorder 인라인 폐기 (freeze 이슈). 단순 tap-only 카드.
                             // Reorder 는 별도 sheet 으로 분리 — 우상단 "순서 변경" 버튼.
                             if othersOnly.count >= 2 {
-                                HStack {
+                                HStack(spacing: 8) {
                                     Spacer()
+                                    // Sprint 13 (F5): 일괄 선택 진입 (5개+).
+                                    if watches.count >= 5 {
+                                        Button {
+                                            withAnimation { selectMode.toggle(); selectedIDs.removeAll() }
+                                        } label: {
+                                            Label(String(localized: selectMode ? "common.done" : "collection.select"),
+                                                  systemImage: selectMode ? "checkmark.circle" : "checkmark.circle.badge.questionmark")
+                                                .font(.system(size: 13, weight: .medium))
+                                                .foregroundStyle(selectMode ? AppColors.accent : AppColors.ink2)
+                                                .padding(.horizontal, 14).padding(.vertical, 10)
+                                                .background(AppColors.paper1)
+                                                .overlay(Capsule().stroke(selectMode ? AppColors.accentLight : AppColors.rule, lineWidth: 1))
+                                                .clipShape(Capsule())
+                                        }
+                                    }
                                     Button {
                                         showingReorderSheet = true
                                     } label: {
@@ -222,11 +241,27 @@ struct CollectionView: View {
                                 // Round 16 (Sora): row 마다 fetch 하지 않도록 wornTodayIds set 한 번 계산해서 주입.
                                 let wornTodayIds = wornTodayWatchIDs
                                 ForEach(othersOnly, id: \.id) { watch in
-                                    // Sprint 8 (UX): press 시 스케일 + 페이드 전환감
-                                    PressableCard {
-                                        pathBinding.wrappedValue.append(watch)
-                                    } content: {
-                                        WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
+                                    if selectMode {
+                                        // Sprint 13 (F5): 선택 모드 — tap=선택 토글, navigation 비활성.
+                                        Button {
+                                            toggleSelect(watch.id)
+                                        } label: {
+                                            WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
+                                                .overlay(alignment: .topTrailing) {
+                                                    Image(systemName: selectedIDs.contains(watch.id) ? "checkmark.circle.fill" : "circle")
+                                                        .font(.system(size: 22))
+                                                        .foregroundStyle(selectedIDs.contains(watch.id) ? AppColors.accent : AppColors.ink3)
+                                                        .padding(10)
+                                                }
+                                                .opacity(selectedIDs.contains(watch.id) ? 1 : 0.7)
+                                        }
+                                        .buttonStyle(.plain)
+                                    } else {
+                                        PressableCard {
+                                            pathBinding.wrappedValue.append(watch)
+                                        } content: {
+                                            WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
+                                        }
                                     }
                                 }
                             }
@@ -247,7 +282,11 @@ struct CollectionView: View {
                     }
                 }
                 } // end ScrollView (Sprint 4 outer VStack)
-            } // end VStack
+                // Sprint 13 (F5): 선택 모드 하단 일괄작업 바.
+                if selectMode {
+                    bulkActionBar
+                }
+            } // end ZStack
             .toolbar {
                 // Round 163: 설정 버튼을 우측 끝으로 이동.
                 ToolbarItem(placement: .topBarTrailing) {
@@ -544,6 +583,66 @@ struct CollectionView: View {
 
     // MARK: - Empty / Footer
 
+
+    // MARK: - Sprint 13 (F5) 일괄 작업
+
+    private func toggleSelect(_ id: UUID) {
+        if selectedIDs.contains(id) { selectedIDs.remove(id) } else { selectedIDs.insert(id) }
+        UISelectionFeedbackGenerator().selectionChanged()
+    }
+
+    private var bulkActionBar: some View {
+        VStack {
+            Spacer()
+            HStack(spacing: 16) {
+                Text(String(format: NSLocalizedString("collection.selected_count", comment: ""), selectedIDs.count))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                Spacer()
+                // 일괄 즐겨찾기
+                Button {
+                    bulkFavorite()
+                } label: {
+                    Image(systemName: "star").font(.system(size: 18)).foregroundStyle(AppColors.accent)
+                }
+                .disabled(selectedIDs.isEmpty)
+                // 일괄 삭제
+                Button {
+                    showingBulkDeleteAlert = true
+                } label: {
+                    Image(systemName: "trash").font(.system(size: 18)).foregroundStyle(AppColors.danger)
+                }
+                .disabled(selectedIDs.isEmpty)
+            }
+            .padding(.horizontal, 20).padding(.vertical, 14)
+            .background(.ultraThinMaterial)
+            .overlay(alignment: .top) { Divider() }
+        }
+        .ignoresSafeArea(edges: .bottom)
+        .alert(String(localized: "collection.bulk_delete.title"), isPresented: $showingBulkDeleteAlert) {
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+            Button(String(localized: "common.delete"), role: .destructive) { bulkDelete() }
+        } message: {
+            Text(String(format: NSLocalizedString("collection.bulk_delete.message", comment: ""), selectedIDs.count))
+        }
+    }
+
+    private func bulkFavorite() {
+        for w in watches where selectedIDs.contains(w.id) { w.isFavorite = true }
+        try? modelContext.save()
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        withAnimation { selectMode = false; selectedIDs.removeAll() }
+    }
+
+    private func bulkDelete() {
+        // Jay Critical: deleteCascade 헬퍼 필수 (Strap/WatchPhoto orphan 방지).
+        for w in watches where selectedIDs.contains(w.id) {
+            w.deleteCascade(in: modelContext)
+        }
+        try? modelContext.save()
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
+        withAnimation { selectMode = false; selectedIDs.removeAll() }
+    }
 
     private func filterChip(label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {

@@ -1530,3 +1530,9 @@
 "notif.onthisday.title" = "On This Day";
 "notif.onthisday.purchase" = "%d years ago today you welcomed %@. Look back on your time together?";
 "notif.onthisday.first_wear" = "%d years ago today you first wore %@.";
+
+/* Sprint 13 — F5 Bulk select */
+"collection.select" = "Select";
+"collection.selected_count" = "%d selected";
+"collection.bulk_delete.title" = "Delete Selected Watches";
+"collection.bulk_delete.message" = "%d watches and all their measurements, photos, and records will be deleted. This cannot be undone.";

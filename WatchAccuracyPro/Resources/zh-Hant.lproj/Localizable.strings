@@ -1473,3 +1473,7 @@
 "notif.onthisday.title" = "On This Day";
 "notif.onthisday.purchase" = "%d years ago today you welcomed %@.";
 "notif.onthisday.first_wear" = "%d years ago today you first wore %@.";
+"collection.select" = "Select";
+"collection.selected_count" = "%d selected";
+"collection.bulk_delete.title" = "Delete Selected Watches";
+"collection.bulk_delete.message" = "%d watches and all their records will be deleted. This cannot be undone.";

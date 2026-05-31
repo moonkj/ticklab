@@ -1529,3 +1529,9 @@
 "notif.onthisday.title" = "오늘, 그날";
 "notif.onthisday.purchase" = "%d년 전 오늘 %@을(를) 맞이했어요. 함께한 시간을 돌아볼까요?";
 "notif.onthisday.first_wear" = "%d년 전 오늘 %@을(를) 처음 착용했어요.";
+
+/* Sprint 13 — F5 일괄 선택 */
+"collection.select" = "선택";
+"collection.selected_count" = "%d개 선택됨";
+"collection.bulk_delete.title" = "선택한 시계 삭제";
+"collection.bulk_delete.message" = "%d개 시계와 모든 측정·사진·기록이 삭제됩니다. 되돌릴 수 없어요.";
