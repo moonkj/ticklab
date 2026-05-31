@@ -293,6 +293,9 @@
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";
 "watch.gift.ribbon" = "Un regalo de %@";
+"settings.data.restore" = "Restaurar (importar)";
+"settings.data.restore.done" = "Restauración completa";
+"settings.data.restore.result" = "Se restauraron %d relojes. (Los existentes se omiten.)";
 "timeline.measurement" = "Medición";
 "timeline.wear" = "Uso";
 "timeline.journal" = "Diario";

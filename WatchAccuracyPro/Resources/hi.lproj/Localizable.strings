@@ -293,6 +293,9 @@
 "timeline.entry" = "जीवन समयरेखा";
 "timeline.first_meeting" = "पहली मुलाकात";
 "watch.gift.ribbon" = "%@ की ओर से उपहार";
+"settings.data.restore" = "पुनर्स्थापित करें (आयात)";
+"settings.data.restore.done" = "पुनर्स्थापना पूर्ण";
+"settings.data.restore.result" = "%d घड़ियाँ पुनर्स्थापित कीं। (मौजूदा छोड़ी गईं)";
 "timeline.measurement" = "मापन";
 "timeline.wear" = "पहना";
 "timeline.journal" = "जर्नल";

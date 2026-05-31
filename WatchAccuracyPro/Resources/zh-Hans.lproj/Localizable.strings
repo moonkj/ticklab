@@ -293,6 +293,9 @@
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";
 "watch.gift.ribbon" = "来自%@的礼物";
+"settings.data.restore" = "恢复（导入）";
+"settings.data.restore.done" = "恢复完成";
+"settings.data.restore.result" = "已恢复 %d 只手表。（已存在的跳过）";
 "timeline.measurement" = "测量";
 "timeline.wear" = "佩戴";
 "timeline.journal" = "记录";

@@ -293,6 +293,9 @@
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";
 "watch.gift.ribbon" = "%@さんからの贈り物";
+"settings.data.restore" = "復元（インポート）";
+"settings.data.restore.done" = "復元完了";
+"settings.data.restore.result" = "%d本の時計を復元しました。（既存はスキップ）";
 "timeline.measurement" = "測定";
 "timeline.wear" = "着用";
 "timeline.journal" = "記録";

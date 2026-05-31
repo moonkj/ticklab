@@ -97,6 +97,40 @@ final class DataExportServiceTests: XCTestCase {
         XCTAssertTrue(lines[1].contains(",,"))
     }
 
+    func test_json_roundtrip_import_restores_full_data() throws {
+        // #10 백업/복원: export → 새 컨테이너로 import → 필드·측정 라운드트립 검증.
+        let watch = makeFixture()  // Hamilton + 측정 2건
+        watch.nickname = "필드워치"
+        watch.referenceNumber = "H70455533"
+        watch.purchasePrice = 850
+        watch.story = "할아버지의 첫 월급"
+        try? container.mainContext.save()
+
+        let payload = DataExportService.export(watches: [watch], format: .json)
+
+        let schema = Schema([
+            Watch.self, WatchMeasurement.self, WearLog.self,
+            JournalEntry.self, SpecCard.self, ServiceLog.self
+        ])
+        let fresh = try ModelContainer(for: schema,
+            configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+        let count = DataExportService.importWatches(from: payload.data, into: fresh.mainContext)
+        XCTAssertEqual(count, 1)
+
+        let restored = try fresh.mainContext.fetch(FetchDescriptor<Watch>())
+        XCTAssertEqual(restored.count, 1)
+        let w = restored.first
+        XCTAssertEqual(w?.brand, "Hamilton")
+        XCTAssertEqual(w?.nickname, "필드워치")
+        XCTAssertEqual(w?.referenceNumber, "H70455533")
+        XCTAssertEqual(w?.story, "할아버지의 첫 월급")
+        XCTAssertEqual(w?.measurements.count, 2)
+
+        // 중복 import 는 건너뜀(같은 id).
+        let again = DataExportService.importWatches(from: payload.data, into: fresh.mainContext)
+        XCTAssertEqual(again, 0)
+    }
+
     func test_json_export_is_valid_and_decodable() throws {
         let watch = makeFixture()
         let payload = DataExportService.export(watches: [watch], format: .json)

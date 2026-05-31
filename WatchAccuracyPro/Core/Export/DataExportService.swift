@@ -1,4 +1,5 @@
 import Foundation
+import SwiftData
 
 /// 워치메이커 페르소나(김재철)의 핵심 요청 — Excel/Numbers 에서 트렌드 분석할 수 있도록 export.
 enum ExportFormat: String, CaseIterable, Identifiable {
@@ -140,23 +141,79 @@ enum DataExportService {
         let watches: [WatchDTO]
     }
 
+    /// #10 백업/복원: full round-trip — 모든 Watch 스칼라 필드 + 사진(base64) + 측정 history.
     private struct WatchDTO: Codable {
         let id: UUID
         let brand: String
         let model: String
         let caliber: String?
+        let movementTypeRaw: String
+        let purchaseDate: Date?
+        let serviceHistory: [Date]
+        let isFavorite: Bool
+        let isPrimary: Bool
+        let sortOrder: Double?
+        let nickname: String?
+        let story: String?
+        let referenceNumber: String?
+        let purchaseLocation: String?
+        let purchaseSalesperson: String?
+        let purchasePrice: Decimal?
+        let purchaseCurrency: String?
+        let warrantyMonths: Int?
+        let warrantyReminderEnabled: Bool
+        let receivedFrom: String?
+        let liftAngleOverride: Double?
+        let customBph: Int?
+        let windReminderEnabled: Bool
+        let windReminderHour: Int
+        let windReminderMinute: Int
+        let batteryLastReplaced: Date?
+        let batteryExpectedLifeMonths: Int
+        let batteryReminderEnabled: Bool
+        let photoBase64: String?
         let createdAt: Date
         let measurements: [MeasurementDTO]
 
-        init(from watch: Watch) {
-            self.id = watch.id
-            self.brand = watch.brand
-            self.model = watch.model
-            self.caliber = watch.caliber
-            self.createdAt = watch.createdAt
-            self.measurements = watch.measurements
-                .sorted(by: { $0.timestamp < $1.timestamp })
-                .map(MeasurementDTO.init(from:))
+        init(from w: Watch) {
+            id = w.id; brand = w.brand; model = w.model; caliber = w.caliber
+            movementTypeRaw = w.movementTypeRaw
+            purchaseDate = w.purchaseDate; serviceHistory = w.serviceHistory
+            isFavorite = w.isFavorite; isPrimary = w.isPrimary; sortOrder = w.sortOrder
+            nickname = w.nickname; story = w.story; referenceNumber = w.referenceNumber
+            purchaseLocation = w.purchaseLocation; purchaseSalesperson = w.purchaseSalesperson
+            purchasePrice = w.purchasePrice; purchaseCurrency = w.purchaseCurrency
+            warrantyMonths = w.warrantyMonths; warrantyReminderEnabled = w.warrantyReminderEnabled
+            receivedFrom = w.receivedFrom; liftAngleOverride = w.liftAngleOverride; customBph = w.customBph
+            windReminderEnabled = w.windReminderEnabled; windReminderHour = w.windReminderHour
+            windReminderMinute = w.windReminderMinute
+            batteryLastReplaced = w.batteryLastReplaced; batteryExpectedLifeMonths = w.batteryExpectedLifeMonths
+            batteryReminderEnabled = w.batteryReminderEnabled
+            photoBase64 = w.photoData?.base64EncodedString()
+            createdAt = w.createdAt
+            measurements = w.measurements.sorted(by: { $0.timestamp < $1.timestamp }).map(MeasurementDTO.init(from:))
+        }
+
+        func makeWatch() -> Watch {
+            Watch(
+                id: id, brand: brand, model: model, caliber: caliber,
+                purchaseDate: purchaseDate,
+                photoData: photoBase64.flatMap { Data(base64Encoded: $0) },
+                serviceHistory: serviceHistory, isFavorite: isFavorite, isPrimary: isPrimary,
+                liftAngleOverride: liftAngleOverride,
+                movementType: WatchMovementType(rawValue: movementTypeRaw) ?? .automatic,
+                nickname: nickname, story: story, referenceNumber: referenceNumber,
+                sortOrder: sortOrder, customBph: customBph,
+                windReminderEnabled: windReminderEnabled, windReminderHour: windReminderHour,
+                windReminderMinute: windReminderMinute,
+                batteryLastReplaced: batteryLastReplaced,
+                batteryExpectedLifeMonths: batteryExpectedLifeMonths,
+                batteryReminderEnabled: batteryReminderEnabled,
+                purchaseLocation: purchaseLocation, purchaseSalesperson: purchaseSalesperson,
+                purchasePrice: purchasePrice, purchaseCurrency: purchaseCurrency,
+                warrantyMonths: warrantyMonths, warrantyReminderEnabled: warrantyReminderEnabled,
+                receivedFrom: receivedFrom, createdAt: createdAt
+            )
         }
     }
 
@@ -182,6 +239,36 @@ enum DataExportService {
             self.durationSeconds = m.durationSeconds
             self.metadata = m.metadata
         }
+
+        func makeMeasurement() -> WatchMeasurement {
+            WatchMeasurement(
+                id: id, timestamp: timestamp, rateSecondsPerDay: rateSecondsPerDay,
+                beatErrorMs: beatErrorMs, amplitudeDegrees: amplitudeDegrees, bph: bph,
+                confidenceScore: confidenceScore, durationSeconds: durationSeconds, metadata: metadata
+            )
+        }
+    }
+
+    // MARK: - Import (복원) — 로컬 JSON 파일에서. 외부 전송 0 (Hard Rule #8 무충돌).
+
+    /// 백업 JSON 을 가져와 복원. 이미 존재하는 id 는 건너뜀(중복 방지). 가져온 시계 수 반환.
+    @MainActor
+    static func importWatches(from data: Data, into context: ModelContext) -> Int {
+        guard let dto = try? JSONDecoder().decode(WatchesDTO.self, from: data) else { return 0 }
+        let existing = Set(((try? context.fetch(FetchDescriptor<Watch>())) ?? []).map(\.id))
+        var imported = 0
+        for wdto in dto.watches where !existing.contains(wdto.id) {
+            let watch = wdto.makeWatch()
+            context.insert(watch)
+            for mdto in wdto.measurements {
+                let m = mdto.makeMeasurement()
+                m.watch = watch
+                context.insert(m)
+            }
+            imported += 1
+        }
+        if imported > 0 { try? context.save() }
+        return imported
     }
 
     private static func dateStamp() -> String {

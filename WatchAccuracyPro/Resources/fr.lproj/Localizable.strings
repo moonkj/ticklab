@@ -293,6 +293,9 @@
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";
 "watch.gift.ribbon" = "Un cadeau de %@";
+"settings.data.restore" = "Restaurer (importer)";
+"settings.data.restore.done" = "Restauration terminée";
+"settings.data.restore.result" = "%d montres restaurées. (Les existantes sont ignorées.)";
 "timeline.measurement" = "Mesure";
 "timeline.wear" = "Porté";
 "timeline.journal" = "Journal";

@@ -2,6 +2,7 @@ import StoreKit
 import SwiftData
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Environment(UserPreferences.self) private var preferences
@@ -28,6 +29,9 @@ struct SettingsView: View {
     @State private var showingOffboarding: Bool = false
     /// Sprint 6 (P3-14): 인앱 피드백.
     @State private var showingFeedback: Bool = false
+    /// #10 백업/복원: 로컬 JSON 가져오기.
+    @State private var showingRestoreImporter: Bool = false
+    @State private var restoreResult: Int? = nil
     /// Sprint 10 (P3-13): 사용자 프로필
     @State private var showingProfile: Bool = false
 
@@ -373,6 +377,29 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    // #10 백업/복원: 로컬 JSON 파일에서 복원(가져오기). 외부 전송 0 (Hard Rule #8).
+                    Button {
+                        showingRestoreImporter = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "square.and.arrow.down")
+                                .frame(width: 24)
+                            Text(String(localized: "settings.data.restore"))
+                            Spacer()
+                        }
+                        .foregroundStyle(AppColors.ink0)
+                    }
+                    .fileImporter(isPresented: $showingRestoreImporter,
+                                  allowedContentTypes: [.json]) { result in
+                        handleRestore(result)
+                    }
+                    .alert(String(localized: "settings.data.restore.done"), isPresented: Binding(
+                        get: { restoreResult != nil }, set: { if !$0 { restoreResult = nil } }
+                    )) {
+                        Button(String(localized: "common.ok"), role: .cancel) { restoreResult = nil }
+                    } message: {
+                        Text(String(format: String(localized: "settings.data.restore.result"), restoreResult ?? 0))
+                    }
                     // Sprint 10 (P2-16): 공개 갤러리 HTML
                     if let galleryURL = CollectionGalleryGenerator.generate(
                         watches: allWatches, includePrices: false, ownerName: UserProfile.displayName
@@ -645,6 +672,15 @@ struct SettingsView: View {
     }
 
     // Round 138 사용자 요청: 동기화 / 원자시계 섹션 제거되어 runOTA / runNTP 도 제거.
+
+    /// #10 백업/복원: 보안 스코프 URL 에서 JSON 읽어 복원. 결과 수를 alert 로.
+    private func handleRestore(_ result: Result<URL, Error>) {
+        guard case .success(let url) = result else { return }
+        let access = url.startAccessingSecurityScopedResource()
+        defer { if access { url.stopAccessingSecurityScopedResource() } }
+        guard let data = try? Data(contentsOf: url) else { restoreResult = 0; return }
+        restoreResult = DataExportService.importWatches(from: data, into: modelContext)
+    }
 
     private func reschedulePick() {
         NotificationService.scheduleRandomPick(

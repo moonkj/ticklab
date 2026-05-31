@@ -224,6 +224,9 @@
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";
 "watch.gift.ribbon" = "%@님께 받은 시계";
+"settings.data.restore" = "복원 (가져오기)";
+"settings.data.restore.done" = "복원 완료";
+"settings.data.restore.result" = "%d개 시계를 복원했어요. (이미 있는 시계는 건너뜀)";
 "timeline.measurement" = "측정";
 "timeline.wear" = "착용";
 "timeline.journal" = "기록";

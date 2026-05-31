@@ -300,6 +300,9 @@
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";
 "watch.gift.ribbon" = "A gift from %@";
+"settings.data.restore" = "Restore (Import)";
+"settings.data.restore.done" = "Restore complete";
+"settings.data.restore.result" = "Restored %d watches. (Existing ones skipped.)";
 "timeline.measurement" = "Measured";
 "timeline.wear" = "Worn";
 "timeline.journal" = "Journal";

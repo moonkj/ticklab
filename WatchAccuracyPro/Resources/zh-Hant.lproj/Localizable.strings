@@ -293,6 +293,9 @@
 "timeline.entry" = "生平時間線";
 "timeline.first_meeting" = "初次相遇";
 "watch.gift.ribbon" = "來自%@的禮物";
+"settings.data.restore" = "還原（匯入）";
+"settings.data.restore.done" = "還原完成";
+"settings.data.restore.result" = "已還原 %d 只手錶。（已存在的略過）";
 "timeline.measurement" = "測量";
 "timeline.wear" = "佩戴";
 "timeline.journal" = "記錄";
