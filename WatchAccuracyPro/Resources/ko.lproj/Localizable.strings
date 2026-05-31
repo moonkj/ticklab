@@ -1193,3 +1193,13 @@
 "addwatch.movement.section.recommended" = "브랜드 기반 추천";
 "addwatch.movement.section.all" = "전체 무브먼트";
 "addwatch.movement.section.results" = "검색 결과";
+
+/* Sprint 1 — solar 무브먼트 + 구매처/담당자 + 데이터 백업 */
+"movementtype.solar" = "솔라";
+"addwatch.section.purchase" = "구매처 정보";
+"addwatch.purchase.location" = "구매처 (부티크/백화점 등)";
+"addwatch.purchase.salesperson" = "담당자/세일즈";
+"settings.section.data" = "데이터";
+"settings.data.export.csv" = "CSV로 내보내기 (Excel/Numbers)";
+"settings.data.export.json" = "JSON으로 내보내기";
+"settings.data.export.hint" = "전체 시계와 측정 기록을 파일로 저장합니다.";

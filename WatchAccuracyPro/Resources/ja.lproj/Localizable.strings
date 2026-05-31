@@ -1198,3 +1198,13 @@
 "purchase.plan.toggle.monthly" = "月額";
 "purchase.plan.toggle.yearly" = "年額";
 "purchase.legal.auto_renew.monthly" = "TickLab Pro · 1ヶ月の自動更新サブスクリプション。お支払いは確認時に Apple ID に請求されます。期間終了の 24 時間前までにキャンセルしない場合、同じ価格で自動更新されます。Apple ID の設定からいつでも管理・キャンセルできます。";
+
+/* Sprint 1 — ソーラー + 購入情報 + データバックアップ */
+"movementtype.solar" = "ソーラー";
+"addwatch.section.purchase" = "購入情報";
+"addwatch.purchase.location" = "購入場所 (ブティック/百貨店など)";
+"addwatch.purchase.salesperson" = "担当者";
+"settings.section.data" = "データ";
+"settings.data.export.csv" = "CSV でエクスポート (Excel/Numbers)";
+"settings.data.export.json" = "JSON でエクスポート";
+"settings.data.export.hint" = "すべての腕時計と測定記録をファイルに保存します。";

@@ -1194,3 +1194,13 @@
 "addwatch.movement.section.recommended" = "Suggested for this brand";
 "addwatch.movement.section.all" = "All movements";
 "addwatch.movement.section.results" = "Search results";
+
+/* Sprint 1 — solar movement + purchase info + data backup */
+"movementtype.solar" = "Solar";
+"addwatch.section.purchase" = "Purchase Info";
+"addwatch.purchase.location" = "Purchase Location (Boutique/Store)";
+"addwatch.purchase.salesperson" = "Salesperson";
+"settings.section.data" = "Data";
+"settings.data.export.csv" = "Export as CSV (Excel/Numbers)";
+"settings.data.export.json" = "Export as JSON";
+"settings.data.export.hint" = "Save all watches and measurements to a file.";

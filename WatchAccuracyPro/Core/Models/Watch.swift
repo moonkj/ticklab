@@ -5,12 +5,14 @@ enum WatchMovementType: String, CaseIterable, Codable, Sendable {
     case automatic
     case manual
     case quartz
+    case solar
 
     var displayName: String {
         switch self {
         case .automatic: return String(localized: "movementtype.automatic")
         case .manual:    return String(localized: "movementtype.manual")
         case .quartz:    return String(localized: "movementtype.quartz")
+        case .solar:     return String(localized: "movementtype.solar")
         }
     }
 }
@@ -40,6 +42,11 @@ final class Watch {
     var story: String? = nil
     /// Round 83 (이재현): reference number — 시리얼이 아닌 모델 ref no.
     var referenceNumber: String? = nil
+    /// Sprint 1 (P3-5): 구매처 — 부티크/백화점/병행수입/중고/해외직구 등. 자유 텍스트.
+    /// SwiftData lightweight migration — optional + default nil.
+    var purchaseLocation: String? = nil
+    /// Sprint 1 (P3-5): 구매 담당자/매장명/세일즈 — 자유 텍스트.
+    var purchaseSalesperson: String? = nil
     /// 페르소나 (김재철, 워치메이커) wish: movement DB lookup 의 lift angle 을 watch 단위로 override.
     /// nil 이면 movement DB 의 default 사용. 워치메이커가 직접 측정한 값이 있을 때만 사용.
     var liftAngleOverride: Double?
@@ -100,6 +107,8 @@ final class Watch {
         batteryLastReplaced: Date? = nil,
         batteryExpectedLifeMonths: Int = 30,
         batteryReminderEnabled: Bool = false,
+        purchaseLocation: String? = nil,
+        purchaseSalesperson: String? = nil,
         createdAt: Date = .init()
     ) {
         self.id = id
@@ -124,6 +133,8 @@ final class Watch {
         self.batteryLastReplaced = batteryLastReplaced
         self.batteryExpectedLifeMonths = batteryExpectedLifeMonths
         self.batteryReminderEnabled = batteryReminderEnabled
+        self.purchaseLocation = purchaseLocation
+        self.purchaseSalesperson = purchaseSalesperson
         self.createdAt = createdAt
     }
 

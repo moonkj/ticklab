@@ -17,6 +17,9 @@ struct AddWatchView: View {
     @State private var nickname: String = ""
     @State private var story: String = ""
     @State private var referenceNumber: String = ""
+    /// Sprint 1 (P3-5): 구매처/담당자 — 자유 텍스트, optional.
+    @State private var purchaseLocation: String = ""
+    @State private var purchaseSalesperson: String = ""
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var showingCamera = false
@@ -261,6 +264,11 @@ struct AddWatchView: View {
                     }
                 }
 
+                Section(String(localized: "addwatch.section.purchase")) {
+                    TextField(String(localized: "addwatch.purchase.location"), text: $purchaseLocation)
+                    TextField(String(localized: "addwatch.purchase.salesperson"), text: $purchaseSalesperson)
+                }
+
                 // Round 84: 디자인 SSOT screens-detail.jsx AddWatchView 시리얼 안내 helpcard.
                 Section {
                     HStack(alignment: .top, spacing: 10) {
@@ -345,6 +353,8 @@ struct AddWatchView: View {
         nickname = existing.nickname ?? ""
         story = existing.story ?? ""
         referenceNumber = existing.referenceNumber ?? ""
+        purchaseLocation = existing.purchaseLocation ?? ""
+        purchaseSalesperson = existing.purchaseSalesperson ?? ""
         if let bph = existing.customBph { manualBphText = String(bph) }
     }
 
@@ -513,6 +523,7 @@ struct AddWatchView: View {
         if isEditing { return false }  // 편집 모드는 매번 alert 보일 필요 없음.
         return !brand.isEmpty || !model.isEmpty || photoData != nil
             || !nickname.isEmpty || !story.isEmpty || !referenceNumber.isEmpty
+            || !purchaseLocation.isEmpty || !purchaseSalesperson.isEmpty
             || caliber != nil
     }
 
@@ -559,6 +570,8 @@ struct AddWatchView: View {
         let nicknameTrimmed = nickname.trimmingCharacters(in: .whitespaces)
         let storyTrimmed = story.trimmingCharacters(in: .whitespaces)
         let refTrimmed = referenceNumber.trimmingCharacters(in: .whitespaces)
+        let purchaseLocationTrimmed = purchaseLocation.trimmingCharacters(in: .whitespaces)
+        let purchaseSalespersonTrimmed = purchaseSalesperson.trimmingCharacters(in: .whitespaces)
         let parsedCustomBph: Int? = isManualEntry ? Int(manualBphText) : nil
         if let existing {
             existing.brand = brand
@@ -574,6 +587,8 @@ struct AddWatchView: View {
             existing.nickname = nicknameTrimmed.isEmpty ? nil : nicknameTrimmed
             existing.story = storyTrimmed.isEmpty ? nil : storyTrimmed
             existing.referenceNumber = refTrimmed.isEmpty ? nil : refTrimmed
+            existing.purchaseLocation = purchaseLocationTrimmed.isEmpty ? nil : purchaseLocationTrimmed
+            existing.purchaseSalesperson = purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed
             existing.customBph = parsedCustomBph
             watch = existing
         } else {
@@ -587,7 +602,9 @@ struct AddWatchView: View {
                 movementType: movementType,
                 nickname: nicknameTrimmed.isEmpty ? nil : nicknameTrimmed,
                 story: storyTrimmed.isEmpty ? nil : storyTrimmed,
-                referenceNumber: refTrimmed.isEmpty ? nil : refTrimmed
+                referenceNumber: refTrimmed.isEmpty ? nil : refTrimmed,
+                purchaseLocation: purchaseLocationTrimmed.isEmpty ? nil : purchaseLocationTrimmed,
+                purchaseSalesperson: purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed
             )
             watch.customBph = parsedCustomBph
             modelContext.insert(watch)

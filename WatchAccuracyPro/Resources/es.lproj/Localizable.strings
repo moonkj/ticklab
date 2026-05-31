@@ -1198,3 +1198,13 @@
 "purchase.plan.toggle.monthly" = "Mensual";
 "purchase.plan.toggle.yearly" = "Anual";
 "purchase.legal.auto_renew.monthly" = "TickLab Pro · suscripción de 1 mes con renovación automática. El pago se carga a tu Apple ID al confirmar. Se renueva automáticamente al mismo precio dentro de las 24 horas previas al final del período, a menos que canceles al menos 24 horas antes. Gestiona o cancela cuando quieras en los ajustes de tu Apple ID.";
+
+/* Sprint 1 — solar + información de compra + copia de seguridad */
+"movementtype.solar" = "Solar";
+"addwatch.section.purchase" = "Información de compra";
+"addwatch.purchase.location" = "Lugar de compra (Boutique/Tienda)";
+"addwatch.purchase.salesperson" = "Vendedor";
+"settings.section.data" = "Datos";
+"settings.data.export.csv" = "Exportar como CSV (Excel/Numbers)";
+"settings.data.export.json" = "Exportar como JSON";
+"settings.data.export.hint" = "Guarda todos los relojes y mediciones en un archivo.";

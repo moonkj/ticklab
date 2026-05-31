@@ -103,6 +103,11 @@ final class AudioCapture: AudioSource {
             NotificationCenter.default.removeObserver(token)
             interruptionObserver = nil
         }
+        // Min P0-4.1: AudioSession 비활성화 — 측정 종료 후 백그라운드 mic indicator(주황 점)
+        //   잔존 + 배터리 drain 방지. notifyOthersOnDeactivation 으로 다른 앱(음악 등) 즉시 복귀.
+        #if canImport(UIKit)
+        try? AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
+        #endif
     }
 
     deinit {

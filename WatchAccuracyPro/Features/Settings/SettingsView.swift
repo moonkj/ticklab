@@ -260,6 +260,42 @@ struct SettingsView: View {
                     }
                 }
                 // Round 134 사용자 요청: 자기장 측정 토글 제거 — 오늘 탭에서 항상 노출.
+                Section {
+                    let csvPayload = DataExportService.export(watches: allWatches, format: .csv)
+                    if let url = csvPayload.tempURL {
+                        ShareLink(item: url) {
+                            HStack {
+                                Image(systemName: "tablecells")
+                                    .frame(width: 24)
+                                Text(String(localized: "settings.data.export.csv"))
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(AppColors.ink3)
+                            }
+                        }
+                    }
+                    let jsonPayload = DataExportService.export(watches: allWatches, format: .json)
+                    if let url = jsonPayload.tempURL {
+                        ShareLink(item: url) {
+                            HStack {
+                                Image(systemName: "doc.text")
+                                    .frame(width: 24)
+                                Text(String(localized: "settings.data.export.json"))
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 13))
+                                    .foregroundStyle(AppColors.ink3)
+                            }
+                        }
+                    }
+                    Text(String(localized: "settings.data.export.hint"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(AppColors.ink3)
+                } header: {
+                    Text(String(localized: "settings.section.data"))
+                }
+
                 Section(String(localized: "settings.section.help")) {
                     NavigationLink(String(localized: "settings.glossary"), destination: GlossaryView())
                     // 사용자 요청: 개인정보처리방침 · 이용약관 · 지원 in-app 접근. App Store 심사 권장.
