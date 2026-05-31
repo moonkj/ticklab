@@ -79,7 +79,7 @@ xcodebuild test -scheme WatchAccuracyPro -destination 'platform=iOS Simulator,na
 5. **CocoaPods/Carthage 사용 금지** — SPM only
 6. **외부 API 호출 추가 시 사전 합의** — Phase 1은 100% on-device. 첫 외부 호출은 atomic time NTP 한 군데뿐
 7. **`@Model` 스키마 변경 시 마이그레이션 명시** — SwiftData lightweight migration 가능 범위 확인하고 진행
-8. **사진/측정 데이터 외부 전송 금지** — Phase 1은 무조건 on-device. CloudKit는 Phase 3
+8. **사진/측정 데이터 외부 전송 금지** — 기본은 on-device. CloudKit는 Phase 3. **(2026-05-31 개정·개발자 승인)** 예외: 사용자가 **명시적으로 게시 버튼을 눌러 공유한 커뮤니티 사진 1장**에 한해 외부 전송 허용. 단 ⓐ EXIF strip 강제 ⓑ 측정 데이터(rate/amplitude/beat error)·시리얼·구매가는 여전히 전송 절대 금지 ⓒ per-photo 명시 동의. 자동/일괄 업로드 금지. 자세한 범위는 `docs/community/PLAN.md`.
 9. **신뢰도 라벨 무시 금지** — 무브먼트 DB의 `confidenceLabel` 이 `medium`/`low` 인 캘리버는 amplitude 노출 X, 안내 카드 표시 O
 10. **테스트 없는 PR 머지 금지** (DSP·Model·ViewModel은 필수)
 
@@ -100,6 +100,18 @@ Phase 1 코드 안에 Phase 2/3 hook을 남길 때:
 // TODO(phase3): CloudKit 동기화
 ```
 구현은 절대 X. 단지 어디에 들어갈지 표시만.
+
+## Community (Phase 2 — 2026-05-31 착수, 개발자 승인)
+
+익명 사진 피드 + 좋아요. 측정 전용 아님([[project_app_identity]]) — 생활기록 플랫폼의 커뮤니티 축. SSOT: `docs/community/PLAN.md`.
+
+- **익명**: 화면에 닉네임/실명 비노출. 단 검열·차단·소유권용 **내부 안정 ID 필수**(Supabase Anonymous Auth, 차단 우회 방지). 게시는 익명 표시.
+- **하루 1장** 게시 제한. 좋아요·열람은 (콜드스타트 단계엔) 무료.
+- **게이팅(밀도 확보 후 ON)**: 무료=최근 ~10장 풀 노출 + 인기글 부분 흐림 + "Pro로 전체 보기" CTA. 본인 글·하루 1장 업로드·좋아요는 영속 무료. 흐림 클릭베이트 금지(앱스토어 4.0/2.3).
+- **검열**: 온디바이스 사전필터(SensitiveContentAnalysis) + 신고기반 자동 숨김. 외부 vision API 미사용(비용·#6).
+- **UGC 필수(없으면 리젝, Guideline 1.2)**: 신고·차단·콘텐츠필터·zero-tolerance EULA·24h 조치·연락처. 17+ 등급.
+- 외부 호출은 Supabase(기존 합의 baseURL)만. 새 테이블/Storage/Auth는 `docs/community/schema.sql`.
+- `FeatureFlags.communityEnabled` 로 게이트. 백엔드 배포 전까지 OFF.
 
 ## Team & Process
 

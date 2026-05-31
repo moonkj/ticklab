@@ -1,0 +1,58 @@
+import Foundation
+
+/// 커뮤니티(익명 사진 피드) DTO — Supabase REST 응답 매핑. `docs/community/schema.sql` 대응.
+/// 원격 데이터이므로 SwiftData @Model 아님. 순수 Codable struct.
+enum Community {
+
+    /// 게시물 상태 — 서버 `status` 컬럼.
+    enum PostStatus: String, Codable {
+        case approved, hidden, blocked
+    }
+
+    /// 피드 게시물.
+    struct Post: Codable, Identifiable, Equatable {
+        let id: String              // uuid
+        let authorUID: String       // 내부 식별자(화면엔 비노출 — 익명)
+        let imagePath: String       // Storage 'community' 경로
+        let brand: String?
+        var likeCount: Int
+        let status: PostStatus
+        let createdAt: Date
+
+        enum CodingKeys: String, CodingKey {
+            case id
+            case authorUID = "author_uid"
+            case imagePath = "image_path"
+            case brand
+            case likeCount = "like_count"
+            case status
+            case createdAt = "created_at"
+        }
+
+        /// 현재 익명 사용자(uid)가 작성자인가 — 본인 글은 게이팅/검열 예외.
+        func isMine(currentUID: String?) -> Bool {
+            guard let currentUID else { return false }
+            return authorUID == currentUID
+        }
+    }
+
+    /// 신고 사유 — UGC 의무(Guideline 1.2).
+    enum ReportReason: String, Codable, CaseIterable {
+        case inappropriate   // 부적절/선정적
+        case spam            // 스팸/광고
+        case offensive       // 욕설/혐오
+        case copyright       // 저작권/타인 사진
+        case other
+
+        /// l10n 키 (Localizable.strings). 인라인 문자열 금지(Hard Rule #3).
+        var localizationKey: String {
+            switch self {
+            case .inappropriate: return "community.report.inappropriate"
+            case .spam:          return "community.report.spam"
+            case .offensive:     return "community.report.offensive"
+            case .copyright:     return "community.report.copyright"
+            case .other:         return "community.report.other"
+            }
+        }
+    }
+}

@@ -13,12 +13,33 @@ final class FeatureFlags: ObservableObject {
     @Published private(set) var seasonalEventTitle: String = ""
     @Published private(set) var seasonalEventColor: String = "accent"  // "accent" | "gold" | "red"
 
+    /// 커뮤니티(익명 사진 피드). 백엔드 배포 전까지 OFF — 진입점 노출 안 함. `docs/community/PLAN.md`.
+    @Published private(set) var communityEnabled: Bool = false
+    /// 게이팅 ON 시 무료 사용자에게 풀 노출할 최근 N장 (그 이후 인기글은 부분 흐림). 원격 조정.
+    @Published private(set) var communityFreeVisibleCount: Int = 10
+    /// 게이팅(부분 흐림) 자체 ON/OFF — 콜드스타트(밀도 확보) 동안은 OFF로 전부 무료.
+    @Published private(set) var communityGatingEnabled: Bool = false
+
     // MARK: - Load from UserDefaults (Phase 1 로컬)
     private func load() {
         let d = UserDefaults.standard
         seasonalEventEnabled = d.bool(forKey: "ticklab.flag.seasonalEvent")
         seasonalEventTitle = d.string(forKey: "ticklab.flag.seasonalTitle") ?? ""
         seasonalEventColor = d.string(forKey: "ticklab.flag.seasonalColor") ?? "accent"
+        communityEnabled = d.bool(forKey: "ticklab.flag.communityEnabled")
+        communityGatingEnabled = d.bool(forKey: "ticklab.flag.communityGating")
+        communityFreeVisibleCount = (d.object(forKey: "ticklab.flag.communityFreeN") as? Int) ?? 10
+    }
+
+    /// 커뮤니티 플래그 조정 (디버그/원격). 백엔드 준비 후 ON.
+    func applyCommunity(enabled: Bool, gating: Bool, freeVisibleCount: Int) {
+        communityEnabled = enabled
+        communityGatingEnabled = gating
+        communityFreeVisibleCount = max(1, freeVisibleCount)
+        let d = UserDefaults.standard
+        d.set(communityEnabled, forKey: "ticklab.flag.communityEnabled")
+        d.set(communityGatingEnabled, forKey: "ticklab.flag.communityGating")
+        d.set(communityFreeVisibleCount, forKey: "ticklab.flag.communityFreeN")
     }
 
     // MARK: - Debug / Remote override
