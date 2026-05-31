@@ -262,74 +262,55 @@ struct TodayView: View {
 
     // MARK: - Sprint 5 (P2-15) AI 추천 카드
 
-    /// Sprint 11 (Doyoon #1): 추천 + 뽑기 통합 카드.
-    /// 추천 시계 있으면 상단에 표시(탭→상세), 항상 하단에 "랜덤 뽑기"(흔들기 게임).
+    /// Sprint 11 (Doyoon #1, 사용자 재지적): 추천 + 뽑기 완전 단일 카드 (한 줄).
+    /// 추천 시계가 있으면 그 시계를 미리 제안하고, 탭하면 ShakePick(흔들어 다시 뽑기)으로 진입.
     @ViewBuilder
     private var todayPickCard: some View {
         let rec = WatchRecommendationService.recommend(from: watches, wearLogs: wearLogs)
-        VStack(spacing: 0) {
-            if let rec {
-                NavigationLink {
-                    WatchDetailView(watch: rec.watch)
-                } label: {
-                    HStack(spacing: 12) {
-                        ZStack {
-                            Circle().fill(Color.purple.opacity(0.15)).frame(width: 56, height: 56)
-                            Image(systemName: "sparkles").font(.system(size: 24)).foregroundStyle(Color.purple)
-                        }
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(String(localized: "recommendation.title"))
-                                .font(.system(size: 11, weight: .semibold))
-                                .tracking(1.5)
-                                .foregroundStyle(Color.purple.opacity(0.8))
-                            Text("\(rec.watch.brand) \(rec.watch.model)")
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundStyle(AppColors.ink0).lineLimit(1)
-                            Text(String(localized: rec.reason))
-                                .font(.system(size: 12)).foregroundStyle(AppColors.ink2)
-                        }
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink3)
-                    }
-                    .padding(14)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .contentShape(Rectangle())
+        NavigationLink {
+            ShakePickView()
+        } label: {
+            HStack(spacing: 14) {
+                ZStack {
+                    Circle().fill(RadialGradient(
+                        colors: [AppColors.accentLight, AppColors.accent],
+                        center: UnitPoint(x: 0.35, y: 0.25), startRadius: 5, endRadius: 50))
+                        .frame(width: 64, height: 64)
+                    Image(systemName: "dice.fill").font(.system(size: 28)).foregroundStyle(.white)
                 }
-                .buttonStyle(.plain)
-                Divider().padding(.horizontal, 14)
-            }
-            // 항상 표시: 랜덤 뽑기 (흔들기 게임)
-            NavigationLink {
-                ShakePickView()
-            } label: {
-                HStack(spacing: 12) {
-                    ZStack {
-                        Circle().fill(RadialGradient(
-                            colors: [AppColors.accentLight, AppColors.accent],
-                            center: UnitPoint(x: 0.35, y: 0.25), startRadius: 5, endRadius: 40))
-                            .frame(width: 56, height: 56)
-                        Image(systemName: "dice.fill").font(.system(size: 24)).foregroundStyle(.white)
-                    }
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(String(localized: "today.shake.title"))
-                            .font(.system(size: 15, weight: .semibold)).foregroundStyle(AppColors.ink0)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(String(localized: "today.shake.title"))
+                        .font(.system(size: 17, weight: .semibold))
+                        .foregroundStyle(AppColors.ink0)
+                    if let rec {
+                        // 추천 시계 미리보기 — 흔들기 전 기본 제안.
+                        Text("\(rec.watch.brand) \(rec.watch.model)")
+                            .font(.system(size: 13, weight: .medium))
+                            .foregroundStyle(AppColors.accentDark)
+                            .lineLimit(1)
+                        Text(String(localized: rec.reason))
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppColors.ink2)
+                            .lineLimit(1)
+                    } else {
                         Text(String(localized: "today.shake.subtitle"))
-                            .font(.system(size: 12)).foregroundStyle(AppColors.ink2)
+                            .font(.system(size: 13))
+                            .foregroundStyle(AppColors.ink2)
                     }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink3)
                 }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AppColors.ink3)
             }
-            .buttonStyle(.plain)
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AppColors.paper1)
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+            .contentShape(Rectangle())
         }
-        .background(AppColors.paper1)
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .buttonStyle(.plain)
     }
 
     // MARK: - Fortune

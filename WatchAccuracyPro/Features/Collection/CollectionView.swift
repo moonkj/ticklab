@@ -164,12 +164,6 @@ struct CollectionView: View {
                             emptyState
                         } else {
                             dashboardSummary
-                            // Sprint 10 (P3-8): 컬렉션 가치 투명성
-                            if watches.contains(where: { $0.purchasePrice != nil }) {
-                                CollectionValueCard(watches: watches)
-                                    .padding(.horizontal, 20)
-                                    .padding(.top, 10)
-                            }
                             // Round 134: 대표시계 설정된 경우 — 상단 큰 카드로 별도 표시.
                             //            없으면 모든 시계가 동일 카드 형태로 리스트에 노출.
                             let primaryWatch = filtered.first(where: { $0.isPrimary })
@@ -236,6 +230,12 @@ struct CollectionView: View {
                             }
                             .padding(.horizontal, 20)
                             .padding(.top, 16)
+                            // Sprint 11 (사용자 요청): 컬렉션 가치를 시계 목록 아래로 이동.
+                            if watches.contains(where: { $0.purchasePrice != nil }) {
+                                CollectionValueCard(watches: watches)
+                                    .padding(.horizontal, 20)
+                                    .padding(.top, 20)
+                            }
                             // Round 62: 디자인 SSOT screens-main.jsx 의 "다음 도전" Founder-style card.
                             challengeCard
                                 .padding(.horizontal, 20)
@@ -335,10 +335,12 @@ struct CollectionView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
-            // 검색 — 시계 20개+ 사용자 대응
-            .searchable(text: $searchQuery,
-                        placement: .navigationBarDrawer(displayMode: .automatic),
-                        prompt: Text(String(localized: "collection.search.placeholder")))
+            // Sprint 11 (사용자 요청): 검색칸은 시계 다수 보유 시에만 표시 — 소수 보유 사용자에겐 불필요.
+            .modifier(ConditionalSearchable(
+                isActive: watches.count >= 5,
+                text: $searchQuery,
+                prompt: String(localized: "collection.search.placeholder")
+            ))
             .sheet(isPresented: $showingWatchBox) {
                 WatchBoxView()
             }
@@ -762,6 +764,24 @@ struct HeroWatchCard: View {
         )
         .clipShape(RoundedRectangle(cornerRadius: 18))
         .cardShadow(.mid)  // Sprint 9 UX
+    }
+}
+
+// MARK: - Conditional Searchable (Sprint 11)
+
+/// 시계 5개 이상일 때만 .searchable 적용. 소수 보유 사용자에겐 검색칸 숨김.
+struct ConditionalSearchable: ViewModifier {
+    let isActive: Bool
+    @Binding var text: String
+    let prompt: String
+    func body(content: Content) -> some View {
+        if isActive {
+            content.searchable(text: $text,
+                               placement: .navigationBarDrawer(displayMode: .automatic),
+                               prompt: Text(prompt))
+        } else {
+            content
+        }
     }
 }
 

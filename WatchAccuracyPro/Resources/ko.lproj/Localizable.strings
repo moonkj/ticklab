@@ -1489,3 +1489,7 @@
 
 /* Sprint 10 — P2-16 공개 갤러리 */
 "settings.data.gallery_html" = "컬렉션 갤러리 (HTML)";
+
+/* Sprint 11 — 프로필 행 */
+"settings.profile.setup_hint" = "프로필을 설정해보세요";
+"settings.profile.edit_hint" = "프로필 편집";

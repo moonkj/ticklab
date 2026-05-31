@@ -1490,3 +1490,7 @@
 
 /* Sprint 10 — P2-16 Public gallery */
 "settings.data.gallery_html" = "Collection Gallery (HTML)";
+
+/* Sprint 11 — Profile row */
+"settings.profile.setup_hint" = "Set up your profile";
+"settings.profile.edit_hint" = "Edit profile";

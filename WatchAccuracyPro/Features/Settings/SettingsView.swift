@@ -49,7 +49,49 @@ struct SettingsView: View {
 
         NavigationStack {
             Form {
-                // Round 48: Founder hero card (디자인 SSOT screens-main.jsx SettingsView).
+                // Sprint 11 (사용자 요청): 내 프로필을 별도 행으로 분리 — 구독 hero에 숨지 않게.
+                Section {
+                    Button { showingProfile = true } label: {
+                        HStack(spacing: 14) {
+                            ZStack {
+                                if let data = UserProfile.photoData, let img = UIImage(data: data) {
+                                    Image(uiImage: img).resizable().scaledToFill()
+                                        .frame(width: 48, height: 48).clipShape(Circle())
+                                } else {
+                                    Circle().fill(AppColors.paper2).frame(width: 48, height: 48)
+                                    Image(systemName: "person.fill")
+                                        .font(.system(size: 20)).foregroundStyle(AppColors.ink3)
+                                }
+                            }
+                            VStack(alignment: .leading, spacing: 2) {
+                                HStack(spacing: 6) {
+                                    let name = UserProfile.displayName
+                                    Text(name.isEmpty ? String(localized: "profile.nav.title") : name)
+                                        .font(.system(size: 16, weight: .semibold))
+                                        .foregroundStyle(AppColors.ink0)
+                                    if UserProfile.isDealer {
+                                        Text("DEALER")
+                                            .font(.system(size: 9, weight: .bold))
+                                            .foregroundStyle(AppColors.primaryDeep)
+                                            .padding(.horizontal, 5).padding(.vertical, 2)
+                                            .background(AppColors.accent).clipShape(Capsule())
+                                    }
+                                }
+                                Text(String(localized: UserProfile.displayName.isEmpty
+                                             ? "settings.profile.setup_hint" : "settings.profile.edit_hint"))
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(AppColors.ink2)
+                            }
+                            Spacer()
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 14)).foregroundStyle(AppColors.ink3)
+                        }
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .sheet(isPresented: $showingProfile) { UserProfileView() }
+                }
+                // Round 48: Founder hero card (구독) — 프로필과 분리됨.
                 Section {
                     accountHero
                         .listRowInsets(EdgeInsets())
@@ -543,52 +585,27 @@ struct SettingsView: View {
 
     private var heroContent: some View {
         HStack(spacing: 14) {
-            // Sprint 10 (P3-13): 프로필 사진 or 기본 아이콘
+            // 구독 hero — 프로필과 분리 (Sprint 11). 항상 sparkles 아이콘.
             ZStack {
                 Circle().fill(AppColors.accent.opacity(0.6)).frame(width: 70, height: 70).blur(radius: 14)
-                if let data = UserProfile.photoData, let img = UIImage(data: data) {
-                    Image(uiImage: img).resizable().scaledToFill()
-                        .frame(width: 56, height: 56).clipShape(Circle())
-                } else {
-                    LinearGradient(colors: [AppColors.accent, AppColors.accentDark],
-                                   startPoint: .top, endPoint: .bottom)
-                        .frame(width: 56, height: 56).clipShape(Circle())
-                    Image(systemName: "sparkles").font(.system(size: 26, weight: .medium))
-                        .foregroundStyle(AppColors.primaryDeep)
-                }
+                LinearGradient(colors: [AppColors.accent, AppColors.accentDark],
+                               startPoint: .top, endPoint: .bottom)
+                    .frame(width: 56, height: 56).clipShape(Circle())
+                Image(systemName: "sparkles").font(.system(size: 26, weight: .medium))
+                    .foregroundStyle(AppColors.primaryDeep)
             }
             VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: 6) {
-                    let name = UserProfile.displayName
-                    Text(name.isEmpty
-                         ? String(localized: preferences.isPro ? "settings.account.pro_name" : "settings.account.free_name")
-                         : name)
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(.white)
-                    if UserProfile.isDealer {
-                        Text("DEALER")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundStyle(AppColors.primaryDeep)
-                            .padding(.horizontal, 5).padding(.vertical, 2)
-                            .background(AppColors.accent)
-                            .clipShape(Capsule())
-                    }
-                }
+                Text(String(localized: preferences.isPro ? "settings.account.pro_name" : "settings.account.free_name"))
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(.white)
                 Text(String(localized: preferences.isPro ? "settings.account.pro_body" : "settings.account.free_body"))
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.7))
             }
             Spacer()
-            // 프로필 편집 버튼
-            Button {
-                showingProfile = true
-            } label: {
-                Image(systemName: "person.crop.circle.badge.plus")
-                    .font(.system(size: 18))
-                    .foregroundStyle(.white.opacity(0.7))
-            }
-            .buttonStyle(.plain)
-            .sheet(isPresented: $showingProfile) { UserProfileView() }
+            Image(systemName: "chevron.right")
+                .font(.system(size: 16, weight: .medium))
+                .foregroundStyle(.white.opacity(0.6))
         }
         .padding(18)
         .background(
