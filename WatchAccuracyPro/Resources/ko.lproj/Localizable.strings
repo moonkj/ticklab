@@ -1316,3 +1316,7 @@
 "wrapped.closing.subtitle" = "내년에도 시계와의 특별한 순간들을 기록해요.";
 "stats.entry.wrapped" = "Wrapped";
 "stats.entry.wrapped.subtitle" = "올해의 시계 이야기";
+
+/* Sprint 4 — P3-10 멀티 필터 검색 */
+"collection.filter.label" = "고급 필터";
+"collection.filter.all" = "전체";

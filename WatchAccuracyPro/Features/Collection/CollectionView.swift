@@ -39,6 +39,9 @@ struct CollectionView: View {
     @State private var searchQuery: String = ""
     /// 즐겨찾기 필터.
     @State private var favoritesOnly: Bool = false
+    /// Sprint 4 (P3-10): 고급 필터 — 시계 5개 이상 보유 시 표시.
+    @State private var filterMovementType: WatchMovementType? = nil
+    @State private var showAdvancedFilter: Bool = false
 
     /// Round 16 (Sora): row 마다 isWornToday fetch 폭주 차단. @Query wearLogs 에서
     ///   오늘자 (startOfDay) 인 watch.id 셋을 한 번 계산해 row 에 prop 으로 전달.
@@ -64,11 +67,14 @@ struct CollectionView: View {
         let q = searchQuery.trimmingCharacters(in: .whitespaces).lowercased()
         let searched: [Watch] = sorted.filter { w in
             if favoritesOnly && !w.isFavorite { return false }
+            // Sprint 4 (P3-10): 무브먼트 타입 필터
+            if let mt = filterMovementType, w.movementType != mt { return false }
             guard !q.isEmpty else { return true }
             return w.brand.lowercased().contains(q)
                 || w.model.lowercased().contains(q)
                 || (w.nickname?.lowercased().contains(q) ?? false)
                 || (w.caliber?.lowercased().contains(q) ?? false)
+                || (w.purchaseLocation?.lowercased().contains(q) ?? false)
         }
         if let primary = searched.first(where: { $0.isPrimary }) {
             return [primary] + searched.filter { $0.id != primary.id }
@@ -88,6 +94,31 @@ struct CollectionView: View {
         NavigationStack(path: pathBinding) {
             ZStack {
                 AppColors.paper0.ignoresSafeArea()
+                VStack(spacing: 0) {
+                    // Sprint 4 (P3-10): 고급 필터 패널
+                    if showAdvancedFilter && watches.count >= 5 {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 8) {
+                                filterChip(
+                                    label: String(localized: "collection.filter.all"),
+                                    isSelected: filterMovementType == nil
+                                ) { filterMovementType = nil }
+                                ForEach(WatchMovementType.allCases, id: \.self) { mt in
+                                    filterChip(
+                                        label: mt.displayName,
+                                        isSelected: filterMovementType == mt
+                                    ) { filterMovementType = filterMovementType == mt ? nil : mt }
+                                }
+                            }
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                        }
+                        .background(AppColors.paper1)
+                        .overlay(alignment: .bottom) {
+                            Divider()
+                        }
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                    }
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
                         header
@@ -168,7 +199,8 @@ struct CollectionView: View {
                         }
                     }
                 }
-            }
+                } // end ScrollView (Sprint 4 outer VStack)
+            } // end VStack
             .toolbar {
                 // Round 163: 설정 버튼을 우측 끝으로 이동.
                 ToolbarItem(placement: .topBarTrailing) {
@@ -216,6 +248,19 @@ struct CollectionView: View {
                     }
                     .accessibilityLabel(String(localized: "tab.settings"))
                     .accessibilityIdentifier("nav.settings")
+                }
+                // Sprint 4 (P3-10): 고급 필터 — 5개 이상 시만 표시
+                if watches.count >= 5 {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button {
+                            withAnimation { showAdvancedFilter.toggle() }
+                        } label: {
+                            Image(systemName: filterMovementType != nil ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                                .font(.system(size: 18))
+                                .foregroundStyle(filterMovementType != nil ? AppColors.accent : AppColors.ink2)
+                        }
+                        .accessibilityLabel(String(localized: "collection.filter.label"))
+                    }
                 }
             }
             .toolbarBackground(AppColors.paper0, for: .navigationBar)
@@ -416,6 +461,22 @@ struct CollectionView: View {
 
     // MARK: - Empty / Footer
 
+
+    private func filterChip(label: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(isSelected ? AppColors.primaryDeep : AppColors.ink2)
+                .padding(.horizontal, 12).padding(.vertical, 6)
+                .background(isSelected
+                    ? LinearGradient(colors: [AppColors.accent, AppColors.accentDark],
+                                     startPoint: .leading, endPoint: .trailing)
+                    : LinearGradient(colors: [AppColors.paper2, AppColors.paper2],
+                                     startPoint: .leading, endPoint: .trailing))
+                .clipShape(Capsule())
+        }
+        .buttonStyle(.plain)
+    }
 
     private var emptyState: some View {
         EmptyState(

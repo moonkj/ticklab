@@ -1317,3 +1317,7 @@
 "wrapped.closing.subtitle" = "Keep recording special moments with your watches.";
 "stats.entry.wrapped" = "Wrapped";
 "stats.entry.wrapped.subtitle" = "Your year in watches";
+
+/* Sprint 4 — P3-10 Multi-filter search */
+"collection.filter.label" = "Advanced Filter";
+"collection.filter.all" = "All";
