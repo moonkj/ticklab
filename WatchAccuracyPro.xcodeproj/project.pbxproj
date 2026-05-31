@@ -148,6 +148,7 @@
 		C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */; };
 		C863ACE28957E2C56F947358 /* WatchAccuracyProWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47D155157AC7BFF49F53E192 /* WatchAccuracyProWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CCC8CA7C1F4F01F4679B538A /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EDDAD4DABD6B3C60B30AD2 /* DateFormatters.swift */; };
+		CD0BEA9689D642E929CE8DC3 /* WatchModelSuggestionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 715BC647776CCFC522EA86BC /* WatchModelSuggestionService.swift */; };
 		CD298342112C7558F54DD752 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FF870CF2C7781C49AFBBF3 /* KeychainService.swift */; };
 		CE1C7A89D2ED09540414AC88 /* MeasurementLiveActivityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B9A011D68F29BFF50AF414 /* MeasurementLiveActivityService.swift */; };
 		CE4A46CFB98D6E6A39E52F2D /* SupabaseBrandLeagueService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F2A14F04A20422E0697A398 /* SupabaseBrandLeagueService.swift */; };
@@ -322,6 +323,7 @@
 		6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimator.swift; sourceTree = "<group>"; };
 		6F2A14F04A20422E0697A398 /* SupabaseBrandLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseBrandLeagueService.swift; sourceTree = "<group>"; };
 		6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementViewModelTests.swift; sourceTree = "<group>"; };
+		715BC647776CCFC522EA86BC /* WatchModelSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModelSuggestionService.swift; sourceTree = "<group>"; };
 		7213C8CD99CB49E77B212DDC /* DSPDownsampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPDownsampleTests.swift; sourceTree = "<group>"; };
 		73F23C24460A6D08DB54AE4D /* MeasurementLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementLiveActivityWidget.swift; sourceTree = "<group>"; };
 		750B0A03373651FDD31BF010 /* MagneticFieldService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticFieldService.swift; sourceTree = "<group>"; };
@@ -972,6 +974,7 @@
 				424742999A1D0919D98F7102 /* MovementDatabase.swift */,
 				DA49473933488382E08C687D /* MovementDBOTAService.swift */,
 				A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */,
+				715BC647776CCFC522EA86BC /* WatchModelSuggestionService.swift */,
 			);
 			path = Movement;
 			sourceTree = "<group>";
@@ -1359,6 +1362,7 @@
 				A9EAB110F1CC595BD08AD4F9 /* WatchDetailRowComponents.swift in Sources */,
 				00A4FCF735B3327F8DE4D210 /* WatchDetailView.swift in Sources */,
 				05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */,
+				CD0BEA9689D642E929CE8DC3 /* WatchModelSuggestionService.swift in Sources */,
 				28CAA896AD14E29EA726E8CE /* WatchMoodService.swift in Sources */,
 				DF0D33547AB565B5F86A0A7F /* WatchSilhouette.swift in Sources */,
 				8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */,
@@ -1506,7 +1510,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 123;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1673,7 +1677,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 122;
+				CURRENT_PROJECT_VERSION = 123;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

@@ -28,6 +28,9 @@ struct AddWatchView: View {
     @State private var warrantyReminderEnabled: Bool = true
     /// Sprint 4 (P1-5): 선택 항목 펼치기/접기.
     @State private var optionalExpanded: Bool = false
+    /// Sprint 5 (P2-2): 모델 자동완성.
+    @State private var modelSuggestions: [String] = []
+    @State private var showModelSuggestions: Bool = false
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var showingCamera = false
@@ -123,8 +126,42 @@ struct AddWatchView: View {
                         }
                     }
 
-                    TextField(String(localized: "addwatch.model"), text: $model)
-                        .onChange(of: model) { _, _ in updateSuggestion() }
+                    VStack(alignment: .leading, spacing: 0) {
+                        TextField(String(localized: "addwatch.model"), text: $model)
+                            .onChange(of: model) { _, _ in
+                                updateSuggestion()
+                                // Sprint 5 (P2-2): 모델 자동완성
+                                modelSuggestions = WatchModelSuggestionService.suggestions(
+                                    brand: brand, partialModel: model
+                                )
+                                showModelSuggestions = !modelSuggestions.isEmpty && !model.isEmpty
+                            }
+                            .onChange(of: brand) { _, newBrand in
+                                // 브랜드 변경 시 해당 브랜드 모델 목록 표시
+                                modelSuggestions = WatchModelSuggestionService.models(for: newBrand)
+                                showModelSuggestions = !modelSuggestions.isEmpty && model.isEmpty
+                            }
+                        if showModelSuggestions {
+                            Divider().padding(.top, 4)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(modelSuggestions.prefix(8), id: \.self) { suggestion in
+                                        Button(suggestion) {
+                                            model = suggestion
+                                            showModelSuggestions = false
+                                            updateSuggestion()
+                                        }
+                                        .font(.system(size: 12))
+                                        .padding(.horizontal, 10).padding(.vertical, 5)
+                                        .background(AppColors.accent50)
+                                        .clipShape(Capsule())
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    }
                 }
 
                 // Sprint 4 (P1-5): 선택 항목 DisclosureGroup
