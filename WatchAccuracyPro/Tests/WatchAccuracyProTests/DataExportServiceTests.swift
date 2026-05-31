@@ -81,6 +81,22 @@ final class DataExportServiceTests: XCTestCase {
         XCTAssertTrue(text.contains("\"Model \"\"quoted\"\"\""))
     }
 
+    func test_csv_includes_watch_without_measurements() {
+        // #8: 측정 0회 시계도 인벤토리 행으로 포함되어야 함.
+        let ctx = container.mainContext
+        let watch = Watch(brand: "Tudor", model: "Black Bay", caliber: "MT5602")
+        ctx.insert(watch)
+        try? ctx.save()
+        let payload = DataExportService.export(watches: [watch], format: .csv)
+        let text = String(data: payload.data, encoding: .utf8) ?? ""
+        let lines = text.components(separatedBy: "\r\n")
+        XCTAssertEqual(lines.count, 2, "header + 1 inventory row")
+        XCTAssertTrue(text.contains("Tudor"))
+        XCTAssertTrue(text.contains("Black Bay"))
+        // 측정 파생 셀(rate 등)은 공란 — 빈 셀 사이 연속 콤마 존재.
+        XCTAssertTrue(lines[1].contains(",,"))
+    }
+
     func test_json_export_is_valid_and_decodable() throws {
         let watch = makeFixture()
         let payload = DataExportService.export(watches: [watch], format: .json)

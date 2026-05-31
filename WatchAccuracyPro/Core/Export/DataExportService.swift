@@ -53,8 +53,13 @@ enum DataExportService {
             var lines = [csvHeader()]
             for watch in watches {
                 let sorted = watch.measurements.sorted(by: { $0.timestamp < $1.timestamp })
-                for m in sorted {
-                    lines.append(csvRow(watch: watch, measurement: m))
+                // 헤비 컬렉터 리뷰(#8): 측정 0회 시계도 인벤토리 행으로 포함 — 보유 목록 전체 export.
+                if sorted.isEmpty {
+                    lines.append(csvRow(watch: watch, measurement: nil))
+                } else {
+                    for m in sorted {
+                        lines.append(csvRow(watch: watch, measurement: m))
+                    }
                 }
             }
             let body = lines.joined(separator: "\r\n")
@@ -94,30 +99,31 @@ enum DataExportService {
         ].joined(separator: ",")
     }
 
-    private static func csvRow(watch: Watch, measurement m: WatchMeasurement) -> String {
-        let metadata = m.metadata
-        let cells: [String] = [
-            isoFormatter.string(from: m.timestamp),
-            watch.brand,
-            watch.model,
-            watch.nickname ?? "",
-            watch.referenceNumber ?? "",
-            watch.caliber ?? "",
-            String(format: "%.2f", m.rateSecondsPerDay),
-            String(format: "%.2f", m.beatErrorMs),
-            m.amplitudeDegrees.map { String(format: "%.0f", $0) } ?? "",
-            String(m.bph),
-            String(m.confidenceScore),
-            String(m.durationSeconds),
-            String(format: "%.1f", metadata.ambientNoiseDB),
-            metadata.snrDB.map { String(format: "%.1f", $0) } ?? "",
-            metadata.temperatureCelsius.map { String(format: "%.1f", $0) } ?? "",
-            metadata.powerReserveEstimate.map { String(format: "%.1f", $0) } ?? "",
-            metadata.position.rawValue,
-            metadata.microphoneType.rawValue,
-            metadata.deviceModel
-        ].map(escapeCSV)
-        return cells.joined(separator: ",")
+    /// measurement 이 nil 이면(측정 0회 시계) 측정 파생 셀은 공란 — 인벤토리 행.
+    private static func csvRow(watch: Watch, measurement m: WatchMeasurement?) -> String {
+        let metadata = m?.metadata
+        // 타입체커 부담 완화 — 셀을 단계적으로 구성.
+        var cells: [String] = []
+        cells.append(m.map { isoFormatter.string(from: $0.timestamp) } ?? "")
+        cells.append(watch.brand)
+        cells.append(watch.model)
+        cells.append(watch.nickname ?? "")
+        cells.append(watch.referenceNumber ?? "")
+        cells.append(watch.caliber ?? "")
+        cells.append(m.map { String(format: "%.2f", $0.rateSecondsPerDay) } ?? "")
+        cells.append(m.map { String(format: "%.2f", $0.beatErrorMs) } ?? "")
+        cells.append(m?.amplitudeDegrees.map { String(format: "%.0f", $0) } ?? "")
+        cells.append(m.map { String($0.bph) } ?? "")
+        cells.append(m.map { String($0.confidenceScore) } ?? "")
+        cells.append(m.map { String($0.durationSeconds) } ?? "")
+        cells.append(metadata.map { String(format: "%.1f", $0.ambientNoiseDB) } ?? "")
+        cells.append(metadata?.snrDB.map { String(format: "%.1f", $0) } ?? "")
+        cells.append(metadata?.temperatureCelsius.map { String(format: "%.1f", $0) } ?? "")
+        cells.append(metadata?.powerReserveEstimate.map { String(format: "%.1f", $0) } ?? "")
+        cells.append(metadata?.position.rawValue ?? "")
+        cells.append(metadata?.microphoneType.rawValue ?? "")
+        cells.append(metadata?.deviceModel ?? "")
+        return cells.map(escapeCSV).joined(separator: ",")
     }
 
     private static func escapeCSV(_ s: String) -> String {
