@@ -353,11 +353,14 @@ struct WatchDetailView: View {
         ZStack(alignment: .bottomLeading) {
             // 1) photo / silhouette background — 전체 영역.
             // Sprint 8 (UX): contentTransition(.identity) — 컬렉션 썸네일과 동일 이미지 연속성.
+            // push 애니메이션 중 너비 계산 osc 방지 — 스크린 너비 고정 + drawingGroup 사전 렌더.
+            let screenW = UIScreen.main.bounds.width
             Group {
                 if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
                     Image(uiImage: img)
                         .resizable()
                         .scaledToFill()
+                        .frame(width: screenW, height: 280)
                 } else {
                     ZStack {
                         LinearGradient(
@@ -366,11 +369,12 @@ struct WatchDetailView: View {
                         )
                         WatchSilhouette(watch: watch, size: 220)
                     }
+                    .frame(width: screenW, height: 280)
                 }
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 280)
+            .frame(width: screenW, height: 280)
             .clipped()
+            .drawingGroup()
             .contentShape(Rectangle())
             // Round 94 (정수민 #2): 사진 있으면 풀스크린 줌, 없으면 source sheet.
             .onTapGesture {
