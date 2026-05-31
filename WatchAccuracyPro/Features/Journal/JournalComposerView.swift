@@ -20,6 +20,8 @@ struct JournalComposerView: View {
     @State private var selectedWatch: Watch?
     @State private var entryText: String = ""
     @State private var mood: Mood = .neutral
+    @State private var peopleText: String = ""
+    @State private var eventText: String = ""
     @State private var photoItems: [PhotosPickerItem] = []
     @State private var photoDatas: [Data] = []
     /// Round 15 (Min): rapid re-pick 시 older Task 가 newer 결과 덮어쓰는 race 회피.
@@ -35,6 +37,7 @@ struct JournalComposerView: View {
                     watchPicker
                     moodPicker
                     bodyEditor
+                    peopleEventSection
                     photoSection
                 }
                 .padding(20)
@@ -156,6 +159,30 @@ struct JournalComposerView: View {
         }
     }
 
+    /// #18 짝: 함께한 사람 / 이벤트 태그 — 쉼표 구분 입력. 추억을 검색·타임라인에 노출.
+    private var peopleEventSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 6) {
+                EyebrowLabel(text: String(localized: "journal.people.label"))
+                TextField(String(localized: "journal.people.placeholder"), text: $peopleText)
+                    .font(.system(size: 14))
+                    .padding(12)
+                    .background(AppColors.paper1)
+                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                    .overlay(RoundedRectangle(cornerRadius: AppRadius.md).stroke(AppColors.rule, lineWidth: 1))
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                EyebrowLabel(text: String(localized: "journal.event.label"))
+                TextField(String(localized: "journal.event.placeholder"), text: $eventText)
+                    .font(.system(size: 14))
+                    .padding(12)
+                    .background(AppColors.paper1)
+                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                    .overlay(RoundedRectangle(cornerRadius: AppRadius.md).stroke(AppColors.rule, lineWidth: 1))
+            }
+        }
+    }
+
     private var photoSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             EyebrowLabel(text: String(localized: "journal.compose.photos"))
@@ -245,6 +272,9 @@ struct JournalComposerView: View {
             photoPaths: paths,
             mood: mood
         )
+        // #18 짝: 쉼표 구분 → 사람/이벤트 태그.
+        entry.people = peopleText.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+        entry.events = eventText.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
         modelContext.insert(entry)
         try? modelContext.save()
         dismiss()

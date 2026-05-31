@@ -300,6 +300,10 @@
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";
 "watch.gift.ribbon" = "A gift from %@";
+"journal.people.label" = "People";
+"journal.people.placeholder" = "Comma-separated (e.g. Dad, friend)";
+"journal.event.label" = "Event";
+"journal.event.placeholder" = "e.g. Wedding, first day";
 "settings.data.restore" = "Restore (Import)";
 "settings.data.restore.done" = "Restore complete";
 "settings.data.restore.result" = "Restored %d watches. (Existing ones skipped.)";

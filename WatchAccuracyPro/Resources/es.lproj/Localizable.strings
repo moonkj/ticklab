@@ -293,6 +293,10 @@
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";
 "watch.gift.ribbon" = "Un regalo de %@";
+"journal.people.label" = "Personas";
+"journal.people.placeholder" = "Separar con comas (p. ej. papá, amigo)";
+"journal.event.label" = "Evento";
+"journal.event.placeholder" = "p. ej. boda, primer día";
 "settings.data.restore" = "Restaurar (importar)";
 "settings.data.restore.done" = "Restauración completa";
 "settings.data.restore.result" = "Se restauraron %d relojes. (Los existentes se omiten.)";

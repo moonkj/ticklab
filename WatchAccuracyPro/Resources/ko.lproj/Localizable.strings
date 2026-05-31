@@ -224,6 +224,10 @@
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";
 "watch.gift.ribbon" = "%@님께 받은 시계";
+"journal.people.label" = "함께한 사람";
+"journal.people.placeholder" = "쉼표로 구분 (예: 아버지, 친구)";
+"journal.event.label" = "이벤트";
+"journal.event.placeholder" = "예: 결혼식, 첫 출근";
 "settings.data.restore" = "복원 (가져오기)";
 "settings.data.restore.done" = "복원 완료";
 "settings.data.restore.result" = "%d개 시계를 복원했어요. (이미 있는 시계는 건너뜀)";

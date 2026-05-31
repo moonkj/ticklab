@@ -293,6 +293,10 @@
 "timeline.entry" = "生平時間線";
 "timeline.first_meeting" = "初次相遇";
 "watch.gift.ribbon" = "來自%@的禮物";
+"journal.people.label" = "同行的人";
+"journal.people.placeholder" = "用逗號分隔（如 父親、朋友）";
+"journal.event.label" = "事件";
+"journal.event.placeholder" = "如 婚禮、第一天上班";
 "settings.data.restore" = "還原（匯入）";
 "settings.data.restore.done" = "還原完成";
 "settings.data.restore.result" = "已還原 %d 只手錶。（已存在的略過）";

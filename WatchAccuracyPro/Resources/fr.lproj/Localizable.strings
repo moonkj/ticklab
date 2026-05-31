@@ -293,6 +293,10 @@
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";
 "watch.gift.ribbon" = "Un cadeau de %@";
+"journal.people.label" = "Personnes";
+"journal.people.placeholder" = "Séparés par des virgules (ex. papa, ami)";
+"journal.event.label" = "Événement";
+"journal.event.placeholder" = "ex. mariage, premier jour";
 "settings.data.restore" = "Restaurer (importer)";
 "settings.data.restore.done" = "Restauration terminée";
 "settings.data.restore.result" = "%d montres restaurées. (Les existantes sont ignorées.)";

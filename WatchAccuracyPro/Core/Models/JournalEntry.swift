@@ -17,6 +17,18 @@ final class JournalEntry {
     var moodRaw: String
     /// 자동 또는 수동 location (city level only — privacy).
     var locationLabel: String?
+    /// #18 짝: 함께한 사람 / 이벤트 태그 — 추억을 검색 가능하게. WearTag JSON 패턴(lightweight migration).
+    var peopleRaw: String = "[]"
+    var eventRaw: String = "[]"
+
+    var people: [String] {
+        get { (try? JSONDecoder().decode([String].self, from: Data(peopleRaw.utf8))) ?? [] }
+        set { peopleRaw = (try? String(data: JSONEncoder().encode(newValue), encoding: .utf8)) ?? "[]" }
+    }
+    var events: [String] {
+        get { (try? JSONDecoder().decode([String].self, from: Data(eventRaw.utf8))) ?? [] }
+        set { eventRaw = (try? String(data: JSONEncoder().encode(newValue), encoding: .utf8)) ?? "[]" }
+    }
 
     var mood: Mood {
         get { Mood(rawValue: moodRaw) ?? .neutral }

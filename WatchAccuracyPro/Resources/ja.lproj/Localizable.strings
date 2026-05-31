@@ -293,6 +293,10 @@
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";
 "watch.gift.ribbon" = "%@さんからの贈り物";
+"journal.people.label" = "一緒にいた人";
+"journal.people.placeholder" = "カンマ区切り（例: 父、友人）";
+"journal.event.label" = "イベント";
+"journal.event.placeholder" = "例: 結婚式、初出勤";
 "settings.data.restore" = "復元（インポート）";
 "settings.data.restore.done" = "復元完了";
 "settings.data.restore.result" = "%d本の時計を復元しました。（既存はスキップ）";

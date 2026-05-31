@@ -67,8 +67,12 @@ struct WatchTimelineView: View {
         for j in allJournal where j.watch?.id == watch.id {
             let snippet = j.body.trimmingCharacters(in: .whitespacesAndNewlines)
             let title = snippet.isEmpty ? j.mood.localizedName : String(snippet.prefix(60))
+            // 사람·이벤트 태그 + location 을 subtitle 로 — 추억 맥락.
+            let tags = (j.people + j.events).joined(separator: " · ")
+            let sub = [j.locationLabel, tags.isEmpty ? nil : tags]
+                .compactMap { $0 }.joined(separator: " · ")
             out.append(Event(date: j.timestamp, kind: .journal,
-                             title: "\(j.mood.emoji) \(title)", subtitle: j.locationLabel, isOrigin: false))
+                             title: "\(j.mood.emoji) \(title)", subtitle: sub.isEmpty ? nil : sub, isOrigin: false))
         }
         // 착용 하이라이트 (이 시계, 하이라이트/태그 있는 것만 — 일반 착용은 노이즈).
         for w in allWear where w.watch?.id == watch.id && (w.isHighlight || !w.tags.isEmpty) {
