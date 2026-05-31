@@ -288,6 +288,8 @@
 "menu.watchbox" = "表盒";
 "collection.more_menu" = "更多";
 "photo.crop.hint" = "拖动·捏合调整手表位置";
+"journal.delete.title" = "删除这条记录？";
+"journal.delete.message" = "删除的记录无法恢复。";
 "whatsnew.title" = "新功能";
 "whatsnew.subtitle" = "看看 TickLab 有哪些改进";
 "whatsnew.dismiss" = "去看看";

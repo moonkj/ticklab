@@ -288,6 +288,8 @@
 "menu.watchbox" = "Écrin à montres";
 "collection.more_menu" = "Plus";
 "photo.crop.hint" = "Faites glisser et pincez pour cadrer la montre";
+"journal.delete.title" = "Supprimer cette entrée ?";
+"journal.delete.message" = "Les entrées supprimées sont irrécupérables.";
 "whatsnew.title" = "Nouveautés";
 "whatsnew.subtitle" = "Voici ce qui s'est amélioré dans TickLab";
 "whatsnew.dismiss" = "Découvrir";

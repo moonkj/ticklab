@@ -98,4 +98,10 @@ enum EXIFStripper {
         guard let resolved = photosDirectoryURL?.appendingPathComponent(filename).path else { return nil }
         return FileManager.default.fileExists(atPath: resolved) ? resolved : nil
     }
+
+    /// 저장된 사진 파일 삭제 — 엔트리 삭제 시 orphan 파일 정리.
+    static func deletePhoto(_ stored: String) {
+        guard let path = resolvePhotoPath(stored) else { return }
+        try? FileManager.default.removeItem(atPath: path)
+    }
 }

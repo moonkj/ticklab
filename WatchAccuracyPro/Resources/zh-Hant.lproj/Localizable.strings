@@ -288,6 +288,8 @@
 "menu.watchbox" = "錶盒";
 "collection.more_menu" = "更多";
 "photo.crop.hint" = "拖曳·縮放調整手錶位置";
+"journal.delete.title" = "刪除這則記錄？";
+"journal.delete.message" = "刪除的記錄無法復原。";
 "whatsnew.title" = "新功能";
 "whatsnew.subtitle" = "看看 TickLab 有哪些改進";
 "whatsnew.dismiss" = "去看看";

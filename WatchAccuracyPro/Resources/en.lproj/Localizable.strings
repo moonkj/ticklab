@@ -295,6 +295,8 @@
 "menu.watchbox" = "Watch box";
 "collection.more_menu" = "More";
 "photo.crop.hint" = "Drag and pinch to frame the watch";
+"journal.delete.title" = "Delete this entry?";
+"journal.delete.message" = "Deleted entries can't be recovered.";
 "whatsnew.title" = "What's New";
 "whatsnew.subtitle" = "Here's what's improved in TickLab";
 "whatsnew.dismiss" = "Take a look";

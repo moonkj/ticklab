@@ -11,6 +11,8 @@ struct JournalFeedView: View {
 
     @State private var viewMode: ViewMode = .feed
     @State private var composing = false
+    /// 인터랙션 진단(R1): 저널은 LazyVStack/Grid 라 swipe 불가 + 삭제 경로 없었음 → long-press contextMenu 삭제.
+    @State private var deletingEntry: JournalEntry?
     /// 더보기 / 접기 토글. 표준: dense grid 12, narrative feed 8 — 너무 많은 데이터 노출 방지.
     @State private var gridExpanded = false
     @State private var feedExpanded = false
@@ -85,6 +87,35 @@ struct JournalFeedView: View {
                 JournalEntryDetailView(entry: entry)
             }
         }
+        .alert(
+            String(localized: "journal.delete.title"),
+            isPresented: Binding(get: { deletingEntry != nil }, set: { if !$0 { deletingEntry = nil } }),
+            presenting: deletingEntry
+        ) { entry in
+            Button(String(localized: "common.cancel"), role: .cancel) { deletingEntry = nil }
+            Button(String(localized: "common.delete"), role: .destructive) {
+                deleteEntry(entry)
+                deletingEntry = nil
+            }
+        } message: { _ in
+            Text(String(localized: "journal.delete.message"))
+        }
+    }
+
+    @ViewBuilder
+    private func deleteMenuButton(for entry: JournalEntry) -> some View {
+        Button(role: .destructive) {
+            deletingEntry = entry
+        } label: {
+            Label(String(localized: "common.delete"), systemImage: "trash")
+        }
+    }
+
+    /// 기록 삭제 — 첨부 사진 파일도 함께 정리(orphan 방지) 후 엔트리 삭제.
+    private func deleteEntry(_ entry: JournalEntry) {
+        for stored in entry.photoPaths { EXIFStripper.deletePhoto(stored) }
+        modelContext.delete(entry)
+        try? modelContext.save()
     }
 
     // MARK: - Stories rail (per-watch latest entries)
@@ -282,6 +313,7 @@ struct JournalFeedView: View {
                     NavigationLink(value: entry) {
                         gridThumb(entry: entry)
                     }
+                    .contextMenu { deleteMenuButton(for: entry) }
                 }
             }
             if hasMore {
@@ -344,6 +376,7 @@ struct JournalFeedView: View {
                         feedCard(entry: entry)
                     }
                     .buttonStyle(.plain)
+                    .contextMenu { deleteMenuButton(for: entry) }
                 }
                 if hasMore {
                     moreToggleButton(expanded: feedExpanded,

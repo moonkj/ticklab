@@ -288,6 +288,8 @@
 "menu.watchbox" = "वॉच बॉक्स";
 "collection.more_menu" = "और";
 "photo.crop.hint" = "घड़ी को फ्रेम करने के लिए खींचें और पिंच करें";
+"journal.delete.title" = "यह प्रविष्टि हटाएँ?";
+"journal.delete.message" = "हटाई गई प्रविष्टियाँ पुनः प्राप्त नहीं की जा सकतीं।";
 "whatsnew.title" = "नया क्या है";
 "whatsnew.subtitle" = "TickLab में ये सुधार हुए हैं";
 "whatsnew.dismiss" = "देखें";

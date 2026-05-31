@@ -288,6 +288,8 @@
 "menu.watchbox" = "Caja de relojes";
 "collection.more_menu" = "Más";
 "photo.crop.hint" = "Arrastra y pellizca para encuadrar el reloj";
+"journal.delete.title" = "¿Eliminar esta entrada?";
+"journal.delete.message" = "Las entradas eliminadas no se pueden recuperar.";
 "whatsnew.title" = "Novedades";
 "whatsnew.subtitle" = "Esto es lo que ha mejorado en TickLab";
 "whatsnew.dismiss" = "Echar un vistazo";
