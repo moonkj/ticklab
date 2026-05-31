@@ -33,6 +33,7 @@
 		181DFE5935859AE7E2926FC1 /* PLLTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB5598ACD04A9D5698B5F4CE /* PLLTracker.swift */; };
 		1A70927B74F7E4EAF1B2E33D /* HelpCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */; };
 		1A763B696452C8EF2E78114B /* AudioInputClassifyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F302C7B8CE7C443C452EB3B2 /* AudioInputClassifyTests.swift */; };
+		1C22FBB7EED85216FAADE1A3 /* ReferralService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 497D91834BAA0A122D08B4E7 /* ReferralService.swift */; };
 		1CD4C584F0A11EDA880813BD /* DataExportServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147FD52A1A20999D7CCBD88E /* DataExportServiceTests.swift */; };
 		1CF7B2C94A1BA11B0A3FA6C7 /* LockScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CC58D57872C85FC248AE57 /* LockScreenView.swift */; };
 		1F201FB9DDBD9AA7AC244A58 /* SpecCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69D2295B7834A646CE946315 /* SpecCardView.swift */; };
@@ -195,6 +196,7 @@
 		FBB7A8BF6D8F35C269864AAE /* MeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D3852E0B4BCFD94CC708179 /* MeasurementResult.swift */; };
 		FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11DD44A69BACBC9F88907263 /* RateCalculator.swift */; };
 		FCAFE946FEC9AC5182167897 /* BadgesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8293C262F87D540B2E2C9E4 /* BadgesView.swift */; };
+		FE716BEFB684B4DB51D028B1 /* ReferralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47337BB60F08B5060EE99A57 /* ReferralView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -295,9 +297,11 @@
 		44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDetailRowComponents.swift; sourceTree = "<group>"; };
 		4579536C7CC814E82192FBCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		45F3AD76B382E83F02230C55 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
+		47337BB60F08B5060EE99A57 /* ReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralView.swift; sourceTree = "<group>"; };
 		47442C30079AEE977B647474 /* BPHEstimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimatorTests.swift; sourceTree = "<group>"; };
 		47D155157AC7BFF49F53E192 /* WatchAccuracyProWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = WatchAccuracyProWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearTagPickerView.swift; sourceTree = "<group>"; };
+		497D91834BAA0A122D08B4E7 /* ReferralService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralService.swift; sourceTree = "<group>"; };
 		4995C3A82B5E708792DD27DE /* BeatDetectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatDetectorProtocol.swift; sourceTree = "<group>"; };
 		4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapture.swift; sourceTree = "<group>"; };
 		4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimator.swift; sourceTree = "<group>"; };
@@ -602,6 +606,7 @@
 				DEEFD90B13F2588AD9CA1C42 /* Movement */,
 				F5E5779E3A00F67FECFA7C64 /* Network */,
 				7A1B60BBC65CCF11C3D48128 /* Notifications */,
+				8AA5312EFA376ACCBAAE7609 /* Referral */,
 				2F1AEA5FB2151A411475F63A /* Reports */,
 				F17ABBF4B4F32363BDB89F98 /* Review */,
 				D8D6BDF52F3EA0180CF90B49 /* Security */,
@@ -807,10 +812,19 @@
 			path = Components;
 			sourceTree = "<group>";
 		};
+		8AA5312EFA376ACCBAAE7609 /* Referral */ = {
+			isa = PBXGroup;
+			children = (
+				497D91834BAA0A122D08B4E7 /* ReferralService.swift */,
+			);
+			path = Referral;
+			sourceTree = "<group>";
+		};
 		8C6BADC0CE27AE7B6600DC2E /* Settings */ = {
 			isa = PBXGroup;
 			children = (
 				D6984089EAA0E94FD1B3326F /* PurchaseView.swift */,
+				47337BB60F08B5060EE99A57 /* ReferralView.swift */,
 				090D20C16B59509F9494E62C /* SettingsView.swift */,
 				E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */,
 			);
@@ -1349,6 +1363,8 @@
 				A29D3FD2A90EA36F5AEF6725 /* QuartzBatteryCard.swift in Sources */,
 				FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */,
 				E39D5900FF1267A2A375198C /* RateDial.swift in Sources */,
+				1C22FBB7EED85216FAADE1A3 /* ReferralService.swift in Sources */,
+				FE716BEFB684B4DB51D028B1 /* ReferralView.swift in Sources */,
 				C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */,
 				EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */,
 				73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */,
@@ -1538,7 +1554,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 128;
+				CURRENT_PROJECT_VERSION = 129;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1705,7 +1721,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 128;
+				CURRENT_PROJECT_VERSION = 129;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

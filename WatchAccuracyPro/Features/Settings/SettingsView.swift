@@ -333,6 +333,22 @@ struct SettingsView: View {
                     Text(String(localized: "settings.section.data"))
                 }
 
+                // Sprint 6 (P2-20): 친구 초대 레퍼럴
+                Section {
+                    NavigationLink { ReferralView() } label: {
+                        HStack(spacing: 12) {
+                            Image(systemName: "person.2.fill").foregroundStyle(AppColors.accentDark)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(String(localized: "settings.referral.title"))
+                                    .font(.system(size: 15, weight: .semibold))
+                                Text(String(localized: "settings.referral.subtitle"))
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(AppColors.ink2)
+                            }
+                        }
+                    }
+                }
+
                 Section(String(localized: "settings.section.help")) {
                     NavigationLink(String(localized: "settings.glossary"), destination: GlossaryView())
                     // 사용자 요청: 개인정보처리방침 · 이용약관 · 지원 in-app 접근. App Store 심사 권장.

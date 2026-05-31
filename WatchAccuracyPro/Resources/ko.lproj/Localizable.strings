@@ -1362,3 +1362,18 @@
 
 /* Sprint 6 — P2-7 마스터 PDF */
 "settings.data.master_pdf" = "컬렉션 마스터 리포트 (PDF)";
+
+/* Sprint 6 — P2-20 레퍼럴 */
+"referral.nav.title" = "친구 초대";
+"referral.title" = "친구에게 TickLab 소개하기";
+"referral.subtitle" = "코드를 공유하면 친구도 워치메이커의 도구를 경험할 수 있어요.";
+"referral.code.label" = "내 초대 코드";
+"referral.code.tap_to_copy" = "탭하면 복사됩니다";
+"referral.share.message" = "TickLab으로 내 시계를 관리해요";
+"referral.share.button" = "친구에게 공유하기";
+"referral.benefit.title" = "함께하면 좋은 이유";
+"referral.benefit.1" = "시계 컬렉션을 체계적으로 관리";
+"referral.benefit.2" = "정확도 측정으로 내 시계 상태 파악";
+"referral.disclaimer" = "초대 코드는 트래킹 목적으로만 사용되며 외부에 전송되지 않습니다.";
+"settings.referral.title" = "친구 초대";
+"settings.referral.subtitle" = "코드를 공유해 친구에게 소개하세요";

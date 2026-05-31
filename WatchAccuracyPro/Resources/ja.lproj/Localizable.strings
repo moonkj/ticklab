@@ -1344,3 +1344,16 @@
 "photo.processing.caseback" = "Caseback";
 "photo.processing.vivid" = "Vivid";
 "settings.data.master_pdf" = "Collection Master Report (PDF)";
+"referral.nav.title" = "Invite Friends";
+"referral.title" = "Share TickLab with Friends";
+"referral.subtitle" = "Share your code and let friends try the app.";
+"referral.code.label" = "Your Invite Code";
+"referral.code.tap_to_copy" = "Tap to copy";
+"referral.share.message" = "Manage your watch collection with TickLab";
+"referral.share.button" = "Share with Friends";
+"referral.benefit.title" = "Why share?";
+"referral.benefit.1" = "Track your watch collection effortlessly";
+"referral.benefit.2" = "Measure accuracy and know your watch's condition";
+"referral.disclaimer" = "Your invite code is for tracking only and never sent externally.";
+"settings.referral.title" = "Invite Friends";
+"settings.referral.subtitle" = "Share your code to invite friends";
