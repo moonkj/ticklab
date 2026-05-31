@@ -1417,3 +1417,11 @@
 "analytics.movement.title" = "내 컬렉션 무브먼트";
 "analytics.movement.subtitle" = "보유 시계 무브먼트 타입 분포";
 "analytics.empty.title" = "아직 데이터가 없어요";
+
+/* Sprint 7 — P2-14 로테이션 넛지 */
+"settings.rotation_nudge" = "착용 로테이션 넛지";
+"settings.rotation_nudge.days" = "미착용 기준 일수";
+"settings.rotation_nudge.days.value" = "%d일 이상 미착용 시 알림";
+"notif.rotation.title" = "%@을(를) 꺼내보는 건 어떨까요?";
+"notif.rotation.body_standard" = "오랫동안 쉬고 있어요. 오늘 함께 나가보세요.";
+"notif.rotation.body_formal" = "내일 중요한 일정이 있네요. 이 시계와 함께하면 어떨까요?";

@@ -31,6 +31,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCalendarsUsageDescription</key>
+	<string>오늘 일정을 참고해 착용할 시계를 추천합니다. 일정 내용은 앱 외부로 전송되지 않습니다.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>시계 사진을 촬영해 컬렉션에 등록하려면 카메라가 필요합니다. 사진은 EXIF 위치 정보 제거 후 디바이스에만 저장됩니다.</string>
 	<key>NSFaceIDUsageDescription</key>

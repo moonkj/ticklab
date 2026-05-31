@@ -1391,3 +1391,9 @@
 "analytics.movement.title" = "My Movement Distribution";
 "analytics.movement.subtitle" = "Movement types in your collection";
 "analytics.empty.title" = "No data yet";
+"settings.rotation_nudge" = "Wear Rotation Nudge";
+"settings.rotation_nudge.days" = "Notify after unworn for";
+"settings.rotation_nudge.days.value" = "%d+ days";
+"notif.rotation.title" = "How about wearing %@?";
+"notif.rotation.body_standard" = "It's been resting for a while. Take it out today.";
+"notif.rotation.body_formal" = "You have an event tomorrow. This watch would be perfect.";

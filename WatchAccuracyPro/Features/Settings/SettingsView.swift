@@ -219,6 +219,22 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    // Sprint 7 (P2-14): 로테이션 넛지
+                    Toggle(String(localized: "settings.rotation_nudge"), isOn: Binding(
+                        get: { preferences.rotationNudgeEnabled },
+                        set: { preferences.rotationNudgeEnabled = $0 }
+                    ))
+                    if preferences.rotationNudgeEnabled {
+                        Picker(String(localized: "settings.rotation_nudge.days"),
+                               selection: Binding(
+                                get: { preferences.rotationNudgeDays },
+                                set: { preferences.rotationNudgeDays = $0 }
+                               )) {
+                            ForEach([3, 5, 7, 14, 30], id: \.self) { d in
+                                Text(String(format: NSLocalizedString("settings.rotation_nudge.days.value", comment: ""), d)).tag(d)
+                            }
+                        }
+                    }
                 } header: {
                     Text(String(localized: "settings.section.reminders"))
                 } footer: {

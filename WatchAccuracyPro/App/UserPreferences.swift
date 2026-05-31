@@ -131,6 +131,13 @@ final class UserPreferences {
     var overhaulReminderYears: Int {
         didSet { defaults.set(overhaulReminderYears, forKey: Keys.overhaulReminderYears) }
     }
+    /// Sprint 7 (P2-14): 로테이션 넛지 — N일 이상 미착용 시계 알림. 기본 ON, 7일.
+    var rotationNudgeEnabled: Bool {
+        didSet { defaults.set(rotationNudgeEnabled, forKey: Keys.rotationNudge) }
+    }
+    var rotationNudgeDays: Int {
+        didSet { defaults.set(rotationNudgeDays, forKey: Keys.rotationNudgeDays) }
+    }
 
     init() {
         // Round 23 (Min): defaults.register — 외부 reader (Settings.app) / 다른 process 에서도
@@ -150,7 +157,9 @@ final class UserPreferences {
             Keys.useSimplifiedDSP: true,
             Keys.overhaulReminder: true,
             Keys.overhaulReminderYears: 4,
-            Keys.brandLeagueOptIn: true
+            Keys.brandLeagueOptIn: true,
+            Keys.rotationNudge: true,
+            Keys.rotationNudgeDays: 7
         ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
         // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
@@ -186,6 +195,8 @@ final class UserPreferences {
         self.overhaulReminderEnabled = (defaults.object(forKey: Keys.overhaulReminder) as? Bool) ?? true
         self.overhaulReminderYears = (defaults.object(forKey: Keys.overhaulReminderYears) as? Int) ?? 4
         self.brandLeagueOptIn = (defaults.object(forKey: Keys.brandLeagueOptIn) as? Bool) ?? true
+        self.rotationNudgeEnabled = (defaults.object(forKey: Keys.rotationNudge) as? Bool) ?? true
+        self.rotationNudgeDays = (defaults.object(forKey: Keys.rotationNudgeDays) as? Int) ?? 7
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
         // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
         proEntitlementObserver = NotificationCenter.default.addObserver(
@@ -225,6 +236,8 @@ final class UserPreferences {
         static let overhaulReminder = "ticklab.overhaulReminderEnabled"
         static let overhaulReminderYears = "ticklab.overhaulReminderYears"
         static let brandLeagueOptIn = "ticklab.brandLeagueOptIn"
+        static let rotationNudge = "ticklab.rotationNudgeEnabled"
+        static let rotationNudgeDays = "ticklab.rotationNudgeDays"
         /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
         /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.
         static let windingHintShownAt = "ticklab.windingHintShownAt"

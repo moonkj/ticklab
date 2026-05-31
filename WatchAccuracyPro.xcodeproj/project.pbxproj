@@ -166,6 +166,7 @@
 		D0758F7FDFC81C0AAF487057 /* EnvelopeExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93567E741B9D07241DB8502A /* EnvelopeExtractor.swift */; };
 		D238CEC1244A180C651E0371 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 119A8CA5E791C92005408AD5 /* Position.swift */; };
 		D2EA0DCA95D9458B32160E6B /* RateCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7708BF5CF03B1E5B1625CF7F /* RateCalculatorTests.swift */; };
+		D37F5A2E79203CCD6E7C293A /* RotationNudgeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 878DAD75031707410CFB1D7B /* RotationNudgeService.swift */; };
 		D3DF5D931B18B0B3F3AA7648 /* AIDiagnosisCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58F1B88C47C2355AC51ABE0 /* AIDiagnosisCard.swift */; };
 		D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F3AD76B382E83F02230C55 /* Secrets.swift */; };
 		D9164317CF032DE33A7CDDFE /* ServiceLogComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353479AEF5F399DDE278E742 /* ServiceLogComposerView.swift */; };
@@ -356,6 +357,7 @@
 		7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlowTests.swift; sourceTree = "<group>"; };
 		814BB874EA00DC74C916110A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepsGuideCard.swift; sourceTree = "<group>"; };
+		878DAD75031707410CFB1D7B /* RotationNudgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationNudgeService.swift; sourceTree = "<group>"; };
 		89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProApp.swift; sourceTree = "<group>"; };
 		8A43345D263140B82EC044BC /* WatchAccuracyProWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchAccuracyProWidget.entitlements; sourceTree = "<group>"; };
 		8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardListView.swift; sourceTree = "<group>"; };
@@ -776,6 +778,7 @@
 			isa = PBXGroup;
 			children = (
 				EE4BD3A2700CBF9B22C7317C /* NotificationService.swift */,
+				878DAD75031707410CFB1D7B /* RotationNudgeService.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -1379,6 +1382,7 @@
 				FE716BEFB684B4DB51D028B1 /* ReferralView.swift in Sources */,
 				C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */,
 				EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */,
+				D37F5A2E79203CCD6E7C293A /* RotationNudgeService.swift in Sources */,
 				73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */,
 				D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */,
 				06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */,
@@ -1566,7 +1570,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 134;
+				CURRENT_PROJECT_VERSION = 135;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1733,7 +1737,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 134;
+				CURRENT_PROJECT_VERSION = 135;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
