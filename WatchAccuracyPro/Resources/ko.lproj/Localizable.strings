@@ -1327,3 +1327,10 @@
 "watch.tco.service" = "정비비";
 "watch.tco.nudge" = "구매가를 입력하면 총 비용을 계산할 수 있어요.";
 "watch.tco.service_count" = "정비 %d건 합산";
+
+/* Sprint 5 — P2-15 오늘의 시계 추천 */
+"recommendation.title" = "오늘의 추천";
+"recommendation.reason.never_worn" = "아직 한 번도 착용하지 않은 시계예요.";
+"recommendation.reason.long_unworn" = "오랫동안 쉬고 있던 시계예요.";
+"recommendation.reason.low_roi" = "착용 횟수가 가장 적어 가성비를 높일 기회예요.";
+"recommendation.reason.rotation" = "로테이션을 위해 추천해요.";

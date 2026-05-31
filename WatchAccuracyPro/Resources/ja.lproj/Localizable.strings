@@ -1317,3 +1317,8 @@
 "watch.tco.service" = "Service";
 "watch.tco.nudge" = "Enter a purchase price to calculate your total cost.";
 "watch.tco.service_count" = "%d service records included";
+"recommendation.title" = "Today's Pick";
+"recommendation.reason.never_worn" = "You haven't worn this one yet.";
+"recommendation.reason.long_unworn" = "This watch has been resting for a while.";
+"recommendation.reason.low_roi" = "Fewest wears — boost your cost-per-wear value.";
+"recommendation.reason.rotation" = "Time to rotate your collection.";
