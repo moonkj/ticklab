@@ -31,12 +31,14 @@ struct WatchPhotoView<Placeholder: View>: View {
             if let image {
                 Image(uiImage: image)
                     .resizable()
-                    .aspectRatio(contentMode: contentMode)
+                    .scaledToFill()
                     .transition(.opacity.animation(.easeIn(duration: 0.15)))
             } else {
                 placeholder()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .task(id: id) {
             guard image == nil, let data else { return }
             // 캐시 재확인 (다른 뷰가 prefetch 했을 수 있음)
