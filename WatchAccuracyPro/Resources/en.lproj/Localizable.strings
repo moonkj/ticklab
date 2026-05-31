@@ -299,6 +299,7 @@
 "timeline.title" = "Watch Story";
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";
+"watch.gift.ribbon" = "A gift from %@";
 "timeline.measurement" = "Measured";
 "timeline.wear" = "Worn";
 "timeline.journal" = "Journal";

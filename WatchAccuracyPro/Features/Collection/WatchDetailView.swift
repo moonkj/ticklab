@@ -1234,22 +1234,36 @@ struct WatchDetailView: View {
     @ViewBuilder
     private var storyCard: some View {
         let story = watch.story?.trimmingCharacters(in: .whitespaces) ?? ""
-        if !story.isEmpty {
+        let gift = watch.receivedFrom?.trimmingCharacters(in: .whitespaces) ?? ""
+        if !story.isEmpty || !gift.isEmpty {
             VStack(alignment: .leading, spacing: 8) {
-                HStack(spacing: 6) {
-                    Image(systemName: "quote.opening")
-                        .font(.system(size: 11))
-                        .foregroundStyle(AppColors.accent)
-                    Text(String(localized: "watch.story.label"))
-                        .font(.system(size: 11, weight: .semibold))
-                        .tracking(1.5)
-                        .foregroundStyle(AppColors.ink2)
+                // #18 짝: 선물받은 시계 감성 리본 — receivedFrom 1급화(평범한 info row → 첫 만남 감성).
+                if !gift.isEmpty {
+                    HStack(spacing: 6) {
+                        Image(systemName: "gift")
+                            .font(.system(size: 11))
+                            .foregroundStyle(AppColors.accentDark)
+                        Text(String(format: String(localized: "watch.gift.ribbon"), gift))
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(AppColors.accentDark)
+                    }
                 }
-                Text(story)
-                    .font(.system(size: 15, design: .serif))
-                    .italic()
-                    .foregroundStyle(AppColors.ink0)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                if !story.isEmpty {
+                    HStack(spacing: 6) {
+                        Image(systemName: "quote.opening")
+                            .font(.system(size: 11))
+                            .foregroundStyle(AppColors.accent)
+                        Text(String(localized: "watch.story.label"))
+                            .font(.system(size: 11, weight: .semibold))
+                            .tracking(1.5)
+                            .foregroundStyle(AppColors.ink2)
+                    }
+                    Text(story)
+                        .font(.system(size: 15, design: .serif))
+                        .italic()
+                        .foregroundStyle(AppColors.ink0)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)

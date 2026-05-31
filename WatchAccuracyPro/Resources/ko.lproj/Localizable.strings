@@ -223,6 +223,7 @@
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";
+"watch.gift.ribbon" = "%@님께 받은 시계";
 "timeline.measurement" = "측정";
 "timeline.wear" = "착용";
 "timeline.journal" = "기록";

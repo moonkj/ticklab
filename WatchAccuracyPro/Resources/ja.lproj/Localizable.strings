@@ -292,6 +292,7 @@
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";
+"watch.gift.ribbon" = "%@さんからの贈り物";
 "timeline.measurement" = "測定";
 "timeline.wear" = "着用";
 "timeline.journal" = "記録";

@@ -292,6 +292,7 @@
 "timeline.title" = "Histoire de la montre";
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";
+"watch.gift.ribbon" = "Un cadeau de %@";
 "timeline.measurement" = "Mesure";
 "timeline.wear" = "Porté";
 "timeline.journal" = "Journal";

@@ -292,6 +292,7 @@
 "timeline.title" = "腕表生平";
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";
+"watch.gift.ribbon" = "来自%@的礼物";
 "timeline.measurement" = "测量";
 "timeline.wear" = "佩戴";
 "timeline.journal" = "记录";

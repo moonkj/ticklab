@@ -292,6 +292,7 @@
 "timeline.title" = "Historia del reloj";
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";
+"watch.gift.ribbon" = "Un regalo de %@";
 "timeline.measurement" = "Medición";
 "timeline.wear" = "Uso";
 "timeline.journal" = "Diario";
