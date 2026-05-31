@@ -1262,3 +1262,19 @@
 "accuracy.tier.excellent" = "우수";
 "accuracy.tier.normal" = "보통";
 "accuracy.tier.service" = "정비 권장";
+
+/* Sprint 3 — P2-10 5탭 IA */
+"watchdetail.tab.overview" = "개요";
+"watchdetail.tab.wear" = "착용";
+"watchdetail.tab.finance" = "재무";
+"watchdetail.tab.memories" = "추억";
+"watchdetail.section.purchase" = "구매 정보";
+"watchdetail.section.warranty" = "보증 기간";
+"watchdetail.purchase.date" = "구매일";
+"watchdetail.purchase.location" = "구매처";
+"watchdetail.purchase.price" = "구매가";
+"watchdetail.purchase.salesperson" = "담당자";
+"watchdetail.warranty.expired" = "보증 기간 만료";
+"watchdetail.warranty.remaining" = "만료까지 %d개월 남음";
+"watchdetail.finance.empty.title" = "구매가를 입력해보세요";
+"watchdetail.finance.empty.body" = "구매가를 입력하면 착용당 비용과 가성비를 확인할 수 있어요.";

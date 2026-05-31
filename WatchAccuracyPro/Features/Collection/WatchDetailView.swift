@@ -54,8 +54,15 @@ struct WatchDetailView: View {
     /// Round 94 (정수민 Critical #2): 사진 풀스크린 줌.
     @State private var showingFullscreenPhoto: Bool = false
     /// Round 46: 디자인 SSOT screens-detail.jsx WatchDetailView 의 3 탭 (measure/journal/service).
-    @State private var detailTab: DetailTab = .measure
-    enum DetailTab: String, CaseIterable { case measure, journal, service }
+    @State private var detailTab: DetailTab = .overview
+    /// Sprint 3 (P2-10): 5탭 IA — 개요/착용기록/정비&관리/재무/추억.
+    enum DetailTab: String, CaseIterable {
+        case overview   // 개요: 스펙, 구매 정보, 보증
+        case wear       // 착용기록: 캘린더 뷰, 착용 통계
+        case service    // 정비&관리: 정비 이력, 측정
+        case finance    // 재무: TCO, 착용 ROI
+        case memories   // 추억: 저널, 하이라이트
+    }
 
     @State private var serialNumber: String = ""
     @State private var serialInput: String = ""
@@ -98,12 +105,16 @@ struct WatchDetailView: View {
                 careSection
                 detailTabBar
                 switch detailTab {
-                case .measure:
-                    measureTab
-                case .journal:
-                    journalTab
+                case .overview:
+                    overviewTab
+                case .wear:
+                    measureTab   // 착용 통계/캘린더 — 기존 journal 섹션 + wear 캘린더
                 case .service:
                     serviceTab
+                case .finance:
+                    financeTab
+                case .memories:
+                    memoriesTab
                 }
             }
         }
@@ -530,13 +541,147 @@ struct WatchDetailView: View {
 
     private func label(for tab: DetailTab) -> String {
         switch tab {
-        case .measure: return String(localized: "watchdetail.tab.measure")
-        case .journal: return String(localized: "watchdetail.tab.journal")
-        case .service: return String(localized: "watchdetail.tab.service")
+        case .overview:  return String(localized: "watchdetail.tab.overview")
+        case .wear:      return String(localized: "watchdetail.tab.wear")
+        case .service:   return String(localized: "watchdetail.tab.service")
+        case .finance:   return String(localized: "watchdetail.tab.finance")
+        case .memories:  return String(localized: "watchdetail.tab.memories")
         }
     }
 
     /// Measure tab — 기존 sections 모음.
+    // MARK: - Sprint 3 (P2-10) 5탭 — 개요 / 착용기록 / 정비&관리 / 재무 / 추억
+
+    /// 개요탭: 스펙, 구매 정보, 보증 기간.
+    @ViewBuilder
+    private var overviewTab: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // 측정 요약 (마지막 rate + COSCBar + grade chip)
+            latestSection
+            // 스펙 섹션 재사용
+            if let movement { specsSection(movement: movement) }
+            // 구매 정보
+            if watch.purchaseDate != nil || watch.purchaseLocation != nil || watch.purchasePrice != nil {
+                purchaseInfoSection
+            }
+            // 보증 정보
+            if let exp = watch.warrantyExpirationDate {
+                warrantySection(expiration: exp)
+            }
+        }
+    }
+
+    private var purchaseInfoSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(String(localized: "watchdetail.section.purchase"))
+                .font(.system(size: 11, weight: .semibold))
+                .tracking(1.5)
+                .foregroundStyle(AppColors.ink2)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+            VStack(spacing: 0) {
+                if let date = watch.purchaseDate {
+                    infoRow(label: "watchdetail.purchase.date",
+                            value: DateFormatter.localizedString(from: date, dateStyle: .medium, timeStyle: .none))
+                }
+                if let loc = watch.purchaseLocation, !loc.isEmpty {
+                    infoRow(label: "watchdetail.purchase.location", value: loc)
+                }
+                if let priceStr = formattedPurchasePrice {
+                    infoRow(label: "watchdetail.purchase.price", value: priceStr)
+                }
+                if let sp = watch.purchaseSalesperson, !sp.isEmpty {
+                    infoRow(label: "watchdetail.purchase.salesperson", value: sp)
+                }
+            }
+            .background(AppColors.paper1)
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 20)
+        }
+    }
+
+    private func warrantySection(expiration: Date) -> some View {
+        let remaining = Calendar.current.dateComponents([.month], from: Date(), to: expiration).month ?? 0
+        let isExpired = expiration < Date()
+        return VStack(alignment: .leading, spacing: 8) {
+            Text(String(localized: "watchdetail.section.warranty"))
+                .font(.system(size: 11, weight: .semibold))
+                .tracking(1.5)
+                .foregroundStyle(AppColors.ink2)
+                .padding(.horizontal, 20)
+                .padding(.top, 12)
+            HStack(spacing: 12) {
+                Image(systemName: isExpired ? "exclamationmark.shield" : "checkmark.shield")
+                    .font(.system(size: 20))
+                    .foregroundStyle(isExpired ? AppColors.danger : AppColors.success)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(DateFormatter.localizedString(from: expiration, dateStyle: .medium, timeStyle: .none))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(AppColors.ink0)
+                    Text(isExpired
+                         ? String(localized: "watchdetail.warranty.expired")
+                         : String(format: NSLocalizedString("watchdetail.warranty.remaining", comment: ""), remaining))
+                        .font(.system(size: 12))
+                        .foregroundStyle(isExpired ? AppColors.danger : AppColors.ink2)
+                }
+                Spacer()
+            }
+            .padding(14)
+            .background(AppColors.paper1)
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, 20)
+        }
+    }
+
+    private var formattedPurchasePrice: String? {
+        guard let price = watch.purchasePrice else { return nil }
+        let fmt = NumberFormatter()
+        fmt.numberStyle = .currency
+        fmt.currencyCode = watch.purchaseCurrency ?? "KRW"
+        return fmt.string(from: NSDecimalNumber(decimal: price)) ?? "\(price)"
+    }
+
+    private func infoRow(label: LocalizedStringResource, value: String) -> some View {
+        HStack {
+            Text(label)
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.ink2)
+            Spacer()
+            Text(value)
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppColors.ink0)
+                .multilineTextAlignment(.trailing)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+    }
+
+    /// 재무탭: ROI + TCO 요약.
+    @ViewBuilder
+    private var financeTab: some View {
+        VStack(spacing: 12) {
+            CostPerWearCard(watch: watch)
+                .padding(.horizontal, 20)
+                .padding(.top, 16)
+            if watch.purchasePrice == nil {
+                HelpCard(
+                    icon: "dollarsign.circle",
+                    title: String(localized: "watchdetail.finance.empty.title"),
+                    body: String(localized: "watchdetail.finance.empty.body")
+                )
+                .padding(.horizontal, 20)
+            }
+        }
+    }
+
+    /// 추억탭: 저널.
+    @ViewBuilder
+    private var memoriesTab: some View {
+        journalTab
+    }
+
     /// Round 138 (사용자 요청): 쿼츠 시계는 측정 관련 모두 숨김 + BatteryMonitorCard 노출.
     @ViewBuilder
     private var measureTab: some View {

@@ -1267,3 +1267,19 @@
 "accuracy.tier.excellent" = "優秀";
 "accuracy.tier.normal" = "正常";
 "accuracy.tier.service" = "建議保養";
+
+/* Sprint 3 — P2-10 5-tab IA */
+"watchdetail.tab.overview" = "Overview";
+"watchdetail.tab.wear" = "Wear";
+"watchdetail.tab.finance" = "Finance";
+"watchdetail.tab.memories" = "Memories";
+"watchdetail.section.purchase" = "Purchase Info";
+"watchdetail.section.warranty" = "Warranty";
+"watchdetail.purchase.date" = "Purchase Date";
+"watchdetail.purchase.location" = "Purchased At";
+"watchdetail.purchase.price" = "Purchase Price";
+"watchdetail.purchase.salesperson" = "Salesperson";
+"watchdetail.warranty.expired" = "Warranty expired";
+"watchdetail.warranty.remaining" = "%d months remaining";
+"watchdetail.finance.empty.title" = "Add a purchase price";
+"watchdetail.finance.empty.body" = "Enter the purchase price to see your cost per wear.";
