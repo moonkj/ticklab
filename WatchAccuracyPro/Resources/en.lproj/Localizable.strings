@@ -1511,3 +1511,17 @@
 "today.solo.title" = "YOUR JOURNEY WITH THIS WATCH";
 "today.solo.wears" = "wears";
 "today.solo.days" = "days together";
+
+/* Sprint 13 — F1 positional + F2 heritage */
+"positional.nav.title" = "Positional Variance";
+"positional.entry" = "Positional Variance Analysis";
+"positional.delta.title" = "Max Positional Delta (δ)";
+"positional.delta.hint" = "Max-min difference of rates across positions. Lower is better serviced.";
+"positional.grade.excellent" = "Excellent";
+"positional.grade.good" = "Good";
+"positional.grade.service" = "Service Recommended";
+"positional.methodology" = "Average rate measured in each position (dial up/down, crown up/down, etc). Measure in different positions for accuracy.";
+"positional.empty.title" = "Not enough positional data";
+"positional.empty.body" = "Measure 2+ times in different positions to see variance analysis.";
+"addwatch.received_from" = "Received From (optional)";
+"watchdetail.received_from" = "Received From";

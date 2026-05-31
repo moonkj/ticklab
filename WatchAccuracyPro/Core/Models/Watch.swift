@@ -56,6 +56,8 @@ final class Watch {
     var warrantyMonths: Int? = nil
     /// 보증 만료 알림 활성화. true 시 만료 3개월 전 + 1개월 전 알림.
     var warrantyReminderEnabled: Bool = true
+    /// Sprint 13 (F2, Min+감성): 증여자/전승 — "할아버지", "아내" 등. 선택 입력, on-device.
+    var receivedFrom: String? = nil
     /// 페르소나 (김재철, 워치메이커) wish: movement DB lookup 의 lift angle 을 watch 단위로 override.
     /// nil 이면 movement DB 의 default 사용. 워치메이커가 직접 측정한 값이 있을 때만 사용.
     var liftAngleOverride: Double?
@@ -122,6 +124,7 @@ final class Watch {
         purchaseCurrency: String? = nil,
         warrantyMonths: Int? = nil,
         warrantyReminderEnabled: Bool = true,
+        receivedFrom: String? = nil,
         createdAt: Date = .init()
     ) {
         self.id = id
@@ -152,6 +155,7 @@ final class Watch {
         self.purchaseCurrency = purchaseCurrency
         self.warrantyMonths = warrantyMonths
         self.warrantyReminderEnabled = warrantyReminderEnabled
+        self.receivedFrom = receivedFrom
         self.createdAt = createdAt
     }
 

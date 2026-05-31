@@ -74,6 +74,7 @@
 		4213E52F2A52302167A13CD8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434603408110ED068E285F1D /* Colors.swift */; };
 		424BAABA02A09B0AE4D9AD00 /* BeatDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50549C4E534FE82AB2BE1CE6 /* BeatDetectorTests.swift */; };
 		42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */; };
+		4337AA48923664FFB6932D88 /* PositionalDeltaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F0D174FCB7932D7D69F55C /* PositionalDeltaView.swift */; };
 		4548DF66FC35644DB9DFE5A7 /* CostPerWearCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02497C4FA9F2012D2D6D2D0 /* CostPerWearCard.swift */; };
 		45BEA8592C353A4A3F03722D /* COSCBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D001FBFE55C95EE047F4F0 /* COSCBar.swift */; };
 		46AFE5684B1CEA0F32AD630A /* BrandNewsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA4EFFE1238185232C696F /* BrandNewsService.swift */; };
@@ -339,6 +340,7 @@
 		53F59D57012F94F1A917365E /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedReportGenerator.swift; sourceTree = "<group>"; };
 		56D001FBFE55C95EE047F4F0 /* COSCBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COSCBar.swift; sourceTree = "<group>"; };
+		56F0D174FCB7932D7D69F55C /* PositionalDeltaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionalDeltaView.swift; sourceTree = "<group>"; };
 		5958AF8CCF5F7A932120AD93 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
 		59C27B0BEC35633950882906 /* MovementMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcherTests.swift; sourceTree = "<group>"; };
 		5A67361F10B027A48A16DD7F /* LiveWaveformView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveWaveformView.swift; sourceTree = "<group>"; };
@@ -600,6 +602,7 @@
 				CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */,
 				792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */,
 				EDF87D1399FFCFF2083C1B44 /* PhotoSourceSheet.swift */,
+				56F0D174FCB7932D7D69F55C /* PositionalDeltaView.swift */,
 				500C4856761ABB8DFF406C89 /* QuartzBatteryCard.swift */,
 				39ABF52B048CB4F9DA9040F9 /* StrapListView.swift */,
 				44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */,
@@ -1455,6 +1458,7 @@
 				AB28B298A4F8237FA0768A8B /* PhotoGalleryView.swift in Sources */,
 				CF91C0788E3B98B4CD0601F3 /* PhotoSourceSheet.swift in Sources */,
 				D238CEC1244A180C651E0371 /* Position.swift in Sources */,
+				4337AA48923664FFB6932D88 /* PositionalDeltaView.swift in Sources */,
 				F23A111B8B8BA58C82E75554 /* PowerReserveGauge.swift in Sources */,
 				A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */,
 				5A0011328BD6071DD10F006F /* PressableCard.swift in Sources */,
@@ -1663,7 +1667,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 161;
+				CURRENT_PROJECT_VERSION = 162;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1830,7 +1834,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 161;
+				CURRENT_PROJECT_VERSION = 162;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

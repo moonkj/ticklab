@@ -597,7 +597,7 @@ struct WatchDetailView: View {
             // 스펙 섹션 재사용
             if let movement { specsSection(movement: movement) }
             // 구매 정보
-            if watch.purchaseDate != nil || watch.purchaseLocation != nil || watch.purchasePrice != nil {
+            if watch.purchaseDate != nil || watch.purchaseLocation != nil || watch.purchasePrice != nil || (watch.receivedFrom?.isEmpty == false) {
                 purchaseInfoSection
             }
             // 보증 정보
@@ -628,6 +628,10 @@ struct WatchDetailView: View {
                 }
                 if let sp = watch.purchaseSalesperson, !sp.isEmpty {
                     infoRow(label: "watchdetail.purchase.salesperson", value: sp)
+                }
+                // Sprint 13 (F2): 증여자/전승.
+                if let from = watch.receivedFrom, !from.isEmpty {
+                    infoRow(label: "watchdetail.received_from", value: from)
                 }
             }
             .background(AppColors.paper1)
@@ -1019,6 +1023,28 @@ struct WatchDetailView: View {
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
+            // Sprint 13 (F1): 자세별 편차 워크벤치 — 기계식 + 측정 2회+ 일 때만.
+            if watch.movementType != .quartz && watch.measurements.count >= 2 {
+                NavigationLink {
+                    PositionalDeltaView(watch: watch)
+                } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: "rotate.3d")
+                        Text(String(localized: "positional.entry"))
+                        Spacer()
+                        Image(systemName: "chevron.right").foregroundStyle(AppColors.ink3)
+                    }
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                    .padding(.horizontal, 16).padding(.vertical, 14)
+                    .background(AppColors.paper1)
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 16)
+                .padding(.top, 10)
+            }
             // Sprint 5 (P3-1): 스트랩 관리 진입
             NavigationLink {
                 StrapListView(watch: watch)

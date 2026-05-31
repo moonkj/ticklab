@@ -17,6 +17,7 @@ struct AddWatchView: View {
     @State private var nickname: String = ""
     @State private var story: String = ""
     @State private var referenceNumber: String = ""
+    @State private var receivedFrom: String = ""
     /// Sprint 1 (P3-5): 구매처/담당자 — 자유 텍스트, optional.
     @State private var purchaseLocation: String = ""
     @State private var purchaseSalesperson: String = ""
@@ -315,6 +316,8 @@ struct AddWatchView: View {
                     TextField(String(localized: "addwatch.nickname"), text: $nickname)
                     TextField(String(localized: "addwatch.reference_no"), text: $referenceNumber)
                         .autocorrectionDisabled()
+                    // Sprint 13 (F2): 증여자/전승 (선택).
+                    TextField(String(localized: "addwatch.received_from"), text: $receivedFrom)
                     VStack(alignment: .leading, spacing: 6) {
                         Text(String(localized: "addwatch.story.label"))
                             .font(.system(size: 12))
@@ -444,6 +447,7 @@ struct AddWatchView: View {
         batteryReminderEnabled = existing.batteryReminderEnabled
         nickname = existing.nickname ?? ""
         story = existing.story ?? ""
+        receivedFrom = existing.receivedFrom ?? ""
         referenceNumber = existing.referenceNumber ?? ""
         purchaseLocation = existing.purchaseLocation ?? ""
         purchaseSalesperson = existing.purchaseSalesperson ?? ""
@@ -671,6 +675,7 @@ struct AddWatchView: View {
         let purchaseSalespersonTrimmed = purchaseSalesperson.trimmingCharacters(in: .whitespaces)
         let purchasePriceTrimmed = purchasePriceText.trimmingCharacters(in: .whitespaces)
         let parsedPurchasePrice: Decimal? = Decimal(string: purchasePriceTrimmed)
+        let receivedFromTrimmed = receivedFrom.trimmingCharacters(in: .whitespaces)
         let parsedCustomBph: Int? = isManualEntry ? Int(manualBphText) : nil
         if let existing {
             existing.brand = brand
@@ -686,6 +691,7 @@ struct AddWatchView: View {
             existing.nickname = nicknameTrimmed.isEmpty ? nil : nicknameTrimmed
             existing.story = storyTrimmed.isEmpty ? nil : storyTrimmed
             existing.referenceNumber = refTrimmed.isEmpty ? nil : refTrimmed
+            existing.receivedFrom = receivedFromTrimmed.isEmpty ? nil : receivedFromTrimmed
             existing.purchaseLocation = purchaseLocationTrimmed.isEmpty ? nil : purchaseLocationTrimmed
             existing.purchaseSalesperson = purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed
             existing.purchasePrice = parsedPurchasePrice
@@ -711,7 +717,8 @@ struct AddWatchView: View {
                 purchasePrice: parsedPurchasePrice,
                 purchaseCurrency: parsedPurchasePrice != nil ? purchaseCurrency : nil,
                 warrantyMonths: warrantyMonths > 0 ? warrantyMonths : nil,
-                warrantyReminderEnabled: warrantyReminderEnabled
+                warrantyReminderEnabled: warrantyReminderEnabled,
+                receivedFrom: receivedFromTrimmed.isEmpty ? nil : receivedFromTrimmed
             )
             watch.customBph = parsedCustomBph
             modelContext.insert(watch)

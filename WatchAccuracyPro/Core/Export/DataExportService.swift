@@ -83,10 +83,13 @@ enum DataExportService {
 
     private static func csvHeader() -> String {
         // Round 115 (데이터 무결성 Med-3): Round 83 신규 필드 추가.
+        // Sprint 13 (F4): 라벨-값 불일치 수정 — 기존 snr_db가 실제로 ambient_noise였음.
+        //   진짜 SNR(metadata.snrDB) + 온도 + 파워리저브 추가.
         [
             "timestamp", "brand", "model", "nickname", "reference_number", "caliber",
             "rate_s_per_day", "beat_error_ms", "amplitude_deg",
-            "bph", "confidence", "duration_s", "snr_db",
+            "bph", "confidence", "duration_s",
+            "ambient_noise_db", "snr_db", "temperature_c", "power_reserve_est_h",
             "position", "microphone", "device"
         ].joined(separator: ",")
     }
@@ -107,6 +110,9 @@ enum DataExportService {
             String(m.confidenceScore),
             String(m.durationSeconds),
             String(format: "%.1f", metadata.ambientNoiseDB),
+            metadata.snrDB.map { String(format: "%.1f", $0) } ?? "",
+            metadata.temperatureCelsius.map { String(format: "%.1f", $0) } ?? "",
+            metadata.powerReserveEstimate.map { String(format: "%.1f", $0) } ?? "",
             metadata.position.rawValue,
             metadata.microphoneType.rawValue,
             metadata.deviceModel

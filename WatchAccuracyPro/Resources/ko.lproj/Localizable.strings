@@ -1510,3 +1510,17 @@
 "today.solo.title" = "이 시계와의 기록";
 "today.solo.wears" = "착용";
 "today.solo.days" = "함께한 날";
+
+/* Sprint 13 — F1 자세별편차 + F2 전승 */
+"positional.nav.title" = "자세별 편차";
+"positional.entry" = "자세별 편차 분석";
+"positional.delta.title" = "자세 간 최대 편차 (δ)";
+"positional.delta.hint" = "여러 자세에서 측정한 rate 의 최대-최소 차이. 작을수록 정비 상태 우수.";
+"positional.grade.excellent" = "우수";
+"positional.grade.good" = "양호";
+"positional.grade.service" = "정비 권장";
+"positional.methodology" = "각 자세(다이얼 업/다운, 크라운 업/다운 등)에서 측정한 평균값입니다. 자세를 바꿔가며 여러 번 측정하면 정확도가 올라갑니다.";
+"positional.empty.title" = "자세별 데이터 부족";
+"positional.empty.body" = "서로 다른 자세에서 2회 이상 측정하면 편차 분석을 볼 수 있어요.";
+"addwatch.received_from" = "받은 사람/유래 (선택)";
+"watchdetail.received_from" = "받은 사람";
