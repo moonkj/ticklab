@@ -672,13 +672,16 @@ struct WatchDetailView: View {
         .padding(.vertical, 10)
     }
 
-    /// 재무탭: ROI + TCO 요약.
+    /// 재무탭: TCO + ROI.
     @ViewBuilder
     private var financeTab: some View {
         VStack(spacing: 12) {
-            CostPerWearCard(watch: watch)
+            // Sprint 5 (P2-13): TCO 카드 — 구매가 + 정비비 합산.
+            TCOCard(watch: watch)
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
+            CostPerWearCard(watch: watch)
+                .padding(.horizontal, 20)
             if watch.purchasePrice == nil {
                 HelpCard(
                     icon: "dollarsign.circle",

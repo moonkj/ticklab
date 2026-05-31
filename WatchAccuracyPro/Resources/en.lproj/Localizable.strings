@@ -1321,3 +1321,10 @@
 /* Sprint 4 — P3-10 Multi-filter search */
 "collection.filter.label" = "Advanced Filter";
 "collection.filter.all" = "All";
+
+/* Sprint 5 — P2-13 TCO */
+"watch.tco.title" = "Total Cost of Ownership";
+"watch.tco.purchase" = "Purchase";
+"watch.tco.service" = "Service";
+"watch.tco.nudge" = "Enter a purchase price to calculate your total cost.";
+"watch.tco.service_count" = "%d service records included";

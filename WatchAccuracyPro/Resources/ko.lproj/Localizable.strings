@@ -1320,3 +1320,10 @@
 /* Sprint 4 — P3-10 멀티 필터 검색 */
 "collection.filter.label" = "고급 필터";
 "collection.filter.all" = "전체";
+
+/* Sprint 5 — P2-13 TCO */
+"watch.tco.title" = "총 비용 (TCO)";
+"watch.tco.purchase" = "구매가";
+"watch.tco.service" = "정비비";
+"watch.tco.nudge" = "구매가를 입력하면 총 비용을 계산할 수 있어요.";
+"watch.tco.service_count" = "정비 %d건 합산";
