@@ -1359,3 +1359,6 @@
 "photo.processing.standard" = "표준";
 "photo.processing.caseback" = "케이스백";
 "photo.processing.vivid" = "선명하게";
+
+/* Sprint 6 — P2-7 마스터 PDF */
+"settings.data.master_pdf" = "컬렉션 마스터 리포트 (PDF)";

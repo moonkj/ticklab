@@ -311,6 +311,21 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    // Sprint 6 (P2-7): 컬렉션 마스터 리포트 PDF
+                    let masterData = MasterReportGenerator.generate(watches: allWatches, includePrices: true)
+                    let masterURL = FileManager.default.temporaryDirectory
+                        .appendingPathComponent("TickLab_Collection_Report.pdf")
+                    if (try? masterData.write(to: masterURL)) != nil {
+                        ShareLink(item: masterURL) {
+                            HStack {
+                                Image(systemName: "doc.richtext.fill").frame(width: 24)
+                                Text(String(localized: "settings.data.master_pdf"))
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 13)).foregroundStyle(AppColors.ink3)
+                            }
+                        }
+                    }
                     Text(String(localized: "settings.data.export.hint"))
                         .font(.system(size: 12))
                         .foregroundStyle(AppColors.ink3)

@@ -150,6 +150,7 @@
 		BDA01A9E488AB16B795BFBA7 /* ShakePickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */; };
 		BF73D6A8D8F3C62DBD9D1073 /* WatchAccuracyProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */; };
 		C509FC401B8430A29D971920 /* DialColorExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD694460270D95643C92DEE /* DialColorExtractor.swift */; };
+		C6F871B4BBD28549CC8C2586 /* MasterReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9167FA96DC9620461400AEEB /* MasterReportGenerator.swift */; };
 		C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */; };
 		C863ACE28957E2C56F947358 /* WatchAccuracyProWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47D155157AC7BFF49F53E192 /* WatchAccuracyProWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CCB631DD13E8FD3A56752BD6 /* Strap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320B6CDCA66C5E935C100A11 /* Strap.swift */; };
@@ -357,6 +358,7 @@
 		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLogServiceTests.swift; sourceTree = "<group>"; };
 		90B8B019EE25542BDB9D3A2A /* SanitizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizationTests.swift; sourceTree = "<group>"; };
+		9167FA96DC9620461400AEEB /* MasterReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterReportGenerator.swift; sourceTree = "<group>"; };
 		91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		91E473958975512F4841DB00 /* MovementDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDatabaseTests.swift; sourceTree = "<group>"; };
 		923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalEventBanner.swift; sourceTree = "<group>"; };
@@ -578,6 +580,7 @@
 			isa = PBXGroup;
 			children = (
 				D77630A107E903F99E49AC29 /* ConditionReportGenerator.swift */,
+				9167FA96DC9620461400AEEB /* MasterReportGenerator.swift */,
 				55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */,
 			);
 			path = Reports;
@@ -1309,6 +1312,7 @@
 				1CF7B2C94A1BA11B0A3FA6C7 /* LockScreenView.swift in Sources */,
 				2540B9511A6535E855BFD290 /* MagneticFieldService.swift in Sources */,
 				F1928421CA0056ADA3D7B61C /* MagneticFieldView.swift in Sources */,
+				C6F871B4BBD28549CC8C2586 /* MasterReportGenerator.swift in Sources */,
 				78B6EDB3C335BE21E1E1058F /* MatchedFilter.swift in Sources */,
 				5D7317C52E5ED354DEBA90DE /* MeasurementActivityAttributes.swift in Sources */,
 				CE1C7A89D2ED09540414AC88 /* MeasurementLiveActivityService.swift in Sources */,
@@ -1534,7 +1538,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 127;
+				CURRENT_PROJECT_VERSION = 128;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1701,7 +1705,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 127;
+				CURRENT_PROJECT_VERSION = 128;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

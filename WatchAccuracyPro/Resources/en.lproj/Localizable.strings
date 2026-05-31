@@ -1360,3 +1360,6 @@
 "photo.processing.standard" = "Standard";
 "photo.processing.caseback" = "Caseback";
 "photo.processing.vivid" = "Vivid";
+
+/* Sprint 6 — P2-7 Master PDF */
+"settings.data.master_pdf" = "Collection Master Report (PDF)";
