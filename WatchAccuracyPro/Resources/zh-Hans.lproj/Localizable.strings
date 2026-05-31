@@ -1246,3 +1246,15 @@
 "offboarding.lose.data_retained" = "您的记录安全保留 — 随时回到 Pro";
 "offboarding.cta.keep" = "继续 Pro";
 "offboarding.cta.manage" = "在 App Store 管理订阅";
+
+/* Sprint 2 — P2-9 保修到期提醒 */
+"addwatch.warranty.months" = "保修期";
+"addwatch.warranty.none" = "未设定";
+"addwatch.warranty.12m" = "1年 (12个月)";
+"addwatch.warranty.24m" = "2年 (24个月)";
+"addwatch.warranty.36m" = "3年 (36个月)";
+"addwatch.warranty.60m" = "5年 (60个月)";
+"addwatch.warranty.reminder" = "到期前3个月和1个月通知";
+"notif.warranty.title" = "%@ 保修即将到期";
+"notif.warranty.body_3m" = "至 %@。请考虑预约保养检查。";
+"notif.warranty.body_1m" = "距 %@ 仅剩 1 个月。建议预约保修服务。";

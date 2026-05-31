@@ -1246,3 +1246,15 @@
 "offboarding.lose.data_retained" = "記録は安全に保管されます — いつでも Pro に戻ればすべて利用可能";
 "offboarding.cta.keep" = "Pro を続ける";
 "offboarding.cta.manage" = "App Store でサブスクリプション管理";
+
+/* Sprint 2 — P2-9 保証期限通知 */
+"addwatch.warranty.months" = "保証期間";
+"addwatch.warranty.none" = "未設定";
+"addwatch.warranty.12m" = "1年 (12ヶ月)";
+"addwatch.warranty.24m" = "2年 (24ヶ月)";
+"addwatch.warranty.36m" = "3年 (36ヶ月)";
+"addwatch.warranty.60m" = "5年 (60ヶ月)";
+"addwatch.warranty.reminder" = "期限切れ3ヶ月・1ヶ月前に通知";
+"notif.warranty.title" = "%@ の保証期限が近づいています";
+"notif.warranty.body_3m" = "%@ まで。点検・整備をご検討ください。";
+"notif.warranty.body_1m" = "%@ まで残り1ヶ月。保証点検の予約をお勧めします。";

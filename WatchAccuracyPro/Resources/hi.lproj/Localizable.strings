@@ -1246,3 +1246,15 @@
 "offboarding.lose.data_retained" = "आपके रिकॉर्ड सुरक्षित रहेंगे — कभी भी Pro पर वापस आएं";
 "offboarding.cta.keep" = "Pro जारी रखें";
 "offboarding.cta.manage" = "App Store में सदस्यता प्रबंधन";
+
+/* Sprint 2 — P2-9 वारंटी समाप्ति अलर्ट */
+"addwatch.warranty.months" = "वारंटी अवधि";
+"addwatch.warranty.none" = "अनसेट";
+"addwatch.warranty.12m" = "1 साल (12 महीने)";
+"addwatch.warranty.24m" = "2 साल (24 महीने)";
+"addwatch.warranty.36m" = "3 साल (36 महीने)";
+"addwatch.warranty.60m" = "5 साल (60 महीने)";
+"addwatch.warranty.reminder" = "समाप्ति से 3 महीने और 1 महीने पहले सूचित करें";
+"notif.warranty.title" = "%@ की वारंटी समाप्त होने वाली है";
+"notif.warranty.body_3m" = "%@ तक। सर्विस चेकअप बुक करने पर विचार करें।";
+"notif.warranty.body_1m" = "%@ तक 1 महीना बचा। वारंटी सर्विस बुक करने की सलाह।";

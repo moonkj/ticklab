@@ -52,6 +52,10 @@ final class Watch {
     var purchasePrice: Decimal? = nil
     /// 통화 코드 — ISO 4217 (예: "KRW", "USD", "JPY"). 기본은 Locale.current.currency.identifier.
     var purchaseCurrency: String? = nil
+    /// Sprint 2 (P2-9): 보증 기간 (개월). nil = 미설정. 일반적으로 신품 2년, 일부 5년.
+    var warrantyMonths: Int? = nil
+    /// 보증 만료 알림 활성화. true 시 만료 3개월 전 + 1개월 전 알림.
+    var warrantyReminderEnabled: Bool = true
     /// 페르소나 (김재철, 워치메이커) wish: movement DB lookup 의 lift angle 을 watch 단위로 override.
     /// nil 이면 movement DB 의 default 사용. 워치메이커가 직접 측정한 값이 있을 때만 사용.
     var liftAngleOverride: Double?
@@ -116,6 +120,8 @@ final class Watch {
         purchaseSalesperson: String? = nil,
         purchasePrice: Decimal? = nil,
         purchaseCurrency: String? = nil,
+        warrantyMonths: Int? = nil,
+        warrantyReminderEnabled: Bool = true,
         createdAt: Date = .init()
     ) {
         self.id = id
@@ -144,6 +150,8 @@ final class Watch {
         self.purchaseSalesperson = purchaseSalesperson
         self.purchasePrice = purchasePrice
         self.purchaseCurrency = purchaseCurrency
+        self.warrantyMonths = warrantyMonths
+        self.warrantyReminderEnabled = warrantyReminderEnabled
         self.createdAt = createdAt
     }
 
@@ -156,5 +164,11 @@ final class Watch {
     var batteryNextDue: Date? {
         guard let last = batteryLastReplaced else { return nil }
         return Calendar.current.date(byAdding: .month, value: batteryExpectedLifeMonths, to: last)
+    }
+
+    /// Sprint 2 (P2-9): 보증 만료일. 구매일 + 보증 개월 = 만료일. nil 이면 미설정.
+    var warrantyExpirationDate: Date? {
+        guard let start = purchaseDate, let months = warrantyMonths, months > 0 else { return nil }
+        return Calendar.current.date(byAdding: .month, value: months, to: start)
     }
 }

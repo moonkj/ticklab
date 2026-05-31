@@ -23,6 +23,9 @@ struct AddWatchView: View {
     /// Sprint 1 (P3-4): 구매가 + 통화. 빈 문자열 = nil.
     @State private var purchasePriceText: String = ""
     @State private var purchaseCurrency: String = Locale.current.currency?.identifier ?? "USD"
+    /// Sprint 2 (P2-9): 보증 기간 (개월). 0 = 미설정.
+    @State private var warrantyMonths: Int = 0
+    @State private var warrantyReminderEnabled: Bool = true
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var showingCamera = false
@@ -288,6 +291,18 @@ struct AddWatchView: View {
                     Text(String(localized: "addwatch.purchase.price.hint"))
                         .font(.system(size: 11))
                         .foregroundStyle(AppColors.ink3)
+                    // Sprint 2 (P2-9): 보증 기간 + 알림.
+                    Picker(String(localized: "addwatch.warranty.months"), selection: $warrantyMonths) {
+                        Text(String(localized: "addwatch.warranty.none")).tag(0)
+                        Text(String(localized: "addwatch.warranty.12m")).tag(12)
+                        Text(String(localized: "addwatch.warranty.24m")).tag(24)
+                        Text(String(localized: "addwatch.warranty.36m")).tag(36)
+                        Text(String(localized: "addwatch.warranty.60m")).tag(60)
+                    }
+                    if warrantyMonths > 0 {
+                        Toggle(String(localized: "addwatch.warranty.reminder"),
+                               isOn: $warrantyReminderEnabled)
+                    }
                 }
 
                 // Round 84: 디자인 SSOT screens-detail.jsx AddWatchView 시리얼 안내 helpcard.
@@ -378,6 +393,8 @@ struct AddWatchView: View {
         purchaseSalesperson = existing.purchaseSalesperson ?? ""
         purchasePriceText = existing.purchasePrice.map { NSDecimalNumber(decimal: $0).stringValue } ?? ""
         purchaseCurrency = existing.purchaseCurrency ?? purchaseCurrency
+        warrantyMonths = existing.warrantyMonths ?? 0
+        warrantyReminderEnabled = existing.warrantyReminderEnabled
         if let bph = existing.customBph { manualBphText = String(bph) }
     }
 
@@ -617,6 +634,8 @@ struct AddWatchView: View {
             existing.purchaseSalesperson = purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed
             existing.purchasePrice = parsedPurchasePrice
             existing.purchaseCurrency = parsedPurchasePrice != nil ? purchaseCurrency : nil
+            existing.warrantyMonths = warrantyMonths > 0 ? warrantyMonths : nil
+            existing.warrantyReminderEnabled = warrantyReminderEnabled
             existing.customBph = parsedCustomBph
             watch = existing
         } else {
@@ -634,7 +653,9 @@ struct AddWatchView: View {
                 purchaseLocation: purchaseLocationTrimmed.isEmpty ? nil : purchaseLocationTrimmed,
                 purchaseSalesperson: purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed,
                 purchasePrice: parsedPurchasePrice,
-                purchaseCurrency: parsedPurchasePrice != nil ? purchaseCurrency : nil
+                purchaseCurrency: parsedPurchasePrice != nil ? purchaseCurrency : nil,
+                warrantyMonths: warrantyMonths > 0 ? warrantyMonths : nil,
+                warrantyReminderEnabled: warrantyReminderEnabled
             )
             watch.customBph = parsedCustomBph
             modelContext.insert(watch)
@@ -666,6 +687,8 @@ struct AddWatchView: View {
         if movementType == .quartz && watch.batteryReminderEnabled {
             NotificationService.scheduleBatteryReminder(for: watch)
         }
+        // Sprint 2 (P2-9): 보증 알림 — purchaseDate + warrantyMonths 둘 다 있으면 schedule.
+        NotificationService.scheduleWarrantyReminder(for: watch)
         // 사용자 요청: 시계 추가/편집 시 오버홀 리마인더도 같이 스케줄.
         //   기계식 (auto/manual) 만 대상. 첫 등록 시 createdAt 기준으로 +N년 후 알림.
         if movementType != .quartz {

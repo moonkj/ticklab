@@ -1241,3 +1241,15 @@
 "offboarding.lose.data_retained" = "기록은 안전하게 보관됩니다 — 언제든 다시 Pro로 돌아오면 모두 사용 가능";
 "offboarding.cta.keep" = "Pro 계속 사용하기";
 "offboarding.cta.manage" = "App Store에서 구독 관리";
+
+/* Sprint 2 — P2-9 보증 만료 알림 */
+"addwatch.warranty.months" = "보증 기간";
+"addwatch.warranty.none" = "미설정";
+"addwatch.warranty.12m" = "1년 (12개월)";
+"addwatch.warranty.24m" = "2년 (24개월)";
+"addwatch.warranty.36m" = "3년 (36개월)";
+"addwatch.warranty.60m" = "5년 (60개월)";
+"addwatch.warranty.reminder" = "만료 3개월·1개월 전 알림";
+"notif.warranty.title" = "%@ 보증 만료가 다가와요";
+"notif.warranty.body_3m" = "%@ 까지. 점검·정비를 고려해 보세요.";
+"notif.warranty.body_1m" = "%@ 까지 1개월 남았어요. 보증 점검 예약을 권장합니다.";

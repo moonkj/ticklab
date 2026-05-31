@@ -1246,3 +1246,15 @@
 "offboarding.lose.data_retained" = "Vos enregistrements restent en sécurité — revenez à Pro quand vous voulez";
 "offboarding.cta.keep" = "Garder Pro";
 "offboarding.cta.manage" = "Gérer l'abonnement dans App Store";
+
+/* Sprint 2 — P2-9 Alertes d'expiration de garantie */
+"addwatch.warranty.months" = "Période de garantie";
+"addwatch.warranty.none" = "Non défini";
+"addwatch.warranty.12m" = "1 an (12 mois)";
+"addwatch.warranty.24m" = "2 ans (24 mois)";
+"addwatch.warranty.36m" = "3 ans (36 mois)";
+"addwatch.warranty.60m" = "5 ans (60 mois)";
+"addwatch.warranty.reminder" = "Notifier 3 mois et 1 mois avant l'expiration";
+"notif.warranty.title" = "La garantie de %@ expire bientôt";
+"notif.warranty.body_3m" = "Jusqu'au %@. Pensez à réserver une révision.";
+"notif.warranty.body_1m" = "1 mois restant jusqu'au %@. Réservation de révision recommandée.";

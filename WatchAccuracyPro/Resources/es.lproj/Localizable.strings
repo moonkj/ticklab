@@ -1246,3 +1246,15 @@
 "offboarding.lose.data_retained" = "Tus registros se mantienen a salvo — vuelve a Pro cuando quieras";
 "offboarding.cta.keep" = "Mantener Pro";
 "offboarding.cta.manage" = "Gestionar suscripción en App Store";
+
+/* Sprint 2 — P2-9 Alertas de expiración de garantía */
+"addwatch.warranty.months" = "Período de garantía";
+"addwatch.warranty.none" = "No definido";
+"addwatch.warranty.12m" = "1 año (12 meses)";
+"addwatch.warranty.24m" = "2 años (24 meses)";
+"addwatch.warranty.36m" = "3 años (36 meses)";
+"addwatch.warranty.60m" = "5 años (60 meses)";
+"addwatch.warranty.reminder" = "Avisar 3 meses y 1 mes antes de la expiración";
+"notif.warranty.title" = "Garantía de %@ próxima a expirar";
+"notif.warranty.body_3m" = "Hasta %@. Considera reservar una revisión.";
+"notif.warranty.body_1m" = "1 mes restante hasta %@. Recomendamos reservar una revisión.";

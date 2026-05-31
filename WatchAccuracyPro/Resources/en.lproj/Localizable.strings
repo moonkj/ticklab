@@ -1242,3 +1242,15 @@
 "offboarding.lose.data_retained" = "Your records stay safe — come back to Pro anytime to access them all";
 "offboarding.cta.keep" = "Keep Pro";
 "offboarding.cta.manage" = "Manage Subscription in App Store";
+
+/* Sprint 2 — P2-9 Warranty expiration alerts */
+"addwatch.warranty.months" = "Warranty Period";
+"addwatch.warranty.none" = "Not set";
+"addwatch.warranty.12m" = "1 year (12 months)";
+"addwatch.warranty.24m" = "2 years (24 months)";
+"addwatch.warranty.36m" = "3 years (36 months)";
+"addwatch.warranty.60m" = "5 years (60 months)";
+"addwatch.warranty.reminder" = "Notify 3 months and 1 month before expiration";
+"notif.warranty.title" = "%@ warranty is about to expire";
+"notif.warranty.body_3m" = "Until %@. Consider booking a service check-up.";
+"notif.warranty.body_1m" = "1 month left until %@. We recommend booking a warranty service.";
