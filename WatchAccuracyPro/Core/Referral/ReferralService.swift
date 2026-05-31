@@ -6,22 +6,30 @@ import UIKit
 /// 보상 처리는 Phase 2 서버 연동 시 추가 (현재 단계: 공유 링크 생성만).
 enum ReferralService {
     private static let appStoreURL = "https://apps.apple.com/app/ticklab/id6741730681"
+    private static let codeKey = "ticklab.referral.code"
 
-    /// 사용자별 고유 레퍼럴 코드 — device hash 첫 8자.
+    /// Sprint 14 (B1, R4): IDFV는 재설치 시 변경 → 최초 1회 생성 후 UserDefaults에 영구 저장.
+    /// 보상 추적이 코드 일관성에 의존하므로 안정적 식별자 필요.
     static var referralCode: String {
-        let raw = UIDevice.current.identifierForVendor?.uuidString ?? "TICKLAB"
-        return String(raw.replacingOccurrences(of: "-", with: "").prefix(8).uppercased())
+        if let saved = UserDefaults.standard.string(forKey: codeKey), !saved.isEmpty {
+            return saved
+        }
+        // 최초 생성 — IDFV 기반 8자, 없으면 랜덤.
+        let raw = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        let code = String(raw.replacingOccurrences(of: "-", with: "").prefix(8).uppercased())
+        UserDefaults.standard.set(code, forKey: codeKey)
+        return code
     }
 
     /// 공유 링크 — App Store URL + 레퍼럴 파라미터.
     static var shareURL: URL {
-        let code = referralCode
-        return URL(string: "\(appStoreURL)?referral=\(code)") ?? URL(string: appStoreURL)!
+        URL(string: "\(appStoreURL)?referral=\(referralCode)") ?? URL(string: appStoreURL)!
     }
 
-    /// UIActivityViewController 공유 아이템.
+    /// UIActivityViewController 공유 아이템. (B1: 하드코드 → l10n)
     static var shareItems: [Any] {
-        let message = "TickLab — 내 시계의 모든 기록 📱\n\(shareURL.absoluteString)\n초대 코드: \(referralCode)"
+        let message = String(format: NSLocalizedString("referral.share.full_message", comment: ""),
+                             shareURL.absoluteString, referralCode)
         return [message]
     }
 }

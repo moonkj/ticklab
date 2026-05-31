@@ -64,6 +64,7 @@
 		367EB49536969E9791A23BCD /* BeatDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4995C3A82B5E708792DD27DE /* BeatDetectorProtocol.swift */; };
 		36C2B82C6131CB8239301BFE /* MeasurementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D1006CC82C071853A73BD9 /* MeasurementViewModel.swift */; };
 		38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */; };
+		3A212C29B66687AD94FF5153 /* TrendDiagnosisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1602A5A1672200C550B86 /* TrendDiagnosisService.swift */; };
 		3B773AC96D9BCA257EA98347 /* MetricKitSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA44D2E8DA78C271B994B1E /* MetricKitSubscriber.swift */; };
 		3FC8620F7EA308EFEADF4D3C /* DSPFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */; };
 		3FE38380443E433BA77C8EFE /* ConfidenceScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */; };
@@ -111,6 +112,7 @@
 		65A62726A9852DFC7E26E5DF /* SimulatedAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76C1431560C91FE2CE1E48C0 /* SimulatedAudioSource.swift */; };
 		66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDB539F26B6E6FA7F0DF2DF /* FullscreenPhotoViewer.swift */; };
 		6B458C5CB512A7DFE23D2BBB /* EXIFStripper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB81C6DB8297A852A837F889 /* EXIFStripper.swift */; };
+		6C801C3C6CEACCBB8DA13043 /* TrendDiagnosisCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6321C02B534578D2BF56FB2A /* TrendDiagnosisCard.swift */; };
 		6D120686D7D100A75E3FEDBF /* AddWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */; };
 		6DA528D1EFE9C6EABDF65B4D /* GlobalAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25937B6B6AC9C60ACCC1F8E /* GlobalAnalyticsView.swift */; };
 		6E69944F41D7A2DA78A2F5B9 /* OnThisDayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880B162EEB36D3F0CB86912A /* OnThisDayService.swift */; };
@@ -353,6 +355,7 @@
 		5F3FB0232C07394894BE9086 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
 		60BF10B3AEE5733B016B36E6 /* WatchPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPhotoView.swift; sourceTree = "<group>"; };
 		60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
+		6321C02B534578D2BF56FB2A /* TrendDiagnosisCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendDiagnosisCard.swift; sourceTree = "<group>"; };
 		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakePickView.swift; sourceTree = "<group>"; };
 		66DCCBEDCDAED7D7BEDE087F /* AudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSource.swift; sourceTree = "<group>"; };
@@ -478,6 +481,7 @@
 		EDF87D1399FFCFF2083C1B44 /* PhotoSourceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSourceSheet.swift; sourceTree = "<group>"; };
 		EE4BD3A2700CBF9B22C7317C /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
 		EF08ED067A88B19F40F1D21F /* NoiseFloorSuppressor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoiseFloorSuppressor.swift; sourceTree = "<group>"; };
+		F0E1602A5A1672200C550B86 /* TrendDiagnosisService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendDiagnosisService.swift; sourceTree = "<group>"; };
 		F23444BF1EB9720E38132881 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		F302C7B8CE7C443C452EB3B2 /* AudioInputClassifyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputClassifyTests.swift; sourceTree = "<group>"; };
 		F341EE5EE217E7EB16CC927F /* Chip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
@@ -711,6 +715,7 @@
 			isa = PBXGroup;
 			children = (
 				1686561FE30C447D3AA4707A /* AppleIntelligenceVerdictService.swift */,
+				F0E1602A5A1672200C550B86 /* TrendDiagnosisService.swift */,
 				4F3D35C570A97B6BFD596270 /* WatchRecommendationService.swift */,
 			);
 			path = AI;
@@ -882,6 +887,7 @@
 				AA7595104575323D6621C7F4 /* SkeletonView.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
 				5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */,
+				6321C02B534578D2BF56FB2A /* TrendDiagnosisCard.swift */,
 				A07FAA2F3650DB74A03B4940 /* WatchCover.swift */,
 				60BF10B3AEE5733B016B36E6 /* WatchPhotoView.swift */,
 				01F911CAA257AD00EFADA2A4 /* WatchSilhouette.swift */,
@@ -1506,6 +1512,8 @@
 				5060F80D248B19D2A07705CA /* TemplateMatcher.swift in Sources */,
 				2EAC9A7EA6B62E91A3FA696B /* TodayView.swift in Sources */,
 				F5D4EDC2C2D428C1E8430899 /* TrendChartView.swift in Sources */,
+				6C801C3C6CEACCBB8DA13043 /* TrendDiagnosisCard.swift in Sources */,
+				3A212C29B66687AD94FF5153 /* TrendDiagnosisService.swift in Sources */,
 				49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */,
 				E87A9E6561A1E7A78F0156C6 /* UserPreferences.swift in Sources */,
 				74BEA8A8ABA4477195771546 /* UserProfileView.swift in Sources */,
@@ -1671,7 +1679,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 165;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1838,7 +1846,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 164;
+				CURRENT_PROJECT_VERSION = 165;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

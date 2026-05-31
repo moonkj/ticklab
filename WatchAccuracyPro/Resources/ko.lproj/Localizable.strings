@@ -1535,3 +1535,21 @@
 "collection.selected_count" = "%d개 선택됨";
 "collection.bulk_delete.title" = "선택한 시계 삭제";
 "collection.bulk_delete.message" = "%d개 시계와 모든 측정·사진·기록이 삭제됩니다. 되돌릴 수 없어요.";
+
+/* Sprint 14 — S1/S2 추세 진단 + B1 레퍼럴 */
+"trend.eyebrow" = "시계 건강 진단";
+"trend.headline.good" = "안정적인 상태예요";
+"trend.headline.watch" = "조금 지켜볼 필요가 있어요";
+"trend.headline.service" = "점검을 받아보시는 게 좋겠어요";
+"trend.coach.stable" = "최근 측정에서 정밀도가 안정적으로 유지되고 있어요.";
+"trend.coach.gaining" = "최근 측정에서 약 %.0f초/일씩 빨라지는 경향이 보여요.";
+"trend.coach.losing" = "최근 측정에서 약 %.0f초/일씩 느려지는 경향이 보여요.";
+"trend.coach.positional_high" = "자세에 따라 %.0f초/일 편차가 커요 — 윤활유 상태나 밸런스 점검 신호일 수 있어요.";
+"trend.coach.positional_mid" = "자세 간 편차가 %.0f초/일로 약간 있어요.";
+"trend.coach.positional_low" = "자세를 바꿔도 편차가 %.0f초/일로 작아 균형이 좋아요.";
+"trend.coach.beat_error" = "박동 오차가 평균 %.2fms로 다소 높아요.";
+"trend.coach.advise_service" = "전문 워치메이커 점검을 권장해요.";
+"trend.coach.advise_watch" = "다음 측정 때 자세를 바꿔가며 한 번 더 확인해보세요.";
+"trend.coach.advise_good" = "지금처럼 주기적으로 측정만 해주면 충분해요.";
+"trend.disclaimer" = "마이크 기반 참고용 진단입니다. 정확한 진단은 워치메이커에게.";
+"referral.share.full_message" = "TickLab — 내 시계의 모든 기록 📱\n%@\n초대 코드: %@";

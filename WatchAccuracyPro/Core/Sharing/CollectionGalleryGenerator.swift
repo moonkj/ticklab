@@ -54,7 +54,8 @@ enum CollectionGalleryGenerator {
         \(cards)
         </div>
         <div class="footer">
-          <p>Made with <a href="https://apps.apple.com/app/ticklab/id6741730681">TickLab</a></p>
+          <p>⌚ Measured & tracked with <a href="\(ReferralService.shareURL.absoluteString)">TickLab</a></p>
+          <p style="font-size:10px;color:#DDD;">iPhone 마이크로 시계 정확도를 측정하는 앱 · Watch accuracy on your iPhone</p>
         </div>
         </body>
         </html>
