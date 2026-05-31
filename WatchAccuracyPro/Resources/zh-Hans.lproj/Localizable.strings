@@ -1291,3 +1291,9 @@
 "weartag.custom.placeholder" = "Custom tag";
 "weartag.save" = "Save";
 "weartag.skip" = "Skip";
+"weartag.highlight" = "Mark as Highlight";
+"highlight.title" = "Highlights";
+"highlight.empty.title" = "No highlights yet";
+"highlight.empty.body" = "Star a wear or add event tags to collect your special moments.";
+"stats.entry.highlights" = "Highlights";
+"stats.entry.highlights.subtitle" = "Your special wear moments";

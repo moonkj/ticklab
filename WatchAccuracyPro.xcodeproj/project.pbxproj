@@ -22,6 +22,7 @@
 		0F8643A3846C68202C26CD92 /* AccuracyGradeChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD030531747E34B54A19412F /* AccuracyGradeChip.swift */; };
 		10022C555825A58EC053B8FC /* MainFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */; };
 		1013456C7F4EE01DB9348F11 /* MovementDBOTAServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32AD90F1C902098C4BC9664B /* MovementDBOTAServiceTests.swift */; };
+		1043FF13ADB635BA20AB14BE /* HighlightTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF9C569CED7D145073DD70E /* HighlightTimelineView.swift */; };
 		11964032C02B9F46668A2B9F /* LiveWaveformCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */; };
 		12F95F4FC5C3ECB525008AA1 /* DialFortuneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C31B146938DDDD93034D95D /* DialFortuneView.swift */; };
 		148D50004B9358C37DB6E1EF /* SharedSnapshotStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 77C3343B7DA5DC9BE3451E21 /* SharedSnapshotStoreTests.swift */; };
@@ -393,6 +394,7 @@
 		D8C5CAA0588BDF3BFCD3981B /* SpecCardComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardComposerView.swift; sourceTree = "<group>"; };
 		DA49473933488382E08C687D /* MovementDBOTAService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDBOTAService.swift; sourceTree = "<group>"; };
 		DB81C6DB8297A852A837F889 /* EXIFStripper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFStripper.swift; sourceTree = "<group>"; };
+		DCF9C569CED7D145073DD70E /* HighlightTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightTimelineView.swift; sourceTree = "<group>"; };
 		DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestServiceTests.swift; sourceTree = "<group>"; };
 		DDD694460270D95643C92DEE /* DialColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialColorExtractor.swift; sourceTree = "<group>"; };
 		DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWatchView.swift; sourceTree = "<group>"; };
@@ -844,6 +846,7 @@
 		B95DB5B3498816E028B197BC /* Stats */ = {
 			isa = PBXGroup;
 			children = (
+				DCF9C569CED7D145073DD70E /* HighlightTimelineView.swift */,
 				053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */,
 			);
 			path = Stats;
@@ -1263,6 +1266,7 @@
 				D0758F7FDFC81C0AAF487057 /* EnvelopeExtractor.swift in Sources */,
 				66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */,
 				1A70927B74F7E4EAF1B2E33D /* HelpCard.swift in Sources */,
+				1043FF13ADB635BA20AB14BE /* HighlightTimelineView.swift in Sources */,
 				40D4EF784CD974B1938BC096 /* JournalComposerView.swift in Sources */,
 				2164E35E2D8612E5CC5337E6 /* JournalEntry.swift in Sources */,
 				04ECC1E0065DE331067422F1 /* JournalEntryDetailView.swift in Sources */,
@@ -1490,7 +1494,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 118;
+				CURRENT_PROJECT_VERSION = 119;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1657,7 +1661,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 118;
+				CURRENT_PROJECT_VERSION = 119;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

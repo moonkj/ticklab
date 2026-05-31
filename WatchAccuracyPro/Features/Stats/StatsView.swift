@@ -81,7 +81,7 @@ struct StatsView: View {
         .padding(.top, 8)
     }
 
-    /// 와이어프레임 Section E — Stats 에서 진입하는 두 카드 (업적 / 리그).
+    /// 와이어프레임 Section E — Stats 에서 진입하는 카드 (업적 / 리그 / 하이라이트).
     private var funEntryCards: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 10) {
@@ -104,6 +104,16 @@ struct StatsView: View {
                 }
                 .buttonStyle(.plain)
             }
+            // Sprint 4 (P3-3): 하이라이트 타임라인 진입
+            NavigationLink {
+                HighlightTimelineView()
+            } label: {
+                funEntryCard(emoji: "⭐",
+                             title: String(localized: "stats.entry.highlights"),
+                             subtitle: String(localized: "stats.entry.highlights.subtitle"),
+                             tint: AppColors.warning.opacity(0.15))
+            }
+            .buttonStyle(.plain)
         }
     }
 

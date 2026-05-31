@@ -9,6 +9,7 @@ struct WearTagPickerView: View {
     @Environment(\.modelContext) private var context
     @State private var selected: Set<String> = []
     @State private var customTag: String = ""
+    @State private var isHighlight: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -71,6 +72,22 @@ struct WearTagPickerView: View {
                 }
                 .padding(.horizontal, 20)
 
+                // 하이라이트 토글
+        Toggle(isOn: $isHighlight) {
+            HStack(spacing: 8) {
+                Image(systemName: "star.fill").foregroundStyle(AppColors.accent)
+                Text(String(localized: "weartag.highlight"))
+                    .font(.system(size: 14, weight: .semibold))
+            }
+        }
+        .padding(.horizontal, 20)
+        .tint(AppColors.accent)
+
+                PrimaryButton(String(localized: "weartag.save"), style: .accent, isEnabled: true) {
+                    save()
+                }
+                .padding(.horizontal, 20)
+
                 Button(String(localized: "weartag.skip")) { dismiss() }
                     .font(.system(size: 14))
                     .foregroundStyle(AppColors.ink3)
@@ -85,7 +102,10 @@ struct WearTagPickerView: View {
                 }
             }
         }
-        .onAppear { selected = Set(wearLog.tags) }
+        .onAppear {
+            selected = Set(wearLog.tags)
+            isHighlight = wearLog.isHighlight
+        }
         .presentationDetents([.medium])
     }
 
@@ -120,6 +140,7 @@ struct WearTagPickerView: View {
 
     private func save() {
         wearLog.tags = Array(selected).sorted()
+        wearLog.isHighlight = isHighlight
         try? context.save()
         dismiss()
     }

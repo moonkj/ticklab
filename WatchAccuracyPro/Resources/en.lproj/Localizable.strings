@@ -1293,3 +1293,11 @@
 "weartag.custom.placeholder" = "Custom tag";
 "weartag.save" = "Save";
 "weartag.skip" = "Skip";
+
+/* Sprint 4 — P3-3 Highlight timeline */
+"weartag.highlight" = "Mark as Highlight";
+"highlight.title" = "Highlights";
+"highlight.empty.title" = "No highlights yet";
+"highlight.empty.body" = "Star a wear or add event tags to collect your special moments here.";
+"stats.entry.highlights" = "Highlights";
+"stats.entry.highlights.subtitle" = "Your special wear moments";

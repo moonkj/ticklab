@@ -30,13 +30,17 @@ final class WearLog {
         }
     }
 
+    /// Sprint 4 (P3-3): 하이라이트 플래그 — 특별한 순간 표시.
+    var isHighlight: Bool = false
+
     init(
         id: UUID = UUID(),
         watch: Watch? = nil,
         date: Date = .init(),
         isAuto: Bool = false,
         note: String = "",
-        tags: [String] = []
+        tags: [String] = [],
+        isHighlight: Bool = false
     ) {
         self.id = id
         self.watch = watch
@@ -45,6 +49,7 @@ final class WearLog {
         self.isAuto = isAuto
         self.note = note
         self.tagsRaw = (try? String(data: JSONEncoder().encode(tags), encoding: .utf8)) ?? "[]"
+        self.isHighlight = isHighlight
     }
 }
 

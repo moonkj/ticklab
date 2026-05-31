@@ -1292,3 +1292,11 @@
 "weartag.custom.placeholder" = "커스텀 태그 입력";
 "weartag.save" = "저장";
 "weartag.skip" = "건너뛰기";
+
+/* Sprint 4 — P3-3 하이라이트 타임라인 */
+"weartag.highlight" = "하이라이트로 표시";
+"highlight.title" = "하이라이트";
+"highlight.empty.title" = "아직 하이라이트가 없어요";
+"highlight.empty.body" = "착용 기록 시 별표를 누르거나 이벤트 태그를 추가하면 특별한 순간을 모아볼 수 있어요.";
+"stats.entry.highlights" = "하이라이트";
+"stats.entry.highlights.subtitle" = "특별한 착용 순간 모음";
