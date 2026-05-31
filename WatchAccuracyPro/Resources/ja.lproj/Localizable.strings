@@ -1208,3 +1208,11 @@
 "settings.data.export.csv" = "CSV でエクスポート (Excel/Numbers)";
 "settings.data.export.json" = "JSON でエクスポート";
 "settings.data.export.hint" = "すべての腕時計と測定記録をファイルに保存します。";
+
+/* Sprint 1 — 購入価格 + 着用ROI */
+"addwatch.purchase.price" = "購入価格";
+"addwatch.purchase.price.hint" = "贈り物なら空欄に。入力すると1回あたりのコストを計算します。";
+"watch.roi.title" = "1回あたりのコスト";
+"watch.roi.nudge" = "購入価格を入力するとコストパフォーマンスがわかります。";
+"watch.roi.empty" = "着用記録を始めるとコストが表示されます。";
+"watch.roi.subtitle" = "累計 %d 回着用";

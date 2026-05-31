@@ -1208,3 +1208,11 @@
 "settings.data.export.csv" = "Exportar como CSV (Excel/Numbers)";
 "settings.data.export.json" = "Exportar como JSON";
 "settings.data.export.hint" = "Guarda todos los relojes y mediciones en un archivo.";
+
+/* Sprint 1 — Precio de compra + Costo por uso */
+"addwatch.purchase.price" = "Precio de compra";
+"addwatch.purchase.price.hint" = "Déjalo vacío si fue un regalo. Calcula el costo por uso.";
+"watch.roi.title" = "Costo por uso";
+"watch.roi.nudge" = "Ingresa el precio de compra para ver tu costo por uso.";
+"watch.roi.empty" = "Empieza a registrar usos para ver tu costo.";
+"watch.roi.subtitle" = "Usado %d veces";

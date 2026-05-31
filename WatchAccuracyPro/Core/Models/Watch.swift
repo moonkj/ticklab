@@ -47,6 +47,11 @@ final class Watch {
     var purchaseLocation: String? = nil
     /// Sprint 1 (P3-5): 구매 담당자/매장명/세일즈 — 자유 텍스트.
     var purchaseSalesperson: String? = nil
+    /// Sprint 1 (P3-4 + P2-12): 구매가 — TCO/ROI 계산용. 통화는 purchaseCurrency 에 별도 저장.
+    /// nil = "선물 받음" 또는 미입력. ROI 카드는 nil 인 경우 "구매가를 입력하면 가성비를 알 수 있어요" 넛지 표시.
+    var purchasePrice: Decimal? = nil
+    /// 통화 코드 — ISO 4217 (예: "KRW", "USD", "JPY"). 기본은 Locale.current.currency.identifier.
+    var purchaseCurrency: String? = nil
     /// 페르소나 (김재철, 워치메이커) wish: movement DB lookup 의 lift angle 을 watch 단위로 override.
     /// nil 이면 movement DB 의 default 사용. 워치메이커가 직접 측정한 값이 있을 때만 사용.
     var liftAngleOverride: Double?
@@ -109,6 +114,8 @@ final class Watch {
         batteryReminderEnabled: Bool = false,
         purchaseLocation: String? = nil,
         purchaseSalesperson: String? = nil,
+        purchasePrice: Decimal? = nil,
+        purchaseCurrency: String? = nil,
         createdAt: Date = .init()
     ) {
         self.id = id
@@ -135,6 +142,8 @@ final class Watch {
         self.batteryReminderEnabled = batteryReminderEnabled
         self.purchaseLocation = purchaseLocation
         self.purchaseSalesperson = purchaseSalesperson
+        self.purchasePrice = purchasePrice
+        self.purchaseCurrency = purchaseCurrency
         self.createdAt = createdAt
     }
 

@@ -20,6 +20,9 @@ struct AddWatchView: View {
     /// Sprint 1 (P3-5): 구매처/담당자 — 자유 텍스트, optional.
     @State private var purchaseLocation: String = ""
     @State private var purchaseSalesperson: String = ""
+    /// Sprint 1 (P3-4): 구매가 + 통화. 빈 문자열 = nil.
+    @State private var purchasePriceText: String = ""
+    @State private var purchaseCurrency: String = Locale.current.currency?.identifier ?? "USD"
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var showingCamera = false
@@ -267,6 +270,24 @@ struct AddWatchView: View {
                 Section(String(localized: "addwatch.section.purchase")) {
                     TextField(String(localized: "addwatch.purchase.location"), text: $purchaseLocation)
                     TextField(String(localized: "addwatch.purchase.salesperson"), text: $purchaseSalesperson)
+                    HStack {
+                        TextField(String(localized: "addwatch.purchase.price"), text: $purchasePriceText)
+                            .keyboardType(.decimalPad)
+                        Picker("", selection: $purchaseCurrency) {
+                            Text("KRW").tag("KRW")
+                            Text("USD").tag("USD")
+                            Text("EUR").tag("EUR")
+                            Text("JPY").tag("JPY")
+                            Text("GBP").tag("GBP")
+                            Text("CHF").tag("CHF")
+                            Text("CNY").tag("CNY")
+                        }
+                        .pickerStyle(.menu)
+                        .labelsHidden()
+                    }
+                    Text(String(localized: "addwatch.purchase.price.hint"))
+                        .font(.system(size: 11))
+                        .foregroundStyle(AppColors.ink3)
                 }
 
                 // Round 84: 디자인 SSOT screens-detail.jsx AddWatchView 시리얼 안내 helpcard.
@@ -355,6 +376,8 @@ struct AddWatchView: View {
         referenceNumber = existing.referenceNumber ?? ""
         purchaseLocation = existing.purchaseLocation ?? ""
         purchaseSalesperson = existing.purchaseSalesperson ?? ""
+        purchasePriceText = existing.purchasePrice.map { NSDecimalNumber(decimal: $0).stringValue } ?? ""
+        purchaseCurrency = existing.purchaseCurrency ?? purchaseCurrency
         if let bph = existing.customBph { manualBphText = String(bph) }
     }
 
@@ -524,6 +547,7 @@ struct AddWatchView: View {
         return !brand.isEmpty || !model.isEmpty || photoData != nil
             || !nickname.isEmpty || !story.isEmpty || !referenceNumber.isEmpty
             || !purchaseLocation.isEmpty || !purchaseSalesperson.isEmpty
+            || !purchasePriceText.isEmpty
             || caliber != nil
     }
 
@@ -572,6 +596,8 @@ struct AddWatchView: View {
         let refTrimmed = referenceNumber.trimmingCharacters(in: .whitespaces)
         let purchaseLocationTrimmed = purchaseLocation.trimmingCharacters(in: .whitespaces)
         let purchaseSalespersonTrimmed = purchaseSalesperson.trimmingCharacters(in: .whitespaces)
+        let purchasePriceTrimmed = purchasePriceText.trimmingCharacters(in: .whitespaces)
+        let parsedPurchasePrice: Decimal? = Decimal(string: purchasePriceTrimmed)
         let parsedCustomBph: Int? = isManualEntry ? Int(manualBphText) : nil
         if let existing {
             existing.brand = brand
@@ -589,6 +615,8 @@ struct AddWatchView: View {
             existing.referenceNumber = refTrimmed.isEmpty ? nil : refTrimmed
             existing.purchaseLocation = purchaseLocationTrimmed.isEmpty ? nil : purchaseLocationTrimmed
             existing.purchaseSalesperson = purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed
+            existing.purchasePrice = parsedPurchasePrice
+            existing.purchaseCurrency = parsedPurchasePrice != nil ? purchaseCurrency : nil
             existing.customBph = parsedCustomBph
             watch = existing
         } else {
@@ -604,7 +632,9 @@ struct AddWatchView: View {
                 story: storyTrimmed.isEmpty ? nil : storyTrimmed,
                 referenceNumber: refTrimmed.isEmpty ? nil : refTrimmed,
                 purchaseLocation: purchaseLocationTrimmed.isEmpty ? nil : purchaseLocationTrimmed,
-                purchaseSalesperson: purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed
+                purchaseSalesperson: purchaseSalespersonTrimmed.isEmpty ? nil : purchaseSalespersonTrimmed,
+                purchasePrice: parsedPurchasePrice,
+                purchaseCurrency: parsedPurchasePrice != nil ? purchaseCurrency : nil
             )
             watch.customBph = parsedCustomBph
             modelContext.insert(watch)

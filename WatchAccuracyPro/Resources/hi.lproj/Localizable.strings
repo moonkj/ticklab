@@ -1208,3 +1208,11 @@
 "settings.data.export.csv" = "CSV में निर्यात (Excel/Numbers)";
 "settings.data.export.json" = "JSON में निर्यात";
 "settings.data.export.hint" = "सभी घड़ियाँ और माप एक फ़ाइल में सहेजें।";
+
+/* Sprint 1 — खरीद मूल्य + प्रति पहनावा लागत */
+"addwatch.purchase.price" = "खरीद मूल्य";
+"addwatch.purchase.price.hint" = "उपहार था तो खाली छोड़ें। दर्ज करने पर प्रति पहनावा लागत दिखाएंगे।";
+"watch.roi.title" = "प्रति पहनावा लागत";
+"watch.roi.nudge" = "खरीद मूल्य दर्ज करें और प्रति पहनावा लागत देखें।";
+"watch.roi.empty" = "पहनावा रिकॉर्ड शुरू करें और लागत देखें।";
+"watch.roi.subtitle" = "कुल %d बार पहना";

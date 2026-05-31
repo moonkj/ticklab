@@ -1208,3 +1208,11 @@
 "settings.data.export.csv" = "Exporter en CSV (Excel/Numbers)";
 "settings.data.export.json" = "Exporter en JSON";
 "settings.data.export.hint" = "Sauvegarde toutes les montres et mesures dans un fichier.";
+
+/* Sprint 1 — Prix d'achat + Coût par port */
+"addwatch.purchase.price" = "Prix d'achat";
+"addwatch.purchase.price.hint" = "Laissez vide si c'est un cadeau. Permet de calculer le coût par port.";
+"watch.roi.title" = "Coût par port";
+"watch.roi.nudge" = "Entrez le prix d'achat pour connaître le coût par port.";
+"watch.roi.empty" = "Commencez à enregistrer vos ports pour voir le coût.";
+"watch.roi.subtitle" = "Porté %d fois";

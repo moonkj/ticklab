@@ -86,4 +86,12 @@ enum WearLogService {
         .sorted { $0.days > $1.days }
     }
 
+    /// Sprint 1 (P2-12 ROI): 단일 시계의 누적 착용 일수. 없으면 0.
+    static func wearCount(for watch: Watch, in context: ModelContext) -> Int {
+        let watchID = watch.id
+        let predicate = #Predicate<WearLog> { $0.watch?.id == watchID }
+        let descriptor = FetchDescriptor<WearLog>(predicate: predicate)
+        return (try? context.fetchCount(descriptor)) ?? 0
+    }
+
 }

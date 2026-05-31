@@ -1208,3 +1208,11 @@
 "settings.data.export.csv" = "匯出為 CSV (Excel/Numbers)";
 "settings.data.export.json" = "匯出為 JSON";
 "settings.data.export.hint" = "將所有手錶和測量記錄儲存為檔案。";
+
+/* Sprint 1 — 購買價格 + 單次佩戴成本 */
+"addwatch.purchase.price" = "購買價格";
+"addwatch.purchase.price.hint" = "如為禮物請留空。輸入後將計算單次佩戴成本。";
+"watch.roi.title" = "單次佩戴成本";
+"watch.roi.nudge" = "輸入購買價格即可查看單次佩戴成本。";
+"watch.roi.empty" = "開始記錄佩戴後將顯示成本。";
+"watch.roi.subtitle" = "累計佩戴 %d 次";

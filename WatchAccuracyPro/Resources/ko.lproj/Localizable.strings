@@ -1203,3 +1203,11 @@
 "settings.data.export.csv" = "CSV로 내보내기 (Excel/Numbers)";
 "settings.data.export.json" = "JSON으로 내보내기";
 "settings.data.export.hint" = "전체 시계와 측정 기록을 파일로 저장합니다.";
+
+/* Sprint 1 — 구매가 + 착용 ROI */
+"addwatch.purchase.price" = "구매가";
+"addwatch.purchase.price.hint" = "선물 받았으면 비워두세요. 입력하면 착용당 가성비를 계산해드려요.";
+"watch.roi.title" = "착용당 비용";
+"watch.roi.nudge" = "구매가를 입력하면 가성비를 알 수 있어요.";
+"watch.roi.empty" = "착용 기록을 시작하면 가성비가 표시돼요.";
+"watch.roi.subtitle" = "누적 %d회 착용";

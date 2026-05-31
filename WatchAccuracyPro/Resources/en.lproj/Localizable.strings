@@ -1204,3 +1204,11 @@
 "settings.data.export.csv" = "Export as CSV (Excel/Numbers)";
 "settings.data.export.json" = "Export as JSON";
 "settings.data.export.hint" = "Save all watches and measurements to a file.";
+
+/* Sprint 1 — Purchase price + Cost per wear */
+"addwatch.purchase.price" = "Purchase Price";
+"addwatch.purchase.price.hint" = "Leave blank if it was a gift. Enter to calculate cost per wear.";
+"watch.roi.title" = "Cost Per Wear";
+"watch.roi.nudge" = "Enter the purchase price to see your cost per wear.";
+"watch.roi.empty" = "Start tracking wears to see your cost per wear.";
+"watch.roi.subtitle" = "Worn %d times";
