@@ -13,24 +13,35 @@ import UIKit
 enum WatchPhotoProcessor {
     private static let ciContext = CIContext(options: [.useSoftwareRenderer: false])
 
-    /// 표준 보정 — 일반 시계 사진.
     static func process(_ data: Data, style: ProcessingStyle = .standard) -> Data? {
         guard let uiImage = UIImage(data: data),
               let cgImage = uiImage.cgImage else { return nil }
         var ci = CIImage(cgImage: cgImage)
 
         switch style {
+
         case .standard:
-            ci = autoExposure(ci)
-            ci = reduceHighlights(ci, amount: 0.3)
-            ci = sharpen(ci, radius: 1.5, sharpness: 0.5)
+            // 자연스러운 시계 사진 — 반사 억제 + 미세 샤프닝
+            ci = exposure(ci, ev: 0.2)
+            ci = reduceHighlights(ci, amount: 0.55)   // 사파이어 반사 강하게 억제
+            ci = sharpen(ci, radius: 2.5, intensity: 0.65)
+            ci = toneCurve(ci, shadows: 0.05, highlights: -0.05)  // 살짝 플랫
+
         case .caseback:
-            ci = autoExposure(ci)
-            ci = sharpen(ci, radius: 2.0, sharpness: 0.7)
+            // 케이스백/각인 전용 — 명암 대비 극대화, 텍스트 가독성
+            ci = exposure(ci, ev: 0.1)
+            ci = contrast(ci, amount: 1.4)            // 대비 40% 강화
+            ci = sharpen(ci, radius: 3.5, intensity: 1.2)  // 강한 샤프닝
+            ci = toneCurve(ci, shadows: -0.08, highlights: 0.08) // 명암 분리
+
         case .vivid:
-            ci = autoExposure(ci)
-            ci = vibrance(ci, amount: 0.4)
-            ci = sharpen(ci, radius: 1.0, sharpness: 0.4)
+            // 선명하고 인상적인 SNS용 — 채도 + 색감 강화
+            ci = exposure(ci, ev: 0.3)
+            ci = vibrance(ci, amount: 0.8)            // 채도 강하게
+            ci = saturation(ci, amount: 1.25)         // 전체 채도 25% 추가
+            ci = contrast(ci, amount: 1.15)
+            ci = sharpen(ci, radius: 2.0, intensity: 0.8)
+            ci = toneCurve(ci, shadows: 0.0, highlights: -0.1) // 하이라이트 약간 억제
         }
 
         guard let output = ciContext.createCGImage(ci, from: ci.extent) else { return nil }
@@ -40,35 +51,51 @@ enum WatchPhotoProcessor {
 
     // MARK: - Filters
 
-    private static func autoExposure(_ ci: CIImage) -> CIImage {
-        let filter = CIFilter.exposureAdjust()
-        filter.inputImage = ci
-        // 자동 노출: 히스토그램 기반 아님 — 약한 +0.2EV로 시계 다이얼 디테일 살림
-        filter.ev = 0.15
-        return filter.outputImage ?? ci
+    private static func exposure(_ ci: CIImage, ev: Float) -> CIImage {
+        let f = CIFilter.exposureAdjust()
+        f.inputImage = ci; f.ev = ev
+        return f.outputImage ?? ci
+    }
+
+    private static func contrast(_ ci: CIImage, amount: Float) -> CIImage {
+        let f = CIFilter.colorControls()
+        f.inputImage = ci; f.contrast = amount; f.saturation = 1.0; f.brightness = 0
+        return f.outputImage ?? ci
+    }
+
+    private static func saturation(_ ci: CIImage, amount: Float) -> CIImage {
+        let f = CIFilter.colorControls()
+        f.inputImage = ci; f.saturation = amount; f.contrast = 1.0; f.brightness = 0
+        return f.outputImage ?? ci
     }
 
     private static func reduceHighlights(_ ci: CIImage, amount: Float) -> CIImage {
-        let filter = CIFilter.highlightShadowAdjust()
-        filter.inputImage = ci
-        filter.highlightAmount = 1.0 - amount  // 1.0 = 원본, 0.0 = 완전 억제
-        filter.shadowAmount = 0.0
-        return filter.outputImage ?? ci
+        let f = CIFilter.highlightShadowAdjust()
+        f.inputImage = ci
+        f.highlightAmount = 1.0 - amount
+        f.shadowAmount = 0.1   // 그림자 살짝 밝혀 디테일 보존
+        return f.outputImage ?? ci
     }
 
-    private static func sharpen(_ ci: CIImage, radius: Float, sharpness: Float) -> CIImage {
-        let filter = CIFilter.unsharpMask()
-        filter.inputImage = ci
-        filter.radius = radius
-        filter.intensity = sharpness
-        return filter.outputImage ?? ci
+    private static func sharpen(_ ci: CIImage, radius: Float, intensity: Float) -> CIImage {
+        let f = CIFilter.unsharpMask()
+        f.inputImage = ci; f.radius = radius; f.intensity = intensity
+        return f.outputImage ?? ci
     }
 
     private static func vibrance(_ ci: CIImage, amount: Float) -> CIImage {
-        let filter = CIFilter.vibrance()
-        filter.inputImage = ci
-        filter.amount = amount
-        return filter.outputImage ?? ci
+        let f = CIFilter.vibrance()
+        f.inputImage = ci; f.amount = amount
+        return f.outputImage ?? ci
+    }
+
+    /// 섀도/하이라이트 독립 조정 — 커브 근사.
+    private static func toneCurve(_ ci: CIImage, shadows: Float, highlights: Float) -> CIImage {
+        let f = CIFilter.highlightShadowAdjust()
+        f.inputImage = ci
+        f.shadowAmount = shadows
+        f.highlightAmount = 1.0 + highlights
+        return f.outputImage ?? ci
     }
 }
 
