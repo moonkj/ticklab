@@ -84,6 +84,17 @@ struct StatsView: View {
     /// 와이어프레임 Section E — Stats 에서 진입하는 카드 (업적 / 리그 / 하이라이트).
     private var funEntryCards: some View {
         VStack(alignment: .leading, spacing: 10) {
+            // Sprint 7 (P3-11): 브랜드 뉴스
+            NavigationLink {
+                BrandNewsView()
+            } label: {
+                funEntryCard(emoji: "📰",
+                             title: String(localized: "stats.entry.news"),
+                             subtitle: String(localized: "stats.entry.news.subtitle"),
+                             tint: Color.orange.opacity(0.15))
+            }
+            .buttonStyle(.plain)
+
             HStack(spacing: 10) {
                 NavigationLink {
                     BadgesView()

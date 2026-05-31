@@ -1441,3 +1441,11 @@
 "photo.role.strap" = "Strap";
 "photo.role.wrist" = "Wrist";
 "photo.role.other" = "Other";
+
+/* Sprint 7 — P3-11 Brand news */
+"news.nav.title" = "Brand News";
+"news.empty.title" = "Couldn't load news";
+"news.empty.body" = "Check your internet connection and pull to refresh.";
+"news.read_more" = "Read more →";
+"stats.entry.news" = "Brand News";
+"stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";

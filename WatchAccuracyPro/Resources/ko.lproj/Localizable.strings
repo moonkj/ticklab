@@ -1440,3 +1440,11 @@
 "photo.role.strap" = "스트랩";
 "photo.role.wrist" = "착용";
 "photo.role.other" = "기타";
+
+/* Sprint 7 — P3-11 브랜드 뉴스 */
+"news.nav.title" = "브랜드 뉴스";
+"news.empty.title" = "뉴스를 불러올 수 없어요";
+"news.empty.body" = "인터넷 연결을 확인하고 당겨서 새로고침해보세요.";
+"news.read_more" = "더 보기 →";
+"stats.entry.news" = "브랜드 뉴스";
+"stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";

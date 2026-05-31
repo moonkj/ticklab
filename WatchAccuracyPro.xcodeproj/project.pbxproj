@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		00A4FCF735B3327F8DE4D210 /* WatchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA093E36FD71D6E5C18697B /* WatchDetailView.swift */; };
 		01A4D17A191E91CFBE2D6F1D /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF677B2D361B068A1718069 /* PrimaryButton.swift */; };
+		02FF8E2DF6DB9518B1448F1C /* BrandNewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9011AAB11CBD8E146ECAC6E1 /* BrandNewsView.swift */; };
 		04ECC1E0065DE331067422F1 /* JournalEntryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A1E00FC26DD48B6AA30C8 /* JournalEntryDetailView.swift */; };
 		05434CB57E3B24A6C9502B6A /* WatchPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1BA6A577E8D8DFE37D50C8 /* WatchPhoto.swift */; };
 		05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7188931BE41A7B110E6264F /* WatchMeasurement.swift */; };
@@ -72,6 +73,7 @@
 		42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */; };
 		4548DF66FC35644DB9DFE5A7 /* CostPerWearCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02497C4FA9F2012D2D6D2D0 /* CostPerWearCard.swift */; };
 		45BEA8592C353A4A3F03722D /* COSCBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D001FBFE55C95EE047F4F0 /* COSCBar.swift */; };
+		46AFE5684B1CEA0F32AD630A /* BrandNewsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA4EFFE1238185232C696F /* BrandNewsService.swift */; };
 		486F772C05AC0CB5B0E5FC57 /* NoiseFloorSuppressor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF08ED067A88B19F40F1D21F /* NoiseFloorSuppressor.swift */; };
 		49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6058169163AA8F5819F4E1D /* Typography.swift */; };
 		4A81DC530A0EB04922985073 /* WatchRecommendationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3D35C570A97B6BFD596270 /* WatchRecommendationService.swift */; };
@@ -369,6 +371,7 @@
 		8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreEmphasisFilter.swift; sourceTree = "<group>"; };
 		8C61A0EC7E6B49980D6EAB40 /* JournalFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFeedView.swift; sourceTree = "<group>"; };
 		8E6F59BEB9DB87D747A88169 /* SpectralFluxExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectralFluxExtractor.swift; sourceTree = "<group>"; };
+		9011AAB11CBD8E146ECAC6E1 /* BrandNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandNewsView.swift; sourceTree = "<group>"; };
 		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLogServiceTests.swift; sourceTree = "<group>"; };
 		90B8B019EE25542BDB9D3A2A /* SanitizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizationTests.swift; sourceTree = "<group>"; };
@@ -455,6 +458,7 @@
 		F23444BF1EB9720E38132881 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		F302C7B8CE7C443C452EB3B2 /* AudioInputClassifyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputClassifyTests.swift; sourceTree = "<group>"; };
 		F341EE5EE217E7EB16CC927F /* Chip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
+		F4DA4EFFE1238185232C696F /* BrandNewsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandNewsService.swift; sourceTree = "<group>"; };
 		F5D6F05B7D6C49E563D6B7F1 /* MatchedFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchedFilter.swift; sourceTree = "<group>"; };
 		F6058169163AA8F5819F4E1D /* Typography.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typography.swift; sourceTree = "<group>"; };
 		F7188931BE41A7B110E6264F /* WatchMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMeasurement.swift; sourceTree = "<group>"; };
@@ -620,6 +624,7 @@
 				56E6438654FBB9518FC1E058 /* Monetization */,
 				DEEFD90B13F2588AD9CA1C42 /* Movement */,
 				F5E5779E3A00F67FECFA7C64 /* Network */,
+				A2F16A4FFCC8CFF52EF660AA /* News */,
 				7A1B60BBC65CCF11C3D48128 /* Notifications */,
 				8AA5312EFA376ACCBAAE7609 /* Referral */,
 				2F1AEA5FB2151A411475F63A /* Reports */,
@@ -882,12 +887,21 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
+		A2F16A4FFCC8CFF52EF660AA /* News */ = {
+			isa = PBXGroup;
+			children = (
+				F4DA4EFFE1238185232C696F /* BrandNewsService.swift */,
+			);
+			path = News;
+			sourceTree = "<group>";
+		};
 		A425404AD62BB6D126B7DF54 /* Fun */ = {
 			isa = PBXGroup;
 			children = (
 				E8293C262F87D540B2E2C9E4 /* BadgesView.swift */,
 				40A1210C79FC5876A632B764 /* BatteryView.swift */,
 				0CE067C7F3DCA7A186DC6FE7 /* BrandLeagueView.swift */,
+				9011AAB11CBD8E146ECAC6E1 /* BrandNewsView.swift */,
 				0C31B146938DDDD93034D95D /* DialFortuneView.swift */,
 				D25937B6B6AC9C60ACCC1F8E /* GlobalAnalyticsView.swift */,
 				6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */,
@@ -1313,6 +1327,8 @@
 				254839437847E46296E32359 /* BeatErrorCalculator.swift in Sources */,
 				2D338DBDDE3A68F846A60062 /* BrandConstants.swift in Sources */,
 				2E65F8B30D3042AD28B9261F /* BrandLeagueView.swift in Sources */,
+				46AFE5684B1CEA0F32AD630A /* BrandNewsService.swift in Sources */,
+				02FF8E2DF6DB9518B1448F1C /* BrandNewsView.swift in Sources */,
 				45BEA8592C353A4A3F03722D /* COSCBar.swift in Sources */,
 				4AB6F1F297397E9A6D0620DE /* CameraImagePicker.swift in Sources */,
 				520B0BC0AA32863772A9865A /* CasebackOCRService.swift in Sources */,
@@ -1582,7 +1598,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1749,7 +1765,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 137;
+				CURRENT_PROJECT_VERSION = 138;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
