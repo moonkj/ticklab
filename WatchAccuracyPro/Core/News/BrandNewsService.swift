@@ -47,14 +47,32 @@ final class BrandNewsService: ObservableObject {
             all.append(contentsOf: items)
         }
 
-        // 브랜드 키워드 필터링 — 매칭되는 것 우선, 없으면 전체 표시
-        let brandKeywords = brands.map { $0.lowercased() }
-        let matched = brandKeywords.isEmpty ? [] : all.filter { article in
+        // 1단계: 시계 관련 키워드 포함 기사만 통과 (RSS 피드의 비시계 기사 제거)
+        let watchKeywords = ["watch", "timepiece", "chronograph", "movement", "caliber",
+                             "rolex", "omega", "seiko", "iwc", "patek", "audemars",
+                             "tudor", "breitling", "tag heuer", "longines", "tissot",
+                             "hamilton", "cartier", "jaeger", "panerai", "nomos",
+                             "grand seiko", "zenith", "oris", "hublot", "strap",
+                             "caseback", "dial", "bezel", "tourbillon", "mechanical",
+                             "automatic", "quartz", "luxury"]
+        let watchRelated = all.filter { article in
             let title = article.title.lowercased()
-            return brandKeywords.contains { title.contains($0) }
+            return watchKeywords.contains { title.contains($0) }
         }
-        // 내 브랜드 매칭 기사가 5개 미만이면 전체 뉴스로 보완
-        let filtered = matched.count >= 5 ? matched : all
+
+        // 2단계: 내 브랜드 매칭 — 매칭 없으면 전체 시계 뉴스 표시 (unrelated 아닌 watch-related만)
+        let brandKeywords = brands.map { $0.lowercased() }
+        let filtered: [NewsArticle]
+        if brandKeywords.isEmpty {
+            filtered = watchRelated
+        } else {
+            let matched = watchRelated.filter { article in
+                let title = article.title.lowercased()
+                return brandKeywords.contains { title.contains($0) }
+            }
+            // 내 브랜드 매칭 기사가 있으면 그것만, 없으면 시계 관련 전체
+            filtered = matched.isEmpty ? watchRelated : matched
+        }
 
         // 날짜 역순 정렬, 최대 20개
         articles = filtered
