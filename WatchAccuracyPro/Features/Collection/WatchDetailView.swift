@@ -180,12 +180,12 @@ struct WatchDetailView: View {
             CameraImagePicker(imageData: Binding(
                 get: { watch.photoData },
                 set: { newData in
-                    if let newData {
-                        watch.photoData = newData
-                        // Round 147 (Min C1): photo 변경 시 NSCache stale 방지.
+                    if let raw = newData {
+                        // Sprint 6 (P2-3): 카메라 촬영도 보정 스타일 적용.
+                        let processed = EXIFStripper.strippedJPEG(from: raw, watchMode: true, style: photoProcessingStyle)
+                        watch.photoData = processed
                         PhotoCache.invalidate(id: watch.id)
-                        // Round (3-1): 즉시 background prefetch — 다음 hero render main thread spike 회피.
-                        PhotoCache.prefetch(for: watch.id, data: newData)
+                        PhotoCache.prefetch(for: watch.id, data: processed)
                         try? modelContext.save()
                     }
                 }
