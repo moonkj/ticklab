@@ -1403,3 +1403,17 @@
 "analytics.empty" = "아직 충분한 데이터가 수집되지 않았어요.";
 "stats.entry.global" = "글로벌 분석";
 "stats.entry.global.subtitle" = "전세계 착용 트렌드";
+
+/* Sprint 6 — P3-9 글로벌 분석 v2 */
+"analytics.vs.me" = "내 착용";
+"analytics.vs.global" = "글로벌";
+"analytics.vs.unit" = "회";
+"analytics.share.title" = "글로벌 브랜드 점유율";
+"analytics.share.subtitle" = "전체 착용 중 각 브랜드 비중";
+"analytics.disclaimer" = "총 %d개 브랜드 집계";
+"analytics.mybrands.title" = "내 컬렉션 글로벌 순위";
+"analytics.mybrands.subtitle" = "내가 보유한 브랜드의 글로벌 위치";
+"analytics.mybrands.rank" = "글로벌 %d위";
+"analytics.movement.title" = "내 컬렉션 무브먼트";
+"analytics.movement.subtitle" = "보유 시계 무브먼트 타입 분포";
+"analytics.empty.title" = "아직 데이터가 없어요";

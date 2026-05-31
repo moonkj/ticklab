@@ -1379,3 +1379,15 @@
 "analytics.empty" = "Not enough data collected yet.";
 "stats.entry.global" = "Global Analytics";
 "stats.entry.global.subtitle" = "Worldwide wear trends";
+"analytics.vs.me" = "My Wears";
+"analytics.vs.global" = "Global";
+"analytics.vs.unit" = "wears";
+"analytics.share.title" = "Global Brand Share";
+"analytics.share.subtitle" = "Each brand's share of total wears";
+"analytics.disclaimer" = "%d brands tracked";
+"analytics.mybrands.title" = "My Collection vs Global";
+"analytics.mybrands.subtitle" = "Where your brands rank worldwide";
+"analytics.mybrands.rank" = "Global #%d";
+"analytics.movement.title" = "My Movement Distribution";
+"analytics.movement.subtitle" = "Movement types in your collection";
+"analytics.empty.title" = "No data yet";
