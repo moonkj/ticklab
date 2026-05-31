@@ -1278,3 +1278,6 @@
 "watchdetail.warranty.remaining" = "만료까지 %d개월 남음";
 "watchdetail.finance.empty.title" = "구매가를 입력해보세요";
 "watchdetail.finance.empty.body" = "구매가를 입력하면 착용당 비용과 가성비를 확인할 수 있어요.";
+
+/* Sprint 3 — P2-6 컨디션 리포트 */
+"watch.menu.condition_report" = "컨디션 리포트 PDF 공유";

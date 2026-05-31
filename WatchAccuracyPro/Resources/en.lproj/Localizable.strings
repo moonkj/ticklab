@@ -1279,3 +1279,6 @@
 "watchdetail.warranty.remaining" = "%d months remaining";
 "watchdetail.finance.empty.title" = "Add a purchase price";
 "watchdetail.finance.empty.body" = "Enter the purchase price to see your cost per wear and value.";
+
+/* Sprint 3 — P2-6 Condition report */
+"watch.menu.condition_report" = "Share Condition Report PDF";

@@ -269,6 +269,20 @@ struct WatchDetailView: View {
                             }
                         }
                     }
+                    // Sprint 3 (P2-6): 컨디션 리포트 PDF 생성
+                    let pdfData = ConditionReportGenerator.generate(
+                        for: watch,
+                        measurements: watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
+                    )
+                    let pdfURL = FileManager.default.temporaryDirectory
+                        .appendingPathComponent("TickLab_\(watch.brand)_\(watch.model)_Report.pdf"
+                            .replacingOccurrences(of: " ", with: "_"))
+                    if (try? pdfData.write(to: pdfURL)) != nil {
+                        ShareLink(item: pdfURL) {
+                            Label(String(localized: "watch.menu.condition_report"),
+                                  systemImage: "doc.richtext")
+                        }
+                    }
                     Divider()
                     Button(role: .destructive) {
                         deleteAlert = true
