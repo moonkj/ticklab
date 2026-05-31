@@ -151,6 +151,7 @@
 		985FFBCBFEDB7FD1210EAF0B /* WatchTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 514AE8CAD96F79F4A975FC47 /* WatchTimelineView.swift */; };
 		98708DB90E2BED07945E6DCE /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */; };
 		9B1536D6967225521A27A721 /* BeatDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */; };
+		9BC25574918A93C54CF710BA /* WatchSpotlightIndexer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 272996ACF850B028504173ED /* WatchSpotlightIndexer.swift */; };
 		9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B71246DA234CB44A78515B /* AppLockService.swift */; };
 		9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232F86DA8616E432AC56384 /* FeatureFlags.swift */; };
 		9E0E4450370961C2C775563A /* TickLabUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9DEA758E5191171E1AF9C2E /* TickLabUI */; };
@@ -305,6 +306,7 @@
 		2276895B7370448EDD723736 /* SyntheticAudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticAudioSource.swift; sourceTree = "<group>"; };
 		227978A140CA929AA168F9CD /* SpectralFluxExtractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectralFluxExtractorTests.swift; sourceTree = "<group>"; };
 		25EB59B27C918A69243C8960 /* LinearRegressionRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearRegressionRate.swift; sourceTree = "<group>"; };
+		272996ACF850B028504173ED /* WatchSpotlightIndexer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSpotlightIndexer.swift; sourceTree = "<group>"; };
 		286091247745D80CC0F014B0 /* TamagotchiView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TamagotchiView.swift; sourceTree = "<group>"; };
 		2A1D06D694095476911C61C1 /* MockURLProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockURLProtocol.swift; sourceTree = "<group>"; };
 		2B4D26544BF069711EF76911 /* ShareCardComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardComposerView.swift; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				FC34F28DF5793CB680C638A3 /* Sensors */,
 				41F1F5ECFEB6F878BD8F5890 /* Sharing */,
 				B5CBD7A863F50CCD535C066C /* Simulation */,
+				70EBC13B6D56E2ADFEE7F121 /* Spotlight */,
 				7E935782F293F79F4030A740 /* Tamagotchi */,
 				19A1540CF62B07AE3B3D0758 /* Time */,
 				25F22FEFAD9A7BD674ED986A /* Wear */,
@@ -815,6 +818,14 @@
 				E19EC790FC88EB97A2382AD3 /* UI */,
 			);
 			path = WatchAccuracyPro;
+			sourceTree = "<group>";
+		};
+		70EBC13B6D56E2ADFEE7F121 /* Spotlight */ = {
+			isa = PBXGroup;
+			children = (
+				272996ACF850B028504173ED /* WatchSpotlightIndexer.swift */,
+			);
+			path = Spotlight;
 			sourceTree = "<group>";
 		};
 		724792B883257AB887F2E3BF /* Theme */ = {
@@ -1585,6 +1596,7 @@
 				F66631C0C61DA85CA83C691E /* WatchPhotoView.swift in Sources */,
 				4A81DC530A0EB04922985073 /* WatchRecommendationService.swift in Sources */,
 				DF0D33547AB565B5F86A0A7F /* WatchSilhouette.swift in Sources */,
+				9BC25574918A93C54CF710BA /* WatchSpotlightIndexer.swift in Sources */,
 				985FFBCBFEDB7FD1210EAF0B /* WatchTimelineView.swift in Sources */,
 				8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */,
 				415504A195095049C4FFC03C /* WearLogService.swift in Sources */,

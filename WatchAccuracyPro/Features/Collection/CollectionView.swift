@@ -411,6 +411,8 @@ struct CollectionView: View {
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
             .navigationBarTitleDisplayMode(.inline)
+            // 발견성(R6): 컬렉션 진입 시 Spotlight 색인 갱신 — iOS 검색에서 시계 찾기.
+            .onAppear { WatchSpotlightIndexer.index(watches) }
             // Sprint 11 (사용자 요청): 검색칸은 시계 다수 보유 시에만 표시 — 소수 보유 사용자에겐 불필요.
             .modifier(ConditionalSearchable(
                 isActive: watches.count >= 5,

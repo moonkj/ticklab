@@ -1,3 +1,5 @@
+import CoreSpotlight
+import SwiftData
 import SwiftUI
 
 /// TickLab v3 main shell — 4-tab structure.
@@ -10,6 +12,7 @@ import SwiftUI
 /// 같은 탭을 재선택해도 루트로 복귀.
 struct RootTabView: View {
     @Environment(UserPreferences.self) private var preferences
+    @Environment(\.modelContext) private var modelContext
     @ObservedObject private var flags = FeatureFlags.shared
     @State private var selected: Tab = .collection
 
@@ -147,6 +150,16 @@ struct RootTabView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: .ticklabMeasurementDidEnd)) { _ in
             measurementInProgress = false
+        }
+        // 발견성(R6): Spotlight 결과 탭 → 해당 시계 상세로 딥링크.
+        .onContinueUserActivity(CSSearchableItemActionType) { activity in
+            guard let idStr = activity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
+                  let id = UUID(uuidString: idStr),
+                  let watch = (try? modelContext.fetch(FetchDescriptor<Watch>()))?.first(where: { $0.id == id })
+            else { return }
+            // selected 직접 set → 탭 전환 시 path 리셋 로직 우회. 그 후 append 로 상세 push.
+            selected = .collection
+            collectionPath.append(watch)
         }
     }
 }
