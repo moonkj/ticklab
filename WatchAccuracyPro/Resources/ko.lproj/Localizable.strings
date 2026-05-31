@@ -1393,3 +1393,13 @@
 "powerreserve.title" = "파워리저브";
 "powerreserve.remaining" = "%dh 남음";
 "powerreserve.a11y" = "파워리저브 %d시간 남음 (전체 %d시간)";
+
+/* Sprint 6 — P3-9 글로벌 분석 */
+"analytics.nav.title" = "글로벌 분석";
+"analytics.header.title" = "전세계 TickLab 착용 통계";
+"analytics.header.total" = "총 %d회 착용";
+"analytics.header.disclaimer" = "익명 집계 데이터. 100명 이상 데이터만 표시.";
+"analytics.top5.title" = "TOP 5 브랜드";
+"analytics.empty" = "아직 충분한 데이터가 수집되지 않았어요.";
+"stats.entry.global" = "글로벌 분석";
+"stats.entry.global.subtitle" = "전세계 착용 트렌드";

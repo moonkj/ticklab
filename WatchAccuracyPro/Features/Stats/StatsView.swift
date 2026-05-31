@@ -105,7 +105,6 @@ struct StatsView: View {
                 .buttonStyle(.plain)
             }
             HStack(spacing: 10) {
-                // Sprint 4 (P3-3): 하이라이트 타임라인 진입
                 NavigationLink {
                     HighlightTimelineView()
                 } label: {
@@ -115,7 +114,6 @@ struct StatsView: View {
                                  tint: AppColors.warning.opacity(0.15))
                 }
                 .buttonStyle(.plain)
-                // Sprint 4 (P2-17): Wrapped 연간 리포트
                 NavigationLink {
                     WrappedView()
                 } label: {
@@ -126,6 +124,16 @@ struct StatsView: View {
                 }
                 .buttonStyle(.plain)
             }
+            // Sprint 6 (P3-9): 글로벌 분석
+            NavigationLink {
+                GlobalAnalyticsView()
+            } label: {
+                funEntryCard(emoji: "🌍",
+                             title: String(localized: "stats.entry.global"),
+                             subtitle: String(localized: "stats.entry.global.subtitle"),
+                             tint: Color.teal.opacity(0.15))
+            }
+            .buttonStyle(.plain)
         }
     }
 

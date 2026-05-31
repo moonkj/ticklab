@@ -1394,3 +1394,13 @@
 "powerreserve.title" = "POWER RESERVE";
 "powerreserve.remaining" = "%dh remaining";
 "powerreserve.a11y" = "Power reserve %d hours remaining out of %d hours";
+
+/* Sprint 6 — P3-9 Global analytics */
+"analytics.nav.title" = "Global Analytics";
+"analytics.header.title" = "Worldwide TickLab Wear Stats";
+"analytics.header.total" = "%d total wears";
+"analytics.header.disclaimer" = "Anonymized data. Only shown with 100+ records.";
+"analytics.top5.title" = "TOP 5 BRANDS";
+"analytics.empty" = "Not enough data collected yet.";
+"stats.entry.global" = "Global Analytics";
+"stats.entry.global.subtitle" = "Worldwide wear trends";
