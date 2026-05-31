@@ -1496,6 +1496,8 @@
 "sort.brand" = "브랜드";
 "sort.recent_wear" = "최근 착용";
 "sort.name" = "모델명";
+"sort.unmeasured" = "미측정 먼저";
+"sort.accuracy" = "정확도순";
 
 /* Sprint 9 — 위시리스트 */
 "wishlist.nav.title" = "드림 위시리스트";

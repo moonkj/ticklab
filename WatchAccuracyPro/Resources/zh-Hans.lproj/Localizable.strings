@@ -1460,6 +1460,8 @@
 "sort.brand" = "Brand";
 "sort.recent_wear" = "Recently Worn";
 "sort.name" = "Model Name";
+"sort.unmeasured" = "未测量优先";
+"sort.accuracy" = "按精度";
 "wishlist.nav.title" = "Dream Wishlist";
 "wishlist.empty.title" = "No wishlist yet";
 "wishlist.empty.body" = "Add watches you dream of owning.";

@@ -48,12 +48,16 @@ struct CollectionView: View {
         case brand       // 브랜드 가나다
         case recentWear  // 최근 착용순
         case name        // 모델명
+        case unmeasured  // 미측정 먼저 (헤비 컬렉터 리뷰)
+        case accuracy    // 최근 정확도순 (|rate| 작은 순)
         var label: LocalizedStringResource {
             switch self {
             case .custom:     return "sort.custom"
             case .brand:      return "sort.brand"
             case .recentWear: return "sort.recent_wear"
             case .name:       return "sort.name"
+            case .unmeasured: return "sort.unmeasured"
+            case .accuracy:   return "sort.accuracy"
             }
         }
     }
@@ -103,6 +107,18 @@ struct CollectionView: View {
                 return watches.sorted {
                     (lastWorn[$0.id] ?? .distantPast) > (lastWorn[$1.id] ?? .distantPast)
                 }
+            case .unmeasured:
+                // 측정 적은 순(미측정 먼저) → 점검 우선순위.
+                return watches.sorted { $0.measurements.count < $1.measurements.count }
+            case .accuracy:
+                // 최근 측정 |rate| 작은 순(정확한 것 먼저). 미측정은 뒤로.
+                func absRate(_ w: Watch) -> Double {
+                    guard let last = w.measurements.max(by: { $0.timestamp < $1.timestamp }) else {
+                        return .greatestFiniteMagnitude
+                    }
+                    return abs(last.rateSecondsPerDay)
+                }
+                return watches.sorted { absRate($0) < absRate($1) }
             }
         }()
         // 검색·즐겨찾기 필터
@@ -116,6 +132,7 @@ struct CollectionView: View {
                 || w.model.lowercased().contains(q)
                 || (w.nickname?.lowercased().contains(q) ?? false)
                 || (w.caliber?.lowercased().contains(q) ?? false)
+                || (w.referenceNumber?.lowercased().contains(q) ?? false)
                 || (w.purchaseLocation?.lowercased().contains(q) ?? false)
         }
         if let primary = searched.first(where: { $0.isPrimary }) {

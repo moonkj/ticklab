@@ -127,6 +127,15 @@ TickLab의 유일한 진짜 해자 = **Wave3 #17 캘리버별 글로벌 분포**
 > 다음(Round 4): 측정 신뢰 회복(P0-1·2)을 전제로, 큰 베팅(#17 글로벌 분포·#18 통합 타임라인·#19 ShareCard 측정배지)의 실행 시퀀스·MVP 컷 라운드.
 
 ---
+# ⚠️ 정정 (코드 재확인) — P0-1 DSP drift 보정은 적용 금지
+
+`DSPPipeline.swift` L1050-1056 주석 확인: 팀은 **이미 Round 170에서 clock-drift 보정을 적용해 봤고**, 사용자 보고로 "**보정 시 +bias가 오히려 커짐** → 원인은 audio clock drift가 아니라 **detection feature 지연**(tic envelope peak이 실제 impact보다 지연 누적)"으로 결론, **의도적으로 비활성화**(diagnostic만 수집). 따라서:
+- **R2/R3의 "drift 死코드 → 적용하면 bias 해소" 결론은 오류** — 이미 시도·반증된 접근. 적용 시 정확도 악화.
+- **MEMORY(사용자 의도 우선)에 따라 보정 비활성화 유지.** 자동 적용 금지.
+- **진짜 bias 원인 = detection feature timing 지연** → envelope peak vs true impact 시점 보정은 별도 DSP 리서치 과제(fixture 필요, 사용자 검증 동반). P0-1은 "drift 보정"이 아니라 "feature-lag 보정 연구"로 재정의.
+
+---
+
 # Round 4 — 팀장(Hyemi) 최종 종합 로드맵
 
 3개 라운드를 단일 실행 순서로 취합. **모든 것의 전제 = 측정 신뢰 회복.** 측정이 틀리면 커뮤니티·ShareCard·글로벌분포가 전부 "틀린 숫자의 포장"이 된다(경쟁사 PM 지적).
