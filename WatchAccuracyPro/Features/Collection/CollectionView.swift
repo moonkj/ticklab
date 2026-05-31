@@ -121,6 +121,8 @@ struct CollectionView: View {
                     }
                 ScrollView {
                     VStack(alignment: .leading, spacing: 0) {
+                        // Sprint 5 (P3-12): 시즌 이벤트 배너
+                        SeasonalEventBanner()
                         header
                         if filtered.isEmpty {
                             emptyState

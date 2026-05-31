@@ -103,6 +103,7 @@
 		6F097B5A50C3E89C40A98D1B /* TCOCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */; };
 		6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D899D1AF17FEFF9EF707EDAB /* PINService.swift */; };
 		71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */; };
+		73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */; };
 		73F5D2BB7934DB165063FC84 /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C0B1191FD9B5AC52121059 /* EmptyState.swift */; };
 		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
 		76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA49473933488382E08C687D /* MovementDBOTAService.swift */; };
@@ -127,6 +128,7 @@
 		98708DB90E2BED07945E6DCE /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */; };
 		9B1536D6967225521A27A721 /* BeatDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */; };
 		9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B71246DA234CB44A78515B /* AppLockService.swift */; };
+		9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232F86DA8616E432AC56384 /* FeatureFlags.swift */; };
 		A29D3FD2A90EA36F5AEF6725 /* QuartzBatteryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C4856761ABB8DFF406C89 /* QuartzBatteryCard.swift */; };
 		A40BC6BA8177158F6189B90F /* LiveWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A67361F10B027A48A16DD7F /* LiveWaveformView.swift */; };
 		A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */; };
@@ -235,6 +237,7 @@
 		005BAA1414033563E77A6ECC /* AmplitudeEstimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimatorTests.swift; sourceTree = "<group>"; };
 		01F911CAA257AD00EFADA2A4 /* WatchSilhouette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSilhouette.swift; sourceTree = "<group>"; };
 		0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementResultView.swift; sourceTree = "<group>"; };
+		0232F86DA8616E432AC56384 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipelineTests.swift; sourceTree = "<group>"; };
 		053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		06D75459625969552D861DDA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -354,6 +357,7 @@
 		90B8B019EE25542BDB9D3A2A /* SanitizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizationTests.swift; sourceTree = "<group>"; };
 		91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		91E473958975512F4841DB00 /* MovementDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDatabaseTests.swift; sourceTree = "<group>"; };
+		923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalEventBanner.swift; sourceTree = "<group>"; };
 		93567E741B9D07241DB8502A /* EnvelopeExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeExtractor.swift; sourceTree = "<group>"; };
 		93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceBadge.swift; sourceTree = "<group>"; };
 		93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDeletion.swift; sourceTree = "<group>"; };
@@ -788,6 +792,7 @@
 				83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */,
 				9FF677B2D361B068A1718069 /* PrimaryButton.swift */,
 				AB7A8BBC217A99FA65A04B05 /* RateDial.swift */,
+				923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
 				5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */,
 				A07FAA2F3650DB74A03B4940 /* WatchCover.swift */,
@@ -875,6 +880,7 @@
 		BC2BA169AC73D969D4F2F6D5 /* Config */ = {
 			isa = PBXGroup;
 			children = (
+				0232F86DA8616E432AC56384 /* FeatureFlags.swift */,
 				45F3AD76B382E83F02230C55 /* Secrets.swift */,
 				E733AA51EC69F71E8AA02809 /* Secrets.swift.template */,
 			);
@@ -1285,6 +1291,7 @@
 				F7BFF81454F5C1996CE5B8D0 /* EditorialPageHeader.swift in Sources */,
 				73F5D2BB7934DB165063FC84 /* EmptyState.swift in Sources */,
 				D0758F7FDFC81C0AAF487057 /* EnvelopeExtractor.swift in Sources */,
+				9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */,
 				66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */,
 				1A70927B74F7E4EAF1B2E33D /* HelpCard.swift in Sources */,
 				1043FF13ADB635BA20AB14BE /* HighlightTimelineView.swift in Sources */,
@@ -1337,6 +1344,7 @@
 				E39D5900FF1267A2A375198C /* RateDial.swift in Sources */,
 				C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */,
 				EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */,
+				73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */,
 				D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */,
 				06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */,
 				900D3F073538D3098D9AC89E /* ServiceLog.swift in Sources */,
@@ -1522,7 +1530,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1689,7 +1697,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 125;
+				CURRENT_PROJECT_VERSION = 126;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

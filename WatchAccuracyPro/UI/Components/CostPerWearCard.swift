@@ -35,20 +35,20 @@ struct CostPerWearCard: View {
             }
             if watch.purchasePrice == nil {
                 Text(String(localized: "watch.roi.nudge"))
-                    .font(.system(size: 13))
+                    .font(.callout)
                     .foregroundStyle(AppColors.ink2)
                     .fixedSize(horizontal: false, vertical: true)
             } else if wearCount == 0 {
                 Text(String(localized: "watch.roi.empty"))
-                    .font(.system(size: 13))
+                    .font(.callout)
                     .foregroundStyle(AppColors.ink2)
             } else if let cpw = costPerWear {
                 let nsNumber = NSDecimalNumber(decimal: cpw)
                 Text(currencyFormatter.string(from: nsNumber) ?? "—")
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(.title.bold())
                     .foregroundStyle(AppColors.ink0)
                 Text(String(format: NSLocalizedString("watch.roi.subtitle", comment: ""), wearCount))
-                    .font(.system(size: 12))
+                    .font(.caption)
                     .foregroundStyle(AppColors.ink2)
             }
         }
