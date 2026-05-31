@@ -12,6 +12,7 @@ struct CommunityFeedView: View {
     @State private var showEULA = false
     @State private var showDailyLimit = false
     @State private var reportTarget: Community.Post?
+    @State private var showViewerGate = false
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -19,7 +20,9 @@ struct CommunityFeedView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if service.feed.isEmpty {
+                if !service.hasAcceptedViewerTerms {
+                    viewerGate
+                } else if service.feed.isEmpty {
                     emptyState
                 } else {
                     feedList
@@ -37,13 +40,23 @@ struct CommunityFeedView: View {
                     .accessibilityLabel(String(localized: "community.compose"))
                 }
             }
-            .task { await service.loadFeed() }
-            .refreshable { await service.loadFeed() }
+            .task {
+                // App Store 1.2: 뷰어도 약관 동의 후에만 UGC 노출 + 익명가입(Round 3 컴플라이언스).
+                if service.hasAcceptedViewerTerms { await service.loadFeed() } else { showViewerGate = true }
+            }
+            .refreshable { if service.hasAcceptedViewerTerms { await service.loadFeed() } }
             .sheet(isPresented: $showComposer) {
                 CommunityComposerView()
             }
             .sheet(isPresented: $showEULA) {
-                CommunityEULAView { showEULA = false; presentComposerIfAllowed() }
+                CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
+            }
+            .fullScreenCover(isPresented: $showViewerGate) {
+                CommunityEULAView {
+                    service.acceptViewerTerms()
+                    showViewerGate = false
+                    Task { await service.loadFeed() }
+                }
             }
             .alert(String(localized: "community.daily_limit.title"), isPresented: $showDailyLimit) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
@@ -85,6 +98,34 @@ struct CommunityFeedView: View {
             .padding(.horizontal, 20)
             .padding(.vertical, 16)
         }
+    }
+
+    /// 뷰어 약관 게이트 — 동의 전엔 피드/익명가입 안 함(App Store 1.2).
+    private var viewerGate: some View {
+        VStack(spacing: 14) {
+            Image(systemName: "lock.shield")
+                .font(.system(size: 44))
+                .foregroundStyle(AppColors.ink3)
+            Text(String(localized: "community.eula.title"))
+                .font(AppTypography.headline)
+                .foregroundStyle(AppColors.ink0)
+            Text(String(localized: "community.eula.body"))
+                .font(AppTypography.bodySmall)
+                .foregroundStyle(AppColors.ink2)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 32)
+            Button { showViewerGate = true } label: {
+                Text(String(localized: "community.eula.agree"))
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(AppColors.paper0)
+                    .padding(.horizontal, 20).padding(.vertical, 12)
+                    .background(AppColors.ink0)
+                    .clipShape(Capsule())
+            }
+            .padding(.top, 4)
+        }
+        .padding(40)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyState: some View {

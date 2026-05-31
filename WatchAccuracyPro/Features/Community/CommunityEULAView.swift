@@ -36,7 +36,7 @@ struct CommunityEULAView: View {
             .safeAreaInset(edge: .bottom) {
                 VStack(spacing: 10) {
                     PrimaryButton(String(localized: "community.eula.agree")) {
-                        service.acceptEULA()
+                        // 수락 처리는 caller 가 결정(뷰어 동의 vs 게시 동의 분리 — Round 3 컴플라이언스).
                         onAgree()
                         dismiss()
                     }

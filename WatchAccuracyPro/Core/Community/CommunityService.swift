@@ -33,14 +33,20 @@ final class CommunityService: ObservableObject {
         static let token = "ticklab.community.token"
         static let uid = "ticklab.community.uid"
         static let eula = "ticklab.community.eulaAccepted"
+        static let viewerTerms = "ticklab.community.viewerTermsAccepted"
         static let lastPost = "ticklab.community.lastPostDate"
         static let liked = "ticklab.community.likedIDs"
         static let blocked = "ticklab.community.blockedUIDs"
     }
 
     // MARK: - EULA (UGC 의무 — zero tolerance 동의)
+    /// 게시(post) 동의.
     var hasAcceptedEULA: Bool { defaults.bool(forKey: Keys.eula) }
     func acceptEULA() { defaults.set(true, forKey: Keys.eula) }
+    /// 뷰어(소비) 동의 — App Store 1.2: UGC를 *보는* 사용자도 약관·신고 동의 필요(Round 3).
+    /// 동의 전엔 피드 로드/익명가입을 하지 않는다.
+    var hasAcceptedViewerTerms: Bool { defaults.bool(forKey: Keys.viewerTerms) }
+    func acceptViewerTerms() { defaults.set(true, forKey: Keys.viewerTerms) }
 
     // MARK: - 하루 1장 (서버 트리거가 강제, 클라는 사전 가드 + UX)
     var canPostToday: Bool {

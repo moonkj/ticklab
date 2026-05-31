@@ -102,4 +102,29 @@ TickLab의 유일한 진짜 해자 = **Wave3 #17 캘리버별 글로벌 분포**
 > 다음(Round 3): 레드팀이 노출한 P0(drift 수정·첫측정 never-fail·커뮤니티 컴플라이언스)의 **구체 해법·테스트 전략** 설계 라운드.
 
 ---
-*Round 1: 7직군 건설 리뷰 → Wave 1/2/3. Round 2: 레드팀 → P0 급소 3 + 재우선순위. 라운드 누적 진행 중.*
+---
+
+# Round 3 — 해법 설계 (P0 급소를 구체 수정안+테스트로)
+
+## P0-1 DSP clock-drift 보정 (설계 완료 — 사용자 검증 후 적용)
+- **끊긴 지점**: 보정 인프라(firstChunkUptime 등)는 수집만 살아있고 적용 0. `analyzeInternal`의 measuredPPM은 print 로그용 死코드, 프로덕션 `analyzeSimplified` L689는 `rawBph`를 보정 없이 사용. 헤더가 약속한 `scaleFactor` 변수는 미정의. → iPhone 샘플클럭 92~130ppm drift가 그대로 +8~12 s/d bias(사용자 보고와 일치).
+- **적용안**: `clockScale()` 헬퍼(audio/wall elapsed 비율, ppm≤500 클램프, elapsed≥10s 가드, 미충족 1.0=no-op) → 양 경로 `measuredBph` 인자를 `rawBph * clockScale()`로. MEMORY(rawBph autocorrelation) 정합.
+- **테스트(Rule #1)**: TC1 drift없음→scale=1·회귀0 / TC2 +110ppm→보정후 |rate|<1 / TC3 ppm=2000→클램프·역바이어스 없음. SyntheticAudioSource에 wall-clock 주입 훅 필요.
+- ⚠️ **고위험(정확도 핵심)·사용자 reference 환경(IWC) 검증 권장 → 자동 적용 보류, 설계 보존.**
+
+## P0-2 첫 측정 never-fail (설계 완료 — 사용자 확인 후)
+- **폐기 조건**: persist() 게이트 중 `beatYield<50%`·`rateUncertaintySD>2.0`·`grade==.f`가 평범한 첫 측정을 통째 폐기 → "재측정"만 남음.
+- **해법**: `watch.measurements.count < 3`일 때만 soft 게이트(beatYield·정밀도·F거부) 우회, **hard-garbage(absRate>300·conf<10·beatError>1.5)는 유지**. `.failed` 대신 `MeasurementResultView`로(이미 있는 C/F 메시지-우선 모드 재사용: 숫자 dim+±정밀도+"참고용·재측정 권장"). F는 첫 N회 저장하되 통계 제외 플래그(`isFirstMeasurementBypass`, SwiftData 필드 추가).
+- ⚠️ 측정 UX 행동 변경·과거 게이트 강화가 사용자 결정일 수 있음 → **확인 필요**.
+
+## P0-3 커뮤니티 컴플라이언스 (✅ 뷰어 EULA 게이트 구현 / 나머지 출시시)
+- **뷰어 EULA 게이트** ✅: 피드 진입 = 뷰어 약관 1회 동의 후에만 `loadFeed`/익명가입. 동의 전 네트워크·uid 생성 0. (이번 구현)
+- **PrivacyInfo.xcprivacy**: 사진 `Linked=true`(author_uid 영구연결), AudioData는 전송 없으면 항목 제거(매니페스트-실동작 일치). → **출시 시 적용**(지금 적용하면 미전송 상태 과대신고).
+- **권한 목적 문자열**(카메라/사진): 커뮤니티 업로드+EXIF 제거 명시(한/영). → **출시 시**.
+- **차단 영속성**: MVP는 익명 + 신고 자동숨김(report_count≥N)으로 1.2 충족. SIWA 승격은 악용 재발 시 C4+.
+- **17+ 등급 + 연락처 + 처리방침 URL**: App Store Connect/EULA. → **출시 시**.
+
+> 다음(Round 4): 측정 신뢰 회복(P0-1·2)을 전제로, 큰 베팅(#17 글로벌 분포·#18 통합 타임라인·#19 ShareCard 측정배지)의 실행 시퀀스·MVP 컷 라운드.
+
+---
+*Round 1: 7직군 건설 리뷰. Round 2: 레드팀 P0 3. Round 3: P0 해법 설계(+뷰어 EULA 구현). 라운드 누적 진행 중.*
