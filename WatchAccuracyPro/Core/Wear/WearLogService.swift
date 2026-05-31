@@ -94,4 +94,20 @@ enum WearLogService {
         return (try? context.fetchCount(descriptor)) ?? 0
     }
 
+    /// Sprint 2 (P1-1): 위젯 AppIntent 에서 큐잉된 pending toggle 처리.
+    /// App Group "ticklab.pendingWearToggleAt" 가 있고, 가장 최근 측정 시계가 있으면 toggleToday 실행.
+    /// 메인 앱 launch / scenePhase=.active 시 호출.
+    static func consumePendingWearToggle(in context: ModelContext) {
+        let appGroupID = "group.com.ticklab.watchaccuracypro"
+        let defaults = UserDefaults(suiteName: appGroupID)
+        guard let pending = defaults?.object(forKey: "ticklab.pendingWearToggleAt") as? Double, pending > 0 else { return }
+        // 이미 처리됐으면 즉시 clear (no-op 호출 방지).
+        defaults?.removeObject(forKey: "ticklab.pendingWearToggleAt")
+        // 가장 최근 측정한 시계를 대상으로 toggle — 위젯은 항상 latest measurement 표시 중.
+        let descriptor = FetchDescriptor<WatchMeasurement>(sortBy: [SortDescriptor(\.timestamp, order: .reverse)])
+        guard let latestMeasurement = (try? context.fetch(descriptor))?.first,
+              let watch = latestMeasurement.watch else { return }
+        _ = toggleToday(watch, in: context, auto: false)
+    }
+
 }

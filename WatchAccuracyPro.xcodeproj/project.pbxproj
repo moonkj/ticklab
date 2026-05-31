@@ -166,6 +166,7 @@
 		EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B73CA7D38E14891EFF33C /* Assets.xcassets */; };
 		EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F3B8F980C953CE9B08EA6 /* WindingHintToast.swift */; };
 		EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47ABF66B3DE34B94929919A /* RootTabView.swift */; };
+		F1031887A0BB52293D926A92 /* WearToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */; };
 		F1311624612DE197ED27B713 /* MeasurementResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */; };
 		F1928421CA0056ADA3D7B61C /* MagneticFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA28D60EFB1492D1A69505E /* MagneticFieldView.swift */; };
 		F37386299DD9166F2DD70F9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00D28F675246E709FE2AC5E7 /* Localizable.strings */; };
@@ -346,6 +347,7 @@
 		A257E0E10995A8BAF36082D9 /* WearLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLogService.swift; sourceTree = "<group>"; };
 		A2BE7B72D8D7DCFF1E62F319 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A58F1B88C47C2355AC51ABE0 /* AIDiagnosisCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDiagnosisCard.swift; sourceTree = "<group>"; };
+		A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearToggleIntent.swift; sourceTree = "<group>"; };
 		A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcher.swift; sourceTree = "<group>"; };
 		A9A11CBDBC528B3E8A2C961E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestService.swift; sourceTree = "<group>"; };
@@ -432,6 +434,7 @@
 				73F23C24460A6D08DB54AE4D /* MeasurementLiveActivityWidget.swift */,
 				8A43345D263140B82EC044BC /* WatchAccuracyProWidget.entitlements */,
 				210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */,
+				A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */,
 			);
 			path = WatchAccuracyProWidget;
 			sourceTree = "<group>";
@@ -1179,6 +1182,7 @@
 				85CC6E1B805415BF20D21CC7 /* MeasurementLiveActivityWidget.swift in Sources */,
 				24D159BE58DBB5C3EF0E307E /* SharedSnapshotStore.swift in Sources */,
 				BF73D6A8D8F3C62DBD9D1073 /* WatchAccuracyProWidgetBundle.swift in Sources */,
+				F1031887A0BB52293D926A92 /* WearToggleIntent.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1450,7 +1454,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 110;
+				CURRENT_PROJECT_VERSION = 111;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1617,7 +1621,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 110;
+				CURRENT_PROJECT_VERSION = 111;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

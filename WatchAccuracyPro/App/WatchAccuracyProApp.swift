@@ -264,6 +264,8 @@ private struct RootView: View {
                !Calendar.current.isDate(bg, inSameDayAs: Date()) {
                 WatchMoodService.invalidateAll()
             }
+            // Sprint 2 (P1-1): 위젯에서 큐잉된 wear toggle 처리.
+            WearLogService.consumePendingWearToggle(in: modelContext)
             lastBackgroundedAt = nil
         @unknown default: break
         }
