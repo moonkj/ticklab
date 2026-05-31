@@ -22,17 +22,19 @@ final class BrandNewsService: ObservableObject {
         let sourceName: String
     }
 
-    // 시계 전문 RSS 피드 (공개 무료)
+    // 시계 전문 RSS 피드 (공개 무료, 2026년 5월 검증)
     private let rssSources: [(name: String, url: String)] = [
-        ("Hodinkee", "https://www.hodinkee.com/feed"),
-        ("WatchTime", "https://www.watchtime.com/feed/"),
+        ("Monochrome", "https://monochrome-watches.com/feed"),
         ("aBlogtoWatch", "https://www.ablogtowatch.com/feed/"),
+        ("WatchPro", "https://www.watchpro.com/feed/"),
     ]
 
     func fetchNews(for brands: [String]) async {
-        // 캐시 유효하면 재사용
-        if let last = lastFetchAt, Date().timeIntervalSince(last) < cacheDuration,
+        // 캐시 유효하면 재사용 (기사가 있고 30분 이내)
+        if let last = lastFetchAt,
+           Date().timeIntervalSince(last) < cacheDuration,
            !articles.isEmpty { return }
+        articles = []  // 리셋 후 새로 fetch
 
         isLoading = true
         lastError = nil
@@ -45,12 +47,14 @@ final class BrandNewsService: ObservableObject {
             all.append(contentsOf: items)
         }
 
-        // 브랜드 키워드 필터링
+        // 브랜드 키워드 필터링 — 매칭되는 것 우선, 없으면 전체 표시
         let brandKeywords = brands.map { $0.lowercased() }
-        let filtered = all.filter { article in
+        let matched = brandKeywords.isEmpty ? [] : all.filter { article in
             let title = article.title.lowercased()
-            return brandKeywords.isEmpty || brandKeywords.contains { title.contains($0) }
+            return brandKeywords.contains { title.contains($0) }
         }
+        // 내 브랜드 매칭 기사가 5개 미만이면 전체 뉴스로 보완
+        let filtered = matched.count >= 5 ? matched : all
 
         // 날짜 역순 정렬, 최대 20개
         articles = filtered
