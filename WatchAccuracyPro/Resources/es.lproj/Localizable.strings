@@ -1258,3 +1258,6 @@
 "notif.warranty.title" = "Garantía de %@ próxima a expirar";
 "notif.warranty.body_3m" = "Hasta %@. Considera reservar una revisión.";
 "notif.warranty.body_1m" = "1 mes restante hasta %@. Recomendamos reservar una revisión.";
+
+/* Sprint 2 — P0-2.2 Banner sin conexión */
+"network.offline.banner" = "Sin conexión — los registros se guardan y sincronizan después";

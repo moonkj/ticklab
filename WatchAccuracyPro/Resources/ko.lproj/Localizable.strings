@@ -1253,3 +1253,6 @@
 "notif.warranty.title" = "%@ 보증 만료가 다가와요";
 "notif.warranty.body_3m" = "%@ 까지. 점검·정비를 고려해 보세요.";
 "notif.warranty.body_1m" = "%@ 까지 1개월 남았어요. 보증 점검 예약을 권장합니다.";
+
+/* Sprint 2 — P0-2.2 오프라인 배너 */
+"network.offline.banner" = "오프라인 — 기록은 저장되며 나중에 동기화됩니다";

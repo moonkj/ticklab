@@ -77,6 +77,8 @@ struct WatchAccuracyProApp: App {
             Task.detached(priority: .userInitiated) {
                 await ProEntitlement.shared.restore()
             }
+            // Sprint 2 (P0-5.1): MetricKit 구독 시작 — hang/crash diagnostic 수집.
+            MetricKitSubscriber.shared.start()
         }
     }
 
@@ -180,7 +182,12 @@ private struct RootView: View {
                     UserDefaults.standard.set(true, forKey: "ticklab.modeChosenOnce")
                 }
             } else {
-                RootTabView()
+                ZStack(alignment: .top) {
+                    RootTabView()
+                    // Sprint 2 (P0-2.2): 오프라인 시 상단 배너 노출.
+                    OfflineBanner()
+                        .animation(.easeInOut(duration: 0.2), value: NetworkMonitor.shared.isConnected)
+                }
             }
         }
         .onChange(of: scenePhase) { _, newPhase in

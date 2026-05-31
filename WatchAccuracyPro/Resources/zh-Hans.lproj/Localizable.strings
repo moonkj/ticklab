@@ -1258,3 +1258,6 @@
 "notif.warranty.title" = "%@ 保修即将到期";
 "notif.warranty.body_3m" = "至 %@。请考虑预约保养检查。";
 "notif.warranty.body_1m" = "距 %@ 仅剩 1 个月。建议预约保修服务。";
+
+/* Sprint 2 — P0-2.2 离线横幅 */
+"network.offline.banner" = "离线 — 记录保存在本地,稍后同步";

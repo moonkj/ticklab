@@ -1258,3 +1258,6 @@
 "notif.warranty.title" = "La garantie de %@ expire bientôt";
 "notif.warranty.body_3m" = "Jusqu'au %@. Pensez à réserver une révision.";
 "notif.warranty.body_1m" = "1 mois restant jusqu'au %@. Réservation de révision recommandée.";
+
+/* Sprint 2 — P0-2.2 Bannière hors ligne */
+"network.offline.banner" = "Hors ligne — les enregistrements sont sauvegardés et synchronisés plus tard";

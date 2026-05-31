@@ -1258,3 +1258,6 @@
 "notif.warranty.title" = "%@ の保証期限が近づいています";
 "notif.warranty.body_3m" = "%@ まで。点検・整備をご検討ください。";
 "notif.warranty.body_1m" = "%@ まで残り1ヶ月。保証点検の予約をお勧めします。";
+
+/* Sprint 2 — P0-2.2 オフラインバナー */
+"network.offline.banner" = "オフライン — 記録は保存され、後で同期されます";
