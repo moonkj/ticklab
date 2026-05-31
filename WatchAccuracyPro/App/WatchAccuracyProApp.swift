@@ -249,6 +249,16 @@ private struct RootView: View {
                 enabled: preferences.overhaulReminderEnabled,
                 in: modelContext
             )
+            // 로테이션 넛지(R6: 死코드 배선) — N일 미착용 시계 있으면 내일 9시 1회 알림(≤1개·비반복).
+            // rotationNudgeEnabled 토글(기본 ON·Settings 제어) 게이트. 캘린더 권한 강제 안 함.
+            if preferences.rotationNudgeEnabled {
+                let wears = (try? modelContext.fetch(FetchDescriptor<WearLog>())) ?? []
+                RotationNudgeService.scheduleIfNeeded(
+                    watches: allWatches,
+                    wearLogs: wears,
+                    nudgeDays: preferences.rotationNudgeDays
+                )
+            }
         }
     }
 
