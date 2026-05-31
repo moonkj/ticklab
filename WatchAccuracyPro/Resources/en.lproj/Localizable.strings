@@ -1378,3 +1378,19 @@
 "referral.disclaimer" = "Your invite code is used for tracking only and is never sent externally.";
 "settings.referral.title" = "Invite Friends";
 "settings.referral.subtitle" = "Share your code to invite friends";
+
+/* Sprint 6 — P3-14 Feedback + INFRA-5 Power reserve */
+"feedback.nav.title" = "Send Feedback";
+"feedback.section.type" = "Type";
+"feedback.type.label" = "Feedback Type";
+"feedback.type.bug" = "Bug Report";
+"feedback.type.suggestion" = "Feature Suggestion";
+"feedback.type.general" = "General";
+"feedback.section.message" = "Message";
+"feedback.placeholder" = "What could be better? What feature would you love?";
+"feedback.email.hint" = "Feedback is sent via email.";
+"feedback.send" = "Send";
+"settings.help.feedback" = "Send Feedback";
+"powerreserve.title" = "POWER RESERVE";
+"powerreserve.remaining" = "%dh remaining";
+"powerreserve.a11y" = "Power reserve %d hours remaining out of %d hours";

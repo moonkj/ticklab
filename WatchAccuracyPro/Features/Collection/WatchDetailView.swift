@@ -652,6 +652,12 @@ struct WatchDetailView: View {
         }
     }
 
+    private func fetchSpecCard() -> SpecCard? {
+        let watchID = watch.id
+        let desc = FetchDescriptor<SpecCard>(predicate: #Predicate { $0.watch?.id == watchID })
+        return (try? modelContext.fetch(desc))?.first
+    }
+
     private var formattedPurchasePrice: String? {
         guard let price = watch.purchasePrice else { return nil }
         let fmt = NumberFormatter()
@@ -849,6 +855,13 @@ struct WatchDetailView: View {
     private var serviceTab: some View {
         let logs = cachedServiceLogs
         VStack(alignment: .leading, spacing: 0) {
+            // Sprint 6 (INFRA-5): 파워리저브 게이지 — SpecCard 데이터 있을 때만.
+            if let specCard = fetchSpecCard(), let maxH = specCard.powerReserveHours, maxH > 0 {
+                let lastWound = wearLogs.first(where: { $0.watch?.id == watch.id })?.date
+                PowerReserveGauge(maxHours: maxH, lastWoundAt: lastWound)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 16)
+            }
             overhaulDueRow
             if logs.isEmpty {
                 VStack(spacing: 12) {

@@ -1377,3 +1377,19 @@
 "referral.disclaimer" = "초대 코드는 트래킹 목적으로만 사용되며 외부에 전송되지 않습니다.";
 "settings.referral.title" = "친구 초대";
 "settings.referral.subtitle" = "코드를 공유해 친구에게 소개하세요";
+
+/* Sprint 6 — P3-14 피드백 + INFRA-5 파워리저브 */
+"feedback.nav.title" = "피드백 보내기";
+"feedback.section.type" = "종류";
+"feedback.type.label" = "피드백 종류";
+"feedback.type.bug" = "버그 신고";
+"feedback.type.suggestion" = "기능 제안";
+"feedback.type.general" = "일반 의견";
+"feedback.section.message" = "메시지";
+"feedback.placeholder" = "어떤 점이 불편하셨나요? 어떤 기능이 있으면 좋을까요?";
+"feedback.email.hint" = "피드백은 이메일로 전송됩니다.";
+"feedback.send" = "보내기";
+"settings.help.feedback" = "피드백 보내기";
+"powerreserve.title" = "파워리저브";
+"powerreserve.remaining" = "%dh 남음";
+"powerreserve.a11y" = "파워리저브 %d시간 남음 (전체 %d시간)";

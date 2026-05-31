@@ -96,6 +96,7 @@
 		5F2CBD2A6D2C758BC60BBDB3 /* SmokeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */; };
 		617932CBE745C7341559CE50 /* PurchaseRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2D3F9AA8A20998AE36CB84 /* PurchaseRouter.swift */; };
 		622C5D72CC63BECCE1FB19B5 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F59D57012F94F1A917365E /* NetworkMonitor.swift */; };
+		63B613E8C23829F5477EA4BF /* InAppFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD78D2E9F5A2A3F1F18B3B2 /* InAppFeedbackView.swift */; };
 		645CC3C17C2FCF029B536985 /* MeasurementNoteEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DAE00D3FC0E2D6BE9B20D5A /* MeasurementNoteEditor.swift */; };
 		65A62726A9852DFC7E26E5DF /* SimulatedAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76C1431560C91FE2CE1E48C0 /* SimulatedAudioSource.swift */; };
 		66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDB539F26B6E6FA7F0DF2DF /* FullscreenPhotoViewer.swift */; };
@@ -189,6 +190,7 @@
 		F1031887A0BB52293D926A92 /* WearToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */; };
 		F1311624612DE197ED27B713 /* MeasurementResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */; };
 		F1928421CA0056ADA3D7B61C /* MagneticFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA28D60EFB1492D1A69505E /* MagneticFieldView.swift */; };
+		F23A111B8B8BA58C82E75554 /* PowerReserveGauge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A36BE3BF6CA4AAB6ACF58A /* PowerReserveGauge.swift */; };
 		F37386299DD9166F2DD70F9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00D28F675246E709FE2AC5E7 /* Localizable.strings */; };
 		F5D4EDC2C2D428C1E8430899 /* TrendChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29687D9A25F32071B52DE06 /* TrendChartView.swift */; };
 		F676A03D2DD8AE447C352FC2 /* MetricBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */; };
@@ -366,6 +368,7 @@
 		91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		91E473958975512F4841DB00 /* MovementDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDatabaseTests.swift; sourceTree = "<group>"; };
 		923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeasonalEventBanner.swift; sourceTree = "<group>"; };
+		92A36BE3BF6CA4AAB6ACF58A /* PowerReserveGauge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerReserveGauge.swift; sourceTree = "<group>"; };
 		93567E741B9D07241DB8502A /* EnvelopeExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnvelopeExtractor.swift; sourceTree = "<group>"; };
 		93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceBadge.swift; sourceTree = "<group>"; };
 		93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDeletion.swift; sourceTree = "<group>"; };
@@ -393,6 +396,7 @@
 		B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipeline.swift; sourceTree = "<group>"; };
 		B29687D9A25F32071B52DE06 /* TrendChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendChartView.swift; sourceTree = "<group>"; };
 		BAC97B88D320D6FBCE8A9503 /* BeatDetectorClusterSubPulsesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatDetectorClusterSubPulsesTests.swift; sourceTree = "<group>"; };
+		BAD78D2E9F5A2A3F1F18B3B2 /* InAppFeedbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InAppFeedbackView.swift; sourceTree = "<group>"; };
 		BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceScorer.swift; sourceTree = "<group>"; };
 		BC7162C3D65CB6A2D69463B3 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		BCB8C9BC27CC5FC79172A7C9 /* AtomicTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicTimeServiceTests.swift; sourceTree = "<group>"; };
@@ -800,6 +804,7 @@
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
 				83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */,
+				92A36BE3BF6CA4AAB6ACF58A /* PowerReserveGauge.swift */,
 				9FF677B2D361B068A1718069 /* PrimaryButton.swift */,
 				AB7A8BBC217A99FA65A04B05 /* RateDial.swift */,
 				923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */,
@@ -823,6 +828,7 @@
 		8C6BADC0CE27AE7B6600DC2E /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				BAD78D2E9F5A2A3F1F18B3B2 /* InAppFeedbackView.swift */,
 				D6984089EAA0E94FD1B3326F /* PurchaseView.swift */,
 				47337BB60F08B5060EE99A57 /* ReferralView.swift */,
 				090D20C16B59509F9494E62C /* SettingsView.swift */,
@@ -1315,6 +1321,7 @@
 				66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */,
 				1A70927B74F7E4EAF1B2E33D /* HelpCard.swift in Sources */,
 				1043FF13ADB635BA20AB14BE /* HighlightTimelineView.swift in Sources */,
+				63B613E8C23829F5477EA4BF /* InAppFeedbackView.swift in Sources */,
 				40D4EF784CD974B1938BC096 /* JournalComposerView.swift in Sources */,
 				2164E35E2D8612E5CC5337E6 /* JournalEntry.swift in Sources */,
 				04ECC1E0065DE331067422F1 /* JournalEntryDetailView.swift in Sources */,
@@ -1355,6 +1362,7 @@
 				181DFE5935859AE7E2926FC1 /* PLLTracker.swift in Sources */,
 				CF91C0788E3B98B4CD0601F3 /* PhotoSourceSheet.swift in Sources */,
 				D238CEC1244A180C651E0371 /* Position.swift in Sources */,
+				F23A111B8B8BA58C82E75554 /* PowerReserveGauge.swift in Sources */,
 				A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */,
 				01A4D17A191E91CFBE2D6F1D /* PrimaryButton.swift in Sources */,
 				83ADE22AA89CEA2028CB6F42 /* ProEntitlement.swift in Sources */,
@@ -1554,7 +1562,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 129;
+				CURRENT_PROJECT_VERSION = 130;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1721,7 +1729,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 129;
+				CURRENT_PROJECT_VERSION = 130;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

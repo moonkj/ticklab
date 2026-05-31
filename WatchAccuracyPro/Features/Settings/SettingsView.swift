@@ -26,6 +26,8 @@ struct SettingsView: View {
     @State private var showingManageSubscriptions: Bool = false
     /// Sprint 2 (P1-7): manage subscription 직전 retention sheet.
     @State private var showingOffboarding: Bool = false
+    /// Sprint 6 (P3-14): 인앱 피드백.
+    @State private var showingFeedback: Bool = false
 
     /// CoreML 모델 가용성 → 현재 active detector. (Round 81: 인라인 한국어 → localize)
     private var coreMLStatus: String {
@@ -388,6 +390,19 @@ struct SettingsView: View {
                                 .foregroundStyle(AppColors.ink3)
                         }
                     }
+                    // Sprint 6 (P3-14): 인앱 피드백
+                    Button {
+                        showingFeedback = true
+                    } label: {
+                        HStack {
+                            Text(String(localized: "settings.help.feedback"))
+                            Spacer()
+                            Image(systemName: "bubble.left.and.bubble.right")
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                    }
+                    .sheet(isPresented: $showingFeedback) { InAppFeedbackView() }
                 }
                 Section(String(localized: "settings.section.about")) {
                     // 사용자 요청: Bundle ID + Movement DB Version 제거. 버전 10번 클릭으로 관리자 모드 진입.
