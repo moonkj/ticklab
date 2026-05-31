@@ -473,6 +473,9 @@ struct WatchDetailView: View {
                 COSCBar(rate: last.rateSecondsPerDay)
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
+                AccuracyGradeChip(rateSecondsPerDay: last.rateSecondsPerDay)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 4)
                 // Sprint 1 (P2-12): 착용당 비용 카드 — 구매가 / 누적 착용. 구매가 nil 이면 넛지.
                 CostPerWearCard(watch: watch)
                     .padding(.horizontal, 20)

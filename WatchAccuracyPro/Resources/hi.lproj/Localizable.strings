@@ -1261,3 +1261,9 @@
 
 /* Sprint 2 — P0-2.2 ऑफ़लाइन बैनर */
 "network.offline.banner" = "ऑफ़लाइन — रिकॉर्ड सहेजे जाते हैं और बाद में सिंक होते हैं";
+
+/* Sprint 3 — P2-5 accuracy grade chip (fallback to en) */
+"accuracy.tier.cosc" = "COSC क्रोनोमीटर";
+"accuracy.tier.excellent" = "उत्कृष्ट";
+"accuracy.tier.normal" = "सामान्य";
+"accuracy.tier.service" = "सर्विस अनुशंसित";

@@ -1261,3 +1261,9 @@
 
 /* Sprint 2 — P0-2.2 オフラインバナー */
 "network.offline.banner" = "オフライン — 記録は保存され、後で同期されます";
+
+/* Sprint 3 — P2-5 accuracy grade chip (fallback to en) */
+"accuracy.tier.cosc" = "COSCクロノメーター";
+"accuracy.tier.excellent" = "優秀";
+"accuracy.tier.normal" = "普通";
+"accuracy.tier.service" = "整備推奨";

@@ -1257,3 +1257,9 @@
 
 /* Sprint 2 — P0-2.2 Offline banner */
 "network.offline.banner" = "Offline — your records save locally and sync later";
+
+/* Sprint 3 — P2-5 Accuracy grade chip */
+"accuracy.tier.cosc" = "COSC Chronometer";
+"accuracy.tier.excellent" = "Excellent";
+"accuracy.tier.normal" = "Normal";
+"accuracy.tier.service" = "Service Recommended";

@@ -1256,3 +1256,9 @@
 
 /* Sprint 2 — P0-2.2 오프라인 배너 */
 "network.offline.banner" = "오프라인 — 기록은 저장되며 나중에 동기화됩니다";
+
+/* Sprint 3 — P2-5 정확도 등급 칩 */
+"accuracy.tier.cosc" = "COSC 크로노미터";
+"accuracy.tier.excellent" = "우수";
+"accuracy.tier.normal" = "보통";
+"accuracy.tier.service" = "정비 권장";

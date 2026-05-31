@@ -11,12 +11,14 @@
 		01A4D17A191E91CFBE2D6F1D /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF677B2D361B068A1718069 /* PrimaryButton.swift */; };
 		04ECC1E0065DE331067422F1 /* JournalEntryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A1E00FC26DD48B6AA30C8 /* JournalEntryDetailView.swift */; };
 		05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7188931BE41A7B110E6264F /* WatchMeasurement.swift */; };
+		06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */; };
 		0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C27B0BEC35633950882906 /* MovementMatcherTests.swift */; };
 		0AF05D132A01F4584655E85D /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0BF3889B7C279B96913C8 /* Watch.swift */; };
 		0B416ACF36F8E8619915B8D3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 15760E394B5817EC63E9E57B /* PrivacyInfo.xcprivacy */; };
 		0CF6D20369F26C6371F0B92F /* BeatErrorCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */; };
 		0E742B15576835ADDBCA32BB /* AsyncDiskImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE10565489923480790DEF0 /* AsyncDiskImage.swift */; };
 		0EDB6CFF23FE196CDEF87803 /* PINEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691023A66AE599737D98CAE7 /* PINEntryView.swift */; };
+		0F8643A3846C68202C26CD92 /* AccuracyGradeChip.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD030531747E34B54A19412F /* AccuracyGradeChip.swift */; };
 		10022C555825A58EC053B8FC /* MainFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */; };
 		1013456C7F4EE01DB9348F11 /* MovementDBOTAServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32AD90F1C902098C4BC9664B /* MovementDBOTAServiceTests.swift */; };
 		11964032C02B9F46668A2B9F /* LiveWaveformCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */; };
@@ -365,9 +367,11 @@
 		BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceScorer.swift; sourceTree = "<group>"; };
 		BC7162C3D65CB6A2D69463B3 /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		BCB8C9BC27CC5FC79172A7C9 /* AtomicTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicTimeServiceTests.swift; sourceTree = "<group>"; };
+		BD030531747E34B54A19412F /* AccuracyGradeChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccuracyGradeChip.swift; sourceTree = "<group>"; };
 		C09D7C9D6BA476268354A860 /* PINSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupView.swift; sourceTree = "<group>"; };
 		C1FF870CF2C7781C49AFBBF3 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		C47ABF66B3DE34B94929919A /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCenterFavoritesService.swift; sourceTree = "<group>"; };
 		C9C0B1191FD9B5AC52121059 /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
 		CAFE5DB5627AFC84036DFD0A /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementPickerSheet.swift; sourceTree = "<group>"; };
@@ -513,6 +517,7 @@
 		25F22FEFAD9A7BD674ED986A /* Wear */ = {
 			isa = PBXGroup;
 			children = (
+				C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */,
 				A257E0E10995A8BAF36082D9 /* WearLogService.swift */,
 			);
 			path = Wear;
@@ -732,6 +737,7 @@
 		841AFF94191B4423A65C1553 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				BD030531747E34B54A19412F /* AccuracyGradeChip.swift */,
 				A58F1B88C47C2355AC51ABE0 /* AIDiagnosisCard.swift */,
 				2DE10565489923480790DEF0 /* AsyncDiskImage.swift */,
 				440628D64E2AD525A2B10DA3 /* CameraImagePicker.swift */,
@@ -1203,6 +1209,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3DF5D931B18B0B3F3AA7648 /* AIDiagnosisCard.swift in Sources */,
+				0F8643A3846C68202C26CD92 /* AccuracyGradeChip.swift in Sources */,
 				6D120686D7D100A75E3FEDBF /* AddWatchView.swift in Sources */,
 				2521BE79E2DE837FACC7DAF4 /* AmplitudeEstimator.swift in Sources */,
 				9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */,
@@ -1291,6 +1298,7 @@
 				C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */,
 				EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */,
 				D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */,
+				06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */,
 				900D3F073538D3098D9AC89E /* ServiceLog.swift in Sources */,
 				D9164317CF032DE33A7CDDFE /* ServiceLogComposerView.swift in Sources */,
 				96EDBAC0599088A662F43280 /* SettingsView.swift in Sources */,
@@ -1466,7 +1474,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 112;
+				CURRENT_PROJECT_VERSION = 113;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1633,7 +1641,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 112;
+				CURRENT_PROJECT_VERSION = 113;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

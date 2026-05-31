@@ -1261,3 +1261,9 @@
 
 /* Sprint 2 — P0-2.2 離線橫幅 */
 "network.offline.banner" = "離線 — 記錄保存在本機,稍後同步";
+
+/* Sprint 3 — P2-5 accuracy grade chip (fallback to en) */
+"accuracy.tier.cosc" = "COSC 天文台認證";
+"accuracy.tier.excellent" = "優秀";
+"accuracy.tier.normal" = "正常";
+"accuracy.tier.service" = "建議保養";

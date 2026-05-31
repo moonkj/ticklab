@@ -1261,3 +1261,9 @@
 
 /* Sprint 2 — P0-2.2 Bannière hors ligne */
 "network.offline.banner" = "Hors ligne — les enregistrements sont sauvegardés et synchronisés plus tard";
+
+/* Sprint 3 — P2-5 accuracy grade chip (fallback to en) */
+"accuracy.tier.cosc" = "Chronomètre COSC";
+"accuracy.tier.excellent" = "Excellent";
+"accuracy.tier.normal" = "Normal";
+"accuracy.tier.service" = "Révision recommandée";

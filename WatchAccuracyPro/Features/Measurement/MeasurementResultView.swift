@@ -109,6 +109,9 @@ struct MeasurementResultView: View {
                 // Round 45 — 디자인 SSOT COSC bar 추가 (rateDial 후).
                 COSCBar(rate: result.rateSecondsPerDay)
                     .padding(.horizontal, 4)
+                // Sprint 3 (P2-5): 정확도 등급 칩 — COSC/우수/보통/정비 권장.
+                AccuracyGradeChip(rateSecondsPerDay: result.rateSecondsPerDay)
+                    .padding(.top, 2)
                 metricsSection
                 if preferences.userMode == .pro { detailsSection }
                 // Round 160: 진단 카드 — Apple Intelligence 가능하면 실제 LLM, 아니면 rule-based.

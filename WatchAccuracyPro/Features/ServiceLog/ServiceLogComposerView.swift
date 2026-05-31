@@ -15,6 +15,13 @@ struct ServiceLogComposerView: View {
     @State private var costText: String = ""
     @State private var note: String = ""
     @State private var showingDiscardAlert = false
+    /// Sprint 3 (P2-11): 워치메이커 즐겨찾기 자동완성.
+    @State private var showFavorites: Bool = false
+    private var filteredFavorites: [String] {
+        let all = ServiceCenterFavoritesService.all
+        guard !center.isEmpty else { return all }
+        return all.filter { $0.localizedCaseInsensitiveContains(center) }
+    }
 
     private var isDirty: Bool {
         !center.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -34,7 +41,31 @@ struct ServiceLogComposerView: View {
                 }
                 Section(String(localized: "service.section.record")) {
                     DatePicker(String(localized: "service.date"), selection: $date, displayedComponents: .date)
-                    TextField(String(localized: "service.center"), text: $center)
+                    VStack(alignment: .leading, spacing: 0) {
+                        TextField(String(localized: "service.center"), text: $center)
+                            .onChange(of: center) { _, _ in showFavorites = true }
+                        // Sprint 3 (P2-11): 즐겨찾기 자동완성 드롭다운.
+                        if showFavorites && !filteredFavorites.isEmpty {
+                            Divider().padding(.top, 4)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 8) {
+                                    ForEach(filteredFavorites, id: \.self) { fav in
+                                        Button(fav) {
+                                            center = fav
+                                            showFavorites = false
+                                        }
+                                        .font(.system(size: 12))
+                                        .padding(.horizontal, 10)
+                                        .padding(.vertical, 5)
+                                        .background(AppColors.accent50)
+                                        .clipShape(Capsule())
+                                        .buttonStyle(.plain)
+                                    }
+                                }
+                                .padding(.vertical, 4)
+                            }
+                        }
+                    }
                     TextField(String(localized: "service.cost"), text: $costText)
                         .keyboardType(.numberPad)
                 }
@@ -83,6 +114,10 @@ struct ServiceLogComposerView: View {
         log.timestamp = date
         log.serviceCenter = center
         log.notes = note
+        // Sprint 3 (P2-11): 저장 시 즐겨찾기에 추가 (LRU).
+        if !center.trimmingCharacters(in: .whitespaces).isEmpty {
+            ServiceCenterFavoritesService.recordUsage(center)
+        }
         if let cost = Decimal(string: costText) {
             log.costAmount = cost
             log.costCurrency = "KRW"
