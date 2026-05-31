@@ -42,6 +42,8 @@ struct RootTabView: View {
             set: { newTab in
                 if newTab != selected {
                     UISelectionFeedbackGenerator().selectionChanged()
+                    // Sprint 9 UX: 탭 아이콘 bounce
+                    UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.5)
                 }
                 // Round 140 (Hyemi/Min H1 Critical): 측정 진행 중에는 deep state 보존 → epoch 증가 차단.
                 // Round 19 (Hyemi): path reset 도 같이 guard — 이전엔 측정 중에도 NavigationPath 가 비워져

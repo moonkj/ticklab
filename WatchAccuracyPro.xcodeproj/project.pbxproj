@@ -15,6 +15,7 @@
 		05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7188931BE41A7B110E6264F /* WatchMeasurement.swift */; };
 		06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */; };
 		0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C27B0BEC35633950882906 /* MovementMatcherTests.swift */; };
+		0A8E8B3E80CDF325E1487029 /* WishlistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5E47884BC08DBF3B9E979 /* WishlistItem.swift */; };
 		0AF05D132A01F4584655E85D /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0BF3889B7C279B96913C8 /* Watch.swift */; };
 		0B416ACF36F8E8619915B8D3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 15760E394B5817EC63E9E57B /* PrivacyInfo.xcprivacy */; };
 		0C475AE81DA480D90B67BC77 /* ConditionReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77630A107E903F99E49AC29 /* ConditionReportGenerator.swift */; };
@@ -50,6 +51,7 @@
 		254839437847E46296E32359 /* BeatErrorCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34385F5101226F0E05DB6B1A /* BeatErrorCalculator.swift */; };
 		27CCFBE3C41378F304CC970E /* LatestMeasurementWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95930B3F72DDE5908ECE3899 /* LatestMeasurementWidget.swift */; };
 		28CAA896AD14E29EA726E8CE /* WatchMoodService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79251A82734FDF2C4574E804 /* WatchMoodService.swift */; };
+		29123D4A4F4DEB813748E1DC /* SkeletonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA7595104575323D6621C7F4 /* SkeletonView.swift */; };
 		2B4BAA5D1BD153C47D0FD778 /* WatchBoxView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB9F352552A37E27C225FCC /* WatchBoxView.swift */; };
 		2BBA8C994DA9610E76E0DFB8 /* MeasurementActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38680208F755CAE7C44D2B6D /* MeasurementActivityAttributes.swift */; };
 		2CF97B809BB33540DCB76FBE /* BeatDetectorClusterSubPulsesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAC97B88D320D6FBCE8A9503 /* BeatDetectorClusterSubPulsesTests.swift */; };
@@ -86,6 +88,7 @@
 		4EF79B15B3D74BE01CF9A2D9 /* SpecCardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */; };
 		5060F80D248B19D2A07705CA /* TemplateMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB63D3C7FEDA364C607D1131 /* TemplateMatcher.swift */; };
 		520B0BC0AA32863772A9865A /* CasebackOCRService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8472F0954A87FCC24459476F /* CasebackOCRService.swift */; };
+		53222385DC5A8173E97DFB7F /* WishlistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BF0D144ADA7FE0ECF71C36F /* WishlistView.swift */; };
 		53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2276895B7370448EDD723736 /* SyntheticAudioSource.swift */; };
 		53C406BC47FD0266CBFCBC40 /* WrappedReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */; };
 		5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */; };
@@ -253,6 +256,7 @@
 		0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementResultView.swift; sourceTree = "<group>"; };
 		0232F86DA8616E432AC56384 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
 		028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPhotoProcessor.swift; sourceTree = "<group>"; };
+		03D5E47884BC08DBF3B9E979 /* WishlistItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistItem.swift; sourceTree = "<group>"; };
 		04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipelineTests.swift; sourceTree = "<group>"; };
 		053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		06D75459625969552D861DDA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -345,6 +349,7 @@
 		69D2295B7834A646CE946315 /* SpecCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardView.swift; sourceTree = "<group>"; };
 		6A42707A0286E4620D0F3829 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6B485902B5A99021F8400A14 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6BF0D144ADA7FE0ECF71C36F /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 		6CE37C38FFCCB336CA05EBCD /* JournalComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalComposerView.swift; sourceTree = "<group>"; };
 		6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimator.swift; sourceTree = "<group>"; };
 		6F2A14F04A20422E0697A398 /* SupabaseBrandLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseBrandLeagueService.swift; sourceTree = "<group>"; };
@@ -401,6 +406,7 @@
 		A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearToggleIntent.swift; sourceTree = "<group>"; };
 		A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcher.swift; sourceTree = "<group>"; };
 		A9A11CBDBC528B3E8A2C961E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AA7595104575323D6621C7F4 /* SkeletonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkeletonView.swift; sourceTree = "<group>"; };
 		AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestService.swift; sourceTree = "<group>"; };
 		AB5598ACD04A9D5698B5F4CE /* PLLTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLLTracker.swift; sourceTree = "<group>"; };
 		AB63D3C7FEDA364C607D1131 /* TemplateMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateMatcher.swift; sourceTree = "<group>"; };
@@ -565,6 +571,7 @@
 				44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */,
 				3FA093E36FD71D6E5C18697B /* WatchDetailView.swift */,
 				48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */,
+				6BF0D144ADA7FE0ECF71C36F /* WishlistView.swift */,
 			);
 			path = Collection;
 			sourceTree = "<group>";
@@ -785,6 +792,7 @@
 				F7188931BE41A7B110E6264F /* WatchMeasurement.swift */,
 				DF1BA6A577E8D8DFE37D50C8 /* WatchPhoto.swift */,
 				B179281822F0A79F6C7494A1 /* WearLog.swift */,
+				03D5E47884BC08DBF3B9E979 /* WishlistItem.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -829,6 +837,7 @@
 				9FF677B2D361B068A1718069 /* PrimaryButton.swift */,
 				AB7A8BBC217A99FA65A04B05 /* RateDial.swift */,
 				923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */,
+				AA7595104575323D6621C7F4 /* SkeletonView.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
 				5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */,
 				A07FAA2F3650DB74A03B4940 /* WatchCover.swift */,
@@ -1425,6 +1434,7 @@
 				30A1D7E3B9E8A3EC4FF2A3F3 /* SharedSnapshotStore.swift in Sources */,
 				EA55DC6146871A3E09E091AE /* SimplifiedBeatDetector.swift in Sources */,
 				65A62726A9852DFC7E26E5DF /* SimulatedAudioSource.swift in Sources */,
+				29123D4A4F4DEB813748E1DC /* SkeletonView.swift in Sources */,
 				4DA99E823280A8742B3140A4 /* Sparkline.swift in Sources */,
 				4D79179B03097BA6CA041622 /* SpecCard.swift in Sources */,
 				980695D5D9B20789B246BF91 /* SpecCardComposerView.swift in Sources */,
@@ -1462,6 +1472,8 @@
 				B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */,
 				16AF0E8A85F6F2382D141164 /* WelcomeFlowView.swift in Sources */,
 				EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */,
+				0A8E8B3E80CDF325E1487029 /* WishlistItem.swift in Sources */,
+				53222385DC5A8173E97DFB7F /* WishlistView.swift in Sources */,
 				53C406BC47FD0266CBFCBC40 /* WrappedReportGenerator.swift in Sources */,
 				87C7A93106D6D38117C28AF2 /* WrappedView.swift in Sources */,
 			);
@@ -1602,7 +1614,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 146;
+				CURRENT_PROJECT_VERSION = 147;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1769,7 +1781,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 146;
+				CURRENT_PROJECT_VERSION = 147;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

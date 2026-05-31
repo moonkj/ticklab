@@ -1455,3 +1455,14 @@
 "sort.brand" = "Brand";
 "sort.recent_wear" = "Recently Worn";
 "sort.name" = "Model Name";
+
+/* Sprint 9 — Wishlist */
+"wishlist.nav.title" = "Dream Wishlist";
+"wishlist.empty.title" = "No wishlist yet";
+"wishlist.empty.body" = "Add watches you dream of owning.";
+"wishlist.add" = "Add to Wishlist";
+"wishlist.edit" = "Edit";
+"wishlist.photo" = "Add Photo";
+"wishlist.target_price" = "Target Price";
+"wishlist.note" = "Note";
+"menu.wishlist" = "Dream Wishlist";

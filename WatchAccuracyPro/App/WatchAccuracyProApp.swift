@@ -90,8 +90,9 @@ struct WatchAccuracyProApp: App {
             ServiceLog.self,
             WearLog.self,
             SpecCard.self,
-            Strap.self,      // Sprint 5 (P3-1)
-            WatchPhoto.self  // Sprint 7 (P2-4)
+            Strap.self,        // Sprint 5 (P3-1)
+            WatchPhoto.self,   // Sprint 7 (P2-4)
+            WishlistItem.self  // Sprint 9 (P2-19)
         ])
         let configuration: ModelConfiguration
         if inMemory {

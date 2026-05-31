@@ -62,6 +62,31 @@ enum AppColors {
     static let border        = rule
 }
 
+// MARK: - Shadow tokens (Sprint 9 UX)
+
+import SwiftUI
+
+struct CardShadow: ViewModifier {
+    var level: Level
+    enum Level { case low, mid, high }
+    func body(content: Content) -> some View {
+        switch level {
+        case .low:
+            content.shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 2)
+        case .mid:
+            content.shadow(color: .black.opacity(0.07), radius: 10, x: 0, y: 4)
+        case .high:
+            content.shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
+        }
+    }
+}
+
+extension View {
+    func cardShadow(_ level: CardShadow.Level = .low) -> some View {
+        modifier(CardShadow(level: level))
+    }
+}
+
 // MARK: - Radius tokens
 
 enum AppRadius {

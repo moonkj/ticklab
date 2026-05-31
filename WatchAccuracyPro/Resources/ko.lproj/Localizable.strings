@@ -1454,3 +1454,14 @@
 "sort.brand" = "브랜드";
 "sort.recent_wear" = "최근 착용";
 "sort.name" = "모델명";
+
+/* Sprint 9 — 위시리스트 */
+"wishlist.nav.title" = "드림 위시리스트";
+"wishlist.empty.title" = "아직 위시리스트가 없어요";
+"wishlist.empty.body" = "갖고 싶은 시계를 추가해보세요.";
+"wishlist.add" = "위시리스트 추가";
+"wishlist.edit" = "편집";
+"wishlist.photo" = "사진 추가";
+"wishlist.target_price" = "목표 가격";
+"wishlist.note" = "메모";
+"menu.wishlist" = "드림 위시리스트";

@@ -254,6 +254,12 @@ struct CollectionView: View {
                         } label: {
                             Label(String(localized: "menu.speccard"), systemImage: "rectangle.stack")
                         }
+                        // Sprint 9 (P2-19): 드림 위시리스트
+                        NavigationLink {
+                            WishlistView()
+                        } label: {
+                            Label(String(localized: "menu.wishlist"), systemImage: "heart")
+                        }
                         // Round 138 사용자 요청: 배터리 모니터 메뉴 제거 — 쿼츠 시계 detail 측정 탭에 통합되어 있음.
                     } label: {
                         Image(systemName: "square.grid.2x2")
@@ -749,6 +755,7 @@ struct HeroWatchCard: View {
             RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 18))
+        .cardShadow(.mid)  // Sprint 9 UX
     }
 }
 
@@ -890,7 +897,7 @@ struct WatchListRow: View {
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-        .shadow(color: .black.opacity(0.04), radius: 2, x: 0, y: 1)
+        .cardShadow(.low)  // Sprint 9 UX
     }
 }
 
