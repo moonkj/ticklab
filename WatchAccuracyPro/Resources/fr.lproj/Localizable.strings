@@ -1216,3 +1216,9 @@
 "watch.roi.nudge" = "Entrez le prix d'achat pour connaître le coût par port.";
 "watch.roi.empty" = "Commencez à enregistrer vos ports pour voir le coût.";
 "watch.roi.subtitle" = "Porté %d fois";
+
+/* Sprint 1 — Guide en 3 étapes post-enregistrement */
+"watch.nextsteps.title" = "Prochaines étapes";
+"watch.nextsteps.photo" = "Ajouter une photo principale";
+"watch.nextsteps.measure" = "Lancer votre première mesure de précision";
+"watch.nextsteps.wear" = "Enregistrer le port d'aujourd'hui";

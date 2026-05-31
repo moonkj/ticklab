@@ -1212,3 +1212,9 @@
 "watch.roi.nudge" = "Enter the purchase price to see your cost per wear.";
 "watch.roi.empty" = "Start tracking wears to see your cost per wear.";
 "watch.roi.subtitle" = "Worn %d times";
+
+/* Sprint 1 — Post-registration 3-step guide */
+"watch.nextsteps.title" = "Next Steps";
+"watch.nextsteps.photo" = "Add a hero photo";
+"watch.nextsteps.measure" = "Run your first accuracy measurement";
+"watch.nextsteps.wear" = "Log today's wear";

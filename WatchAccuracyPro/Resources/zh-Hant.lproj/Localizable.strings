@@ -1216,3 +1216,9 @@
 "watch.roi.nudge" = "輸入購買價格即可查看單次佩戴成本。";
 "watch.roi.empty" = "開始記錄佩戴後將顯示成本。";
 "watch.roi.subtitle" = "累計佩戴 %d 次";
+
+/* Sprint 1 — 註冊後3步指南 */
+"watch.nextsteps.title" = "接下來";
+"watch.nextsteps.photo" = "新增主要照片";
+"watch.nextsteps.measure" = "進行首次精度測量";
+"watch.nextsteps.wear" = "記錄今日佩戴";

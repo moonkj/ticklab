@@ -1216,3 +1216,9 @@
 "watch.roi.nudge" = "購入価格を入力するとコストパフォーマンスがわかります。";
 "watch.roi.empty" = "着用記録を始めるとコストが表示されます。";
 "watch.roi.subtitle" = "累計 %d 回着用";
+
+/* Sprint 1 — 登録後の3ステップガイド */
+"watch.nextsteps.title" = "次のステップ";
+"watch.nextsteps.photo" = "メイン写真を追加";
+"watch.nextsteps.measure" = "初めての精度測定";
+"watch.nextsteps.wear" = "今日の着用を記録";

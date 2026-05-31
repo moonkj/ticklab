@@ -130,6 +130,7 @@
 		BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E473958975512F4841DB00 /* MovementDatabaseTests.swift */; };
 		BDA01A9E488AB16B795BFBA7 /* ShakePickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */; };
 		BF73D6A8D8F3C62DBD9D1073 /* WatchAccuracyProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */; };
+		C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */; };
 		C863ACE28957E2C56F947358 /* WatchAccuracyProWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47D155157AC7BFF49F53E192 /* WatchAccuracyProWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CCC8CA7C1F4F01F4679B538A /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EDDAD4DABD6B3C60B30AD2 /* DateFormatters.swift */; };
 		CD298342112C7558F54DD752 /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1FF870CF2C7781C49AFBBF3 /* KeychainService.swift */; };
@@ -155,6 +156,7 @@
 		E5C8B21BB4AABF7A948BD57A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E64051659783FC3CB44FAFA /* InfoPlist.strings */; };
 		E7C7AC56744BD01C74F034B8 /* CoreMLBeatDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98CCF7E44D164A736DE563E1 /* CoreMLBeatDetector.swift */; };
 		E87A9E6561A1E7A78F0156C6 /* UserPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42A7C71EE156A61717C3845A /* UserPreferences.swift */; };
+		EA0C0A6D8A4281B2E37D2BFF /* NextStepsGuideCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */; };
 		EA55DC6146871A3E09E091AE /* SimplifiedBeatDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B595778E45E7063CD0641D /* SimplifiedBeatDetector.swift */; };
 		EA79B5DB065DC64CF3B3E244 /* Secrets.swift.template in Resources */ = {isa = PBXBuildFile; fileRef = E733AA51EC69F71E8AA02809 /* Secrets.swift.template */; };
 		EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B73CA7D38E14891EFF33C /* Assets.xcassets */; };
@@ -311,6 +313,7 @@
 		7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricBadge.swift; sourceTree = "<group>"; };
 		7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlowTests.swift; sourceTree = "<group>"; };
 		814BB874EA00DC74C916110A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepsGuideCard.swift; sourceTree = "<group>"; };
 		89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProApp.swift; sourceTree = "<group>"; };
 		8A43345D263140B82EC044BC /* WatchAccuracyProWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchAccuracyProWidget.entitlements; sourceTree = "<group>"; };
 		8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardListView.swift; sourceTree = "<group>"; };
@@ -339,6 +342,7 @@
 		A58F1B88C47C2355AC51ABE0 /* AIDiagnosisCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDiagnosisCard.swift; sourceTree = "<group>"; };
 		A89D9DA3A6ED5F9D8CA2AE6F /* MovementMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcher.swift; sourceTree = "<group>"; };
 		A9A11CBDBC528B3E8A2C961E /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestService.swift; sourceTree = "<group>"; };
 		AB5598ACD04A9D5698B5F4CE /* PLLTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PLLTracker.swift; sourceTree = "<group>"; };
 		AB63D3C7FEDA364C607D1131 /* TemplateMatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateMatcher.swift; sourceTree = "<group>"; };
 		AB7A8BBC217A99FA65A04B05 /* RateDial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateDial.swift; sourceTree = "<group>"; };
@@ -533,6 +537,7 @@
 				56E6438654FBB9518FC1E058 /* Monetization */,
 				DEEFD90B13F2588AD9CA1C42 /* Movement */,
 				7A1B60BBC65CCF11C3D48128 /* Notifications */,
+				F17ABBF4B4F32363BDB89F98 /* Review */,
 				D8D6BDF52F3EA0180CF90B49 /* Security */,
 				FC34F28DF5793CB680C638A3 /* Sensors */,
 				41F1F5ECFEB6F878BD8F5890 /* Sharing */,
@@ -720,6 +725,7 @@
 				5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */,
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
+				83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */,
 				9FF677B2D361B068A1718069 /* PrimaryButton.swift */,
 				AB7A8BBC217A99FA65A04B05 /* RateDial.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
@@ -913,6 +919,14 @@
 				724792B883257AB887F2E3BF /* Theme */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		F17ABBF4B4F32363BDB89F98 /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */,
+			);
+			path = Review;
 			sourceTree = "<group>";
 		};
 		F28255DB742D464DE0D26C58 /* Measurement */ = {
@@ -1201,6 +1215,7 @@
 				E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */,
 				96E18BF4543AA4B570297798 /* MovementPickerSheet.swift in Sources */,
 				71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */,
+				EA0C0A6D8A4281B2E37D2BFF /* NextStepsGuideCard.swift in Sources */,
 				486F772C05AC0CB5B0E5FC57 /* NoiseFloorSuppressor.swift in Sources */,
 				4ADD04419FE75C1D0BA9486C /* NoiseSuppressor.swift in Sources */,
 				DC89F8DCD618CF3F200491BC /* NotificationService.swift in Sources */,
@@ -1218,6 +1233,7 @@
 				A29D3FD2A90EA36F5AEF6725 /* QuartzBatteryCard.swift in Sources */,
 				FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */,
 				E39D5900FF1267A2A375198C /* RateDial.swift in Sources */,
+				C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */,
 				EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */,
 				D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */,
 				900D3F073538D3098D9AC89E /* ServiceLog.swift in Sources */,
@@ -1394,7 +1410,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1561,7 +1577,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 105;
+				CURRENT_PROJECT_VERSION = 106;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

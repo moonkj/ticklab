@@ -89,6 +89,10 @@ struct WatchDetailView: View {
             VStack(alignment: .leading, spacing: 0) {
                 heroHeader
                 actionsSection
+                // Sprint 1 (P1-4): 등록 후 다음 단계 가이드 — 모든 단계 완료 또는 닫기 시 영구 숨김.
+                NextStepsGuideCard(watch: watch)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
                 statusStripSection
                 storyCard
                 careSection

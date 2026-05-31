@@ -1216,3 +1216,9 @@
 "watch.roi.nudge" = "Ingresa el precio de compra para ver tu costo por uso.";
 "watch.roi.empty" = "Empieza a registrar usos para ver tu costo.";
 "watch.roi.subtitle" = "Usado %d veces";
+
+/* Sprint 1 — Guía de 3 pasos post-registro */
+"watch.nextsteps.title" = "Siguientes pasos";
+"watch.nextsteps.photo" = "Añade una foto principal";
+"watch.nextsteps.measure" = "Realiza tu primera medición de precisión";
+"watch.nextsteps.wear" = "Registra el uso de hoy";

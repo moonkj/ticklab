@@ -1216,3 +1216,9 @@
 "watch.roi.nudge" = "खरीद मूल्य दर्ज करें और प्रति पहनावा लागत देखें।";
 "watch.roi.empty" = "पहनावा रिकॉर्ड शुरू करें और लागत देखें।";
 "watch.roi.subtitle" = "कुल %d बार पहना";
+
+/* Sprint 1 — पंजीकरण के बाद 3-स्टेप गाइड */
+"watch.nextsteps.title" = "अगले कदम";
+"watch.nextsteps.photo" = "मुख्य फोटो जोड़ें";
+"watch.nextsteps.measure" = "पहली सटीकता माप लें";
+"watch.nextsteps.wear" = "आज का पहनावा रिकॉर्ड करें";

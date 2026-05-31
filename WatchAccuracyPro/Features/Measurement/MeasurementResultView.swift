@@ -151,6 +151,11 @@ struct MeasurementResultView: View {
             case .c:        gen.notificationOccurred(.warning)
             case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
             }
+            // Sprint 1 (P1-6): 골든 모멘트 — 신뢰도 A/B + confidence ≥80 일 때만 카운트.
+            // 누적 3회 도달 + 60일 cooldown 통과 시 시스템 리뷰 prompt.
+            if let g = result.reliabilityGrade, (g == .a || g == .b), result.confidenceScore >= 80 {
+                ReviewRequestService.qualifyingMomentReached()
+            }
         }
     }
 
