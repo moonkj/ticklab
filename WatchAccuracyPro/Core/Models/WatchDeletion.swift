@@ -126,12 +126,27 @@ extension Watch {
                 entry.deleteWithFiles(in: context)
             }
         }
-        // 7) Notification identifier 정리 — wind / battery / overhaul reminder.
+        // 7) Sprint 11 (Jay Critical): Strap cascade — watch optional 이라 자동 cascade 안 됨.
+        let strapDescriptor = FetchDescriptor<Strap>(
+            predicate: #Predicate { $0.watch?.id == watchID }
+        )
+        if let straps = try? context.fetch(strapDescriptor) {
+            for strap in straps { context.delete(strap) }
+        }
+        // 8) Sprint 11 (Jay Critical): WatchPhoto cascade — 사진 Blob orphan 누적 방지.
+        let photoDescriptor = FetchDescriptor<WatchPhoto>(
+            predicate: #Predicate { $0.watch?.id == watchID }
+        )
+        if let photos = try? context.fetch(photoDescriptor) {
+            for photo in photos { context.delete(photo) }
+        }
+        // 9) Notification identifier 정리 — wind / battery / overhaul / warranty reminder.
         NotificationService.cancelWindReminder(for: self)
         NotificationService.cancelBatteryReminder(for: self)
         NotificationService.cancelOverhaulReminder(for: self)
+        NotificationService.cancelWarrantyReminder(for: self)
 
-        // 8) Watch 자체 삭제
+        // 10) Watch 자체 삭제
         context.delete(self)
     }
 }

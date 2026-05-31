@@ -134,8 +134,9 @@ struct WatchDetailView: View {
             refreshJournalAndServiceCache()
             cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
             serialNumber = KeychainService.serial(for: watch.id) ?? ""
-            // push 애니메이션 완료(~0.35s) 후 hero fade in — 크롭 아티팩트 완전 은폐.
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
+            // push 애니메이션 완료 후 hero fade in — 크롭 아티팩트 은폐.
+            // Sprint 11 (Sora #4): 0.32→0.12 단축 — 체감 로딩 지연 제거.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
                 heroVisible = true
             }
         }

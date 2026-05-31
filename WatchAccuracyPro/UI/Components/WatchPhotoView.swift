@@ -27,8 +27,9 @@ struct WatchPhotoView<Placeholder: View>: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .onAppear { loadImage() }
-        .onChange(of: data) { _, _ in
-            // 사진 변경(등록/교체) 시 이전 이미지 클리어 후 새로 로드
+        // Sprint 11 (Min #1): data 전체(수 MB) Equatable 비교 대신 byte count 토큰으로 감시.
+        // 같은 count 다른 이미지 케이스는 등록 경로에서 PhotoCache.invalidate가 처리하므로 안전.
+        .onChange(of: data?.count) { _, _ in
             image = nil
             loadImage()
         }

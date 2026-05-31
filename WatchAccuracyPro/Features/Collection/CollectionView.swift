@@ -798,12 +798,12 @@ struct WatchListRow: View {
     @State private var extractedColor: Color? = nil
 
     private func extractColorIfNeeded() {
-        guard extractedColor == nil,
-              let data = watch.photoData,
-              let img = PhotoCache.image(for: watch.id, data: data),
-              let cg = img.cgImage else { return }
-        // 비동기 추출 — main thread 차단 없음
+        guard extractedColor == nil, let data = watch.photoData else { return }
+        let watchID = watch.id
+        // Sprint 11 (Sora #2): 디코딩까지 백그라운드 — main thread 동기 디코드 제거.
         Task.detached(priority: .utility) {
+            guard let img = PhotoCache.image(for: watchID, data: data),
+                  let cg = img.cgImage else { return }
             let color = DialColorExtractor.averageColor(from: cg)
             await MainActor.run { self.extractedColor = color }
         }

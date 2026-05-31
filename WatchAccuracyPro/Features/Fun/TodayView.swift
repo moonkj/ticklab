@@ -44,11 +44,8 @@ struct TodayView: View {
                     headerSection
                     // Round 176 (사용자 UX 요청 #2): 대표 시계 명확화. 설정 됐으면 큰 카드, 아니면 빈 상태 CTA.
                     primaryWatchSection
-                    // Sprint 5 (P2-15): AI 오늘의 시계 추천
-                    if let rec = WatchRecommendationService.recommend(from: watches, wearLogs: wearLogs) {
-                        recommendationCard(rec)
-                    }
-                    todaysWatchCard
+                    // Sprint 11 (Doyoon #1): 추천 + 뽑기 통합 단일 카드.
+                    todayPickCard
                     // 시각적 리듬: fortune + magnetic 을 2-col grid 로 묶어 hero card 와 차별화
                     HStack(spacing: 10) {
                         fortuneCard
@@ -265,82 +262,74 @@ struct TodayView: View {
 
     // MARK: - Sprint 5 (P2-15) AI 추천 카드
 
+    /// Sprint 11 (Doyoon #1): 추천 + 뽑기 통합 카드.
+    /// 추천 시계 있으면 상단에 표시(탭→상세), 항상 하단에 "랜덤 뽑기"(흔들기 게임).
     @ViewBuilder
-    private func recommendationCard(_ rec: WatchRecommendationService.Recommendation) -> some View {
-        NavigationLink {
-            WatchDetailView(watch: rec.watch)
-        } label: {
-            HStack(spacing: 12) {
-                ZStack {
-                    Circle().fill(Color.purple.opacity(0.15)).frame(width: 56, height: 56)
-                    Image(systemName: "sparkles")
-                        .font(.system(size: 24))
-                        .foregroundStyle(Color.purple)
+    private var todayPickCard: some View {
+        let rec = WatchRecommendationService.recommend(from: watches, wearLogs: wearLogs)
+        VStack(spacing: 0) {
+            if let rec {
+                NavigationLink {
+                    WatchDetailView(watch: rec.watch)
+                } label: {
+                    HStack(spacing: 12) {
+                        ZStack {
+                            Circle().fill(Color.purple.opacity(0.15)).frame(width: 56, height: 56)
+                            Image(systemName: "sparkles").font(.system(size: 24)).foregroundStyle(Color.purple)
+                        }
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(String(localized: "recommendation.title"))
+                                .font(.system(size: 11, weight: .semibold))
+                                .tracking(1.5)
+                                .foregroundStyle(Color.purple.opacity(0.8))
+                            Text("\(rec.watch.brand) \(rec.watch.model)")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(AppColors.ink0).lineLimit(1)
+                            Text(String(localized: rec.reason))
+                                .font(.system(size: 12)).foregroundStyle(AppColors.ink2)
+                        }
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink3)
+                    }
+                    .padding(14)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .contentShape(Rectangle())
                 }
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "recommendation.title"))
-                        .font(.system(size: 11, weight: .semibold))
-                        .tracking(1.5)
-                        .foregroundStyle(Color.purple.opacity(0.8))
-                    Text("\(rec.watch.brand) \(rec.watch.model)")
-                        .font(.system(size: 15, weight: .semibold))
-                        .foregroundStyle(AppColors.ink0)
-                        .lineLimit(1)
-                    Text(String(localized: rec.reason))
-                        .font(.system(size: 12))
-                        .foregroundStyle(AppColors.ink2)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppColors.ink3)
+                .buttonStyle(.plain)
+                Divider().padding(.horizontal, 14)
             }
-            .padding(14)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(Color.purple.opacity(0.06))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.purple.opacity(0.2), lineWidth: 1))
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-        }
-        .buttonStyle(.plain)
-    }
-
-    private var todaysWatchCard: some View {
-        NavigationLink {
-            ShakePickView()
-        } label: {
-            HStack(spacing: 14) {
-                ZStack {
-                    Circle()
-                        .fill(RadialGradient(
+            // 항상 표시: 랜덤 뽑기 (흔들기 게임)
+            NavigationLink {
+                ShakePickView()
+            } label: {
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle().fill(RadialGradient(
                             colors: [AppColors.accentLight, AppColors.accent],
-                            center: UnitPoint(x: 0.35, y: 0.25),
-                            startRadius: 5, endRadius: 50))
-                        .frame(width: 64, height: 64)
-                    Image(systemName: "dice.fill")
-                        .font(.system(size: 28))
-                        .foregroundStyle(.white)
+                            center: UnitPoint(x: 0.35, y: 0.25), startRadius: 5, endRadius: 40))
+                            .frame(width: 56, height: 56)
+                        Image(systemName: "dice.fill").font(.system(size: 24)).foregroundStyle(.white)
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(String(localized: "today.shake.title"))
+                            .font(.system(size: 15, weight: .semibold)).foregroundStyle(AppColors.ink0)
+                        Text(String(localized: "today.shake.subtitle"))
+                            .font(.system(size: 12)).foregroundStyle(AppColors.ink2)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink3)
                 }
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(String(localized: "today.shake.title"))
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(AppColors.ink0)
-                    Text(String(localized: "today.shake.subtitle"))
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.ink2)
-                        .multilineTextAlignment(.leading)
-                }
-                Spacer()
-                Image(systemName: "chevron.right")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(AppColors.ink3)
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(AppColors.paper1)
-            .clipShape(RoundedRectangle(cornerRadius: 14))
-            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+            .buttonStyle(.plain)
         }
-        .buttonStyle(.plain)
+        .background(AppColors.paper1)
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
     }
 
     // MARK: - Fortune

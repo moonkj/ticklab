@@ -11,7 +11,8 @@ final class ModelTests: XCTestCase {
         // SpecCard, WearLog, ServiceLog, JournalEntry 포함 — WatchDeletion.deleteCascade 헬퍼가
         // 이 모델들을 참조하므로 테스트 컨테이너 스키마에도 반드시 포함해야 한다.
         let schema = Schema([Watch.self, WatchMeasurement.self, SpecCard.self,
-                             WearLog.self, ServiceLog.self, JournalEntry.self])
+                             WearLog.self, ServiceLog.self, JournalEntry.self,
+                             Strap.self, WatchPhoto.self])
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         container = try ModelContainer(for: schema, configurations: config)
         context = ModelContext(container)
@@ -150,6 +151,37 @@ final class ModelTests: XCTestCase {
         try context.save()
 
         XCTAssertEqual(try context.fetch(beforeDesc).count, 0, "ServiceLog 가 watch cascade 와 함께 삭제되지 않음")
+    }
+
+    // Sprint 11 (Jay Critical): Strap/WatchPhoto cascade 회귀 테스트.
+    func test_strap_cascades_on_watch_deletion() throws {
+        let watch = Watch(brand: "TestBrand", model: "Model3a")
+        context.insert(watch)
+        context.insert(Strap(watch: watch, name: "Leather", material: "가죽"))
+        try context.save()
+
+        let desc = FetchDescriptor<Strap>()
+        XCTAssertEqual(try context.fetch(desc).count, 1)
+
+        watch.deleteCascade(in: context)
+        try context.save()
+
+        XCTAssertEqual(try context.fetch(desc).count, 0, "Strap 이 watch cascade 와 함께 삭제되지 않음 (orphan)")
+    }
+
+    func test_watchPhoto_cascades_on_watch_deletion() throws {
+        let watch = Watch(brand: "TestBrand", model: "Model3b")
+        context.insert(watch)
+        context.insert(WatchPhoto(watch: watch, role: .caseback, photoData: Data([0xFF, 0xD8])))
+        try context.save()
+
+        let desc = FetchDescriptor<WatchPhoto>()
+        XCTAssertEqual(try context.fetch(desc).count, 1)
+
+        watch.deleteCascade(in: context)
+        try context.save()
+
+        XCTAssertEqual(try context.fetch(desc).count, 0, "WatchPhoto 가 watch cascade 와 함께 삭제되지 않음 (Blob orphan)")
     }
 
     func test_journalEntry_measurementId_nullified_on_measurement_delete() throws {
