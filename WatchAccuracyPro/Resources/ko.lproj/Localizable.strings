@@ -1285,3 +1285,10 @@
 /* Sprint 4 — P1-5 필수/선택 폼 */
 "addwatch.section.required" = "필수 정보";
 "addwatch.section.optional" = "추가 정보 입력 ▼";
+
+/* Sprint 4 — P2-18 착용 이벤트 태그 */
+"weartag.title" = "어떤 자리였나요?";
+"weartag.subtitle" = "태그를 선택하면 나중에 착용 패턴을 분석할 수 있어요.";
+"weartag.custom.placeholder" = "커스텀 태그 입력";
+"weartag.save" = "저장";
+"weartag.skip" = "건너뛰기";

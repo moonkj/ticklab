@@ -16,13 +16,27 @@ final class WearLog {
     var isAuto: Bool
     /// 짧은 메모 (선택).
     var note: String
+    /// Sprint 4 (P2-18): 이벤트 태그. JSON 문자열 배열로 저장 (SwiftData migration safe).
+    /// 예: ["비즈니스", "포멀"] — 프리셋 또는 커스텀 입력.
+    var tagsRaw: String = "[]"
+
+    /// 파싱된 태그 배열 접근자.
+    var tags: [String] {
+        get {
+            (try? JSONDecoder().decode([String].self, from: Data(tagsRaw.utf8))) ?? []
+        }
+        set {
+            tagsRaw = (try? String(data: JSONEncoder().encode(newValue), encoding: .utf8)) ?? "[]"
+        }
+    }
 
     init(
         id: UUID = UUID(),
         watch: Watch? = nil,
         date: Date = .init(),
         isAuto: Bool = false,
-        note: String = ""
+        note: String = "",
+        tags: [String] = []
     ) {
         self.id = id
         self.watch = watch
@@ -30,6 +44,30 @@ final class WearLog {
         self.date = Calendar.current.startOfDay(for: date)
         self.isAuto = isAuto
         self.note = note
+        self.tagsRaw = (try? String(data: JSONEncoder().encode(tags), encoding: .utf8)) ?? "[]"
+    }
+}
+
+/// Sprint 4 (P2-18): 이벤트 태그 프리셋.
+enum WearTag: String, CaseIterable, Identifiable, Sendable {
+    case business   = "비즈니스"
+    case casual     = "캐주얼"
+    case formal     = "포멀"
+    case travel     = "여행"
+    case special    = "특별한 날"
+    case sports     = "스포츠"
+
+    var id: String { rawValue }
+
+    var icon: String {
+        switch self {
+        case .business: return "briefcase"
+        case .casual:   return "tshirt"
+        case .formal:   return "suit"
+        case .travel:   return "airplane"
+        case .special:  return "star"
+        case .sports:   return "figure.run"
+        }
     }
 }
 

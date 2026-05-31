@@ -130,6 +130,7 @@
 		AADCCD5D8C1AA5197C1A19FD /* ConfidenceBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */; };
 		AEF7F1EDF3E5A1B69E9FA324 /* MeasurementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */; };
 		AF3D6294B39E5E9CD8DC04E3 /* AtomicTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BAE1F6F68E6C62F37967AB /* AtomicTimeService.swift */; };
+		B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */; };
 		B0866BE9EAEBECCB7FDE6D8D /* ProEntitlementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8592EF7BED1AC8A8DCF27A /* ProEntitlementTests.swift */; };
 		B0B4B8ECF8E547FF9B134B60 /* ReliabilityNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE2539AD0268040B19EC189 /* ReliabilityNoteTests.swift */; };
 		B1DAFF98053B03D2F2F56983 /* MeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B82869C79CF19830D780904 /* MeasurementView.swift */; };
@@ -280,6 +281,7 @@
 		45F3AD76B382E83F02230C55 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		47442C30079AEE977B647474 /* BPHEstimatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimatorTests.swift; sourceTree = "<group>"; };
 		47D155157AC7BFF49F53E192 /* WatchAccuracyProWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = WatchAccuracyProWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearTagPickerView.swift; sourceTree = "<group>"; };
 		4995C3A82B5E708792DD27DE /* BeatDetectorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatDetectorProtocol.swift; sourceTree = "<group>"; };
 		4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapture.swift; sourceTree = "<group>"; };
 		4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimator.swift; sourceTree = "<group>"; };
@@ -512,6 +514,7 @@
 				500C4856761ABB8DFF406C89 /* QuartzBatteryCard.swift */,
 				44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */,
 				3FA093E36FD71D6E5C18697B /* WatchDetailView.swift */,
+				48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */,
 			);
 			path = Collection;
 			sourceTree = "<group>";
@@ -1346,6 +1349,7 @@
 				DF0D33547AB565B5F86A0A7F /* WatchSilhouette.swift in Sources */,
 				8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */,
 				415504A195095049C4FFC03C /* WearLogService.swift in Sources */,
+				B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */,
 				16AF0E8A85F6F2382D141164 /* WelcomeFlowView.swift in Sources */,
 				EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */,
 			);
@@ -1486,7 +1490,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 117;
+				CURRENT_PROJECT_VERSION = 118;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1653,7 +1657,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 117;
+				CURRENT_PROJECT_VERSION = 118;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

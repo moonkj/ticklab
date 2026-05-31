@@ -641,6 +641,9 @@ struct WatchListRow: View {
     let watch: Watch
     /// Round 16 (Sora): parent 가 한 번 계산한 결과를 prop 으로 받음 — row 마다 fetch 방지.
     let wornToday: Bool
+    /// Sprint 4 (P2-18): 착용 토글 후 tag picker 표시.
+    @State private var showingTagPicker: Bool = false
+    @State private var recentWearLog: WearLog?
 
     init(watch: Watch, wornToday: Bool) {
         self.watch = watch
@@ -733,7 +736,21 @@ struct WatchListRow: View {
             Button {
                 UISelectionFeedbackGenerator().selectionChanged()
                 withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
-                    WearLogService.toggleToday(watch, in: modelContext)
+                    let added = WearLogService.toggleToday(watch, in: modelContext)
+                    // Sprint 4 (P2-18): 착용 추가 시에만 tag picker 표시.
+                    if added {
+                        let today = Calendar.current.startOfDay(for: Date())
+                        let watchID = watch.id
+                        let desc = FetchDescriptor<WearLog>(
+                            predicate: #Predicate { $0.watch?.id == watchID && $0.date == today }
+                        )
+                        recentWearLog = (try? modelContext.fetch(desc))?.first
+                        if recentWearLog != nil {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                showingTagPicker = true
+                            }
+                        }
+                    }
                 }
             } label: {
                 Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
@@ -745,6 +762,11 @@ struct WatchListRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: worn ? "wear.toggle.on" : "wear.toggle.off"))
+            .sheet(isPresented: $showingTagPicker) {
+                if let log = recentWearLog {
+                    WearTagPickerView(wearLog: log)
+                }
+            }
         }
         .padding(.horizontal, 10)
         .padding(.vertical, 14)

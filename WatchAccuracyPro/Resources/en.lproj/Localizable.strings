@@ -1286,3 +1286,10 @@
 /* Sprint 4 — P1-5 Required/optional form */
 "addwatch.section.required" = "Required";
 "addwatch.section.optional" = "More Info ▼";
+
+/* Sprint 4 — P2-18 Wear event tags */
+"weartag.title" = "What was the occasion?";
+"weartag.subtitle" = "Tag your wear to discover patterns later.";
+"weartag.custom.placeholder" = "Custom tag";
+"weartag.save" = "Save";
+"weartag.skip" = "Skip";
