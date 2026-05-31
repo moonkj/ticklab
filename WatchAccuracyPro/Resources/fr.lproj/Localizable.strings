@@ -1174,3 +1174,27 @@
 "addwatch.movement.section.recommended" = "Suggestions pour cette marque";
 "addwatch.movement.section.all" = "Tous les mouvements";
 "addwatch.movement.section.results" = "Résultats de recherche";
+
+/* Lifetime IAP (v1.0.1) */
+"purchase.plan.toggle.lifetime" = "À vie";
+"purchase.plan.lifetime" = "Accès à vie";
+"purchase.plan.lifetime.one_time" = "Achat unique · pour toujours";
+"purchase.plan.lifetime.badge" = "BEST";
+"purchase.cta.buy_lifetime" = "Acheter à vie";
+"purchase.legal.one_time" = "TickLab Pro · achat unique pour un accès à vie. Le paiement est facturé une seule fois sur votre compte Apple ID et ne se renouvelle pas automatiquement. Toutes les fonctionnalités Pro restent débloquées de façon permanente.";
+
+/* Backfill (v1.0.1) — pre-existing missing keys */
+"watch.spec.serial" = "Numéro de série";
+"watch.spec.serial.empty" = "Non défini";
+"watch.spec.serial.add" = "Ajouter";
+"watch.spec.serial.edit" = "Modifier";
+"watch.spec.serial.edit_title" = "Numéro de série";
+"watch.spec.serial.edit_message" = "Stocké en toute sécurité dans le Trousseau. Effacer pour supprimer.";
+"watch.spec.serial.placeholder" = "ex. 1234567";
+"watchbox.slot_count" = "%d emplacements";
+"purchase.plan.monthly" = "Abonnement mensuel";
+"purchase.plan.monthly.per_month" = "/ mois renouvellement automatique — annulez à tout moment";
+"purchase.plan.yearly.badge" = "%d%% de réduction";
+"purchase.plan.toggle.monthly" = "Mensuel";
+"purchase.plan.toggle.yearly" = "Annuel";
+"purchase.legal.auto_renew.monthly" = "TickLab Pro · abonnement de 1 mois avec renouvellement automatique. Le paiement est facturé à votre compte Apple ID lors de la confirmation. Renouvellement automatique au même tarif dans les 24 heures précédant la fin de la période, sauf annulation au moins 24 heures avant. Gérez ou annulez à tout moment dans les paramètres de votre Apple ID.";

@@ -939,12 +939,18 @@
 "purchase.plan.yearly.badge" = "%d%% off";
 "purchase.plan.toggle.monthly" = "Monthly";
 "purchase.plan.toggle.yearly" = "Yearly";
+"purchase.plan.toggle.lifetime" = "Lifetime";
+"purchase.plan.lifetime" = "Lifetime access";
+"purchase.plan.lifetime.one_time" = "One-time purchase · forever";
+"purchase.plan.lifetime.badge" = "BEST";
 "purchase.cta.subscribe" = "Start Pro";
+"purchase.cta.buy_lifetime" = "Buy Lifetime";
 "purchase.cta.processing" = "Processing…";
 "purchase.cta.restore" = "Restore Purchase";
 "purchase.cta.restoring" = "Restoring…";
 "purchase.legal.auto_renew" = "TickLab Pro · 1-year auto-renewing subscription. Payment charges your Apple ID at confirmation. Auto-renews at the same price within 24 hours before the period ends unless cancelled at least 24 hours prior. Manage or cancel anytime in your Apple ID settings.";
 "purchase.legal.auto_renew.monthly" = "TickLab Pro · 1-month auto-renewing subscription. Payment charges your Apple ID at confirmation. Auto-renews at the same price within 24 hours before the period ends unless cancelled at least 24 hours prior. Manage or cancel anytime in your Apple ID settings.";
+"purchase.legal.one_time" = "TickLab Pro · one-time purchase for lifetime access. Payment charges your Apple ID once and does not auto-renew. All Pro features remain unlocked permanently.";
 "purchase.legal.terms" = "Terms of Use";
 "purchase.legal.privacy" = "Privacy Policy";
 "purchase.success.title" = "Pro Activated";
@@ -1078,7 +1084,7 @@
 "badges.b32.name" = "History of Time"; "badges.b32.desc" = "Collected and measured 5 vintage watches over 25 years old"; "badges.b32.condition" = "5 pre-2000 watches each measured at least once";
 
 "league.loading" = "Loading global rankings...";
-"league.error.body" = "Network error. Pull to refresh.";
+"league.error.body" = "Cannot connect to server. Pull to refresh in a moment.";
 "league.myteam.my_count" = " my wears";
 "league.myteam.global_count" = " global";
 "league.myteam.badge" = "MY TEAM";

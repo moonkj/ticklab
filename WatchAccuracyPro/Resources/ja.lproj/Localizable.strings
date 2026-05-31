@@ -1174,3 +1174,27 @@
 "addwatch.movement.section.recommended" = "このブランドの推奨";
 "addwatch.movement.section.all" = "すべてのムーブメント";
 "addwatch.movement.section.results" = "検索結果";
+
+/* Lifetime IAP (v1.0.1) */
+"purchase.plan.toggle.lifetime" = "永続";
+"purchase.plan.lifetime" = "永続アクセス";
+"purchase.plan.lifetime.one_time" = "1回購入 · 永続利用";
+"purchase.plan.lifetime.badge" = "BEST";
+"purchase.cta.buy_lifetime" = "永続版を購入";
+"purchase.legal.one_time" = "TickLab Pro · 1回購入の永続アクセス。Apple ID に1回のみ請求され、自動更新はありません。すべての Pro 機能を永続的に利用できます。";
+
+/* Backfill (v1.0.1) — pre-existing missing keys */
+"watch.spec.serial" = "シリアルナンバー";
+"watch.spec.serial.empty" = "未設定";
+"watch.spec.serial.add" = "追加";
+"watch.spec.serial.edit" = "編集";
+"watch.spec.serial.edit_title" = "シリアルナンバー";
+"watch.spec.serial.edit_message" = "Keychain に安全に保存されます。削除するには空にしてください。";
+"watch.spec.serial.placeholder" = "例: 1234567";
+"watchbox.slot_count" = "%d スロット";
+"purchase.plan.monthly" = "月額サブスクリプション";
+"purchase.plan.monthly.per_month" = "/ 月 自動更新 — いつでもキャンセル可能";
+"purchase.plan.yearly.badge" = "%d%% オフ";
+"purchase.plan.toggle.monthly" = "月額";
+"purchase.plan.toggle.yearly" = "年額";
+"purchase.legal.auto_renew.monthly" = "TickLab Pro · 1ヶ月の自動更新サブスクリプション。お支払いは確認時に Apple ID に請求されます。期間終了の 24 時間前までにキャンセルしない場合、同じ価格で自動更新されます。Apple ID の設定からいつでも管理・キャンセルできます。";

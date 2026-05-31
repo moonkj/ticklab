@@ -399,32 +399,10 @@ struct BrandLeagueView: View {
             .shadow(color: .black.opacity(0.25), radius: 3, y: 1)
     }
 
-    // MARK: - Brand Count Computation (뷰 레벨에서 직접 계산 — @Query 관계 로딩 보장)
+    // MARK: - Brand Count Computation (뷰 레벨에서 @Query wearLogs 사용 — 관계 로딩 보장)
 
     private func computedBrandCounts() -> [(brand: String, type: String, key: String, count: Int)] {
-        let now = Date()
-        let cal = Calendar.current
-        let periods: [(type: String, cutoff: Date)] = [
-            ("day",   cal.startOfDay(for: now)),
-            ("week",  cal.date(byAdding: .day,   value: -7,  to: now) ?? now),
-            ("month", cal.date(byAdding: .month, value: -1,  to: now) ?? now),
-            ("year",  cal.date(byAdding: .year,  value: -1,  to: now) ?? now),
-        ]
-        var result: [(brand: String, type: String, key: String, count: Int)] = []
-        for (pt, cutoff) in periods {
-            let pk = SupabaseBrandLeagueService.periodKey(type: pt, date: now)
-            var brandCounts: [String: Int] = [:]
-            // @Query wearLogs 에서 직접 집계 — 이 뷰 레벨에서는 watch?.brand 가 정확
-            for log in wearLogs where log.date >= cutoff {
-                if let brand = log.watch?.brand, !brand.isEmpty {
-                    brandCounts[brand, default: 0] += 1
-                }
-            }
-            for (brand, count) in brandCounts {
-                result.append((brand: brand, type: pt, key: pk, count: count))
-            }
-        }
-        return result
+        SupabaseBrandLeagueService.computeBrandCounts(from: wearLogs)
     }
 
     // MARK: - Helpers

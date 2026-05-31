@@ -939,12 +939,18 @@
 "purchase.plan.yearly.badge" = "%d%% 할인";
 "purchase.plan.toggle.monthly" = "월간";
 "purchase.plan.toggle.yearly" = "연간";
+"purchase.plan.toggle.lifetime" = "평생";
+"purchase.plan.lifetime" = "평생 이용권";
+"purchase.plan.lifetime.one_time" = "1회 결제로 영구 사용";
+"purchase.plan.lifetime.badge" = "BEST";
 "purchase.cta.subscribe" = "Pro 시작하기";
+"purchase.cta.buy_lifetime" = "평생 이용권 구매";
 "purchase.cta.processing" = "처리 중…";
 "purchase.cta.restore" = "이전 구매 복원";
 "purchase.cta.restoring" = "복원 중…";
 "purchase.legal.auto_renew" = "TickLab Pro · 1년 자동 갱신 구독. 결제는 Apple ID 계정에 청구되며, 현재 기간 종료 24시간 이전에 취소하지 않으면 같은 가격으로 자동 갱신됩니다. 구독은 Apple ID 계정 설정에서 언제든 관리·취소할 수 있어요.";
 "purchase.legal.auto_renew.monthly" = "TickLab Pro · 1개월 자동 갱신 구독. 결제는 Apple ID 계정에 청구되며, 현재 기간 종료 24시간 이전에 취소하지 않으면 같은 가격으로 자동 갱신됩니다. 구독은 Apple ID 계정 설정에서 언제든 관리·취소할 수 있어요.";
+"purchase.legal.one_time" = "TickLab Pro · 1회 결제 평생 이용권. 결제는 Apple ID 계정에 한 번만 청구되며 자동 갱신되지 않습니다. 이후 모든 Pro 기능을 영구적으로 사용할 수 있어요.";
 "purchase.legal.terms" = "이용 약관";
 "purchase.legal.privacy" = "개인정보 처리방침";
 "purchase.success.title" = "Pro 활성화 완료";
@@ -1077,7 +1083,7 @@
 "badges.b32.name" = "시계의 역사"; "badges.b32.desc" = "25년 이상의 역사를 지닌 빈티지 시계 5점을 수집하고 측정"; "badges.b32.condition" = "2000년 이전 구매 시계 5개 각 측정";
 
 "league.loading" = "글로벌 랭킹 불러오는 중...";
-"league.error.body" = "네트워크 오류. 아래로 당겨 새로고침해주세요.";
+"league.error.body" = "서버에 연결할 수 없습니다. 잠시 후 아래로 당겨 새로고침해주세요.";
 "league.myteam.my_count" = "회 내착용";
 "league.myteam.global_count" = "회 글로벌";
 "league.myteam.badge" = "MY TEAM";

@@ -1174,3 +1174,27 @@
 "addwatch.movement.section.recommended" = "为此品牌推荐";
 "addwatch.movement.section.all" = "全部机芯";
 "addwatch.movement.section.results" = "搜索结果";
+
+/* Lifetime IAP (v1.0.1) */
+"purchase.plan.toggle.lifetime" = "终身";
+"purchase.plan.lifetime" = "终身使用权";
+"purchase.plan.lifetime.one_time" = "一次性付款 · 永久使用";
+"purchase.plan.lifetime.badge" = "BEST";
+"purchase.cta.buy_lifetime" = "购买终身版";
+"purchase.legal.one_time" = "TickLab Pro · 一次性付款获得终身使用权。仅向您的 Apple ID 收取一次费用,不自动续订。所有 Pro 功能将永久解锁。";
+
+/* Backfill (v1.0.1) — pre-existing missing keys */
+"watch.spec.serial" = "序列号";
+"watch.spec.serial.empty" = "未设置";
+"watch.spec.serial.add" = "添加";
+"watch.spec.serial.edit" = "编辑";
+"watch.spec.serial.edit_title" = "序列号";
+"watch.spec.serial.edit_message" = "安全存储在钥匙串中。清空以删除。";
+"watch.spec.serial.placeholder" = "例如 1234567";
+"watchbox.slot_count" = "%d 个槽位";
+"purchase.plan.monthly" = "月度订阅";
+"purchase.plan.monthly.per_month" = "/ 月 自动续订 — 可随时取消";
+"purchase.plan.yearly.badge" = "%d%% 优惠";
+"purchase.plan.toggle.monthly" = "月度";
+"purchase.plan.toggle.yearly" = "年度";
+"purchase.legal.auto_renew.monthly" = "TickLab Pro · 1 个月自动续订订阅。确认时将向您的 Apple ID 收取费用。如果在订阅期结束前 24 小时内未取消,将以相同价格自动续订。可随时在 Apple ID 设置中管理或取消。";

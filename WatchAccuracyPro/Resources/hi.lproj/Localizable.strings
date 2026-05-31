@@ -1174,3 +1174,27 @@
 "addwatch.movement.section.recommended" = "इस ब्रांड के लिए सुझाया गया";
 "addwatch.movement.section.all" = "सभी मूवमेंट";
 "addwatch.movement.section.results" = "खोज परिणाम";
+
+/* Lifetime IAP (v1.0.1) */
+"purchase.plan.toggle.lifetime" = "आजीवन";
+"purchase.plan.lifetime" = "आजीवन एक्सेस";
+"purchase.plan.lifetime.one_time" = "एक बार खरीद · हमेशा के लिए";
+"purchase.plan.lifetime.badge" = "BEST";
+"purchase.cta.buy_lifetime" = "आजीवन खरीदें";
+"purchase.legal.one_time" = "TickLab Pro · एक बार की खरीद के साथ आजीवन एक्सेस। आपके Apple ID पर एक बार शुल्क लगेगा और यह स्वचालित रूप से नवीनीकृत नहीं होगा। सभी Pro सुविधाएँ स्थायी रूप से अनलॉक रहेंगी।";
+
+/* Backfill (v1.0.1) — pre-existing missing keys */
+"watch.spec.serial" = "सीरियल नंबर";
+"watch.spec.serial.empty" = "सेट नहीं किया गया";
+"watch.spec.serial.add" = "जोड़ें";
+"watch.spec.serial.edit" = "संपादित करें";
+"watch.spec.serial.edit_title" = "सीरियल नंबर";
+"watch.spec.serial.edit_message" = "Keychain में सुरक्षित रूप से संग्रहीत। हटाने के लिए साफ़ करें।";
+"watch.spec.serial.placeholder" = "उदा. 1234567";
+"watchbox.slot_count" = "%d स्लॉट";
+"purchase.plan.monthly" = "मासिक सब्सक्रिप्शन";
+"purchase.plan.monthly.per_month" = "/ माह स्वतः नवीनीकरण — कभी भी रद्द करें";
+"purchase.plan.yearly.badge" = "%d%% छूट";
+"purchase.plan.toggle.monthly" = "मासिक";
+"purchase.plan.toggle.yearly" = "वार्षिक";
+"purchase.legal.auto_renew.monthly" = "TickLab Pro · 1 महीने का स्वतः नवीनीकरण सब्सक्रिप्शन। पुष्टि के समय आपके Apple ID पर शुल्क लगेगा। अवधि समाप्त होने से 24 घंटे पहले रद्द न करने पर समान मूल्य पर स्वतः नवीनीकृत होगा। अपने Apple ID सेटिंग्स में कभी भी प्रबंधित या रद्द करें।";

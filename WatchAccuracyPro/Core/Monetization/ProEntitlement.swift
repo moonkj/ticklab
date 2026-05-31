@@ -1,7 +1,7 @@
 import Foundation
 import StoreKit
 
-/// 월 $1.99 / 연 $9.99 구독 — TickLab Pro.
+/// 월 $1.99 / 연 $9.99 구독 + ₩25,000 평생 (non-consumable) — TickLab Pro.
 ///
 /// Free tier 제한:
 /// - 시계 등록 최대 1개
@@ -13,9 +13,10 @@ import StoreKit
 final class ProEntitlement: ObservableObject {
     static let shared = ProEntitlement()
 
-    static let monthlyProductId = "com.ticklab.watchaccuracypro.pro.monthly"
-    static let yearlyProductId  = "com.ticklab.app.pro.yearly"
-    static let allProductIds: Set<String> = [monthlyProductId, yearlyProductId]
+    static let monthlyProductId  = "com.ticklab.watchaccuracypro.pro.monthly"
+    static let yearlyProductId   = "com.ticklab.app.pro.yearly"
+    static let lifetimeProductId = "com.ticklab.app.pro.lifetime"
+    static let allProductIds: Set<String> = [monthlyProductId, yearlyProductId, lifetimeProductId]
     static let freeWatchLimit = 1
     static let freeDailyMeasurementLimit = 3
     static let freeJournalMonthLimit = 5
@@ -74,20 +75,20 @@ final class ProEntitlement: ObservableObject {
     }
 
     func restore() async {
+        // Min 팀 보고 fix: 기존 코드는 entitlement 이터레이션 순서에 따라 활성 monthly 뒤
+        //   환불된 lifetime 처리 시 isPro=false 로 끝나던 race. 모든 entitlement 를 한 번에 평가 후
+        //   최종 결정. transaction.finish() 만 루프 안에서 호출.
         var foundActiveEntitlement = false
         for await result in Transaction.currentEntitlements {
-            if case .verified(let transaction) = result,
-               Self.allProductIds.contains(transaction.productID),
+            guard case .verified(let transaction) = result else { continue }
+            if Self.allProductIds.contains(transaction.productID),
                transaction.revocationDate == nil {
                 foundActiveEntitlement = true
             }
-            await handle(result)
+            await transaction.finish()
         }
-        // 사용자 보고 fix: 환불/구독 만료 시 currentEntitlements 에 우리 productID 없음 → silent
-        //   하게 isPro=true 유지하던 버그. 활성 entitlement 없으면 명시적으로 false 처리.
-        if !foundActiveEntitlement {
-            storeKitMarkPro(false)
-        }
+        // 활성 entitlement 가 하나라도 있으면 true, 없으면 false — 최종 단일 set.
+        storeKitMarkPro(foundActiveEntitlement)
     }
 
     /// Round 149 (Hyemi 7 C4): release 빌드에 internal 노출은 attack surface — DEBUG 전용 외부 set.

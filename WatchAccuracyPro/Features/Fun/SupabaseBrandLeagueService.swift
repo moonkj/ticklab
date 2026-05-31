@@ -23,6 +23,11 @@ final class SupabaseBrandLeagueService: ObservableObject {
     var rankingCache: [String: (rows: [GlobalBrandRow], at: Date)] = [:]
     private let cacheMinutes: TimeInterval = 30 * 60
 
+    /// Sora/Min 팀 보고 fix: 빠른 연속 토글 시 매번 ALL WearLog fetch + 120 upsert 폭주 →
+    ///   3초 디바운스. 마지막 토글 기준으로만 1회 업로드.
+    private var pendingSyncTask: Task<Void, Never>?
+    private let syncDebounceSeconds: UInt64 = 3
+
     // MARK: - Types
 
     struct GlobalBrandRow: Identifiable {
@@ -180,11 +185,53 @@ final class SupabaseBrandLeagueService: ObservableObject {
         rankingCache.removeAll()
     }
 
-    /// WearLogService 에서 호출 — @Query 없이 간단 업로드 (fallback).
+    /// WearLogService 에서 호출 — 착용 toggle 시 디바운스 후 Supabase 업로드.
+    /// BrandLeagueView 를 열지 않아도 글로벌 랭킹에 반영되도록 하되,
+    /// 빠른 연속 토글은 3초 디바운스로 마지막 1회만 업로드.
     func syncAfterWearToggle(watch: Watch, context: ModelContext) {
-        // BrandLeagueView 의 syncFromQueryWearLogs 가 더 정확하므로,
-        // 여기서는 최소한의 신호만 보냄 — 캐시 무효화로 다음 BrandLeagueView fetch 를 강제.
         rankingCache.removeAll()
+        // 옵트인 사용자만 업로드 (Apple guideline 5.1.1/5.1.2).
+        let optedIn = UserDefaults.standard.bool(forKey: "ticklab.brandLeagueOptIn")
+        guard optedIn else { return }
+
+        // 이전 pending 작업 취소 — 빠른 토글 시 마지막만 살아남음.
+        pendingSyncTask?.cancel()
+        pendingSyncTask = Task { [weak self] in
+            try? await Task.sleep(nanoseconds: (self?.syncDebounceSeconds ?? 3) * 1_000_000_000)
+            guard !Task.isCancelled, let self else { return }
+            // Fetch 는 MainActor 에서 (ModelContext 는 main bound).
+            let descriptor = FetchDescriptor<WearLog>()
+            guard let logs = try? context.fetch(descriptor) else { return }
+            let counts = Self.computeBrandCounts(from: logs)
+            await self.uploadBrandCounts(counts)
+        }
+    }
+
+    /// WearLog 배열 → (brand, periodType, periodKey, count) 변환.
+    /// BrandLeagueView.computedBrandCounts 와 동일 로직 — 단일 진실 소스.
+    static func computeBrandCounts(from logs: [WearLog]) -> [(brand: String, type: String, key: String, count: Int)] {
+        let now = Date()
+        let cal = Calendar.current
+        let periods: [(type: String, cutoff: Date)] = [
+            ("day",   cal.startOfDay(for: now)),
+            ("week",  cal.date(byAdding: .day,   value: -7,  to: now) ?? now),
+            ("month", cal.date(byAdding: .month, value: -1,  to: now) ?? now),
+            ("year",  cal.date(byAdding: .year,  value: -1,  to: now) ?? now),
+        ]
+        var result: [(brand: String, type: String, key: String, count: Int)] = []
+        for (pt, cutoff) in periods {
+            let pk = periodKey(type: pt, date: now)
+            var brandCounts: [String: Int] = [:]
+            for log in logs where log.date >= cutoff {
+                if let brand = log.watch?.brand, !brand.isEmpty {
+                    brandCounts[brand, default: 0] += 1
+                }
+            }
+            for (brand, count) in brandCounts {
+                result.append((brand: brand, type: pt, key: pk, count: count))
+            }
+        }
+        return result
     }
 }
 

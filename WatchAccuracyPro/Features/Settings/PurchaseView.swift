@@ -1,10 +1,10 @@
 import StoreKit
 import SwiftUI
 
-/// TickLab Pro 페이월 — 월 $1.99 / 연 $9.99.
+/// TickLab Pro 페이월 — 월 $1.99 / 연 $9.99 / 평생 ₩25,000.
 /// Free → Pro 업그레이드 진입점. Settings.accountHero 에서 시트로 진입.
 struct PurchaseView: View {
-    enum Plan { case monthly, yearly }
+    enum Plan { case monthly, yearly, lifetime }
 
     @Environment(\.dismiss) private var dismiss
     @Environment(UserPreferences.self) private var preferences
@@ -12,6 +12,7 @@ struct PurchaseView: View {
 
     @State private var monthlyProduct: Product?
     @State private var yearlyProduct: Product?
+    @State private var lifetimeProduct: Product?
     @State private var selectedPlan: Plan = .yearly
     @State private var isLoadingProduct = true
     @State private var isPurchasing = false
@@ -22,7 +23,11 @@ struct PurchaseView: View {
     @ScaledMetric(relativeTo: .title) private var scaledHeadlineSize: CGFloat = 26
 
     private var selectedProduct: Product? {
-        selectedPlan == .monthly ? monthlyProduct : yearlyProduct
+        switch selectedPlan {
+        case .monthly:  return monthlyProduct
+        case .yearly:   return yearlyProduct
+        case .lifetime: return lifetimeProduct
+        }
     }
 
     private var yearlyDiscountBadge: String {
@@ -183,8 +188,11 @@ struct PurchaseView: View {
                              price: monthlyProduct?.displayPrice ?? "$1.99")
             planToggleButton(.yearly,
                              label: String(localized: "purchase.plan.toggle.yearly"),
-                             price: yearlyProduct?.displayPrice ?? "$9.99",
-                             badge: yearlyDiscountBadge)
+                             price: yearlyProduct?.displayPrice ?? "$9.99")
+            planToggleButton(.lifetime,
+                             label: String(localized: "purchase.plan.toggle.lifetime"),
+                             price: lifetimeProduct?.displayPrice,
+                             badge: String(localized: "purchase.plan.lifetime.badge"))
         }
         .frame(maxWidth: .infinity)
         .background(AppColors.paper1)
@@ -197,14 +205,16 @@ struct PurchaseView: View {
             withAnimation(.easeInOut(duration: 0.18)) { selectedPlan = plan }
         } label: {
             VStack(spacing: 2) {
-                HStack(spacing: 6) {
+                HStack(spacing: 4) {
                     Text(label)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                     if let badge {
                         Text(badge)
-                            .font(.system(size: 10, weight: .bold))
+                            .font(.system(size: 9, weight: .bold))
                             .foregroundStyle(AppColors.primaryDeep)
-                            .padding(.horizontal, 6)
+                            .padding(.horizontal, 5)
                             .padding(.vertical, 2)
                             .background(AppColors.accentDark)
                             .clipShape(Capsule())
@@ -212,7 +222,9 @@ struct PurchaseView: View {
                 }
                 if let price {
                     Text(price)
-                        .font(.system(size: 13, weight: .bold))
+                        .font(.system(size: 12, weight: .bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
                 } else if isLoadingProduct {
                     ProgressView().scaleEffect(0.6).tint(selectedPlan == plan ? AppColors.primaryDeep : AppColors.ink3)
                 }
@@ -231,7 +243,13 @@ struct PurchaseView: View {
 
     private var pricingCard: some View {
         VStack(spacing: 8) {
-            let planKey = selectedPlan == .monthly ? "purchase.plan.monthly" : "purchase.plan.yearly"
+            let planKey: String = {
+                switch selectedPlan {
+                case .monthly:  return "purchase.plan.monthly"
+                case .yearly:   return "purchase.plan.yearly"
+                case .lifetime: return "purchase.plan.lifetime"
+                }
+            }()
             Text(String(localized: String.LocalizationValue(planKey)))
                 .font(.system(size: 11, weight: .semibold))
                 .tracking(1.5)
@@ -242,15 +260,34 @@ struct PurchaseView: View {
                     .tint(AppColors.accentDark)
                     .padding(.vertical, 6)
             } else {
-                let displayPrice = selectedProduct?.displayPrice ?? (selectedPlan == .monthly ? "$1.99" : "$9.99")
-                Text(displayPrice)
-                    .font(.system(size: scaledPriceSize, weight: .bold))
-                    .foregroundStyle(AppColors.ink0)
-                let perKey = selectedPlan == .monthly ? "purchase.plan.monthly.per_month" : "purchase.plan.yearly.per_year"
+                // StoreKit displayPrice 만 사용 — 하드코드 fallback 제거 (Hard Rule #3 locale 종속 방지).
+                // Product 로드 실패 시 빈 텍스트로 두고 retry/restore 로 처리.
+                if let displayPrice = selectedProduct?.displayPrice {
+                    Text(displayPrice)
+                        .font(.system(size: scaledPriceSize, weight: .bold))
+                        .foregroundStyle(AppColors.ink0)
+                } else {
+                    ProgressView()
+                        .tint(AppColors.accentDark)
+                        .padding(.vertical, 6)
+                }
+                let perKey: String = {
+                    switch selectedPlan {
+                    case .monthly:  return "purchase.plan.monthly.per_month"
+                    case .yearly:   return "purchase.plan.yearly.per_year"
+                    case .lifetime: return "purchase.plan.lifetime.one_time"
+                    }
+                }()
                 Text(String(localized: String.LocalizationValue(perKey)))
                     .font(.system(size: 13))
                     .foregroundStyle(AppColors.ink2)
-                let legalKey = selectedPlan == .monthly ? "purchase.legal.auto_renew.monthly" : "purchase.legal.auto_renew"
+                let legalKey: String = {
+                    switch selectedPlan {
+                    case .monthly:  return "purchase.legal.auto_renew.monthly"
+                    case .yearly:   return "purchase.legal.auto_renew"
+                    case .lifetime: return "purchase.legal.one_time"
+                    }
+                }()
                 Text(String(localized: String.LocalizationValue(legalKey)))
                     .font(.system(size: 11))
                     .foregroundStyle(AppColors.ink2)
@@ -276,10 +313,14 @@ struct PurchaseView: View {
 
     private var actionButtons: some View {
         VStack(spacing: 10) {
+            let ctaKey: String = {
+                if isPurchasing { return "purchase.cta.processing" }
+                return selectedPlan == .lifetime
+                    ? "purchase.cta.buy_lifetime"
+                    : "purchase.cta.subscribe"
+            }()
             PrimaryButton(
-                isPurchasing
-                    ? String(localized: "purchase.cta.processing")
-                    : String(localized: "purchase.cta.subscribe"),
+                String(localized: String.LocalizationValue(ctaKey)),
                 style: .accent,
                 isEnabled: !isPurchasing && !isRestoring && selectedProduct != nil
             ) {
@@ -302,7 +343,10 @@ struct PurchaseView: View {
 
     private var legalLinks: some View {
         VStack(spacing: 6) {
-            Text(String(localized: "purchase.legal.auto_renew"))
+            let legalKey = selectedPlan == .lifetime
+                ? "purchase.legal.one_time"
+                : "purchase.legal.auto_renew"
+            Text(String(localized: String.LocalizationValue(legalKey)))
                 .font(.system(size: 11))
                 .foregroundStyle(AppColors.ink3)
                 .multilineTextAlignment(.center)
@@ -330,12 +374,14 @@ struct PurchaseView: View {
         do {
             let loaded = try await Product.products(for: ProEntitlement.allProductIds)
             for p in loaded {
-                if p.id == ProEntitlement.monthlyProductId { monthlyProduct = p }
-                if p.id == ProEntitlement.yearlyProductId  { yearlyProduct  = p }
+                if p.id == ProEntitlement.monthlyProductId  { monthlyProduct  = p }
+                if p.id == ProEntitlement.yearlyProductId   { yearlyProduct   = p }
+                if p.id == ProEntitlement.lifetimeProductId { lifetimeProduct = p }
             }
         } catch {
-            monthlyProduct = nil
-            yearlyProduct  = nil
+            monthlyProduct  = nil
+            yearlyProduct   = nil
+            lifetimeProduct = nil
         }
     }
 
