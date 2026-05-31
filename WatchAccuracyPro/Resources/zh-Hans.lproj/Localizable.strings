@@ -289,6 +289,13 @@
 "collection.more_menu" = "更多";
 "photo.crop.hint" = "拖动·捏合调整手表位置";
 "community.tab.title" = "社区";
+"timeline.title" = "腕表生平";
+"timeline.entry" = "生平时间线";
+"timeline.first_meeting" = "初次相遇";
+"timeline.measurement" = "测量";
+"timeline.wear" = "佩戴";
+"timeline.journal" = "记录";
+"timeline.service" = "保养";
 "community.compose" = "发布照片";
 "community.compose.hint" = "匿名分享今天的腕表。每天一张。";
 "community.compose.anonymous_note" = "匿名发布 · 每天一张";

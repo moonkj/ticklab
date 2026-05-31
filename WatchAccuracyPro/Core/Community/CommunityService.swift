@@ -209,7 +209,7 @@ final class CommunityService: ObservableObject {
         up.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
         up.setValue(anonKey, forHTTPHeaderField: "apikey")
         up.setValue("Bearer \(accessToken ?? anonKey)", forHTTPHeaderField: "Authorization")
-        up.httpBody = imageData
+        // upload(for:from:) 가 body 를 from: 으로 보냄 — httpBody 중복 설정 제거.
         let (_, resp) = try await URLSession.shared.upload(for: up, from: imageData)
         if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
             throw UploadError.storageFailed

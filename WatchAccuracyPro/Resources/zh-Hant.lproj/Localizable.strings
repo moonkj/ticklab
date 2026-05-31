@@ -289,6 +289,13 @@
 "collection.more_menu" = "更多";
 "photo.crop.hint" = "拖曳·縮放調整手錶位置";
 "community.tab.title" = "社群";
+"timeline.title" = "腕錶生平";
+"timeline.entry" = "生平時間線";
+"timeline.first_meeting" = "初次相遇";
+"timeline.measurement" = "測量";
+"timeline.wear" = "佩戴";
+"timeline.journal" = "記錄";
+"timeline.service" = "保養";
 "community.compose" = "發布照片";
 "community.compose.hint" = "匿名分享今天的腕錶。每天一張。";
 "community.compose.anonymous_note" = "匿名發布 · 每天一張";

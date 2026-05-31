@@ -220,6 +220,13 @@
 "collection.more_menu" = "더 보기";
 "photo.crop.hint" = "드래그·확대해서 시계를 맞추세요";
 "community.tab.title" = "커뮤니티";
+"timeline.title" = "시계 생애 기록";
+"timeline.entry" = "생애 타임라인";
+"timeline.first_meeting" = "첫 만남";
+"timeline.measurement" = "측정";
+"timeline.wear" = "착용";
+"timeline.journal" = "기록";
+"timeline.service" = "정비";
 "community.compose" = "사진 올리기";
 "community.compose.hint" = "오늘의 시계를 익명으로 공유하세요. 하루 한 장.";
 "community.compose.anonymous_note" = "익명으로 게시됩니다 · 하루 1장";

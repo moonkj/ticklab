@@ -1080,6 +1080,28 @@ struct WatchDetailView: View {
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
+            .padding(.bottom, 10)
+
+            // #18: 시계별 통합 생애 타임라인 — 첫만남·측정·착용·저널·정비 한 시간축.
+            NavigationLink {
+                WatchTimelineView(watch: watch)
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "clock.arrow.circlepath")
+                    Text(String(localized: "timeline.entry"))
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(AppColors.ink3)
+                }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(AppColors.ink0)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 14)
+                .background(AppColors.paper1)
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 16)
             .padding(.bottom, 32)
         }
     }

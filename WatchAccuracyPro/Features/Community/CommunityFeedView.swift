@@ -187,12 +187,13 @@ private struct CommunityPostCard: View {
     let onBlock: () -> Void
     let onDelete: (() -> Void)?
 
-    @StateObject private var service = CommunityService.shared
+    // 코드리뷰: 카드는 service 를 관찰하면 안 됨(좋아요 1개에 전체 피드 re-render). imageURL 은
+    //   순수 함수라 shared 에서 직접 호출 — 관찰 제거로 피드 성능 보호.
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack {
-                if let path = post.imagePath as String?, let url = service.imageURL(for: path) {
+                if let url = CommunityService.shared.imageURL(for: post.imagePath) {
                     AsyncImage(url: url) { phase in
                         switch phase {
                         case .success(let img): img.resizable().scaledToFill()

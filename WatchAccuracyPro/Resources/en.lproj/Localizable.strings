@@ -296,6 +296,13 @@
 "collection.more_menu" = "More";
 "photo.crop.hint" = "Drag and pinch to frame the watch";
 "community.tab.title" = "Community";
+"timeline.title" = "Watch Story";
+"timeline.entry" = "Life Timeline";
+"timeline.first_meeting" = "First meeting";
+"timeline.measurement" = "Measured";
+"timeline.wear" = "Worn";
+"timeline.journal" = "Journal";
+"timeline.service" = "Service";
 "community.compose" = "Post a photo";
 "community.compose.hint" = "Share today's watch anonymously. One photo a day.";
 "community.compose.anonymous_note" = "Posted anonymously · once a day";

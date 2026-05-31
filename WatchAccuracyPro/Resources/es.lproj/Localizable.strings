@@ -289,6 +289,13 @@
 "collection.more_menu" = "Más";
 "photo.crop.hint" = "Arrastra y pellizca para encuadrar el reloj";
 "community.tab.title" = "Comunidad";
+"timeline.title" = "Historia del reloj";
+"timeline.entry" = "Línea de vida";
+"timeline.first_meeting" = "Primer encuentro";
+"timeline.measurement" = "Medición";
+"timeline.wear" = "Uso";
+"timeline.journal" = "Diario";
+"timeline.service" = "Servicio";
 "community.compose" = "Publicar foto";
 "community.compose.hint" = "Comparte el reloj de hoy de forma anónima. Una foto al día.";
 "community.compose.anonymous_note" = "Publicado de forma anónima · una vez al día";

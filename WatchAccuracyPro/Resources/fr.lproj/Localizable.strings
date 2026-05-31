@@ -289,6 +289,13 @@
 "collection.more_menu" = "Plus";
 "photo.crop.hint" = "Faites glisser et pincez pour cadrer la montre";
 "community.tab.title" = "Communauté";
+"timeline.title" = "Histoire de la montre";
+"timeline.entry" = "Chronologie";
+"timeline.first_meeting" = "Première rencontre";
+"timeline.measurement" = "Mesure";
+"timeline.wear" = "Porté";
+"timeline.journal" = "Journal";
+"timeline.service" = "Entretien";
 "community.compose" = "Publier une photo";
 "community.compose.hint" = "Partagez la montre du jour de façon anonyme. Une photo par jour.";
 "community.compose.anonymous_note" = "Publié anonymement · une fois par jour";

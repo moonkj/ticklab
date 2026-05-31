@@ -289,6 +289,13 @@
 "collection.more_menu" = "その他";
 "photo.crop.hint" = "ドラッグ・ピンチで時計を合わせてください";
 "community.tab.title" = "コミュニティ";
+"timeline.title" = "時計の記録";
+"timeline.entry" = "ライフタイムライン";
+"timeline.first_meeting" = "出会い";
+"timeline.measurement" = "測定";
+"timeline.wear" = "着用";
+"timeline.journal" = "記録";
+"timeline.service" = "整備";
 "community.compose" = "写真を投稿";
 "community.compose.hint" = "今日の時計を匿名でシェア。1日1枚。";
 "community.compose.anonymous_note" = "匿名で投稿 · 1日1枚";

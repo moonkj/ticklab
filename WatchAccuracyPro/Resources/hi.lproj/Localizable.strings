@@ -289,6 +289,13 @@
 "collection.more_menu" = "और";
 "photo.crop.hint" = "घड़ी को फ्रेम करने के लिए खींचें और पिंच करें";
 "community.tab.title" = "समुदाय";
+"timeline.title" = "घड़ी की कहानी";
+"timeline.entry" = "जीवन समयरेखा";
+"timeline.first_meeting" = "पहली मुलाकात";
+"timeline.measurement" = "मापन";
+"timeline.wear" = "पहना";
+"timeline.journal" = "जर्नल";
+"timeline.service" = "सर्विस";
 "community.compose" = "फ़ोटो पोस्ट करें";
 "community.compose.hint" = "आज की घड़ी गुमनाम रूप से साझा करें। दिन में एक फ़ोटो।";
 "community.compose.anonymous_note" = "गुमनाम रूप से पोस्ट · दिन में एक बार";
