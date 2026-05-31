@@ -204,6 +204,7 @@
 		F23A111B8B8BA58C82E75554 /* PowerReserveGauge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92A36BE3BF6CA4AAB6ACF58A /* PowerReserveGauge.swift */; };
 		F37386299DD9166F2DD70F9E /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 00D28F675246E709FE2AC5E7 /* Localizable.strings */; };
 		F5D4EDC2C2D428C1E8430899 /* TrendChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B29687D9A25F32071B52DE06 /* TrendChartView.swift */; };
+		F66631C0C61DA85CA83C691E /* WatchPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60BF10B3AEE5733B016B36E6 /* WatchPhotoView.swift */; };
 		F676A03D2DD8AE447C352FC2 /* MetricBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */; };
 		F7BFF81454F5C1996CE5B8D0 /* EditorialPageHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7909924A1367F8260BED015F /* EditorialPageHeader.swift */; };
 		FBB7A8BF6D8F35C269864AAE /* MeasurementResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D3852E0B4BCFD94CC708179 /* MeasurementResult.swift */; };
@@ -341,6 +342,7 @@
 		5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCOCard.swift; sourceTree = "<group>"; };
 		5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpCard.swift; sourceTree = "<group>"; };
 		5F3FB0232C07394894BE9086 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		60BF10B3AEE5733B016B36E6 /* WatchPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPhotoView.swift; sourceTree = "<group>"; };
 		60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
 		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakePickView.swift; sourceTree = "<group>"; };
@@ -841,6 +843,7 @@
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
 				5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */,
 				A07FAA2F3650DB74A03B4940 /* WatchCover.swift */,
+				60BF10B3AEE5733B016B36E6 /* WatchPhotoView.swift */,
 				01F911CAA257AD00EFADA2A4 /* WatchSilhouette.swift */,
 				4D5F3B8F980C953CE9B08EA6 /* WindingHintToast.swift */,
 			);
@@ -1465,6 +1468,7 @@
 				28CAA896AD14E29EA726E8CE /* WatchMoodService.swift in Sources */,
 				05434CB57E3B24A6C9502B6A /* WatchPhoto.swift in Sources */,
 				71B079E8367404BFF8513C0A /* WatchPhotoProcessor.swift in Sources */,
+				F66631C0C61DA85CA83C691E /* WatchPhotoView.swift in Sources */,
 				4A81DC530A0EB04922985073 /* WatchRecommendationService.swift in Sources */,
 				DF0D33547AB565B5F86A0A7F /* WatchSilhouette.swift in Sources */,
 				8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */,
@@ -1614,7 +1618,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1781,7 +1785,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 149;
+				CURRENT_PROJECT_VERSION = 150;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

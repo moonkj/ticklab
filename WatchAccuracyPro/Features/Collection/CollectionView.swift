@@ -807,7 +807,6 @@ struct WatchListRow: View {
         // Round 74: SE 320pt 너비 대응 — spacing 14→10.
         HStack(spacing: 10) {
             ZStack {
-                // Sprint 3 (P3-7): 사진 있으면 추출 색상 그라데이션, 없으면 기본 배경.
                 if let accent = extractedColor {
                     LinearGradient(
                         colors: [accent.opacity(0.7), accent.opacity(0.3)],
@@ -816,10 +815,10 @@ struct WatchListRow: View {
                 } else {
                     AppColors.paper2
                 }
-                if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
-                    Image(uiImage: img)
-                        .resizable()
-                        .scaledToFill()
+                if watch.photoData != nil {
+                    WatchPhotoView(id: watch.id, data: watch.photoData) {
+                        WatchSilhouette(watch: watch, size: 60)
+                    }
                 } else {
                     WatchSilhouette(watch: watch, size: 60)
                 }

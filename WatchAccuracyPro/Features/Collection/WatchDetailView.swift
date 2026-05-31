@@ -362,11 +362,16 @@ struct WatchDetailView: View {
             // 1) photo / silhouette background — 전체 영역.
             // Sprint 8 (UX): contentTransition(.identity) — 컬렉션 썸네일과 동일 이미지 연속성.
             Group {
-                if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
-                    Image(uiImage: img)
-                        .resizable()
-                        .scaledToFill()
-                        .transition(.opacity.animation(.easeIn(duration: 0.2)))
+                if watch.photoData != nil {
+                    WatchPhotoView(id: watch.id, data: watch.photoData) {
+                        ZStack {
+                            LinearGradient(
+                                colors: [AppColors.primaryDeep, AppColors.primary700],
+                                startPoint: .topLeading, endPoint: .bottomTrailing
+                            )
+                            WatchSilhouette(watch: watch, size: 220)
+                        }
+                    }
                 } else {
                     ZStack {
                         LinearGradient(
@@ -380,7 +385,6 @@ struct WatchDetailView: View {
             .frame(maxWidth: .infinity)
             .frame(height: 280)
             .clipped()
-            .animation(.easeInOut(duration: 0.2), value: PhotoCache.image(for: watch.id, data: watch.photoData) != nil)
             .contentShape(Rectangle())
             // Round 94 (정수민 #2): 사진 있으면 풀스크린 줌, 없으면 source sheet.
             .onTapGesture {

@@ -6,7 +6,8 @@ import UIKit
 /// SwiftData Watch.photoData 의 디코드 결과를 NSCache 에 보관해 list cell 재현 시 재사용.
 /// 키: Watch.id (UUID). 메모리 압박 시 시스템이 자동 비움.
 enum PhotoCache {
-    private static let cache: NSCache<NSUUID, UIImage> = {
+    /// WatchPhotoView에서 직접 접근용 (내부 캐시 적재).
+    static let cache: NSCache<NSUUID, UIImage> = {
         let c = NSCache<NSUUID, UIImage>()
         // Round 14 (Sora): countLimit 64 → 32 + totalCostLimit 256MB.
         // 4032×3024 사진 UIImage 한 장 ~50MB → 64장이면 3.2GB 메모리 압박.
@@ -17,9 +18,8 @@ enum PhotoCache {
     static func image(for id: UUID, data: Data?) -> UIImage? {
         let key = id as NSUUID
         if let cached = cache.object(forKey: key) { return cached }
-        // cache miss — 백그라운드 prefetch 트리거 후 nil 반환 (main thread 블로킹 디코딩 제거).
-        // 다음 렌더 사이클에 cache hit → 이미지 표시. 로딩 순간 silhouette 잠시 노출되지만
-        // main thread spike(최대 200ms) 제거로 전반적 반응성이 크게 개선됨.
+        // WatchPhotoView를 통한 호출은 nil 반환 → Task 내에서 비동기 디코딩.
+        // 직접 호출(레거시)은 nil 반환 후 prefetch 트리거.
         if let data { prefetch(for: id, data: data) }
         return nil
     }
