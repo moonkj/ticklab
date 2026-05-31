@@ -1334,3 +1334,22 @@
 "recommendation.reason.long_unworn" = "오랫동안 쉬고 있던 시계예요.";
 "recommendation.reason.low_roi" = "착용 횟수가 가장 적어 가성비를 높일 기회예요.";
 "recommendation.reason.rotation" = "로테이션을 위해 추천해요.";
+
+/* Sprint 5 — P3-1 스트랩 관리 */
+"strap.nav.title" = "스트랩/브레이슬릿";
+"strap.empty.title" = "등록된 스트랩이 없어요";
+"strap.empty.body" = "+ 버튼으로 스트랩을 추가하세요.";
+"strap.section.basic" = "기본 정보";
+"strap.section.usage" = "착용 현황";
+"strap.name" = "이름";
+"strap.material" = "소재";
+"strap.color" = "색상";
+"strap.source" = "구매처/브랜드";
+"strap.note" = "메모";
+"strap.wears" = "회 착용";
+"strap.replace_threshold" = "교체 권장 횟수";
+"strap.threshold_placeholder" = "예: 200";
+"strap.threshold" = "/%d회 교체";
+"strap.add.title" = "스트랩 추가";
+"strap.edit.title" = "스트랩 편집";
+"watch.strap.entry" = "스트랩/브레이슬릿 관리";

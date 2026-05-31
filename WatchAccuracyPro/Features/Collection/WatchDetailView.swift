@@ -936,6 +936,26 @@ struct WatchDetailView: View {
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
+            // Sprint 5 (P3-1): 스트랩 관리 진입
+            NavigationLink {
+                StrapListView(watch: watch)
+            } label: {
+                HStack(spacing: 8) {
+                    Image(systemName: "watch.analog")
+                    Text(String(localized: "watch.strap.entry"))
+                    Spacer()
+                    Image(systemName: "chevron.right").foregroundStyle(AppColors.ink3)
+                }
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(AppColors.ink0)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 14)
+                .background(AppColors.paper1)
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            .padding(.horizontal, 16)
             .padding(.bottom, 32)
         }
     }
