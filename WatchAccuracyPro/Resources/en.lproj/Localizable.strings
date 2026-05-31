@@ -1449,3 +1449,9 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
+
+/* Sprint 8 — Sort options */
+"sort.custom" = "Custom Order";
+"sort.brand" = "Brand";
+"sort.recent_wear" = "Recently Worn";
+"sort.name" = "Model Name";

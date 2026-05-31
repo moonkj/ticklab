@@ -1414,3 +1414,7 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
+"sort.custom" = "Custom Order";
+"sort.brand" = "Brand";
+"sort.recent_wear" = "Recently Worn";
+"sort.name" = "Model Name";

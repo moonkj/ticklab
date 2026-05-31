@@ -654,33 +654,45 @@ struct GlossaryView: View {
         }
     }
 
+    @State private var selectedEntry: (key: String, descKey: String, icon: String)?
+
     var body: some View {
         ScrollView {
-            VStack(spacing: 10) {
+            // Sprint 8 (UX): 2열 그리드로 컴팩트하게 표시 — 탭 시 바텀 시트 상세
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                 if filtered.isEmpty && !query.isEmpty {
                     ContentUnavailableView.search(text: query)
+                        .gridCellColumns(2)
                         .padding(.top, 32)
                 }
                 ForEach(filtered, id: \.key) { entry in
-                    HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: entry.icon)
-                            .font(.system(size: 20))
-                            .foregroundStyle(AppColors.accent)
-                            .frame(width: 28, height: 28)
-                        VStack(alignment: .leading, spacing: 6) {
+                    Button {
+                        selectedEntry = entry
+                        UISelectionFeedbackGenerator().selectionChanged()
+                    } label: {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Image(systemName: entry.icon)
+                                .font(.system(size: 20))
+                                .foregroundStyle(AppColors.accent)
                             Text(String(localized: String.LocalizationValue(entry.key)))
-                                .font(.system(size: 16, weight: .semibold))
+                                .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(AppColors.ink0)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
                             Text(String(localized: String.LocalizationValue(entry.descKey)))
-                                .font(.system(size: 13))
+                                .font(.system(size: 11))
                                 .foregroundStyle(AppColors.ink2)
+                                .lineLimit(2)
+                                .multilineTextAlignment(.leading)
                         }
+                        .padding(14)
+                        .frame(maxWidth: .infinity, minHeight: 110, alignment: .topLeading)
+                        .background(AppColors.paper1)
+                        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .contentShape(RoundedRectangle(cornerRadius: 14))
                     }
-                    .padding(14)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(AppColors.paper1)
-                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .buttonStyle(.plain)
                 }
             }
             .padding(.horizontal, 16)
@@ -690,6 +702,42 @@ struct GlossaryView: View {
         .searchable(text: $query, prompt: String(localized: "glossary.search.prompt"))
         .navigationTitle(String(localized: "glossary.title"))
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: Binding(
+            get: { selectedEntry.map { GlossaryEntryID(key: $0.key, descKey: $0.descKey, icon: $0.icon) } },
+            set: { if $0 == nil { selectedEntry = nil } }
+        )) { item in
+            GlossaryDetailSheet(key: item.key, descKey: item.descKey, icon: item.icon)
+        }
+    }
+}
+
+struct GlossaryEntryID: Identifiable {
+    let id = UUID()
+    let key: String; let descKey: String; let icon: String
+}
+
+struct GlossaryDetailSheet: View {
+    let key: String; let descKey: String; let icon: String
+    @Environment(\.dismiss) private var dismiss
+    var body: some View {
+        VStack(spacing: 20) {
+            Capsule().fill(AppColors.rule).frame(width: 36, height: 4).padding(.top, 10)
+            Image(systemName: icon)
+                .font(.system(size: 44))
+                .foregroundStyle(AppColors.accentDark)
+            Text(String(localized: String.LocalizationValue(key)))
+                .font(.system(size: 24, weight: .bold))
+                .foregroundStyle(AppColors.ink0)
+            Text(String(localized: String.LocalizationValue(descKey)))
+                .font(.system(size: 15))
+                .foregroundStyle(AppColors.ink2)
+                .multilineTextAlignment(.center)
+                .padding(.horizontal, 24)
+            Spacer()
+        }
+        .presentationDetents([.height(300)])
+        .presentationDragIndicator(.hidden)
+        .background(AppColors.paper0.ignoresSafeArea())
     }
 }
 

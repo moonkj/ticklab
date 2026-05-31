@@ -22,15 +22,8 @@ struct EmptyState: View {
 
     var body: some View {
         VStack(spacing: 14) {
-            ZStack {
-                Circle()
-                    .fill(AppColors.paper1)
-                    .frame(width: 72, height: 72)
-                    .overlay(Circle().stroke(AppColors.rule, lineWidth: 1))
-                Image(systemName: icon)
-                    .font(.system(size: 28, weight: .light))
-                    .foregroundStyle(AppColors.ink2)
-            }
+            // Sprint 8 (UX): 애니메이션 시계 아이콘 — Reduce Motion 시 정적 아이콘
+            AnimatedEmptyIcon(icon: icon)
             Text(title)
                 .font(.system(size: 22, weight: .medium, design: .serif))
                 .italic()
@@ -62,6 +55,41 @@ struct EmptyState: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
         .padding(.vertical, 60)
         .padding(.horizontal, 24)
+    }
+}
+
+/// Sprint 8 (UX): TimelineView 기반 회전 애니메이션 아이콘.
+/// Reduce Motion 시 정적 아이콘으로 폴백.
+struct AnimatedEmptyIcon: View {
+    let icon: String
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var angle: Double = 0
+
+    var body: some View {
+        ZStack {
+            Circle()
+                .fill(AppColors.paper1)
+                .frame(width: 80, height: 80)
+                .overlay(Circle().stroke(AppColors.rule, lineWidth: 1))
+            // 회전 링 (Reduce Motion 꺼져있을 때)
+            if !reduceMotion {
+                Circle()
+                    .trim(from: 0, to: 0.25)
+                    .stroke(AppColors.accent.opacity(0.4), style: StrokeStyle(lineWidth: 2, lineCap: .round))
+                    .frame(width: 68, height: 68)
+                    .rotationEffect(.degrees(angle))
+                    .onAppear {
+                        withAnimation(.linear(duration: 3).repeatForever(autoreverses: false)) {
+                            angle = 360
+                        }
+                    }
+            }
+            Image(systemName: icon)
+                .font(.system(size: 28, weight: .light))
+                .foregroundStyle(AppColors.ink2)
+                // 아이콘 자체도 살짝 맥동
+                .symbolEffect(.pulse.wholeSymbol, isActive: !reduceMotion)
+        }
     }
 }
 

@@ -1448,3 +1448,9 @@
 "news.read_more" = "더 보기 →";
 "stats.entry.news" = "브랜드 뉴스";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
+
+/* Sprint 8 — 정렬 옵션 */
+"sort.custom" = "사용자 순서";
+"sort.brand" = "브랜드";
+"sort.recent_wear" = "최근 착용";
+"sort.name" = "모델명";

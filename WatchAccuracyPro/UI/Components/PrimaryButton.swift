@@ -76,16 +76,27 @@ struct PrimaryButton: View {
     }
 }
 
-/// Round 170: 모든 버튼에 scale-on-tap 적용용 ButtonStyle.
-/// contentShape(Rectangle()) — 배경 전체를 hit-test 영역으로 지정.
-/// 이 없으면 SwiftUI 가 텍스트/아이콘 크기만 hit-test → 가운데만 눌림.
+/// Round 170 + Sprint 8 (UX): 모든 버튼에 scale-on-tap + spring 복귀 + haptic.
+/// Reduce Motion 활성 시 scale 없이 haptic만.
 struct PressableButtonStyle: ButtonStyle {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .contentShape(Rectangle())
-            .scaleEffect(configuration.isPressed ? 0.96 : 1.0)
-            .brightness(configuration.isPressed ? -0.04 : 0)
-            .animation(.easeOut(duration: 0.12), value: configuration.isPressed)
+            .scaleEffect((!reduceMotion && configuration.isPressed) ? 0.95 : 1.0)
+            .brightness(configuration.isPressed ? -0.05 : 0)
+            .animation(
+                configuration.isPressed
+                    ? .easeIn(duration: 0.08)
+                    : .spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0),
+                value: configuration.isPressed
+            )
+            .onChange(of: configuration.isPressed) { _, pressed in
+                if pressed {
+                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                }
+            }
     }
 }
 

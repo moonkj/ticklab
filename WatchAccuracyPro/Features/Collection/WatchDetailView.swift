@@ -352,11 +352,13 @@ struct WatchDetailView: View {
         // 이전 Color.clear tap 이 button 위 덮어 클릭 안 되던 문제 + ZStack(.bottomLeading) 으로 위치 어긋남.
         ZStack(alignment: .bottomLeading) {
             // 1) photo / silhouette background — 전체 영역.
+            // Sprint 8 (UX): contentTransition(.identity) — 컬렉션 썸네일과 동일 이미지 연속성.
             Group {
                 if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
                     Image(uiImage: img)
                         .resizable()
                         .scaledToFill()
+                        .contentTransition(.identity)
                 } else {
                     ZStack {
                         LinearGradient(

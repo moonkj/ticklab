@@ -42,6 +42,22 @@ struct CollectionView: View {
     /// Sprint 4 (P3-10): 고급 필터 — 시계 5개 이상 보유 시 표시.
     @State private var filterMovementType: WatchMovementType? = nil
     @State private var showAdvancedFilter: Bool = false
+    /// Sprint 8 (UX): 정렬 옵션 (5개 이상 보유 시).
+    enum SortOption: String, CaseIterable {
+        case custom      // 사용자 순서 (기본)
+        case brand       // 브랜드 가나다
+        case recentWear  // 최근 착용순
+        case name        // 모델명
+        var label: LocalizedStringResource {
+            switch self {
+            case .custom:     return "sort.custom"
+            case .brand:      return "sort.brand"
+            case .recentWear: return "sort.recent_wear"
+            case .name:       return "sort.name"
+            }
+        }
+    }
+    @State private var sortOption: SortOption = .custom
 
     /// Round 16 (Sora): row 마다 isWornToday fetch 폭주 차단. @Query wearLogs 에서
     ///   오늘자 (startOfDay) 인 watch.id 셋을 한 번 계산해 row 에 prop 으로 전달.
@@ -55,14 +71,34 @@ struct CollectionView: View {
     }
 
     private var filtered: [Watch] {
-        let sorted = watches.sorted { a, b in
-            switch (a.sortOrder, b.sortOrder) {
-            case let (sa?, sb?): return sa < sb
-            case (_?, nil): return true
-            case (nil, _?): return false
-            case (nil, nil): return a.createdAt > b.createdAt
+        let sorted: [Watch] = {
+            switch sortOption {
+            case .custom:
+                return watches.sorted {
+                    switch ($0.sortOrder, $1.sortOrder) {
+                    case let (sa?, sb?): return sa < sb
+                    case (_?, nil): return true
+                    case (nil, _?): return false
+                    case (nil, nil): return $0.createdAt > $1.createdAt
+                    }
+                }
+            case .brand:
+                return watches.sorted { $0.brand.localizedCompare($1.brand) == .orderedAscending }
+            case .name:
+                return watches.sorted { $0.model.localizedCompare($1.model) == .orderedAscending }
+            case .recentWear:
+                let lastWorn: [UUID: Date] = Dictionary(
+                    wearLogs.compactMap { log -> (UUID, Date)? in
+                        guard let id = log.watch?.id else { return nil }
+                        return (id, log.date)
+                    },
+                    uniquingKeysWith: { max($0, $1) }
+                )
+                return watches.sorted {
+                    (lastWorn[$0.id] ?? .distantPast) > (lastWorn[$1.id] ?? .distantPast)
+                }
             }
-        }
+        }()
         // 검색·즐겨찾기 필터
         let q = searchQuery.trimmingCharacters(in: .whitespaces).lowercased()
         let searched: [Watch] = sorted.filter { w in
@@ -184,11 +220,12 @@ struct CollectionView: View {
                                 // Round 16 (Sora): row 마다 fetch 하지 않도록 wornTodayIds set 한 번 계산해서 주입.
                                 let wornTodayIds = wornTodayWatchIDs
                                 ForEach(othersOnly, id: \.id) { watch in
-                                    WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
-                                        .contentShape(Rectangle())
-                                        .onTapGesture {
-                                            pathBinding.wrappedValue.append(watch)
-                                        }
+                                    // Sprint 8 (UX): press 시 스케일 + 페이드 전환감
+                                    PressableCard {
+                                        pathBinding.wrappedValue.append(watch)
+                                    } content: {
+                                        WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
+                                    }
                                 }
                             }
                             .padding(.horizontal, 20)
@@ -251,17 +288,34 @@ struct CollectionView: View {
                     .accessibilityLabel(String(localized: "tab.settings"))
                     .accessibilityIdentifier("nav.settings")
                 }
-                // Sprint 4 (P3-10): 고급 필터 — 5개 이상 시만 표시
+                // Sprint 4 (P3-10) + Sprint 8 (UX): 고급 필터 + 정렬 — 5개 이상 시만 표시
                 if watches.count >= 5 {
                     ToolbarItem(placement: .topBarLeading) {
-                        Button {
-                            withAnimation { showAdvancedFilter.toggle() }
-                        } label: {
-                            Image(systemName: filterMovementType != nil ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                                .font(.system(size: 18))
-                                .foregroundStyle(filterMovementType != nil ? AppColors.accent : AppColors.ink2)
+                        HStack(spacing: 8) {
+                            Button {
+                                withAnimation { showAdvancedFilter.toggle() }
+                            } label: {
+                                Image(systemName: filterMovementType != nil ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                                    .font(.system(size: 18))
+                                    .foregroundStyle(filterMovementType != nil ? AppColors.accent : AppColors.ink2)
+                            }
+                            .accessibilityLabel(String(localized: "collection.filter.label"))
+                            Menu {
+                                ForEach(SortOption.allCases, id: \.self) { opt in
+                                    Button {
+                                        withAnimation(.easeOut(duration: 0.2)) { sortOption = opt }
+                                        UISelectionFeedbackGenerator().selectionChanged()
+                                    } label: {
+                                        Label(String(localized: opt.label),
+                                              systemImage: sortOption == opt ? "checkmark" : "")
+                                    }
+                                }
+                            } label: {
+                                Image(systemName: sortOption == .custom ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
+                                    .font(.system(size: 18))
+                                    .foregroundStyle(sortOption == .custom ? AppColors.ink2 : AppColors.accent)
+                            }
                         }
-                        .accessibilityLabel(String(localized: "collection.filter.label"))
                     }
                 }
             }
