@@ -358,7 +358,6 @@ struct WatchDetailView: View {
                     Image(uiImage: img)
                         .resizable()
                         .scaledToFill()
-                        .contentTransition(.identity)
                 } else {
                     ZStack {
                         LinearGradient(
