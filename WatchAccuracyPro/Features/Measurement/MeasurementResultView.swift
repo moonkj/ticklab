@@ -17,6 +17,8 @@ struct MeasurementResultView: View {
     @ScaledMetric(relativeTo: .body) private var scaledBodySizeLow: CGFloat = 15
     /// Round 23 (Doyoon): onAppear haptic 가 매 reentry (share sheet dismiss 등) 마다 fire 하던 버그.
     @State private var didFireHaptic = false
+    /// Sprint 12 (UX2): 용어 설명 바텀시트.
+    @State private var glossaryEntry: GlossaryEntryID?
 
     private var movement: Movement? {
         watch.caliber.flatMap { MovementDatabase.shared.movement(id: $0) }
@@ -144,6 +146,10 @@ struct MeasurementResultView: View {
         .background(AppColors.paper0.ignoresSafeArea())
         .navigationTitle(String(localized: "result.title"))
         .navigationBarTitleDisplayMode(.inline)
+        // Sprint 12 (UX2): 메트릭 라벨 탭 → 용어 설명 바텀시트.
+        .sheet(item: $glossaryEntry) { e in
+            GlossaryDetailSheet(key: e.key, descKey: e.descKey, icon: e.icon)
+        }
         .onAppear {
             // Round 23 (Doyoon): 최초 1회만 haptic. share sheet 닫고 reentry 시 재발화 차단.
             guard !didFireHaptic else { return }
@@ -250,9 +256,34 @@ struct MeasurementResultView: View {
                 .foregroundStyle(AppColors.ink0)
                 .lineSpacing(3)
                 .padding(.top, 4)
+            // Sprint 12 (UX5): 입문자용 "사람말" 환산 — ±s/d를 주/월 단위로.
+            if isHighConfidenceGrade {
+                Text(plainLanguageRate)
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.ink2)
+                    .padding(.top, 2)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.top, 4)
+    }
+
+    /// Sprint 12 (UX5): ±s/d → "일주일에 약 X초 / 한 달에 약 Y초" 평이한 표현.
+    private var plainLanguageRate: String {
+        let perDay = result.rateSecondsPerDay
+        let absDay = abs(perDay)
+        let week = absDay * 7
+        let direction = perDay >= 0
+            ? String(localized: "result.plain.fast")
+            : String(localized: "result.plain.slow")
+        if absDay < 0.1 {
+            return String(localized: "result.plain.perfect")
+        }
+        if week < 60 {
+            return String(format: NSLocalizedString("result.plain.week_sec", comment: ""), Int(week.rounded()), direction)
+        }
+        let month = absDay * 30
+        return String(format: NSLocalizedString("result.plain.month_min", comment: ""), month / 60, direction)
     }
 
     // MARK: - Rate dial card
@@ -344,13 +375,15 @@ struct MeasurementResultView: View {
                     ? String(localized: "result.beat.excellent")
                     : String(localized: "result.beat.acceptable"),
                 tone: result.beatErrorMs < 0.5 ? .success : .warning,
-                big: true
+                big: true,
+                onGlossaryTap: { glossaryEntry = .init(key: "glossary.beat_error", descKey: "glossary.beat_error.desc", icon: "waveform") }
             ),
             MetricBadge(
                 label: String(localized: "watch.spec.bph"),
                 value: "\(result.bph)",
                 hint: movement?.escapement.rawValue.uppercased() ?? NSLocalizedString("result.escapement.fallback", comment: ""),
-                big: true
+                big: true,
+                onGlossaryTap: { glossaryEntry = .init(key: "glossary.bph", descKey: "glossary.bph.desc", icon: "metronome") }
             ),
             MetricBadge(
                 label: String(localized: "confidence.label"),
@@ -358,7 +391,8 @@ struct MeasurementResultView: View {
                 hint: String(format: NSLocalizedString("result.snr_beats_hint", comment: ""),
                              result.snrDB, result.beatCount),
                 tone: result.confidenceScore >= 80 ? .success : .warning,
-                big: true
+                big: true,
+                onGlossaryTap: { glossaryEntry = .init(key: "glossary.confidence", descKey: "glossary.confidence.desc", icon: "chart.bar.fill") }
             )
         ]
         return VStack(alignment: .leading, spacing: 10) {

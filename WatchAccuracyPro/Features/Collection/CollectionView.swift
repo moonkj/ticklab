@@ -58,6 +58,8 @@ struct CollectionView: View {
         }
     }
     @State private var sortOption: SortOption = .custom
+    /// Sprint 12 (UX1): 측정 단축 sheet 대상 시계.
+    @State private var measureWatch: Watch?
 
     /// Round 16 (Sora): row 마다 isWornToday fetch 폭주 차단. @Query wearLogs 에서
     ///   오늘자 (startOfDay) 인 watch.id 셋을 한 번 계산해 row 에 prop 으로 전달.
@@ -172,7 +174,7 @@ struct CollectionView: View {
                                 // Round 170: padding 을 NavigationLink 외부로 → tap 영역이 visible card 만.
                                 // 이전엔 .padding(.top, 8) 이 NavigationLink 안쪽에 있어서 위 8pt 도 tap 영역이었음.
                                 NavigationLink(value: primary) {
-                                    HeroWatchCard(watch: primary)
+                                    HeroWatchCard(watch: primary, onMeasure: { measureWatch = primary })
                                         .contentShape(Rectangle())
                                 }
                                 .buttonStyle(.plain)
@@ -346,6 +348,17 @@ struct CollectionView: View {
             }
             .sheet(isPresented: $showingAdd) {
                 AddWatchView()
+            }
+            // Sprint 12 (UX1): 측정 단축 sheet — NavigationStack 래핑(측정 화면 push 전제 충족).
+            .sheet(item: $measureWatch) { w in
+                NavigationStack {
+                    MeasurementView(watch: w, preferences: preferences)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarLeading) {
+                                Button(String(localized: "common.close")) { measureWatch = nil }
+                            }
+                        }
+                }
             }
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
@@ -611,6 +624,8 @@ struct CollectionView: View {
 
 struct HeroWatchCard: View {
     let watch: Watch
+    /// Sprint 12 (UX1): 측정 단축 진입 콜백. nil 이면 버튼 숨김.
+    var onMeasure: (() -> Void)? = nil
     @Environment(\.modelContext) private var modelContext
 
     // Round 174: sorted() O(N log N) → max(by:) O(N).
@@ -710,6 +725,25 @@ struct HeroWatchCard: View {
                         .contentShape(Capsule())
                     }
                     .buttonStyle(.plain)
+                    // Sprint 12 (UX1): 측정 단축 — 기계식만, 콜백 있을 때.
+                    if let onMeasure, watch.movementType != .quartz {
+                        Button {
+                            UISelectionFeedbackGenerator().selectionChanged()
+                            onMeasure()
+                        } label: {
+                            HStack(spacing: 5) {
+                                Image(systemName: "mic.fill").font(.system(size: 14))
+                                Text(String(localized: "measurement.button.start_short"))
+                                    .font(.system(size: 11, weight: .semibold))
+                            }
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12).padding(.vertical, 10)
+                            .background(AppColors.accentDark)
+                            .clipShape(Capsule())
+                            .contentShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
                     if watch.isFavorite {
                         Image(systemName: "star.fill")
                             .font(.system(size: 14))

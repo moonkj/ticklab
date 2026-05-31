@@ -44,8 +44,12 @@ struct TodayView: View {
                     headerSection
                     // Round 176 (사용자 UX 요청 #2): 대표 시계 명확화. 설정 됐으면 큰 카드, 아니면 빈 상태 CTA.
                     primaryWatchSection
-                    // Sprint 11 (Doyoon #1): 추천 + 뽑기 통합 단일 카드.
-                    todayPickCard
+                    // Sprint 12 (UX3): 적응형 — 시계 2개 이상이면 추천/뽑기, 1개면 "이 시계와의 기록".
+                    if watches.count >= 2 {
+                        todayPickCard
+                    } else if let solo = watches.first {
+                        soloWatchInsightCard(solo)
+                    }
                     // 시각적 리듬: fortune + magnetic 을 2-col grid 로 묶어 hero card 와 차별화
                     HStack(spacing: 10) {
                         fortuneCard
@@ -261,6 +265,60 @@ struct TodayView: View {
     // MARK: - Today's Watch
 
     // MARK: - Sprint 5 (P2-15) AI 추천 카드
+
+    /// Sprint 12 (UX3): 시계 1개 사용자용 — 추천/뽑기 대신 "이 시계와의 기록".
+    @ViewBuilder
+    private func soloWatchInsightCard(_ watch: Watch) -> some View {
+        let wearCount = wearLogs.filter { $0.watch?.id == watch.id }.count
+        let daysSincePurchase: Int? = watch.purchaseDate.map {
+            Calendar.current.dateComponents([.day], from: $0, to: Date()).day ?? 0
+        }
+        NavigationLink {
+            WatchDetailView(watch: watch)
+        } label: {
+            VStack(alignment: .leading, spacing: 12) {
+                Text(String(localized: "today.solo.title"))
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(AppColors.accentDark)
+                Text("\(watch.brand) \(watch.model)")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                    .lineLimit(1)
+                HStack(spacing: 20) {
+                    soloStat(value: "\(wearCount)", label: String(localized: "today.solo.wears"))
+                    if let days = daysSincePurchase, days >= 0 {
+                        Rectangle().fill(AppColors.rule).frame(width: 1, height: 32)
+                        soloStat(value: "\(days)", label: String(localized: "today.solo.days"))
+                    }
+                    if let last = watch.measurements.max(by: { $0.timestamp < $1.timestamp }) {
+                        Rectangle().fill(AppColors.rule).frame(width: 1, height: 32)
+                        soloStat(value: String(format: "%+.1f", last.rateSecondsPerDay),
+                                 label: String(localized: "unit.seconds_per_day"))
+                    }
+                    Spacer()
+                }
+            }
+            .padding(16)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AppColors.paper1)
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+            .clipShape(RoundedRectangle(cornerRadius: 14))
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func soloStat(value: String, label: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(value)
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .foregroundStyle(AppColors.ink0)
+            Text(label)
+                .font(.system(size: 10))
+                .foregroundStyle(AppColors.ink3)
+        }
+    }
 
     /// Sprint 11 (Doyoon #1, 사용자 재지적): 추천 + 뽑기 완전 단일 카드 (한 줄).
     /// 추천 시계가 있으면 그 시계를 미리 제안하고, 탭하면 ShakePick(흔들어 다시 뽑기)으로 진입.

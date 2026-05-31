@@ -48,9 +48,16 @@ struct COSCBar: View {
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundStyle(AppColors.ink2)
                     Spacer()
-                    Text("COSC −4 ~ +6")
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(AppColors.success)
+                    // Sprint 12 (UX6): 색약 대응 — COSC 범위 안/밖을 아이콘으로도 표시.
+                    HStack(spacing: 3) {
+                        let inRange = rate >= coscLo && rate <= coscHi
+                        Image(systemName: inRange ? "checkmark.circle.fill" : "exclamationmark.circle")
+                            .font(.system(size: 10))
+                            .foregroundStyle(inRange ? AppColors.success : AppColors.warning)
+                        Text("COSC −4 ~ +6")
+                            .font(.system(size: 11, design: .monospaced))
+                            .foregroundStyle(inRange ? AppColors.success : AppColors.ink2)
+                    }
                     Spacer()
                     Text("+12")
                         .font(.system(size: 11, design: .monospaced))

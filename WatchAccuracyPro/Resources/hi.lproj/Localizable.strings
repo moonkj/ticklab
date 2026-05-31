@@ -1446,3 +1446,15 @@
 "profile.section.invite" = "Invite Code";
 "settings.data.gallery_html" = "Collection Gallery (HTML)";
 "settings.profile.setup_hint" = "Set up your profile"; "settings.profile.edit_hint" = "Edit profile";
+"measurement.button.start_short" = "Measure"; "a11y.tap_for_definition" = "Tap for definition";
+"result.plain.fast" = "fast";
+"result.plain.slow" = "slow";
+"result.plain.perfect" = "Almost perfectly accurate.";
+"result.plain.week_sec" = "about %d sec %@ per week";
+"result.plain.month_min" = "about %.1f min %@ per month";
+"stats.group.mine" = "MY RECORDS";
+"stats.group.community" = "COMMUNITY";
+"stats.entry.community.subtitle" = "Brand ranking · global stats";
+"today.solo.title" = "YOUR JOURNEY WITH THIS WATCH";
+"today.solo.wears" = "wears";
+"today.solo.days" = "days together";

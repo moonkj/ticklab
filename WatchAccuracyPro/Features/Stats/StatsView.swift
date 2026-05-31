@@ -81,70 +81,59 @@ struct StatsView: View {
         .padding(.top, 8)
     }
 
-    /// 와이어프레임 Section E — Stats 에서 진입하는 카드 (업적 / 리그 / 하이라이트).
+    /// Sprint 12 (UX4): IA 2그룹화 — "내 기록" / "커뮤니티". 글로벌분석은 브랜드리그로 흡수.
     private var funEntryCards: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            // Sprint 7 (P3-11): 브랜드 뉴스
-            NavigationLink {
-                BrandNewsView()
-            } label: {
-                funEntryCard(emoji: "📰",
-                             title: String(localized: "stats.entry.news"),
-                             subtitle: String(localized: "stats.entry.news.subtitle"),
-                             tint: Color.orange.opacity(0.15))
-            }
-            .buttonStyle(.plain)
-
-            HStack(spacing: 10) {
-                NavigationLink {
-                    BadgesView()
-                } label: {
-                    funEntryCard(emoji: "🏆",
-                                 title: String(localized: "stats.entry.badges"),
-                                 subtitle: String(localized: "stats.entry.badges.subtitle"),
-                                 tint: AppColors.accent.opacity(0.18))
+        VStack(alignment: .leading, spacing: 14) {
+            // ── 그룹 1: 내 기록 ──
+            VStack(alignment: .leading, spacing: 10) {
+                Text(String(localized: "stats.group.mine"))
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(AppColors.ink3)
+                HStack(spacing: 10) {
+                    NavigationLink { BadgesView() } label: {
+                        funEntryCard(emoji: "🏆",
+                                     title: String(localized: "stats.entry.badges"),
+                                     subtitle: String(localized: "stats.entry.badges.subtitle"),
+                                     tint: AppColors.accent.opacity(0.18))
+                    }.buttonStyle(.plain)
+                    NavigationLink { HighlightTimelineView() } label: {
+                        funEntryCard(emoji: "⭐",
+                                     title: String(localized: "stats.entry.highlights"),
+                                     subtitle: String(localized: "stats.entry.highlights.subtitle"),
+                                     tint: AppColors.warning.opacity(0.15))
+                    }.buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
-                NavigationLink {
-                    BrandLeagueView()
-                } label: {
-                    funEntryCard(emoji: "📣",
-                                 title: String(localized: "stats.entry.league"),
-                                 subtitle: String(localized: "stats.entry.league.subtitle"),
-                                 tint: AppColors.info.opacity(0.18))
-                }
-                .buttonStyle(.plain)
-            }
-            HStack(spacing: 10) {
-                NavigationLink {
-                    HighlightTimelineView()
-                } label: {
-                    funEntryCard(emoji: "⭐",
-                                 title: String(localized: "stats.entry.highlights"),
-                                 subtitle: String(localized: "stats.entry.highlights.subtitle"),
-                                 tint: AppColors.warning.opacity(0.15))
-                }
-                .buttonStyle(.plain)
-                NavigationLink {
-                    WrappedView()
-                } label: {
+                NavigationLink { WrappedView() } label: {
                     funEntryCard(emoji: "🎁",
                                  title: String(localized: "stats.entry.wrapped"),
                                  subtitle: String(localized: "stats.entry.wrapped.subtitle"),
                                  tint: Color.purple.opacity(0.15))
+                }.buttonStyle(.plain)
+            }
+
+            // ── 그룹 2: 커뮤니티 ── (브랜드리그=글로벌분석 통합, 뉴스)
+            VStack(alignment: .leading, spacing: 10) {
+                Text(String(localized: "stats.group.community"))
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(AppColors.ink3)
+                HStack(spacing: 10) {
+                    // 브랜드리그 진입 → 내부에 글로벌분석 세그먼트 포함 (통합).
+                    NavigationLink { BrandLeagueView() } label: {
+                        funEntryCard(emoji: "📣",
+                                     title: String(localized: "stats.entry.league"),
+                                     subtitle: String(localized: "stats.entry.community.subtitle"),
+                                     tint: AppColors.info.opacity(0.18))
+                    }.buttonStyle(.plain)
+                    NavigationLink { BrandNewsView() } label: {
+                        funEntryCard(emoji: "📰",
+                                     title: String(localized: "stats.entry.news"),
+                                     subtitle: String(localized: "stats.entry.news.subtitle"),
+                                     tint: Color.orange.opacity(0.15))
+                    }.buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
-            // Sprint 6 (P3-9): 글로벌 분석
-            NavigationLink {
-                GlobalAnalyticsView()
-            } label: {
-                funEntryCard(emoji: "🌍",
-                             title: String(localized: "stats.entry.global"),
-                             subtitle: String(localized: "stats.entry.global.subtitle"),
-                             tint: Color.teal.opacity(0.15))
-            }
-            .buttonStyle(.plain)
         }
     }
 

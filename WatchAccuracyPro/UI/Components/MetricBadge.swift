@@ -11,6 +11,8 @@ struct MetricBadge: View {
     let hint: String?
     let tone: Tone
     let big: Bool
+    /// Sprint 12 (UX2): 용어 설명 탭 콜백. 있으면 label 에 info dot + 탭 가능.
+    let onGlossaryTap: (() -> Void)?
 
     init(
         label: String,
@@ -18,7 +20,8 @@ struct MetricBadge: View {
         unit: String? = nil,
         hint: String? = nil,
         tone: Tone = .neutral,
-        big: Bool = false
+        big: Bool = false,
+        onGlossaryTap: (() -> Void)? = nil
     ) {
         self.label = label
         self.value = value
@@ -26,14 +29,22 @@ struct MetricBadge: View {
         self.hint = hint
         self.tone = tone
         self.big = big
+        self.onGlossaryTap = onGlossaryTap
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(label.uppercased())
-                .font(.system(size: 9.5, weight: .semibold))
-                .tracking(2)
-                .foregroundStyle(AppColors.ink2)
+            HStack(spacing: 3) {
+                Text(label.uppercased())
+                    .font(.system(size: 9.5, weight: .semibold))
+                    .tracking(2)
+                    .foregroundStyle(AppColors.ink2)
+                if onGlossaryTap != nil {
+                    Image(systemName: "info.circle")
+                        .font(.system(size: 9))
+                        .foregroundStyle(AppColors.accentDark.opacity(0.6))
+                }
+            }
             HStack(alignment: .firstTextBaseline, spacing: 4) {
                 Text(value)
                     .font(.system(size: big ? 22 : 18, weight: .medium, design: .monospaced))
@@ -58,10 +69,13 @@ struct MetricBadge: View {
         .padding(.vertical, big ? 14 : 10)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(AppColors.paper0)
+        .contentShape(Rectangle())
+        .onTapGesture { onGlossaryTap?() }
         // Round 176: VoiceOver — '라벨, 값, 단위' 한 번에.
         // Round 18 (Hyemi): 빈 hint announce 차단 — modifier 자체를 hint 있을 때만 부착.
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(label) \(value)\(unit.map { " \($0)" } ?? "")")
+        .accessibilityHint(onGlossaryTap != nil ? Text(String(localized: "a11y.tap_for_definition")) : Text(""))
         .modifier(OptionalAccessibilityHint(hint: hint))
     }
 

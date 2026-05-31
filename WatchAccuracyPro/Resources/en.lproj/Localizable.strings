@@ -1494,3 +1494,20 @@
 /* Sprint 11 — Profile row */
 "settings.profile.setup_hint" = "Set up your profile";
 "settings.profile.edit_hint" = "Edit profile";
+
+/* Sprint 12 — UX polish 1 */
+"measurement.button.start_short" = "Measure";
+"a11y.tap_for_definition" = "Tap for definition";
+
+/* Sprint 12 — UX5 plain rate + UX4 groups + UX3 solo */
+"result.plain.fast" = "fast";
+"result.plain.slow" = "slow";
+"result.plain.perfect" = "Almost perfectly accurate.";
+"result.plain.week_sec" = "about %d sec %@ per week";
+"result.plain.month_min" = "about %.1f min %@ per month";
+"stats.group.mine" = "MY RECORDS";
+"stats.group.community" = "COMMUNITY";
+"stats.entry.community.subtitle" = "Brand ranking · global stats";
+"today.solo.title" = "YOUR JOURNEY WITH THIS WATCH";
+"today.solo.wears" = "wears";
+"today.solo.days" = "days together";

@@ -1493,3 +1493,20 @@
 /* Sprint 11 — 프로필 행 */
 "settings.profile.setup_hint" = "프로필을 설정해보세요";
 "settings.profile.edit_hint" = "프로필 편집";
+
+/* Sprint 12 — UX 고도화 1차 */
+"measurement.button.start_short" = "측정";
+"a11y.tap_for_definition" = "탭하면 용어 설명을 볼 수 있어요";
+
+/* Sprint 12 — UX5 verdict 환산 + UX4 그룹 + UX3 솔로 */
+"result.plain.fast" = "빠릅니다";
+"result.plain.slow" = "느립니다";
+"result.plain.perfect" = "거의 오차 없이 정확해요.";
+"result.plain.week_sec" = "일주일에 약 %d초 %@";
+"result.plain.month_min" = "한 달에 약 %.1f분 %@";
+"stats.group.mine" = "내 기록";
+"stats.group.community" = "커뮤니티";
+"stats.entry.community.subtitle" = "브랜드 랭킹 · 글로벌 통계";
+"today.solo.title" = "이 시계와의 기록";
+"today.solo.wears" = "착용";
+"today.solo.days" = "함께한 날";

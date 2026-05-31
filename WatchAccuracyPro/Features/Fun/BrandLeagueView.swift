@@ -103,6 +103,14 @@ struct BrandLeagueView: View {
         .background(AppColors.paper0.ignoresSafeArea())
         .navigationTitle(String(localized: "league.nav.title"))
         .navigationBarTitleDisplayMode(.inline)
+        // Sprint 12 (UX4): 글로벌분석을 브랜드리그 내부로 흡수 — 상단 버튼으로 진입.
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                NavigationLink { GlobalAnalyticsView() } label: {
+                    Image(systemName: "chart.bar.xaxis")
+                }
+            }
+        }
         .task(id: period.rawValue) {
             await service.fetchRanking(periodType: period.supabaseType)
         }
