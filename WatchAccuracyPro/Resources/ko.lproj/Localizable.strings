@@ -1281,3 +1281,7 @@
 
 /* Sprint 3 — P2-6 컨디션 리포트 */
 "watch.menu.condition_report" = "컨디션 리포트 PDF 공유";
+
+/* Sprint 4 — P1-5 필수/선택 폼 */
+"addwatch.section.required" = "필수 정보";
+"addwatch.section.optional" = "추가 정보 입력 ▼";

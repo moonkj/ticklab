@@ -26,6 +26,8 @@ struct AddWatchView: View {
     /// Sprint 2 (P2-9): 보증 기간 (개월). 0 = 미설정.
     @State private var warrantyMonths: Int = 0
     @State private var warrantyReminderEnabled: Bool = true
+    /// Sprint 4 (P1-5): 선택 항목 펼치기/접기.
+    @State private var optionalExpanded: Bool = false
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var showingCamera = false
@@ -83,7 +85,8 @@ struct AddWatchView: View {
                 Section(String(localized: "addwatch.section.photo")) {
                     photoPicker
                 }
-                Section(String(localized: "addwatch.section.basic")) {
+                // Sprint 4 (P1-5): 필수 항목 레이블
+                Section(header: Text(String(localized: "addwatch.section.required"))) {
                     // Picker + 직접 입력 통합 — Menu 로 인기 브랜드 선택 + 직접 입력 시트.
                     HStack {
                         Text(String(localized: "addwatch.brand"))
@@ -122,14 +125,28 @@ struct AddWatchView: View {
 
                     TextField(String(localized: "addwatch.model"), text: $model)
                         .onChange(of: model) { _, _ in updateSuggestion() }
+                }
 
-                    DatePicker(
-                        String(localized: "addwatch.purchase_date"),
-                        selection: Binding(
-                            get: { purchaseDate ?? Date() },
-                            set: { purchaseDate = $0 }
-                        ),
-                        displayedComponents: .date
+                // Sprint 4 (P1-5): 선택 항목 DisclosureGroup
+                Section {
+                    DisclosureGroup(
+                        isExpanded: $optionalExpanded,
+                        content: {
+                            DatePicker(
+                                String(localized: "addwatch.purchase_date"),
+                                selection: Binding(
+                                    get: { purchaseDate ?? Date() },
+                                    set: { purchaseDate = $0 }
+                                ),
+                                displayedComponents: .date
+                            )
+                            .padding(.leading, 4)
+                        },
+                        label: {
+                            Text(String(localized: "addwatch.section.optional"))
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(AppColors.accentDark)
+                        }
                     )
                 }
 
@@ -370,6 +387,8 @@ struct AddWatchView: View {
     /// Round 173: 편집 모드 진입 시 기존 시계 데이터를 state 로 복원.
     private func loadExisting() {
         guard let existing else { return }
+        // Sprint 4 (P1-5): 편집 모드에서는 선택 항목 자동 펼침.
+        optionalExpanded = true
         brand = existing.brand
         model = existing.model
         caliber = existing.caliber

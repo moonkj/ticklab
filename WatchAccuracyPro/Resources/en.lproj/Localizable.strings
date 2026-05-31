@@ -1282,3 +1282,7 @@
 
 /* Sprint 3 — P2-6 Condition report */
 "watch.menu.condition_report" = "Share Condition Report PDF";
+
+/* Sprint 4 — P1-5 Required/optional form */
+"addwatch.section.required" = "Required";
+"addwatch.section.optional" = "More Info ▼";

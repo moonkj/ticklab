@@ -1284,3 +1284,5 @@
 "watchdetail.finance.empty.title" = "Add a purchase price";
 "watchdetail.finance.empty.body" = "Enter the purchase price to see your cost per wear.";
 "watch.menu.condition_report" = "Share Condition Report PDF";
+"addwatch.section.required" = "Required";
+"addwatch.section.optional" = "More Info ▼";
