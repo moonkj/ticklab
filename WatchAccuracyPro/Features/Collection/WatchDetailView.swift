@@ -53,6 +53,8 @@ struct WatchDetailView: View {
     @State private var showingPhotoLibrary: Bool = false
     /// Round 94 (정수민 Critical #2): 사진 풀스크린 줌.
     @State private var showingFullscreenPhoto: Bool = false
+    /// push 애니메이션 중 hero crop 숨기기 — onAppear 후 fade in.
+    @State private var heroVisible: Bool = false
     /// Sprint 6 (P2-3): 사진 보정 스타일 — 기본 standard.
     @State private var photoProcessingStyle: ProcessingStyle = .standard
     @State private var showingPhotoStylePicker: Bool = false
@@ -101,6 +103,8 @@ struct WatchDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
                 heroHeader
+                    .opacity(heroVisible ? 1 : 0)
+                    .animation(.easeIn(duration: 0.18), value: heroVisible)
                 actionsSection
                 // Sprint 1 (P1-4): 등록 후 다음 단계 가이드 — 모든 단계 완료 또는 닫기 시 영구 숨김.
                 NextStepsGuideCard(watch: watch)
@@ -130,6 +134,10 @@ struct WatchDetailView: View {
             refreshJournalAndServiceCache()
             cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
             serialNumber = KeychainService.serial(for: watch.id) ?? ""
+            // push 애니메이션 완료 후 hero fade in (crop 아티팩트 은폐).
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+                heroVisible = true
+            }
         }
         .onChange(of: watch.measurements.count) { _, _ in
             sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
