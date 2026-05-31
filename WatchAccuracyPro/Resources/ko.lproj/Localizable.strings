@@ -1465,3 +1465,27 @@
 "wishlist.target_price" = "목표 가격";
 "wishlist.note" = "메모";
 "menu.wishlist" = "드림 위시리스트";
+
+/* Sprint 10 — P3-8 컬렉션 가치 투명성 */
+"collection.value.title" = "컬렉션 가치";
+"collection.value.count" = "%d / 전체 %d개 시계 기준";
+"collection.value.info.title" = "계산 기준";
+"collection.value.info.updated" = "마지막 업데이트: %@";
+"collection.value.info.source" = "출처: 직접 입력한 구매가 우선 적용";
+"collection.value.info.count" = "구매가 입력된 시계 %d개 / 전체 %d개";
+"collection.value.info.disclaimer" = "참고용 수치입니다. 정확한 시세는 공식 딜러 또는 Chrono24를 확인하세요.";
+
+/* Sprint 10 — P3-13 사용자 프로필 */
+"profile.nav.title" = "내 프로필";
+"profile.name" = "이름";
+"profile.name.hint" = "다른 컬렉터들에게 표시될 이름";
+"profile.section.collector" = "컬렉터 정보";
+"profile.start_year" = "컬렉션 시작 연도";
+"profile.fav_brands" = "좋아하는 브랜드";
+"profile.bio" = "소개";
+"profile.dealer_badge" = "딜러 배지";
+"profile.dealer_badge.hint" = "시계 거래를 하시면 활성화하세요.";
+"profile.section.invite" = "초대 코드";
+
+/* Sprint 10 — P2-16 공개 갤러리 */
+"settings.data.gallery_html" = "컬렉션 갤러리 (HTML)";

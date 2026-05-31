@@ -13,7 +13,7 @@ settings:
     SWIFT_VERSION: "5.9"
     IPHONEOS_DEPLOYMENT_TARGET: "17.0"
     ENABLE_USER_SCRIPT_SANDBOXING: NO
-    CURRENT_PROJECT_VERSION: 154
+    CURRENT_PROJECT_VERSION: 155
     MARKETING_VERSION: "1.0.1"
     DEVELOPMENT_TEAM: "QN975MTM7H"
     CODE_SIGN_STYLE: Automatic
@@ -74,6 +74,8 @@ targets:
     dependencies:
       - target: WatchAccuracyProWidget
         embed: true
+      - package: TickLabUI    # Sprint 10 INFRA-3
+      - package: TickLabCore  # Sprint 10 INFRA-3
 
   WatchAccuracyProWidget:
     type: app-extension
@@ -123,6 +125,12 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.ticklab.watchaccuracypro.uitests
         TEST_TARGET_NAME: WatchAccuracyPro
         GENERATE_INFOPLIST_FILE: YES
+
+packages:
+  TickLabUI:
+    path: Packages/TickLabUI
+  TickLabCore:
+    path: Packages/TickLabCore
 
 schemes:
   WatchAccuracyPro:

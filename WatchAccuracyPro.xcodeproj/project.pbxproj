@@ -19,6 +19,7 @@
 		0AF05D132A01F4584655E85D /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0BF3889B7C279B96913C8 /* Watch.swift */; };
 		0B416ACF36F8E8619915B8D3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 15760E394B5817EC63E9E57B /* PrivacyInfo.xcprivacy */; };
 		0C475AE81DA480D90B67BC77 /* ConditionReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77630A107E903F99E49AC29 /* ConditionReportGenerator.swift */; };
+		0C96AF50F78003395D7730C8 /* CollectionValueCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB6C7E11831324D6C5BB937 /* CollectionValueCard.swift */; };
 		0CF6D20369F26C6371F0B92F /* BeatErrorCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */; };
 		0E742B15576835ADDBCA32BB /* AsyncDiskImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DE10565489923480790DEF0 /* AsyncDiskImage.swift */; };
 		0EDB6CFF23FE196CDEF87803 /* PINEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691023A66AE599737D98CAE7 /* PINEntryView.swift */; };
@@ -117,6 +118,7 @@
 		71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */; };
 		73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */; };
 		73F5D2BB7934DB165063FC84 /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C0B1191FD9B5AC52121059 /* EmptyState.swift */; };
+		74BEA8A8ABA4477195771546 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8EC3DB6EA239EFE56FB9287 /* UserProfileView.swift */; };
 		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
 		76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA49473933488382E08C687D /* MovementDBOTAService.swift */; };
 		78B6EDB3C335BE21E1E1058F /* MatchedFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D6F05B7D6C49E563D6B7F1 /* MatchedFilter.swift */; };
@@ -141,6 +143,7 @@
 		9B1536D6967225521A27A721 /* BeatDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */; };
 		9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09B71246DA234CB44A78515B /* AppLockService.swift */; };
 		9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232F86DA8616E432AC56384 /* FeatureFlags.swift */; };
+		9E0E4450370961C2C775563A /* TickLabUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9DEA758E5191171E1AF9C2E /* TickLabUI */; };
 		A29D3FD2A90EA36F5AEF6725 /* QuartzBatteryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C4856761ABB8DFF406C89 /* QuartzBatteryCard.swift */; };
 		A40BC6BA8177158F6189B90F /* LiveWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A67361F10B027A48A16DD7F /* LiveWaveformView.swift */; };
 		A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */; };
@@ -150,6 +153,7 @@
 		AADCCD5D8C1AA5197C1A19FD /* ConfidenceBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */; };
 		AB28B298A4F8237FA0768A8B /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */; };
 		AEF7F1EDF3E5A1B69E9FA324 /* MeasurementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */; };
+		AF281D649E28358A70E50899 /* TickLabCore in Frameworks */ = {isa = PBXBuildFile; productRef = CD62A593AA90C3C154662D06 /* TickLabCore */; };
 		AF3D6294B39E5E9CD8DC04E3 /* AtomicTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BAE1F6F68E6C62F37967AB /* AtomicTimeService.swift */; };
 		B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */; };
 		B0866BE9EAEBECCB7FDE6D8D /* ProEntitlementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8592EF7BED1AC8A8DCF27A /* ProEntitlementTests.swift */; };
@@ -198,6 +202,7 @@
 		EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B73CA7D38E14891EFF33C /* Assets.xcassets */; };
 		EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F3B8F980C953CE9B08EA6 /* WindingHintToast.swift */; };
 		EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47ABF66B3DE34B94929919A /* RootTabView.swift */; };
+		ECD94829EBE2AB0201C514F7 /* CollectionGalleryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85CB710BDB6E5CCE4BEEFE /* CollectionGalleryGenerator.swift */; };
 		F1031887A0BB52293D926A92 /* WearToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */; };
 		F1311624612DE197ED27B713 /* MeasurementResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */; };
 		F1928421CA0056ADA3D7B61C /* MagneticFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BA28D60EFB1492D1A69505E /* MagneticFieldView.swift */; };
@@ -296,6 +301,7 @@
 		34385F5101226F0E05DB6B1A /* BeatErrorCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatErrorCalculator.swift; sourceTree = "<group>"; };
 		353479AEF5F399DDE278E742 /* ServiceLogComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLogComposerView.swift; sourceTree = "<group>"; };
 		36CC58D57872C85FC248AE57 /* LockScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockScreenView.swift; sourceTree = "<group>"; };
+		3774E39B3185517210C20E1C /* TickLabCore */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TickLabCore; path = Packages/TickLabCore; sourceTree = SOURCE_ROOT; };
 		378B7AD6ADC6AF39B0B26AF6 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		38680208F755CAE7C44D2B6D /* MeasurementActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementActivityAttributes.swift; sourceTree = "<group>"; };
 		39ABF52B048CB4F9DA9040F9 /* StrapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapListView.swift; sourceTree = "<group>"; };
@@ -369,6 +375,7 @@
 		792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
 		7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricBadge.swift; sourceTree = "<group>"; };
 		7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlowTests.swift; sourceTree = "<group>"; };
+		7F85CB710BDB6E5CCE4BEEFE /* CollectionGalleryGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionGalleryGenerator.swift; sourceTree = "<group>"; };
 		814BB874EA00DC74C916110A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepsGuideCard.swift; sourceTree = "<group>"; };
 		8472F0954A87FCC24459476F /* CasebackOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasebackOCRService.swift; sourceTree = "<group>"; };
@@ -427,6 +434,7 @@
 		C47ABF66B3DE34B94929919A /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
 		C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCenterFavoritesService.swift; sourceTree = "<group>"; };
 		C9C0B1191FD9B5AC52121059 /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
+		CAB6C7E11831324D6C5BB937 /* CollectionValueCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionValueCard.swift; sourceTree = "<group>"; };
 		CAFE5DB5627AFC84036DFD0A /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementPickerSheet.swift; sourceTree = "<group>"; };
 		CE2D3F9AA8A20998AE36CB84 /* PurchaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseRouter.swift; sourceTree = "<group>"; };
@@ -443,6 +451,7 @@
 		D77630A107E903F99E49AC29 /* ConditionReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionReportGenerator.swift; sourceTree = "<group>"; };
 		D899D1AF17FEFF9EF707EDAB /* PINService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINService.swift; sourceTree = "<group>"; };
 		D8C5CAA0588BDF3BFCD3981B /* SpecCardComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardComposerView.swift; sourceTree = "<group>"; };
+		D8EC3DB6EA239EFE56FB9287 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		DA49473933488382E08C687D /* MovementDBOTAService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDBOTAService.swift; sourceTree = "<group>"; };
 		DB81C6DB8297A852A837F889 /* EXIFStripper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFStripper.swift; sourceTree = "<group>"; };
 		DCF9C569CED7D145073DD70E /* HighlightTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightTimelineView.swift; sourceTree = "<group>"; };
@@ -474,8 +483,21 @@
 		F7188931BE41A7B110E6264F /* WatchMeasurement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMeasurement.swift; sourceTree = "<group>"; };
 		FA09F8C4A5F535A21D8C8AEF /* ServiceLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLog.swift; sourceTree = "<group>"; };
 		FC41F6299A97CA2A50A55E4A /* ProEntitlement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProEntitlement.swift; sourceTree = "<group>"; };
+		FD0837B504607DFBE70AEDA1 /* TickLabUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TickLabUI; path = Packages/TickLabUI; sourceTree = SOURCE_ROOT; };
 		FD21F230F693C58F9E3386CA /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D4539FAA9C5D9507A8278455 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E0E4450370961C2C775563A /* TickLabUI in Frameworks */,
+				AF281D649E28358A70E50899 /* TickLabCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		01AC12321ECC1B9959488C09 /* Root */ = {
@@ -484,6 +506,15 @@
 				C47ABF66B3DE34B94929919A /* RootTabView.swift */,
 			);
 			path = Root;
+			sourceTree = "<group>";
+		};
+		01EE88217C725ABFAA045325 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				3774E39B3185517210C20E1C /* TickLabCore */,
+				FD0837B504607DFBE70AEDA1 /* TickLabUI */,
+			);
+			path = Packages;
 			sourceTree = "<group>";
 		};
 		04A2AD5853B6259F7123CEC4 /* Fixtures */ = {
@@ -545,6 +576,7 @@
 		0B78B34AA6BBAF432D883A0B = {
 			isa = PBXGroup;
 			children = (
+				01EE88217C725ABFAA045325 /* Packages */,
 				70AE09A853F055F0F4CC3FAE /* WatchAccuracyPro */,
 				0784FAEF8B8A46BD788C34F3 /* WatchAccuracyProWidget */,
 				7694FAE22D951C33E39D92E3 /* Products */,
@@ -664,6 +696,7 @@
 		41F1F5ECFEB6F878BD8F5890 /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
+				7F85CB710BDB6E5CCE4BEEFE /* CollectionGalleryGenerator.swift */,
 				1C4817C4FF6E9CD72A586997 /* SharedSnapshotStore.swift */,
 			);
 			path = Sharing;
@@ -824,6 +857,7 @@
 				2DE10565489923480790DEF0 /* AsyncDiskImage.swift */,
 				440628D64E2AD525A2B10DA3 /* CameraImagePicker.swift */,
 				F341EE5EE217E7EB16CC927F /* Chip.swift */,
+				CAB6C7E11831324D6C5BB937 /* CollectionValueCard.swift */,
 				93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */,
 				56D001FBFE55C95EE047F4F0 /* COSCBar.swift */,
 				D02497C4FA9F2012D2D6D2D0 /* CostPerWearCard.swift */,
@@ -866,6 +900,7 @@
 				47337BB60F08B5060EE99A57 /* ReferralView.swift */,
 				090D20C16B59509F9494E62C /* SettingsView.swift */,
 				E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */,
+				D8EC3DB6EA239EFE56FB9287 /* UserProfileView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1179,6 +1214,7 @@
 			buildPhases = (
 				84ADE368F02C76A830C0DDDF /* Sources */,
 				13568083CDF9FCBF24A17DF9 /* Resources */,
+				D4539FAA9C5D9507A8278455 /* Frameworks */,
 				DD20EC2A55E28853C7661C19 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
@@ -1188,6 +1224,8 @@
 			);
 			name = WatchAccuracyPro;
 			packageProductDependencies = (
+				C9DEA758E5191171E1AF9C2E /* TickLabUI */,
+				CD62A593AA90C3C154662D06 /* TickLabCore */,
 			);
 			productName = WatchAccuracyPro;
 			productReference = 63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */;
@@ -1237,6 +1275,10 @@
 			);
 			mainGroup = 0B78B34AA6BBAF432D883A0B;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				9B031F449BAD0C4CFCE82802 /* XCLocalSwiftPackageReference "Packages/TickLabCore" */,
+				D58D1794AE25F8DC04DFF81A /* XCLocalSwiftPackageReference "Packages/TickLabUI" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 7694FAE22D951C33E39D92E3 /* Products */;
 			projectDirPath = "";
@@ -1348,6 +1390,8 @@
 				4AB6F1F297397E9A6D0620DE /* CameraImagePicker.swift in Sources */,
 				520B0BC0AA32863772A9865A /* CasebackOCRService.swift in Sources */,
 				4DA466650FB44A1B4458FD84 /* Chip.swift in Sources */,
+				ECD94829EBE2AB0201C514F7 /* CollectionGalleryGenerator.swift in Sources */,
+				0C96AF50F78003395D7730C8 /* CollectionValueCard.swift in Sources */,
 				42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */,
 				4213E52F2A52302167A13CD8 /* Colors.swift in Sources */,
 				0C475AE81DA480D90B67BC77 /* ConditionReportGenerator.swift in Sources */,
@@ -1456,6 +1500,7 @@
 				F5D4EDC2C2D428C1E8430899 /* TrendChartView.swift in Sources */,
 				49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */,
 				E87A9E6561A1E7A78F0156C6 /* UserPreferences.swift in Sources */,
+				74BEA8A8ABA4477195771546 /* UserProfileView.swift in Sources */,
 				0AF05D132A01F4584655E85D /* Watch.swift in Sources */,
 				38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */,
 				2B4BAA5D1BD153C47D0FD778 /* WatchBoxView.swift in Sources */,
@@ -1618,7 +1663,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 154;
+				CURRENT_PROJECT_VERSION = 155;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1785,7 +1830,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 154;
+				CURRENT_PROJECT_VERSION = 155;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1868,6 +1913,28 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		9B031F449BAD0C4CFCE82802 /* XCLocalSwiftPackageReference "Packages/TickLabCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/TickLabCore;
+		};
+		D58D1794AE25F8DC04DFF81A /* XCLocalSwiftPackageReference "Packages/TickLabUI" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Packages/TickLabUI;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		C9DEA758E5191171E1AF9C2E /* TickLabUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TickLabUI;
+		};
+		CD62A593AA90C3C154662D06 /* TickLabCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TickLabCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 485D755C8EB3EFF2887E58E9 /* Project object */;
 }

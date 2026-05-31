@@ -28,6 +28,8 @@ struct SettingsView: View {
     @State private var showingOffboarding: Bool = false
     /// Sprint 6 (P3-14): 인앱 피드백.
     @State private var showingFeedback: Bool = false
+    /// Sprint 10 (P3-13): 사용자 프로필
+    @State private var showingProfile: Bool = false
 
     /// CoreML 모델 가용성 → 현재 active detector. (Round 81: 인라인 한국어 → localize)
     private var coreMLStatus: String {
@@ -329,6 +331,20 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    // Sprint 10 (P2-16): 공개 갤러리 HTML
+                    if let galleryURL = CollectionGalleryGenerator.generate(
+                        watches: allWatches, includePrices: false, ownerName: UserProfile.displayName
+                    ) {
+                        ShareLink(item: galleryURL) {
+                            HStack {
+                                Image(systemName: "globe").frame(width: 24)
+                                Text(String(localized: "settings.data.gallery_html"))
+                                Spacer()
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 13)).foregroundStyle(AppColors.ink3)
+                            }
+                        }
+                    }
                     // Sprint 6 (P2-7): 컬렉션 마스터 리포트 PDF
                     let masterData = MasterReportGenerator.generate(watches: allWatches, includePrices: true)
                     let masterURL = FileManager.default.temporaryDirectory
@@ -527,41 +543,57 @@ struct SettingsView: View {
 
     private var heroContent: some View {
         HStack(spacing: 14) {
+            // Sprint 10 (P3-13): 프로필 사진 or 기본 아이콘
             ZStack {
-                // Gold glow halo.
-                Circle()
-                    .fill(AppColors.accent.opacity(0.6))
-                    .frame(width: 70, height: 70)
-                    .blur(radius: 14)
-                LinearGradient(
-                    colors: [AppColors.accent, AppColors.accentDark],
-                    startPoint: .top, endPoint: .bottom
-                )
-                .frame(width: 56, height: 56)
-                .clipShape(Circle())
-                Image(systemName: "sparkles")
-                    .font(.system(size: 26, weight: .medium))
-                    .foregroundStyle(AppColors.primaryDeep)
+                Circle().fill(AppColors.accent.opacity(0.6)).frame(width: 70, height: 70).blur(radius: 14)
+                if let data = UserProfile.photoData, let img = UIImage(data: data) {
+                    Image(uiImage: img).resizable().scaledToFill()
+                        .frame(width: 56, height: 56).clipShape(Circle())
+                } else {
+                    LinearGradient(colors: [AppColors.accent, AppColors.accentDark],
+                                   startPoint: .top, endPoint: .bottom)
+                        .frame(width: 56, height: 56).clipShape(Circle())
+                    Image(systemName: "sparkles").font(.system(size: 26, weight: .medium))
+                        .foregroundStyle(AppColors.primaryDeep)
+                }
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(String(localized: preferences.isPro ? "settings.account.pro_name" : "settings.account.free_name"))
-                    .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(.white)
+                HStack(spacing: 6) {
+                    let name = UserProfile.displayName
+                    Text(name.isEmpty
+                         ? String(localized: preferences.isPro ? "settings.account.pro_name" : "settings.account.free_name")
+                         : name)
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(.white)
+                    if UserProfile.isDealer {
+                        Text("DEALER")
+                            .font(.system(size: 9, weight: .bold))
+                            .foregroundStyle(AppColors.primaryDeep)
+                            .padding(.horizontal, 5).padding(.vertical, 2)
+                            .background(AppColors.accent)
+                            .clipShape(Capsule())
+                    }
+                }
                 Text(String(localized: preferences.isPro ? "settings.account.pro_body" : "settings.account.free_body"))
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.7))
             }
             Spacer()
-            Image(systemName: "chevron.right")
-                .font(.system(size: 16, weight: .medium))
-                .foregroundStyle(.white.opacity(0.6))
+            // 프로필 편집 버튼
+            Button {
+                showingProfile = true
+            } label: {
+                Image(systemName: "person.crop.circle.badge.plus")
+                    .font(.system(size: 18))
+                    .foregroundStyle(.white.opacity(0.7))
+            }
+            .buttonStyle(.plain)
+            .sheet(isPresented: $showingProfile) { UserProfileView() }
         }
         .padding(18)
         .background(
-            LinearGradient(
-                colors: [AppColors.primaryDeep, AppColors.primary700],
-                startPoint: .topLeading, endPoint: .bottomTrailing
-            )
+            LinearGradient(colors: [AppColors.primaryDeep, AppColors.primary700],
+                           startPoint: .topLeading, endPoint: .bottomTrailing)
         )
         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
         .padding(.vertical, 8)

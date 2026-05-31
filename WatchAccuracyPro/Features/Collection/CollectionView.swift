@@ -164,6 +164,12 @@ struct CollectionView: View {
                             emptyState
                         } else {
                             dashboardSummary
+                            // Sprint 10 (P3-8): 컬렉션 가치 투명성
+                            if watches.contains(where: { $0.purchasePrice != nil }) {
+                                CollectionValueCard(watches: watches)
+                                    .padding(.horizontal, 20)
+                                    .padding(.top, 10)
+                            }
                             // Round 134: 대표시계 설정된 경우 — 상단 큰 카드로 별도 표시.
                             //            없으면 모든 시계가 동일 카드 형태로 리스트에 노출.
                             let primaryWatch = filtered.first(where: { $0.isPrimary })
