@@ -724,9 +724,36 @@ struct WatchDetailView: View {
         }
     }
 
-    /// 추억탭: 저널.
+    /// 추억탭: 사진 갤러리 + 저널.
     @ViewBuilder
     private var memoriesTab: some View {
+        // Sprint 7 (P2-4): 역할별 사진 갤러리 진입
+        NavigationLink {
+            PhotoGalleryView(watch: watch)
+        } label: {
+            HStack(spacing: 12) {
+                Image(systemName: "photo.on.rectangle.angled")
+                    .font(.system(size: 18))
+                    .foregroundStyle(AppColors.accentDark)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(String(localized: "gallery.entry.title"))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(AppColors.ink0)
+                    Text(String(localized: "gallery.entry.subtitle"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(AppColors.ink2)
+                }
+                Spacer()
+                Image(systemName: "chevron.right").foregroundStyle(AppColors.ink3)
+            }
+            .padding(14)
+            .background(AppColors.paper1)
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 20)
+        .padding(.top, 16)
         journalTab
     }
 

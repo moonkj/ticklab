@@ -10,6 +10,7 @@
 		00A4FCF735B3327F8DE4D210 /* WatchDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA093E36FD71D6E5C18697B /* WatchDetailView.swift */; };
 		01A4D17A191E91CFBE2D6F1D /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FF677B2D361B068A1718069 /* PrimaryButton.swift */; };
 		04ECC1E0065DE331067422F1 /* JournalEntryDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325A1E00FC26DD48B6AA30C8 /* JournalEntryDetailView.swift */; };
+		05434CB57E3B24A6C9502B6A /* WatchPhoto.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1BA6A577E8D8DFE37D50C8 /* WatchPhoto.swift */; };
 		05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7188931BE41A7B110E6264F /* WatchMeasurement.swift */; };
 		06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */ = {isa = PBXBuildFile; fileRef = C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */; };
 		0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59C27B0BEC35633950882906 /* MovementMatcherTests.swift */; };
@@ -141,6 +142,7 @@
 		A9EAB110F1CC595BD08AD4F9 /* WatchDetailRowComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */; };
 		AA4C23FA890988DD78C469EF /* AudioCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */; };
 		AADCCD5D8C1AA5197C1A19FD /* ConfidenceBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */; };
+		AB28B298A4F8237FA0768A8B /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */; };
 		AEF7F1EDF3E5A1B69E9FA324 /* MeasurementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */; };
 		AF3D6294B39E5E9CD8DC04E3 /* AtomicTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BAE1F6F68E6C62F37967AB /* AtomicTimeService.swift */; };
 		B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48DBE51AB35FAAA947F8CBD6 /* WearTagPickerView.swift */; };
@@ -354,6 +356,7 @@
 		77C3343B7DA5DC9BE3451E21 /* SharedSnapshotStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedSnapshotStoreTests.swift; sourceTree = "<group>"; };
 		7909924A1367F8260BED015F /* EditorialPageHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorialPageHeader.swift; sourceTree = "<group>"; };
 		79251A82734FDF2C4574E804 /* WatchMoodService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMoodService.swift; sourceTree = "<group>"; };
+		792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoGalleryView.swift; sourceTree = "<group>"; };
 		7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetricBadge.swift; sourceTree = "<group>"; };
 		7DBD9709D3B63C9030734A64 /* MainFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlowTests.swift; sourceTree = "<group>"; };
 		814BB874EA00DC74C916110A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -432,6 +435,7 @@
 		DCF9C569CED7D145073DD70E /* HighlightTimelineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightTimelineView.swift; sourceTree = "<group>"; };
 		DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestServiceTests.swift; sourceTree = "<group>"; };
 		DDD694460270D95643C92DEE /* DialColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialColorExtractor.swift; sourceTree = "<group>"; };
+		DF1BA6A577E8D8DFE37D50C8 /* WatchPhoto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPhoto.swift; sourceTree = "<group>"; };
 		DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWatchView.swift; sourceTree = "<group>"; };
 		E01DD25CF11FA896AD6774E4 /* BrandConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandConstants.swift; sourceTree = "<group>"; };
 		E092F461ECBA66FDF3B82B7E /* WatchAccuracyPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchAccuracyPro.entitlements; sourceTree = "<group>"; };
@@ -548,6 +552,7 @@
 				91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */,
 				4DAE00D3FC0E2D6BE9B20D5A /* MeasurementNoteEditor.swift */,
 				CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */,
+				792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */,
 				EDF87D1399FFCFF2083C1B44 /* PhotoSourceSheet.swift */,
 				500C4856761ABB8DFF406C89 /* QuartzBatteryCard.swift */,
 				39ABF52B048CB4F9DA9040F9 /* StrapListView.swift */,
@@ -771,6 +776,7 @@
 				97B0BF3889B7C279B96913C8 /* Watch.swift */,
 				93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */,
 				F7188931BE41A7B110E6264F /* WatchMeasurement.swift */,
+				DF1BA6A577E8D8DFE37D50C8 /* WatchPhoto.swift */,
 				B179281822F0A79F6C7494A1 /* WearLog.swift */,
 			);
 			path = Models;
@@ -1371,6 +1377,7 @@
 				6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */,
 				DA905BE42112412325D23E64 /* PINSetupView.swift in Sources */,
 				181DFE5935859AE7E2926FC1 /* PLLTracker.swift in Sources */,
+				AB28B298A4F8237FA0768A8B /* PhotoGalleryView.swift in Sources */,
 				CF91C0788E3B98B4CD0601F3 /* PhotoSourceSheet.swift in Sources */,
 				D238CEC1244A180C651E0371 /* Position.swift in Sources */,
 				F23A111B8B8BA58C82E75554 /* PowerReserveGauge.swift in Sources */,
@@ -1426,6 +1433,7 @@
 				05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */,
 				CD0BEA9689D642E929CE8DC3 /* WatchModelSuggestionService.swift in Sources */,
 				28CAA896AD14E29EA726E8CE /* WatchMoodService.swift in Sources */,
+				05434CB57E3B24A6C9502B6A /* WatchPhoto.swift in Sources */,
 				71B079E8367404BFF8513C0A /* WatchPhotoProcessor.swift in Sources */,
 				4A81DC530A0EB04922985073 /* WatchRecommendationService.swift in Sources */,
 				DF0D33547AB565B5F86A0A7F /* WatchSilhouette.swift in Sources */,
@@ -1574,7 +1582,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 136;
+				CURRENT_PROJECT_VERSION = 137;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1741,7 +1749,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 136;
+				CURRENT_PROJECT_VERSION = 137;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

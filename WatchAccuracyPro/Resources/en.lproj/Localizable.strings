@@ -1430,3 +1430,14 @@
 /* Sprint 7 — P3-6 Caseback OCR */
 "watch.ocr.button" = "Scan caseback with OCR";
 "watch.ocr.no_serial" = "No serial number detected. Try retaking the caseback photo more clearly.";
+
+/* Sprint 7 — P2-4 Photo gallery by role */
+"gallery.nav.title" = "Photo Gallery";
+"gallery.completion.title" = "Profile Completeness";
+"gallery.entry.title" = "Photo Gallery";
+"gallery.entry.subtitle" = "Hero · Caseback · Strap · Wrist shots";
+"photo.role.hero" = "Hero";
+"photo.role.caseback" = "Caseback";
+"photo.role.strap" = "Strap";
+"photo.role.wrist" = "Wrist";
+"photo.role.other" = "Other";

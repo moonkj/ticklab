@@ -1429,3 +1429,14 @@
 /* Sprint 7 — P3-6 케이스백 OCR */
 "watch.ocr.button" = "케이스백 OCR 스캔";
 "watch.ocr.no_serial" = "시리얼 번호를 인식하지 못했어요. 케이스백 사진을 선명하게 다시 찍어보세요.";
+
+/* Sprint 7 — P2-4 역할별 사진 갤러리 */
+"gallery.nav.title" = "사진 갤러리";
+"gallery.completion.title" = "프로필 완성도";
+"gallery.entry.title" = "사진 갤러리";
+"gallery.entry.subtitle" = "대표·케이스백·스트랩·착용 사진 모음";
+"photo.role.hero" = "대표";
+"photo.role.caseback" = "케이스백";
+"photo.role.strap" = "스트랩";
+"photo.role.wrist" = "착용";
+"photo.role.other" = "기타";

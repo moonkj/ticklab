@@ -1399,3 +1399,12 @@
 "notif.rotation.body_formal" = "You have an event tomorrow. This watch would be perfect.";
 "watch.ocr.button" = "Scan caseback with OCR";
 "watch.ocr.no_serial" = "No serial number detected. Try a clearer photo.";
+"gallery.nav.title" = "Photo Gallery";
+"gallery.completion.title" = "Profile Completeness";
+"gallery.entry.title" = "Photo Gallery";
+"gallery.entry.subtitle" = "Hero · Caseback · Strap · Wrist shots";
+"photo.role.hero" = "Hero";
+"photo.role.caseback" = "Caseback";
+"photo.role.strap" = "Strap";
+"photo.role.wrist" = "Wrist";
+"photo.role.other" = "Other";
