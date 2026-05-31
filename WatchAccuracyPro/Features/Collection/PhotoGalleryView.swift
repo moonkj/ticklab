@@ -36,42 +36,40 @@ struct PhotoGalleryView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
-                    completionCard
-                    rolePicker
-                    photoGrid
-                }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 32)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                completionCard
+                rolePicker
+                photoGrid
             }
-            .background(AppColors.paper0.ignoresSafeArea())
-            .navigationTitle(String(localized: "gallery.nav.title"))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    PhotosPicker(selection: $photoItem, matching: .images) {
-                        Image(systemName: "plus")
-                    }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 32)
+        }
+        .background(AppColors.paper0.ignoresSafeArea())
+        .navigationTitle(String(localized: "gallery.nav.title"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                PhotosPicker(selection: $photoItem, matching: .images) {
+                    Image(systemName: "plus")
                 }
             }
-            .onChange(of: photoItem) { _, new in
-                guard let new else { return }
-                Task {
-                    guard let raw = try? await new.loadTransferable(type: Data.self),
-                          let processed = EXIFStripper.strippedJPEG(from: raw, watchMode: true) else { return }
-                    await MainActor.run {
-                        let photo = WatchPhoto(watch: watch, role: selectedRole, photoData: processed)
-                        context.insert(photo)
-                        try? context.save()
-                        photoItem = nil
-                    }
+        }
+        .onChange(of: photoItem) { _, new in
+            guard let new else { return }
+            Task {
+                guard let raw = try? await new.loadTransferable(type: Data.self),
+                      let processed = EXIFStripper.strippedJPEG(from: raw, watchMode: true) else { return }
+                await MainActor.run {
+                    let photo = WatchPhoto(watch: watch, role: selectedRole, photoData: processed)
+                    context.insert(photo)
+                    try? context.save()
+                    photoItem = nil
                 }
             }
-            .sheet(item: $selectedPhoto) { photo in
-                PhotoDetailView(photo: photo)
-            }
+        }
+        .sheet(item: $selectedPhoto) { photo in
+            PhotoDetailView(photo: photo)
         }
     }
 
