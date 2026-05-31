@@ -10,6 +10,7 @@ struct WatchBoxView: View {
     @State private var material: Material = .walnut
     @State private var editing: Bool = false
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     enum Material: String, CaseIterable, Identifiable {
         case walnut, ebony, leather, linen
@@ -370,7 +371,7 @@ struct WatchBoxView: View {
             .clipShape(RoundedRectangle(cornerRadius: cols == 3 ? 60 : 40))
             .rotationEffect(.degrees(editing ? (idx % 2 == 0 ? -0.6 : 0.6) : 0))
             .animation(
-                editing
+                editing && !reduceMotion
                     ? .easeInOut(duration: 0.25).repeatForever(autoreverses: true).delay(Double(idx) * 0.07)
                     : .default,
                 value: editing

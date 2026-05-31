@@ -262,6 +262,22 @@ struct CollectionView: View {
                                         } content: {
                                             WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
                                         }
+                                        // 인터랙션 진단(R1): 비대표 카드에 삭제/대표설정 경로가 없어
+                                        //   시계 1~2개 사용자는 삭제를 못 찾음. long-press contextMenu 로 노출.
+                                        .contextMenu {
+                                            Button {
+                                                for w in watches { w.isPrimary = false }
+                                                watch.isPrimary = true
+                                                try? modelContext.save()
+                                            } label: {
+                                                Label(String(localized: "watch.primary.set"), systemImage: "star")
+                                            }
+                                            Button(role: .destructive) {
+                                                deletingWatch = watch
+                                            } label: {
+                                                Label(String(localized: "common.delete"), systemImage: "trash")
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -309,11 +325,13 @@ struct CollectionView: View {
                         }
                         // Round 138 사용자 요청: 배터리 모니터 메뉴 제거 — 쿼츠 시계 detail 측정 탭에 통합되어 있음.
                     } label: {
-                        Image(systemName: "square.grid.2x2")
+                        // UX 진단(R1): square.grid.2x2 는 "그리드 뷰"로 오인 → 메뉴임이 안 보임.
+                        //   ellipsis.circle 로 교체해 "더 보기" 어포던스 명시.
+                        Image(systemName: "ellipsis.circle")
                             .font(.system(size: 18, weight: .regular))
                             .foregroundStyle(AppColors.ink1)
                     }
-                    .accessibilityLabel(String(localized: "menu.watchbox"))
+                    .accessibilityLabel(String(localized: "collection.more_menu"))
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

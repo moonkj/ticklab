@@ -282,7 +282,7 @@ struct MeasurementView: View {
     private var bigRateReadout: some View {
         let lm = viewModel.liveMetrics
         return VStack(alignment: .leading, spacing: 16) {
-            EyebrowLabel(text: String(localized: "measurement.eyebrow.live_rate"))
+            EyebrowLabel(text: String(localized: "measurement.eyebrow.live_rate"), number: "01")
             // Round 158 (사용자 보고: 실시간 rate swing 으로 사용자 신뢰 낮아짐):
             // 실시간 정확도 숫자 숨김. 측정 중엔 "측정 중..." 만 표시, 최종 결과 화면에서만 rate 표시.
             HStack(alignment: .firstTextBaseline, spacing: 8) {

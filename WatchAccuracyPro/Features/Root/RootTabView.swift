@@ -28,6 +28,8 @@ struct RootTabView: View {
     @State private var measurementInProgress: Bool = false
     /// 사용자 보고 fix: 4 분산 sheet 호스트를 shell 레벨로 통합 — iPad multi-window race 차단 + 신규 진입점 추가 cost 감소.
     @State private var purchaseRouter = PurchaseRouter()
+    /// 신기능 안내 시트 — 버전당 1회, 기존 사용자 전용.
+    @State private var showWhatsNew = false
 
     enum Tab: Hashable {
         case collection
@@ -110,6 +112,19 @@ struct RootTabView: View {
         .sheet(isPresented: $purchaseRouter.isPresenting) {
             PurchaseView()
                 .environment(preferences)
+        }
+        // 신기능 안내(what's-new) — 발견성 강화. 버전당 1회, 페이월과 충돌 방지 위해 약간 지연.
+        .sheet(isPresented: $showWhatsNew) {
+            WhatsNewSheet()
+                .environment(preferences)
+        }
+        .onAppear {
+            guard WhatsNew.shouldShow(preferences) else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                if !purchaseRouter.isPresenting && WhatsNew.shouldShow(preferences) {
+                    showWhatsNew = true
+                }
+            }
         }
         // Round 140 (H1): MeasurementViewModel 의 start/end notification 받아 epoch reset 차단.
         .onReceive(NotificationCenter.default.publisher(for: .ticklabMeasurementDidStart)) { _ in

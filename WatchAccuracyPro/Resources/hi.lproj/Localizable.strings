@@ -286,6 +286,18 @@
 "common.show_more_count" = "+%d और";
 "common.collapse" = "समेटें";
 "menu.watchbox" = "वॉच बॉक्स";
+"collection.more_menu" = "और";
+"whatsnew.title" = "नया क्या है";
+"whatsnew.subtitle" = "TickLab में ये सुधार हुए हैं";
+"whatsnew.dismiss" = "देखें";
+"whatsnew.positional.title" = "स्थिति-वार सटीकता अंतर";
+"whatsnew.positional.body" = "अपनी घड़ी को कई स्थितियों में मापें और हर स्थिति का अंतर तुलना करें। घड़ी विवरण → मापें टैब में देखें।";
+"whatsnew.trend.title" = "ट्रेंड निदान";
+"whatsnew.trend.body" = "जैसे-जैसे माप इतिहास बढ़ता है, TickLab सटीकता के बदलाव का विश्लेषण कर देखभाल सुझाव देता है।";
+"whatsnew.wishlist.title" = "ड्रीम विशलिस्ट";
+"whatsnew.wishlist.body" = "जो घड़ियाँ आप चाहते हैं उन्हें सहेजें। यह कलेक्शन स्क्रीन के ऊपर दाईं ओर ⋯ मेनू में है।";
+"whatsnew.care.title" = "स्ट्रैप और सर्विस लॉग";
+"whatsnew.care.body" = "हर घड़ी के लिए स्ट्रैप बदलाव और ओवरहॉल इतिहास दर्ज करें।";
 "menu.speccard" = "स्पेक कार्ड";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
 "menu.speccard.create" = "स्पेक कार्ड बनाएँ";

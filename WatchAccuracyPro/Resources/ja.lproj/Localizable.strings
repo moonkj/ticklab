@@ -286,6 +286,18 @@
 "common.show_more_count" = "+%d 件";
 "common.collapse" = "閉じる";
 "menu.watchbox" = "ウォッチボックス";
+"collection.more_menu" = "その他";
+"whatsnew.title" = "新機能";
+"whatsnew.subtitle" = "TickLabがさらに便利になりました";
+"whatsnew.dismiss" = "見てみる";
+"whatsnew.positional.title" = "姿勢別の精度差";
+"whatsnew.positional.body" = "複数の姿勢で測定すると、姿勢ごとの誤差を比較できます。時計の詳細 → 測定タブで確認できます。";
+"whatsnew.trend.title" = "トレンド診断";
+"whatsnew.trend.body" = "測定記録が増えると、精度の変化を分析してメンテナンスのアドバイスを提供します。";
+"whatsnew.wishlist.title" = "ドリームウィッシュリスト";
+"whatsnew.wishlist.body" = "欲しい時計を記録しましょう。コレクション画面右上の ⋯ メニューにあります。";
+"whatsnew.care.title" = "ストラップ・整備記録";
+"whatsnew.care.body" = "ストラップ交換やオーバーホール履歴を時計ごとに残せます。";
 "menu.speccard" = "スペックカード";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
 "menu.speccard.create" = "スペックカードを作成";

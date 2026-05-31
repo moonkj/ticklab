@@ -15,6 +15,10 @@ struct MeasurementResultView: View {
     @ScaledMetric(relativeTo: .title) private var scaledHeadlineSizeLow: CGFloat = 32
     @ScaledMetric(relativeTo: .body) private var scaledBodySize: CGFloat = 14
     @ScaledMetric(relativeTo: .body) private var scaledBodySizeLow: CGFloat = 15
+    /// 핵심 readout(rate 값+단위) Dynamic Type 대응 — 기준값=기존 크기 → 기본 설정에선 변화 없음, 큰글씨에서만 확대.
+    @ScaledMetric(relativeTo: .largeTitle) private var rateValueSizeHigh: CGFloat = 60
+    @ScaledMetric(relativeTo: .largeTitle) private var rateValueSizeLow: CGFloat = 28
+    @ScaledMetric(relativeTo: .title3) private var rateUnitSize: CGFloat = 16
     /// Round 23 (Doyoon): onAppear haptic 가 매 reentry (share sheet dismiss 등) 마다 fire 하던 버그.
     @State private var didFireHaptic = false
     /// Sprint 12 (UX2): 용어 설명 바텀시트.
@@ -302,7 +306,7 @@ struct MeasurementResultView: View {
     }
 
     private var rateDialCard: some View {
-        let bigFont: CGFloat = isHighConfidenceGrade ? 60 : 28
+        let bigFont: CGFloat = isHighConfidenceGrade ? rateValueSizeHigh : rateValueSizeLow
         let bigColor: Color = isHighConfidenceGrade ? verdict.toneColor : AppColors.ink3
         let dialSize: CGFloat = isHighConfidenceGrade ? 220 : 160
         let dialOpacity: Double = isHighConfidenceGrade ? 1.0 : 0.55
@@ -320,7 +324,7 @@ struct MeasurementResultView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.55)
                 Text(String(localized: "unit.seconds_per_day"))
-                    .font(.system(size: 16, design: .monospaced))
+                    .font(.system(size: rateUnitSize, design: .monospaced))
                     .foregroundStyle(AppColors.ink2)
                     .lineLimit(1)
             }

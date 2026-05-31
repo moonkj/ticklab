@@ -68,7 +68,8 @@ struct PositionalDeltaView: View {
                 .foregroundStyle(AppColors.accentDark)
             HStack(alignment: .firstTextBaseline, spacing: 6) {
                 Text(String(format: "%.1f", d))
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    // 타이포 SSOT: 숫자=monospaced 통일 (이전 rounded → mono).
+                    .font(.system(size: 36, weight: .bold, design: .monospaced))
                     .foregroundStyle(tone)
                 Text("s/d")
                     .font(.system(size: 14)).foregroundStyle(AppColors.ink2)

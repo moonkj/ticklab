@@ -183,6 +183,8 @@ private struct RootView: View {
                 WelcomeFlowView {
                     preferences.hasCompletedOnboarding = true
                     UserDefaults.standard.set(true, forKey: "ticklab.modeChosenOnce")
+                    // 신규 사용자는 현재 버전으로 캐치업 → what's-new 안내를 보지 않음(기존 사용자 전용).
+                    WhatsNew.markSeen(preferences)
                 }
             } else {
                 ZStack(alignment: .top) {

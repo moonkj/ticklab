@@ -286,6 +286,18 @@
 "common.show_more_count" = "+%d de plus";
 "common.collapse" = "Réduire";
 "menu.watchbox" = "Écrin à montres";
+"collection.more_menu" = "Plus";
+"whatsnew.title" = "Nouveautés";
+"whatsnew.subtitle" = "Voici ce qui s'est amélioré dans TickLab";
+"whatsnew.dismiss" = "Découvrir";
+"whatsnew.positional.title" = "Écart par position";
+"whatsnew.positional.body" = "Mesurez votre montre dans plusieurs positions pour comparer l'écart de chacune. Dans Détail de la montre → onglet Mesurer.";
+"whatsnew.trend.title" = "Diagnostic de tendance";
+"whatsnew.trend.body" = "À mesure que votre historique s'étoffe, TickLab analyse l'évolution de la précision et propose des conseils d'entretien.";
+"whatsnew.wishlist.title" = "Liste de souhaits";
+"whatsnew.wishlist.body" = "Notez les montres qui vous font envie. C'est dans le menu ⋯ en haut à droite de l'écran Collection.";
+"whatsnew.care.title" = "Bracelets et entretien";
+"whatsnew.care.body" = "Consignez les changements de bracelet et l'historique de révision de chaque montre.";
 "menu.speccard" = "Cartes techniques";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
 "menu.speccard.create" = "Créer une carte technique";

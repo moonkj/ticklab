@@ -3,6 +3,7 @@ import SwiftUI
 /// Sprint 9 (UX): 스켈레톤 로딩 — shimmer 애니메이션.
 /// ProgressView 대신 콘텐츠 형태를 유지하는 플레이스홀더.
 struct SkeletonView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var phase: CGFloat = 0
     var cornerRadius: CGFloat = 8
     var height: CGFloat = 16
@@ -12,6 +13,8 @@ struct SkeletonView: View {
             .fill(shimmerGradient)
             .frame(height: height)
             .onAppear {
+                // 접근성: Reduce Motion 켜진 경우 무한 shimmer 정지 (정적 플레이스홀더).
+                guard !reduceMotion else { phase = 0.5; return }
                 withAnimation(.linear(duration: 1.4).repeatForever(autoreverses: false)) {
                     phase = 1
                 }

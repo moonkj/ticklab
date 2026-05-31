@@ -32,7 +32,8 @@ struct CollectionValueCard: View {
                     .tracking(1.2)
                     .foregroundStyle(AppColors.ink3)
                 Text(formattedTotal)
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
+                    // 타이포 SSOT: 숫자=monospaced 통일 (이전 rounded → mono).
+                    .font(.system(size: 22, weight: .bold, design: .monospaced))
                     .foregroundStyle(AppColors.ink0)
                 Text(String(format: NSLocalizedString("collection.value.count", comment: ""),
                             priceWatches.count, watches.count))

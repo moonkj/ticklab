@@ -11,6 +11,8 @@ struct StatsView: View {
     @Query(sort: \JournalEntry.timestamp, order: .reverse) private var journalEntries: [JournalEntry]
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
+    /// 평균 rate 요약 숫자 Dynamic Type 대응 — 기준값=기존 40pt → 기본 설정 변화 없음, 큰글씨만 확대.
+    @ScaledMetric(relativeTo: .largeTitle) private var avgRateSize: CGFloat = 40
     /// Round 119 (이재현 High): per-watch position breakdown — 선택한 시계만 필터링.
     @State private var selectedWatchForPosition: Watch?
 
@@ -580,7 +582,7 @@ struct StatsView: View {
     private func averageRateCard(rate: Double, count: Int, stddev: Double = 0) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(formatRate(rate))
-                .font(.system(size: 40, weight: .medium, design: .monospaced))
+                .font(.system(size: avgRateSize, weight: .medium, design: .monospaced))
                 .foregroundStyle(rateColor(rate))
             Text(String(format: NSLocalizedString("stats.average_rate.subtitle", comment: ""), count))
                 .font(.system(size: 12))

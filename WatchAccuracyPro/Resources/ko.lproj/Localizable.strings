@@ -217,6 +217,18 @@
 "common.show_more_count" = "+%d개 더보기";
 "common.collapse" = "접기";
 "menu.watchbox" = "시계 보관함";
+"collection.more_menu" = "더 보기";
+"whatsnew.title" = "새로워진 기능";
+"whatsnew.subtitle" = "그동안 TickLab이 이만큼 좋아졌어요";
+"whatsnew.dismiss" = "둘러보기";
+"whatsnew.positional.title" = "자세별 정확도 편차";
+"whatsnew.positional.body" = "시계를 여러 자세로 측정하면 자세별 오차를 비교해 줍니다. 시계 상세 → 측정 탭에서 확인하세요.";
+"whatsnew.trend.title" = "트렌드 진단";
+"whatsnew.trend.body" = "측정 기록이 쌓이면 정확도 변화를 분석해 관리 코칭을 제공합니다.";
+"whatsnew.wishlist.title" = "드림 위시리스트";
+"whatsnew.wishlist.body" = "갖고 싶은 시계를 기록하세요. 컬렉션 화면 우측 상단 ⋯ 메뉴에 있습니다.";
+"whatsnew.care.title" = "스트랩·정비 기록";
+"whatsnew.care.body" = "스트랩 교체와 오버홀 이력을 시계별로 남길 수 있어요.";
 "menu.speccard" = "스펙 카드";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합. */
 "menu.speccard.create" = "스펙 카드 만들기";

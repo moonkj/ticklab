@@ -139,6 +139,12 @@ final class UserPreferences {
         didSet { defaults.set(rotationNudgeDays, forKey: Keys.rotationNudgeDays) }
     }
 
+    /// 신기능 안내(what's-new) 시트를 마지막으로 표시한 카탈로그 버전.
+    /// 비어 있으면(기존 사용자) 안내 노출, 온보딩 완료/시트 닫힘 시 현재 버전으로 캐치업.
+    var lastSeenWhatsNewVersion: String {
+        didSet { defaults.set(lastSeenWhatsNewVersion, forKey: Keys.whatsNewVersion) }
+    }
+
     init() {
         // Round 23 (Min): defaults.register — 외부 reader (Settings.app) / 다른 process 에서도
         //   ON-by-default 키들이 일관된 fallback. didSet 으로 한 번이라도 write 한 값은 우선 유지.
@@ -197,6 +203,7 @@ final class UserPreferences {
         self.brandLeagueOptIn = (defaults.object(forKey: Keys.brandLeagueOptIn) as? Bool) ?? true
         self.rotationNudgeEnabled = (defaults.object(forKey: Keys.rotationNudge) as? Bool) ?? true
         self.rotationNudgeDays = (defaults.object(forKey: Keys.rotationNudgeDays) as? Int) ?? 7
+        self.lastSeenWhatsNewVersion = defaults.string(forKey: Keys.whatsNewVersion) ?? ""
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
         // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
         proEntitlementObserver = NotificationCenter.default.addObserver(
@@ -238,6 +245,7 @@ final class UserPreferences {
         static let brandLeagueOptIn = "ticklab.brandLeagueOptIn"
         static let rotationNudge = "ticklab.rotationNudgeEnabled"
         static let rotationNudgeDays = "ticklab.rotationNudgeDays"
+        static let whatsNewVersion = "ticklab.lastSeenWhatsNewVersion"
         /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
         /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.
         static let windingHintShownAt = "ticklab.windingHintShownAt"

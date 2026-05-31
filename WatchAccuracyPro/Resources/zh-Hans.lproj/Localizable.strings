@@ -286,6 +286,18 @@
 "common.show_more_count" = "再加 %d";
 "common.collapse" = "收起";
 "menu.watchbox" = "表盒";
+"collection.more_menu" = "更多";
+"whatsnew.title" = "新功能";
+"whatsnew.subtitle" = "看看 TickLab 有哪些改进";
+"whatsnew.dismiss" = "去看看";
+"whatsnew.positional.title" = "方位精度偏差";
+"whatsnew.positional.body" = "以多个方位测量手表，比较各方位的偏差。在手表详情 → 测量标签中查看。";
+"whatsnew.trend.title" = "趋势诊断";
+"whatsnew.trend.body" = "随着测量记录增多，TickLab 会分析精度变化并提供保养建议。";
+"whatsnew.wishlist.title" = "梦想清单";
+"whatsnew.wishlist.body" = "记录你想要的手表。位于收藏页面右上角的 ⋯ 菜单中。";
+"whatsnew.care.title" = "表带与保养记录";
+"whatsnew.care.body" = "为每只手表记录表带更换和大修历史。";
 "menu.speccard" = "规格卡";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
 "menu.speccard.create" = "创建规格卡";

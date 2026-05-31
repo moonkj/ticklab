@@ -293,6 +293,18 @@
 "common.show_more_count" = "+%d more";
 "common.collapse" = "Collapse";
 "menu.watchbox" = "Watch box";
+"collection.more_menu" = "More";
+"whatsnew.title" = "What's New";
+"whatsnew.subtitle" = "Here's what's improved in TickLab";
+"whatsnew.dismiss" = "Take a look";
+"whatsnew.positional.title" = "Positional Accuracy Delta";
+"whatsnew.positional.body" = "Measure your watch in several positions to compare per-position deviation. Find it in Watch detail → Measure tab.";
+"whatsnew.trend.title" = "Trend Diagnosis";
+"whatsnew.trend.body" = "As your measurement history grows, TickLab analyzes accuracy trends and offers care coaching.";
+"whatsnew.wishlist.title" = "Dream Wishlist";
+"whatsnew.wishlist.body" = "Keep track of watches you want. It's in the ⋯ menu at the top right of the Collection screen.";
+"whatsnew.care.title" = "Strap & Service Log";
+"whatsnew.care.body" = "Record strap changes and overhaul history for each watch.";
 "menu.speccard" = "Spec cards";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
 "menu.speccard.create" = "Create spec card";

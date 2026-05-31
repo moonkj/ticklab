@@ -165,7 +165,8 @@ struct WrappedView: View {
 
     private func bigNumber(_ text: String) -> some View {
         Text(text)
-            .font(.system(size: 72, weight: .black, design: .rounded))
+            // 타이포 SSOT: 숫자=monospaced 통일 (이전 rounded → mono).
+            .font(.system(size: 72, weight: .black, design: .monospaced))
             .foregroundStyle(.white)
     }
 

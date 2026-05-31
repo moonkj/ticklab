@@ -140,7 +140,8 @@ struct GlobalAnalyticsView: View {
                 .tracking(1.5)
                 .foregroundStyle(AppColors.ink3)
             Text(value)
-                .font(.system(size: 28, weight: .bold, design: .rounded))
+                // 타이포 SSOT: 숫자=monospaced 통일 (이전 rounded → mono).
+                .font(.system(size: 28, weight: .bold, design: .monospaced))
                 .foregroundStyle(color)
             Text(unit)
                 .font(.caption)

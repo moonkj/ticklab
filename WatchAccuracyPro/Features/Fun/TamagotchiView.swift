@@ -6,6 +6,7 @@ struct TamagotchiView: View {
     @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var activeId: PersistentIdentifier?
     @State private var isWinding: Bool = false
     @State private var reactionVisible: Bool = false
@@ -114,7 +115,7 @@ struct TamagotchiView: View {
                 }
                 .rotationEffect(.degrees(isWinding ? windRotation : 0))
                 .scaleEffect(mood == .dormant ? 0.98 : 1.0)
-                .animation(.easeInOut(duration: 4).repeatForever(autoreverses: true), value: mood == .dormant)
+                .animation(reduceMotion ? nil : .easeInOut(duration: 4).repeatForever(autoreverses: true), value: mood == .dormant)
                 // 표정 overlay
                 Text(theme.face)
                     .font(.system(size: 28, weight: .bold, design: .monospaced))

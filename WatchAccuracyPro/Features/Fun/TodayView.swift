@@ -354,7 +354,8 @@ struct TodayView: View {
     private func soloStat(value: String, label: String) -> some View {
         VStack(alignment: .leading, spacing: 2) {
             Text(value)
-                .font(.system(size: 22, weight: .bold, design: .rounded))
+                // 타이포 SSOT: 숫자=monospaced 통일 (이전 rounded → mono).
+                .font(.system(size: 22, weight: .bold, design: .monospaced))
                 .foregroundStyle(AppColors.ink0)
             Text(label)
                 .font(.system(size: 10))

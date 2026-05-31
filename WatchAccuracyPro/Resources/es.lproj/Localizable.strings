@@ -286,6 +286,18 @@
 "common.show_more_count" = "+%d más";
 "common.collapse" = "Contraer";
 "menu.watchbox" = "Caja de relojes";
+"collection.more_menu" = "Más";
+"whatsnew.title" = "Novedades";
+"whatsnew.subtitle" = "Esto es lo que ha mejorado en TickLab";
+"whatsnew.dismiss" = "Echar un vistazo";
+"whatsnew.positional.title" = "Desviación por posición";
+"whatsnew.positional.body" = "Mide tu reloj en varias posiciones para comparar la desviación de cada una. En Detalle del reloj → pestaña Medir.";
+"whatsnew.trend.title" = "Diagnóstico de tendencia";
+"whatsnew.trend.body" = "A medida que crece tu historial, TickLab analiza la evolución de la precisión y ofrece consejos de cuidado.";
+"whatsnew.wishlist.title" = "Lista de deseos";
+"whatsnew.wishlist.body" = "Anota los relojes que quieres. Está en el menú ⋯ arriba a la derecha de la pantalla Colección.";
+"whatsnew.care.title" = "Correas y mantenimiento";
+"whatsnew.care.body" = "Registra cambios de correa y el historial de revisiones de cada reloj.";
 "menu.speccard" = "Tarjetas de ficha";
 /* Round (3-2 잔여): menu.shakepick/tamagotchi/battery/fortune dead — Today 탭으로 통합됨. */
 "menu.speccard.create" = "Crear tarjeta de ficha";
