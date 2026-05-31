@@ -10,8 +10,8 @@ struct WatchPhotoView<Placeholder: View>: View {
 
     init(id: UUID, data: Data?, @ViewBuilder placeholder: @escaping () -> Placeholder) {
         self.id = id; self.data = data; self.placeholder = placeholder
-        // 캐시 hit 시 초기값 즉시 설정 (첫 생성 시 flash 방지)
-        _image = State(initialValue: PhotoCache.cache.object(forKey: id as NSUUID))
+        // 캐시 hit 시 초기값 즉시 설정 (첫 생성 시 flash 방지). data nil 이면 캐시 조회 안 함.
+        _image = State(initialValue: data == nil ? nil : PhotoCache.cache.object(forKey: id as NSUUID))
     }
 
     var body: some View {
@@ -36,16 +36,16 @@ struct WatchPhotoView<Placeholder: View>: View {
 
     private func loadImage() {
         guard let data else { image = nil; return }
+        if image != nil { return }
         // 캐시 확인 — hit이면 즉시 표시
         if let cached = PhotoCache.cache.object(forKey: id as NSUUID) {
             image = cached; return
         }
-        // 캐시 miss — 백그라운드 디코딩
+        // 캐시 miss — 백그라운드 다운샘플 디코딩 (PhotoCache 와 동일 경로, nonisolated)
+        let watchID = id
         Task.detached(priority: .userInitiated) {
-            guard let decoded = UIImage(data: data) else { return }
-            let cost = Int(decoded.size.width * decoded.size.height * decoded.scale * decoded.scale * 4)
-            PhotoCache.cache.setObject(decoded, forKey: id as NSUUID, cost: cost)
-            await MainActor.run { image = decoded }
+            let decoded = PhotoCache.image(for: watchID, data: data)
+            if let decoded { await MainActor.run { self.image = decoded } }
         }
     }
 }

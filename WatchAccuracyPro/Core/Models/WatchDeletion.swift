@@ -1,4 +1,5 @@
 import Foundation
+import ImageIO
 import SwiftData
 import UIKit
 
@@ -18,10 +19,31 @@ enum PhotoCache {
     static func image(for id: UUID, data: Data?) -> UIImage? {
         let key = id as NSUUID
         if let cached = cache.object(forKey: key) { return cached }
-        // WatchPhotoView를 통한 호출은 nil 반환 → Task 내에서 비동기 디코딩.
-        // 직접 호출(레거시)은 nil 반환 후 prefetch 트리거.
-        if let data { prefetch(for: id, data: data) }
-        return nil
+        guard let data else { return nil }
+        // 다운샘플링 디코딩 — 4K 원본을 화면 표시용 max 1024px 로 축소해 디코드 비용/메모리 대폭 절감.
+        // ImageIO 가 전체 디코드 없이 썸네일만 생성하므로 main thread 호출도 안전.
+        guard let image = downsampledImage(from: data, maxPixel: 1024) else { return nil }
+        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
+        cache.setObject(image, forKey: key, cost: cost)
+        return image
+    }
+
+    /// ImageIO 다운샘플 — 전체 디코드 회피. maxPixel = 긴 변 기준 목표 픽셀.
+    private static func downsampledImage(from data: Data, maxPixel: CGFloat) -> UIImage? {
+        let srcOptions = [kCGImageSourceShouldCache: false] as CFDictionary
+        guard let src = CGImageSourceCreateWithData(data as CFData, srcOptions) else {
+            return UIImage(data: data)  // 폴백
+        }
+        let opts: [CFString: Any] = [
+            kCGImageSourceCreateThumbnailFromImageAlways: true,
+            kCGImageSourceCreateThumbnailWithTransform: true,  // EXIF orientation 적용
+            kCGImageSourceThumbnailMaxPixelSize: maxPixel,
+            kCGImageSourceShouldCacheImmediately: true
+        ]
+        guard let cg = CGImageSourceCreateThumbnailAtIndex(src, 0, opts as CFDictionary) else {
+            return UIImage(data: data)
+        }
+        return UIImage(cgImage: cg)
     }
 
     /// Round (3-1): 사진 저장 직후 호출 — background thread 에서 미리 디코드 + 캐시 적재.
@@ -33,7 +55,7 @@ enum PhotoCache {
         // 이미 캐시되어 있으면 no-op.
         guard cache.object(forKey: key) == nil else { return }
         Task.detached(priority: .userInitiated) {
-            guard let image = UIImage(data: data) else { return }
+            guard let image = downsampledImage(from: data, maxPixel: 1024) else { return }
             let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
             cache.setObject(image, forKey: key, cost: cost)
         }
