@@ -1230,3 +1230,19 @@
 "settings.photo.quality.high" = "高画質";
 "settings.photo.quality.original" = "オリジナルに近い";
 "settings.photo.quality.hint" = "標準は容量が少なく、オリジナルに近いは最も鮮明です。";
+
+/* Sprint 2 — P1-7 解約 retention sheet */
+"offboarding.title" = "TickLab との時間";
+"offboarding.subtitle" = "Pro で築いた記録を一緒に見てみましょう。";
+"offboarding.summary.title" = "これまでの記録";
+"offboarding.summary.watches" = "腕時計";
+"offboarding.summary.measurements" = "測定";
+"offboarding.summary.journals" = "日記";
+"offboarding.summary.days" = "最初の腕時計登録から %d 日目です。";
+"offboarding.lose.title" = "解約すると失うもの";
+"offboarding.lose.unlimited_watches" = "無制限の腕時計登録 — 1個までに戻ります";
+"offboarding.lose.unlimited_measurements" = "無制限の測定 — 1日3回制限が再適用されます";
+"offboarding.lose.unlimited_ai" = "無制限の AI 診断 — 腕時計あたり3回トライアルに戻ります";
+"offboarding.lose.data_retained" = "記録は安全に保管されます — いつでも Pro に戻ればすべて利用可能";
+"offboarding.cta.keep" = "Pro を続ける";
+"offboarding.cta.manage" = "App Store でサブスクリプション管理";

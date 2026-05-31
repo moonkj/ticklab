@@ -24,6 +24,8 @@ struct SettingsView: View {
     @Environment(\.purchaseRouter) private var purchaseRouter
     /// Pro 사용자가 hero 탭하면 StoreKit manage subscriptions 진입.
     @State private var showingManageSubscriptions: Bool = false
+    /// Sprint 2 (P1-7): manage subscription 직전 retention sheet.
+    @State private var showingOffboarding: Bool = false
 
     /// CoreML 모델 가용성 → 현재 active detector. (Round 81: 인라인 한국어 → localize)
     private var coreMLStatus: String {
@@ -443,8 +445,9 @@ struct SettingsView: View {
         Button {
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             // 사용자 보고 fix: Pro 면 paywall 대신 StoreKit 구독 관리 sheet 열기 (이전엔 no-op UX dead end).
+            // Sprint 2 (P1-7): Pro 면 offboarding retention sheet 먼저 — 사용자가 manage 선택 시에만 진입.
             if preferences.isPro {
-                showingManageSubscriptions = true
+                showingOffboarding = true
             } else {
                 purchaseRouter?.intend(.settings)
             }
@@ -453,6 +456,11 @@ struct SettingsView: View {
         }
         .buttonStyle(.plain)
         .manageSubscriptionsSheet(isPresented: $showingManageSubscriptions)
+        .sheet(isPresented: $showingOffboarding) {
+            SubscriptionOffboardingView {
+                showingManageSubscriptions = true
+            }
+        }
     }
 
     private var heroContent: some View {

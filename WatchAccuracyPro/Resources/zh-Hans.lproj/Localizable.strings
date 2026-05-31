@@ -1230,3 +1230,19 @@
 "settings.photo.quality.high" = "高清";
 "settings.photo.quality.original" = "接近原图";
 "settings.photo.quality.hint" = "标准占用空间小;接近原图最清晰。";
+
+/* Sprint 2 — P1-7 取消订阅 retention sheet */
+"offboarding.title" = "您与 TickLab 的时光";
+"offboarding.subtitle" = "回顾您用 Pro 建立的记录。";
+"offboarding.summary.title" = "您的记录";
+"offboarding.summary.watches" = "手表";
+"offboarding.summary.measurements" = "测量";
+"offboarding.summary.journals" = "日记";
+"offboarding.summary.days" = "首次登记手表后第 %d 天。";
+"offboarding.lose.title" = "取消将失去";
+"offboarding.lose.unlimited_watches" = "无限手表登记 — 回到 1 块手表限制";
+"offboarding.lose.unlimited_measurements" = "无限测量 — 每天 3 次限制恢复";
+"offboarding.lose.unlimited_ai" = "无限 AI 诊断 — 回到每块手表 3 次试用";
+"offboarding.lose.data_retained" = "您的记录安全保留 — 随时回到 Pro";
+"offboarding.cta.keep" = "继续 Pro";
+"offboarding.cta.manage" = "在 App Store 管理订阅";

@@ -1230,3 +1230,19 @@
 "settings.photo.quality.high" = "Alta";
 "settings.photo.quality.original" = "Casi original";
 "settings.photo.quality.hint" = "Estándar usa menos espacio; Casi original es la más nítida.";
+
+/* Sprint 2 — P1-7 Cancelación retention sheet */
+"offboarding.title" = "Tu tiempo con TickLab";
+"offboarding.subtitle" = "Mira lo que has construido con Pro.";
+"offboarding.summary.title" = "Tus registros";
+"offboarding.summary.watches" = "Relojes";
+"offboarding.summary.measurements" = "Mediciones";
+"offboarding.summary.journals" = "Diarios";
+"offboarding.summary.days" = "Día %d desde tu primer reloj registrado.";
+"offboarding.lose.title" = "Lo que perderás";
+"offboarding.lose.unlimited_watches" = "Relojes ilimitados — vuelves al límite de 1 reloj";
+"offboarding.lose.unlimited_measurements" = "Mediciones ilimitadas — vuelve el límite de 3 al día";
+"offboarding.lose.unlimited_ai" = "Diagnóstico AI ilimitado — vuelves a 3 pruebas por reloj";
+"offboarding.lose.data_retained" = "Tus registros se mantienen a salvo — vuelve a Pro cuando quieras";
+"offboarding.cta.keep" = "Mantener Pro";
+"offboarding.cta.manage" = "Gestionar suscripción en App Store";

@@ -1230,3 +1230,19 @@
 "settings.photo.quality.high" = "उच्च";
 "settings.photo.quality.original" = "मूल के निकट";
 "settings.photo.quality.hint" = "मानक कम स्थान लेता है; मूल के निकट सबसे स्पष्ट है।";
+
+/* Sprint 2 — P1-7 सदस्यता रद्द retention sheet */
+"offboarding.title" = "TickLab के साथ आपका समय";
+"offboarding.subtitle" = "Pro के साथ बनाए गए रिकॉर्ड पर एक नज़र डालें।";
+"offboarding.summary.title" = "आपके रिकॉर्ड";
+"offboarding.summary.watches" = "घड़ियाँ";
+"offboarding.summary.measurements" = "माप";
+"offboarding.summary.journals" = "डायरी";
+"offboarding.summary.days" = "पहली घड़ी पंजीकरण के %d वें दिन।";
+"offboarding.lose.title" = "रद्द करने पर खोएंगे";
+"offboarding.lose.unlimited_watches" = "असीमित घड़ियाँ — 1 घड़ी सीमा पर वापस";
+"offboarding.lose.unlimited_measurements" = "असीमित माप — प्रति दिन 3 की सीमा वापस";
+"offboarding.lose.unlimited_ai" = "असीमित AI निदान — प्रति घड़ी 3 trial पर वापस";
+"offboarding.lose.data_retained" = "आपके रिकॉर्ड सुरक्षित रहेंगे — कभी भी Pro पर वापस आएं";
+"offboarding.cta.keep" = "Pro जारी रखें";
+"offboarding.cta.manage" = "App Store में सदस्यता प्रबंधन";

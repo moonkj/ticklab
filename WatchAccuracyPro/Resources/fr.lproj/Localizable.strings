@@ -1230,3 +1230,19 @@
 "settings.photo.quality.high" = "Haute";
 "settings.photo.quality.original" = "Proche de l'original";
 "settings.photo.quality.hint" = "Standard utilise moins d'espace; Proche de l'original est le plus net.";
+
+/* Sprint 2 — P1-7 Résiliation retention sheet */
+"offboarding.title" = "Votre temps avec TickLab";
+"offboarding.subtitle" = "Regardez ce que vous avez construit avec Pro.";
+"offboarding.summary.title" = "Vos enregistrements";
+"offboarding.summary.watches" = "Montres";
+"offboarding.summary.measurements" = "Mesures";
+"offboarding.summary.journals" = "Journaux";
+"offboarding.summary.days" = "Jour %d depuis votre première montre enregistrée.";
+"offboarding.lose.title" = "Ce que vous perdrez";
+"offboarding.lose.unlimited_watches" = "Montres illimitées — retour à la limite de 1 montre";
+"offboarding.lose.unlimited_measurements" = "Mesures illimitées — la limite de 3 par jour revient";
+"offboarding.lose.unlimited_ai" = "Diagnostic AI illimité — retour à 3 essais par montre";
+"offboarding.lose.data_retained" = "Vos enregistrements restent en sécurité — revenez à Pro quand vous voulez";
+"offboarding.cta.keep" = "Garder Pro";
+"offboarding.cta.manage" = "Gérer l'abonnement dans App Store";

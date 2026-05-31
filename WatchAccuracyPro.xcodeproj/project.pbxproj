@@ -55,6 +55,7 @@
 		38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */; };
 		3FC8620F7EA308EFEADF4D3C /* DSPFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */; };
 		3FE38380443E433BA77C8EFE /* ConfidenceScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */; };
+		40720F642333EA1407DE359F /* SubscriptionOffboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */; };
 		4083CD91BD77B19A7B86FBAE /* DSPPipelineLiveStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4666F7268951B503D87251 /* DSPPipelineLiveStreamTests.swift */; };
 		40D4EF784CD974B1938BC096 /* JournalComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE37C38FFCCB336CA05EBCD /* JournalComposerView.swift */; };
 		415504A195095049C4FFC03C /* WearLogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257E0E10995A8BAF36082D9 /* WearLogService.swift */; };
@@ -383,6 +384,7 @@
 		E460665285032C7AAEBC05E4 /* Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movement.swift; sourceTree = "<group>"; };
 		E733AA51EC69F71E8AA02809 /* Secrets.swift.template */ = {isa = PBXFileReference; path = Secrets.swift.template; sourceTree = "<group>"; };
 		E8293C262F87D540B2E2C9E4 /* BadgesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesView.swift; sourceTree = "<group>"; };
+		E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOffboardingView.swift; sourceTree = "<group>"; };
 		E9EDDAD4DABD6B3C60B30AD2 /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
 		ED3ACAC424B9D19F511D68F4 /* DataExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExportService.swift; sourceTree = "<group>"; };
 		EDF87D1399FFCFF2083C1B44 /* PhotoSourceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSourceSheet.swift; sourceTree = "<group>"; };
@@ -744,6 +746,7 @@
 			children = (
 				D6984089EAA0E94FD1B3326F /* PurchaseView.swift */,
 				090D20C16B59509F9494E62C /* SettingsView.swift */,
+				E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1263,6 +1266,7 @@
 				1F201FB9DDBD9AA7AC244A58 /* SpecCardView.swift in Sources */,
 				8A4D5C648893A10C67B90CF9 /* SpectralFluxExtractor.swift in Sources */,
 				98708DB90E2BED07945E6DCE /* StatsView.swift in Sources */,
+				40720F642333EA1407DE359F /* SubscriptionOffboardingView.swift in Sources */,
 				CE4A46CFB98D6E6A39E52F2D /* SupabaseBrandLeagueService.swift in Sources */,
 				179AC4078D8D52AF46341F61 /* TamagotchiView.swift in Sources */,
 				5060F80D248B19D2A07705CA /* TemplateMatcher.swift in Sources */,
@@ -1422,7 +1426,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1589,7 +1593,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 107;
+				CURRENT_PROJECT_VERSION = 108;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

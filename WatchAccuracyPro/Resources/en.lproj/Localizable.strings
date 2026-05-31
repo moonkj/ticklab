@@ -1226,3 +1226,19 @@
 "settings.photo.quality.high" = "High";
 "settings.photo.quality.original" = "Near Original";
 "settings.photo.quality.hint" = "Standard uses less storage; Near Original is sharpest.";
+
+/* Sprint 2 — P1-7 Subscription offboarding retention sheet */
+"offboarding.title" = "Your Time with TickLab";
+"offboarding.subtitle" = "Take a look at what you've built with Pro.";
+"offboarding.summary.title" = "Your Records";
+"offboarding.summary.watches" = "Watches";
+"offboarding.summary.measurements" = "Measurements";
+"offboarding.summary.journals" = "Journals";
+"offboarding.summary.days" = "Day %d since you registered your first watch.";
+"offboarding.lose.title" = "What you'll lose";
+"offboarding.lose.unlimited_watches" = "Unlimited watches — back to a 1-watch limit";
+"offboarding.lose.unlimited_measurements" = "Unlimited measurements — 3 per day limit returns";
+"offboarding.lose.unlimited_ai" = "Unlimited AI diagnosis — back to 3 trials per watch";
+"offboarding.lose.data_retained" = "Your records stay safe — come back to Pro anytime to access them all";
+"offboarding.cta.keep" = "Keep Pro";
+"offboarding.cta.manage" = "Manage Subscription in App Store";
