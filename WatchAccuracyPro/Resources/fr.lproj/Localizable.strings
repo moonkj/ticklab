@@ -1339,3 +1339,7 @@
 "strap.add.title" = "Add Strap";
 "strap.edit.title" = "Edit Strap";
 "watch.strap.entry" = "Straps & Bracelets";
+"photo.processing.style" = "Correction";
+"photo.processing.standard" = "Standard";
+"photo.processing.caseback" = "Caseback";
+"photo.processing.vivid" = "Vivid";

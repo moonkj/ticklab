@@ -1353,3 +1353,9 @@
 "strap.add.title" = "스트랩 추가";
 "strap.edit.title" = "스트랩 편집";
 "watch.strap.entry" = "스트랩/브레이슬릿 관리";
+
+/* Sprint 6 — P2-3 시계 전용 포토 모드 */
+"photo.processing.style" = "보정 스타일";
+"photo.processing.standard" = "표준";
+"photo.processing.caseback" = "케이스백";
+"photo.processing.vivid" = "선명하게";

@@ -102,6 +102,7 @@
 		6D120686D7D100A75E3FEDBF /* AddWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */; };
 		6F097B5A50C3E89C40A98D1B /* TCOCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */; };
 		6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D899D1AF17FEFF9EF707EDAB /* PINService.swift */; };
+		71B079E8367404BFF8513C0A /* WatchPhotoProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */; };
 		71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */; };
 		73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */; };
 		73F5D2BB7934DB165063FC84 /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C0B1191FD9B5AC52121059 /* EmptyState.swift */; };
@@ -238,6 +239,7 @@
 		01F911CAA257AD00EFADA2A4 /* WatchSilhouette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchSilhouette.swift; sourceTree = "<group>"; };
 		0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementResultView.swift; sourceTree = "<group>"; };
 		0232F86DA8616E432AC56384 /* FeatureFlags.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlags.swift; sourceTree = "<group>"; };
+		028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPhotoProcessor.swift; sourceTree = "<group>"; };
 		04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipelineTests.swift; sourceTree = "<group>"; };
 		053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		06D75459625969552D861DDA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -891,6 +893,7 @@
 			isa = PBXGroup;
 			children = (
 				DDD694460270D95643C92DEE /* DialColorExtractor.swift */,
+				028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -1383,6 +1386,7 @@
 				05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */,
 				CD0BEA9689D642E929CE8DC3 /* WatchModelSuggestionService.swift in Sources */,
 				28CAA896AD14E29EA726E8CE /* WatchMoodService.swift in Sources */,
+				71B079E8367404BFF8513C0A /* WatchPhotoProcessor.swift in Sources */,
 				4A81DC530A0EB04922985073 /* WatchRecommendationService.swift in Sources */,
 				DF0D33547AB565B5F86A0A7F /* WatchSilhouette.swift in Sources */,
 				8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */,
@@ -1530,7 +1534,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 126;
+				CURRENT_PROJECT_VERSION = 127;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1697,7 +1701,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 126;
+				CURRENT_PROJECT_VERSION = 127;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

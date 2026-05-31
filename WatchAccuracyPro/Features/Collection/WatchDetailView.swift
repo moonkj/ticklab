@@ -53,6 +53,9 @@ struct WatchDetailView: View {
     @State private var showingPhotoLibrary: Bool = false
     /// Round 94 (정수민 Critical #2): 사진 풀스크린 줌.
     @State private var showingFullscreenPhoto: Bool = false
+    /// Sprint 6 (P2-3): 사진 보정 스타일 — 기본 standard.
+    @State private var photoProcessingStyle: ProcessingStyle = .standard
+    @State private var showingPhotoStylePicker: Bool = false
     /// Round 46: 디자인 SSOT screens-detail.jsx WatchDetailView 의 3 탭 (measure/journal/service).
     @State private var detailTab: DetailTab = .overview
     /// Sprint 3 (P2-10): 5탭 IA — 개요/착용기록/정비&관리/재무/추억.
@@ -147,12 +150,13 @@ struct WatchDetailView: View {
         // Round 133: confirmationDialog 가 iOS 26 에서 중앙 popover + 라이브러리 trigger 안 되는 버그로
         // 커스텀 PhotoSourceSheet 로 교체. 라이브러리/카메라 sheet 는 dialog 닫힌 후 별도 트리거.
         .sheet(isPresented: $showingPhotoSourceSheet) {
+            // Sprint 6 (P2-3): 보정 스타일 선택 포함한 photo source sheet.
             PhotoSourceSheet(
                 title: String(localized: "watch.photo.dialog.title"),
                 allowRemove: watch.photoData != nil,
+                processingStyle: $photoProcessingStyle,
                 onLibrary: {
                     showingPhotoSourceSheet = false
-                    // dismiss 끝나고 라이브러리 trigger.
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                         showingPhotoLibrary = true
                     }
@@ -166,7 +170,6 @@ struct WatchDetailView: View {
                 onRemove: {
                     showingPhotoSourceSheet = false
                     watch.photoData = nil
-                    // Round 147 (Min C1): photo 변경/제거 시 NSCache stale 방지.
                     PhotoCache.invalidate(id: watch.id)
                     try? modelContext.save()
                 }
@@ -200,7 +203,7 @@ struct WatchDetailView: View {
             Task {
                 guard let new,
                       let raw = try? await new.loadTransferable(type: Data.self) else { return }
-                let stripped = EXIFStripper.strippedJPEG(from: raw)
+                let stripped = EXIFStripper.strippedJPEG(from: raw, watchMode: true, style: photoProcessingStyle)
                 await MainActor.run {
                     watch.photoData = stripped
                     // Round 147 (Min C1): NSCache stale 방지.

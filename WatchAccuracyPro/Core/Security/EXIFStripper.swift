@@ -33,7 +33,12 @@ enum EXIFStripper {
     /// 원인: EXIF Orientation 키까지 제거되어 raw pixel orientation 으로 디코드되는데,
     /// CGImage 자체는 항상 .up 으로 가정. UIImage 로 한 번 normalize 해 픽셀을 재배열한 후 jpeg 인코딩.
     /// Sprint 1 (P0-4.4): hardcode 0.85 → PhotoQuality.current.jpegQuality.
-    static func strippedJPEG(from data: Data) -> Data? {
+    /// Sprint 6 (P2-3): watchMode=true 시 WatchPhotoProcessor 보정 파이프라인 실행.
+    static func strippedJPEG(from data: Data, watchMode: Bool = false, style: ProcessingStyle = .standard) -> Data? {
+        if watchMode {
+            // 시계 전용 보정 우선 적용 후 반환 (orientation normalize 포함)
+            return WatchPhotoProcessor.process(data, style: style)
+        }
         guard let uiImage = UIImage(data: data) else { return nil }
         let normalized = uiImage.imageOrientation == .up
             ? uiImage

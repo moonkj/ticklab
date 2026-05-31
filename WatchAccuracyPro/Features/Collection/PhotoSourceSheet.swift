@@ -7,10 +7,18 @@ import SwiftUI
 struct PhotoSourceSheet: View {
     var title: String
     var allowRemove: Bool
+    /// Sprint 6 (P2-3): 보정 스타일 바인딩 — nil 이면 스타일 picker 표시 안 함.
+    var processingStyle: Binding<ProcessingStyle>?
     var onLibrary: () -> Void
     var onCamera: () -> Void
     var onRemove: (() -> Void)?
     @Environment(\.dismiss) private var dismiss
+
+    private var sheetHeight: CGFloat {
+        var h: CGFloat = allowRemove ? 300 : 248
+        if processingStyle != nil { h += 60 }
+        return h
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -24,7 +32,18 @@ struct PhotoSourceSheet: View {
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(AppColors.ink2)
                 .padding(.top, 16)
-                .padding(.bottom, 16)
+                .padding(.bottom, 8)
+            // Sprint 6 (P2-3): 보정 스타일 picker
+            if let style = processingStyle {
+                Picker(String(localized: "photo.processing.style"), selection: style) {
+                    Text(String(localized: "photo.processing.standard")).tag(ProcessingStyle.standard)
+                    Text(String(localized: "photo.processing.caseback")).tag(ProcessingStyle.caseback)
+                    Text(String(localized: "photo.processing.vivid")).tag(ProcessingStyle.vivid)
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 8)
+            }
             Divider()
             // 액션 목록
             VStack(spacing: 0) {
@@ -48,7 +67,7 @@ struct PhotoSourceSheet: View {
             .buttonStyle(.plain)
         }
         .background(AppColors.paper1.ignoresSafeArea())
-        .presentationDetents([.height(allowRemove ? 300 : 248)])
+        .presentationDetents([.height(sheetHeight)])
         .presentationDragIndicator(.hidden)
         .presentationBackground(AppColors.paper1)
     }
