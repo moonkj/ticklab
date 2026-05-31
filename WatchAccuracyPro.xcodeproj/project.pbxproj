@@ -127,9 +127,12 @@
 		AADCCD5D8C1AA5197C1A19FD /* ConfidenceBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */; };
 		AEF7F1EDF3E5A1B69E9FA324 /* MeasurementViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */; };
 		AF3D6294B39E5E9CD8DC04E3 /* AtomicTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94BAE1F6F68E6C62F37967AB /* AtomicTimeService.swift */; };
+		B0866BE9EAEBECCB7FDE6D8D /* ProEntitlementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8592EF7BED1AC8A8DCF27A /* ProEntitlementTests.swift */; };
 		B0B4B8ECF8E547FF9B134B60 /* ReliabilityNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE2539AD0268040B19EC189 /* ReliabilityNoteTests.swift */; };
 		B1DAFF98053B03D2F2F56983 /* MeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B82869C79CF19830D780904 /* MeasurementView.swift */; };
+		B4CEB0425189CF259812D3E2 /* ReviewRequestServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */; };
 		B6FD47F74F219314C019BB1D /* WatchCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07FAA2F3650DB74A03B4940 /* WatchCover.swift */; };
+		BAC8E110CABC5A3A5BE9401F /* WearLogServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */; };
 		BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E473958975512F4841DB00 /* MovementDatabaseTests.swift */; };
 		BDA01A9E488AB16B795BFBA7 /* ShakePickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */; };
 		BF73D6A8D8F3C62DBD9D1073 /* WatchAccuracyProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */; };
@@ -328,6 +331,7 @@
 		8C61A0EC7E6B49980D6EAB40 /* JournalFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFeedView.swift; sourceTree = "<group>"; };
 		8E6F59BEB9DB87D747A88169 /* SpectralFluxExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectralFluxExtractor.swift; sourceTree = "<group>"; };
 		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLogServiceTests.swift; sourceTree = "<group>"; };
 		90B8B019EE25542BDB9D3A2A /* SanitizationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SanitizationTests.swift; sourceTree = "<group>"; };
 		91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		91E473958975512F4841DB00 /* MovementDatabaseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDatabaseTests.swift; sourceTree = "<group>"; };
@@ -368,6 +372,7 @@
 		CAFE5DB5627AFC84036DFD0A /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementPickerSheet.swift; sourceTree = "<group>"; };
 		CE2D3F9AA8A20998AE36CB84 /* PurchaseRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseRouter.swift; sourceTree = "<group>"; };
+		CF8592EF7BED1AC8A8DCF27A /* ProEntitlementTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProEntitlementTests.swift; sourceTree = "<group>"; };
 		CF8B67DE1AE5717360E55EB0 /* LocalizationParityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizationParityTests.swift; sourceTree = "<group>"; };
 		CFF5322B96CF1A7041ACDD97 /* BeatDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatDetector.swift; sourceTree = "<group>"; };
 		D02497C4FA9F2012D2D6D2D0 /* CostPerWearCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CostPerWearCard.swift; sourceTree = "<group>"; };
@@ -380,6 +385,7 @@
 		D8C5CAA0588BDF3BFCD3981B /* SpecCardComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardComposerView.swift; sourceTree = "<group>"; };
 		DA49473933488382E08C687D /* MovementDBOTAService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDBOTAService.swift; sourceTree = "<group>"; };
 		DB81C6DB8297A852A837F889 /* EXIFStripper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFStripper.swift; sourceTree = "<group>"; };
+		DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRequestServiceTests.swift; sourceTree = "<group>"; };
 		DDD694460270D95643C92DEE /* DialColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialColorExtractor.swift; sourceTree = "<group>"; };
 		DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWatchView.swift; sourceTree = "<group>"; };
 		E01DD25CF11FA896AD6774E4 /* BrandConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandConstants.swift; sourceTree = "<group>"; };
@@ -882,12 +888,15 @@
 				91E473958975512F4841DB00 /* MovementDatabaseTests.swift */,
 				32AD90F1C902098C4BC9664B /* MovementDBOTAServiceTests.swift */,
 				59C27B0BEC35633950882906 /* MovementMatcherTests.swift */,
+				CF8592EF7BED1AC8A8DCF27A /* ProEntitlementTests.swift */,
 				7708BF5CF03B1E5B1625CF7F /* RateCalculatorTests.swift */,
 				0AE2539AD0268040B19EC189 /* ReliabilityNoteTests.swift */,
+				DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */,
 				90B8B019EE25542BDB9D3A2A /* SanitizationTests.swift */,
 				77C3343B7DA5DC9BE3451E21 /* SharedSnapshotStoreTests.swift */,
 				5A97745FEBC88A23361251E8 /* SpectralFluxBPHIntegrationTests.swift */,
 				227978A140CA929AA168F9CD /* SpectralFluxExtractorTests.swift */,
+				906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */,
 			);
 			path = WatchAccuracyProTests;
 			sourceTree = "<group>";
@@ -1162,14 +1171,17 @@
 				1013456C7F4EE01DB9348F11 /* MovementDBOTAServiceTests.swift in Sources */,
 				BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */,
 				0A4B8FECD75C3FF5ABA639AF /* MovementMatcherTests.swift in Sources */,
+				B0866BE9EAEBECCB7FDE6D8D /* ProEntitlementTests.swift in Sources */,
 				D2EA0DCA95D9458B32160E6B /* RateCalculatorTests.swift in Sources */,
 				B0B4B8ECF8E547FF9B134B60 /* ReliabilityNoteTests.swift in Sources */,
+				B4CEB0425189CF259812D3E2 /* ReviewRequestServiceTests.swift in Sources */,
 				2074B70DCD2BE24E32008ED9 /* SanitizationTests.swift in Sources */,
 				148D50004B9358C37DB6E1EF /* SharedSnapshotStoreTests.swift in Sources */,
 				5A896560E27D0CE652E12A6F /* SpectralFluxBPHIntegrationTests.swift in Sources */,
 				80A433977287750B9080D2AB /* SpectralFluxExtractorTests.swift in Sources */,
 				53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */,
 				DAD07F22F7161CCDC0D90EA4 /* SyntheticSignal.swift in Sources */,
+				BAC8E110CABC5A3A5BE9401F /* WearLogServiceTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1454,7 +1466,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 111;
+				CURRENT_PROJECT_VERSION = 112;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1621,7 +1633,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 111;
+				CURRENT_PROJECT_VERSION = 112;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

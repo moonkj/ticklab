@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: macos-15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_26.0.app/Contents/Developer
+
+      - name: Install xcodegen
+        run: brew install xcodegen
+
+      - name: Create Secrets.swift
+        run: |
+          mkdir -p WatchAccuracyPro/Core/Config
+          cp WatchAccuracyPro/Core/Config/Secrets.swift.template \
+             WatchAccuracyPro/Core/Config/Secrets.swift
+
+      - name: Generate project
+        run: xcodegen generate
+
+      - name: Build (Debug)
+        run: |
+          xcodebuild build \
+            -scheme WatchAccuracyPro \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+            -configuration Debug \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty --color || exit 1
+
+      - name: Run unit tests
+        run: |
+          xcodebuild test \
+            -scheme WatchAccuracyPro \
+            -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=latest' \
+            -only-testing:WatchAccuracyProTests \
+            CODE_SIGNING_ALLOWED=NO \
+            | xcpretty --color || exit 1
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            ~/Library/Developer/Xcode/DerivedData/**/Logs/Test/*.xcresult
+          if-no-files-found: ignore
+          retention-days: 7

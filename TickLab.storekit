@@ -1,7 +1,28 @@
 {
   "identifier" : "C42E5BA1-TICKLAB-STOREKIT-CONFIG",
   "nonRenewingSubscriptions" : [],
-  "products" : [],
+  "products" : [
+    {
+      "displayPrice" : "17.99",
+      "familyShareable" : false,
+      "internalID" : "TICKLAB-PRO-LIFETIME",
+      "localizations" : [
+        {
+          "description" : "TickLab Pro 평생 이용권 — 모든 기능 무제한",
+          "displayName" : "TickLab Pro (평생)",
+          "locale" : "ko"
+        },
+        {
+          "description" : "TickLab Pro lifetime access — all features unlimited",
+          "displayName" : "TickLab Pro (Lifetime)",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.ticklab.app.pro.lifetime",
+      "referenceName" : "TickLab Pro Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
   "settings" : {
     "_failTransactionsEnabled" : false,
     "_locale" : "en_US",
