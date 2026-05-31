@@ -113,6 +113,7 @@
 		6B458C5CB512A7DFE23D2BBB /* EXIFStripper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB81C6DB8297A852A837F889 /* EXIFStripper.swift */; };
 		6D120686D7D100A75E3FEDBF /* AddWatchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */; };
 		6DA528D1EFE9C6EABDF65B4D /* GlobalAnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25937B6B6AC9C60ACCC1F8E /* GlobalAnalyticsView.swift */; };
+		6E69944F41D7A2DA78A2F5B9 /* OnThisDayService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 880B162EEB36D3F0CB86912A /* OnThisDayService.swift */; };
 		6F097B5A50C3E89C40A98D1B /* TCOCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */; };
 		6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D899D1AF17FEFF9EF707EDAB /* PINService.swift */; };
 		71B079E8367404BFF8513C0A /* WatchPhotoProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */; };
@@ -382,6 +383,7 @@
 		83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextStepsGuideCard.swift; sourceTree = "<group>"; };
 		8472F0954A87FCC24459476F /* CasebackOCRService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasebackOCRService.swift; sourceTree = "<group>"; };
 		878DAD75031707410CFB1D7B /* RotationNudgeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotationNudgeService.swift; sourceTree = "<group>"; };
+		880B162EEB36D3F0CB86912A /* OnThisDayService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnThisDayService.swift; sourceTree = "<group>"; };
 		89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProApp.swift; sourceTree = "<group>"; };
 		8A43345D263140B82EC044BC /* WatchAccuracyProWidget.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchAccuracyProWidget.entitlements; sourceTree = "<group>"; };
 		8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardListView.swift; sourceTree = "<group>"; };
@@ -839,6 +841,7 @@
 			isa = PBXGroup;
 			children = (
 				EE4BD3A2700CBF9B22C7317C /* NotificationService.swift */,
+				880B162EEB36D3F0CB86912A /* OnThisDayService.swift */,
 				878DAD75031707410CFB1D7B /* RotationNudgeService.swift */,
 			);
 			path = Notifications;
@@ -1451,6 +1454,7 @@
 				486F772C05AC0CB5B0E5FC57 /* NoiseFloorSuppressor.swift in Sources */,
 				4ADD04419FE75C1D0BA9486C /* NoiseSuppressor.swift in Sources */,
 				DC89F8DCD618CF3F200491BC /* NotificationService.swift in Sources */,
+				6E69944F41D7A2DA78A2F5B9 /* OnThisDayService.swift in Sources */,
 				0EDB6CFF23FE196CDEF87803 /* PINEntryView.swift in Sources */,
 				6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */,
 				DA905BE42112412325D23E64 /* PINSetupView.swift in Sources */,
@@ -1667,7 +1671,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 163;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1834,7 +1838,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 162;
+				CURRENT_PROJECT_VERSION = 163;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

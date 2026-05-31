@@ -269,6 +269,9 @@ private struct RootView: View {
             }
             // Sprint 2 (P1-1): 위젯에서 큐잉된 wear toggle 처리.
             WearLogService.consumePendingWearToggle(in: modelContext)
+            // Sprint 13 (F3): On This Day 추억 알림 검사 (1일 1회 내부 제한).
+            let wears = (try? modelContext.fetch(FetchDescriptor<WearLog>())) ?? []
+            OnThisDayService.checkAndNotify(watches: allWatches, wearLogs: wears)
             lastBackgroundedAt = nil
         @unknown default: break
         }

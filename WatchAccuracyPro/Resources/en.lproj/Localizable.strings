@@ -1525,3 +1525,8 @@
 "positional.empty.body" = "Measure 2+ times in different positions to see variance analysis.";
 "addwatch.received_from" = "Received From (optional)";
 "watchdetail.received_from" = "Received From";
+
+/* Sprint 13 — F3 On This Day */
+"notif.onthisday.title" = "On This Day";
+"notif.onthisday.purchase" = "%d years ago today you welcomed %@. Look back on your time together?";
+"notif.onthisday.first_wear" = "%d years ago today you first wore %@.";

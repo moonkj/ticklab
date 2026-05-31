@@ -1470,3 +1470,6 @@
 "positional.empty.body" = "Measure 2+ times in different positions.";
 "addwatch.received_from" = "Received From (optional)";
 "watchdetail.received_from" = "Received From";
+"notif.onthisday.title" = "On This Day";
+"notif.onthisday.purchase" = "%d years ago today you welcomed %@.";
+"notif.onthisday.first_wear" = "%d years ago today you first wore %@.";

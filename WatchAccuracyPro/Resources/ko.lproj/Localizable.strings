@@ -1524,3 +1524,8 @@
 "positional.empty.body" = "서로 다른 자세에서 2회 이상 측정하면 편차 분석을 볼 수 있어요.";
 "addwatch.received_from" = "받은 사람/유래 (선택)";
 "watchdetail.received_from" = "받은 사람";
+
+/* Sprint 13 — F3 On This Day */
+"notif.onthisday.title" = "오늘, 그날";
+"notif.onthisday.purchase" = "%d년 전 오늘 %@을(를) 맞이했어요. 함께한 시간을 돌아볼까요?";
+"notif.onthisday.first_wear" = "%d년 전 오늘 %@을(를) 처음 착용했어요.";
