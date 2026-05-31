@@ -47,6 +47,7 @@ struct WatchDetailView: View {
     /// Round 144: 시계 이미지 변경 — action sheet + photo picker / camera.
     @State private var showingPhotoSourceSheet: Bool = false
     @State private var photoItem: PhotosPickerItem?
+    @State private var cropPayload: CropImagePayload?
     @State private var showingCamera: Bool = false
     /// Round 133 BUG FIX: confirmationDialog 안 PhotosPicker 가 sheet 안 띄우는 SwiftUI 버그 우회.
     /// dialog 닫힌 후 별도 boolean 으로 PhotosPicker 트리거.
@@ -189,20 +190,33 @@ struct WatchDetailView: View {
         }
         .photosPicker(isPresented: $showingPhotoLibrary, selection: $photoItem, matching: .images)
         .sheet(isPresented: $showingCamera) {
+            // 사용자 요청: 카메라 촬영도 4:3 크롭 단계 경유.
             CameraImagePicker(imageData: Binding(
-                get: { watch.photoData },
+                get: { nil },
                 set: { newData in
-                    if let raw = newData {
-                        // Sprint 6 (P2-3): 카메라 촬영도 보정 스타일 적용.
-                        let processed = EXIFStripper.strippedJPEG(from: raw, watchMode: true, style: photoProcessingStyle)
-                        watch.photoData = processed
-                        PhotoCache.invalidate(id: watch.id)
-                        PhotoCache.prefetch(for: watch.id, data: processed)
-                        try? modelContext.save()
+                    if let raw = newData, let ui = UIImage(data: raw) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            cropPayload = CropImagePayload(image: ui)
+                        }
                     }
                 }
             ))
             .ignoresSafeArea()
+        }
+        .fullScreenCover(item: $cropPayload) { payload in
+            PhotoCropView(
+                image: payload.image,
+                onComplete: { cropped in
+                    // Sprint 6 (P2-3): 보정 스타일 적용 (크롭 후).
+                    let processed = EXIFStripper.strippedJPEG(from: cropped, watchMode: true, style: photoProcessingStyle)
+                    watch.photoData = processed
+                    PhotoCache.invalidate(id: watch.id)
+                    PhotoCache.prefetch(for: watch.id, data: processed)
+                    try? modelContext.save()
+                    cropPayload = nil
+                },
+                onCancel: { cropPayload = nil }
+            )
         }
         // Round 94 (정수민 #2): 풀스크린 줌 viewer.
         .fullScreenCover(isPresented: $showingFullscreenPhoto) {
@@ -212,17 +226,13 @@ struct WatchDetailView: View {
             )
         }
         .onChange(of: photoItem) { _, new in
+            // 사용자 요청: 업로드 시 4:3 크롭 단계 경유 → 표시(4:3)와 일치.
             Task {
                 guard let new,
-                      let raw = try? await new.loadTransferable(type: Data.self) else { return }
-                let stripped = EXIFStripper.strippedJPEG(from: raw, watchMode: true, style: photoProcessingStyle)
+                      let raw = try? await new.loadTransferable(type: Data.self),
+                      let ui = UIImage(data: raw) else { return }
                 await MainActor.run {
-                    watch.photoData = stripped
-                    // Round 147 (Min C1): NSCache stale 방지.
-                    PhotoCache.invalidate(id: watch.id)
-                    // Round (3-1): background prefetch.
-                    PhotoCache.prefetch(for: watch.id, data: stripped)
-                    try? modelContext.save()
+                    cropPayload = CropImagePayload(image: ui)
                 }
             }
         }
@@ -383,8 +393,7 @@ struct WatchDetailView: View {
                     }
                 }
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 280)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .clipped()
             .contentShape(Rectangle())
             // Round 94 (정수민 #2): 사진 있으면 풀스크린 줌, 없으면 source sheet.
@@ -447,7 +456,9 @@ struct WatchDetailView: View {
             }
             .padding(22)
         }
-        .frame(height: 280)
+        // 사용자 결정: 상세 히어로도 4:3 — 컬렉션 카드·업로드 크롭과 동일 비율.
+        .aspectRatio(4.0 / 3.0, contentMode: .fit)
+        .frame(maxWidth: .infinity)
         .clipped()
         // Round 73: 카메라 버튼 — overlay 로 위치 고정 + topTrailing 정렬. ZStack 내부 충돌 해결.
         .overlay(alignment: .topTrailing) {

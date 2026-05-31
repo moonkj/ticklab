@@ -767,12 +767,12 @@ struct HeroWatchCard: View {
                             startPoint: .topLeading, endPoint: .bottomTrailing
                         )
                     )
-                    .frame(height: 240)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                 if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
                     Image(uiImage: img)
                         .resizable()
                         .scaledToFill()
-                        .frame(height: 240)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .clipped()
                 } else {
                     WatchSilhouette(watch: watch, size: 180)
@@ -800,7 +800,9 @@ struct HeroWatchCard: View {
                         .padding(14)
                 }
             }
-            .frame(height: 240)
+            // 사용자 결정: 대표 사진 4:3 전체 표시(잘림 없음) — 업로드 크롭과 동일 비율 → WYSIWYG.
+            .aspectRatio(4.0 / 3.0, contentMode: .fit)
+            .frame(maxWidth: .infinity)
             .clipShape(RoundedRectangle(cornerRadius: 20))
 
             VStack(alignment: .leading, spacing: 14) {

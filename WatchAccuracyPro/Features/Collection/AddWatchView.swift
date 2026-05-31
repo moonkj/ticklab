@@ -34,6 +34,7 @@ struct AddWatchView: View {
     @State private var showModelSuggestions: Bool = false
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
+    @State private var cropPayload: CropImagePayload?
     @State private var showingCamera = false
     @State private var showingPhotosPicker = false
     @State private var showingPhotoSourceDialog = false
@@ -527,19 +528,37 @@ struct AddWatchView: View {
         }
         .photosPicker(isPresented: $showingPhotosPicker, selection: $photoItem, matching: .images)
         .onChange(of: photoItem) { _, item in
-            // Round 14 (Hyemi): EXIF strip + JPEG re-encode 가 main thread 100-300ms 점유 →
-            //   detached task 에서 작업 후 main actor 로 assign.
+            // 사용자 요청: 업로드 시 4:3 크롭으로 프레임 맞춤 → 표시(4:3)와 일치, 잘림 없음.
             Task {
-                guard let raw = try? await item?.loadTransferable(type: Data.self) else { return }
-                let stripped = await Task.detached(priority: .userInitiated) {
-                    EXIFStripper.strippedJPEG(from: raw)
-                }.value
-                await MainActor.run { photoData = stripped }
+                guard let raw = try? await item?.loadTransferable(type: Data.self),
+                      let ui = UIImage(data: raw) else { return }
+                await MainActor.run { cropPayload = CropImagePayload(image: ui) }
             }
         }
         .sheet(isPresented: $showingCamera) {
-            CameraImagePicker(imageData: $photoData)
-                .ignoresSafeArea()
+            // 카메라 촬영도 동일하게 크롭 단계 경유.
+            CameraImagePicker(imageData: Binding(
+                get: { nil },
+                set: { newData in
+                    if let raw = newData, let ui = UIImage(data: raw) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            cropPayload = CropImagePayload(image: ui)
+                        }
+                    }
+                }
+            ))
+            .ignoresSafeArea()
+        }
+        .fullScreenCover(item: $cropPayload) { payload in
+            PhotoCropView(
+                image: payload.image,
+                onComplete: { cropped in
+                    // EXIF strip 은 detached 부담이 작아 동기 처리 (크롭 결과는 이미 metadata 없음).
+                    photoData = EXIFStripper.strippedJPEG(from: cropped)
+                    cropPayload = nil
+                },
+                onCancel: { cropPayload = nil }
+            )
         }
         .sheet(isPresented: $showingMovementPicker) {
             MovementPickerSheet(

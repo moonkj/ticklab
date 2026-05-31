@@ -124,6 +124,7 @@
 		71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */; };
 		73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */; };
 		73F5D2BB7934DB165063FC84 /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C0B1191FD9B5AC52121059 /* EmptyState.swift */; };
+		7447BD1465D3E483AD3B210A /* PhotoCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3F867375C95643C502D0FB /* PhotoCropView.swift */; };
 		74BEA8A8ABA4477195771546 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8EC3DB6EA239EFE56FB9287 /* UserProfileView.swift */; };
 		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
 		76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA49473933488382E08C687D /* MovementDBOTAService.swift */; };
@@ -274,6 +275,7 @@
 		06D75459625969552D861DDA /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		090D20C16B59509F9494E62C /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		09B71246DA234CB44A78515B /* AppLockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockService.swift; sourceTree = "<group>"; };
+		0A3F867375C95643C502D0FB /* PhotoCropView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCropView.swift; sourceTree = "<group>"; };
 		0AE2539AD0268040B19EC189 /* ReliabilityNoteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReliabilityNoteTests.swift; sourceTree = "<group>"; };
 		0C31B146938DDDD93034D95D /* DialFortuneView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialFortuneView.swift; sourceTree = "<group>"; };
 		0CE067C7F3DCA7A186DC6FE7 /* BrandLeagueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandLeagueView.swift; sourceTree = "<group>"; };
@@ -885,6 +887,7 @@
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
 				83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */,
+				0A3F867375C95643C502D0FB /* PhotoCropView.swift */,
 				92A36BE3BF6CA4AAB6ACF58A /* PowerReserveGauge.swift */,
 				9FAC0D83943B770F1B767C04 /* PressableCard.swift */,
 				9FF677B2D361B068A1718069 /* PrimaryButton.swift */,
@@ -1471,6 +1474,7 @@
 				6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */,
 				DA905BE42112412325D23E64 /* PINSetupView.swift in Sources */,
 				181DFE5935859AE7E2926FC1 /* PLLTracker.swift in Sources */,
+				7447BD1465D3E483AD3B210A /* PhotoCropView.swift in Sources */,
 				AB28B298A4F8237FA0768A8B /* PhotoGalleryView.swift in Sources */,
 				CF91C0788E3B98B4CD0601F3 /* PhotoSourceSheet.swift in Sources */,
 				D238CEC1244A180C651E0371 /* Position.swift in Sources */,

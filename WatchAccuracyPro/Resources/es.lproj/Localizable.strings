@@ -287,6 +287,7 @@
 "common.collapse" = "Contraer";
 "menu.watchbox" = "Caja de relojes";
 "collection.more_menu" = "Más";
+"photo.crop.hint" = "Arrastra y pellizca para encuadrar el reloj";
 "whatsnew.title" = "Novedades";
 "whatsnew.subtitle" = "Esto es lo que ha mejorado en TickLab";
 "whatsnew.dismiss" = "Echar un vistazo";

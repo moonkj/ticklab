@@ -287,6 +287,7 @@
 "common.collapse" = "閉じる";
 "menu.watchbox" = "ウォッチボックス";
 "collection.more_menu" = "その他";
+"photo.crop.hint" = "ドラッグ・ピンチで時計を合わせてください";
 "whatsnew.title" = "新機能";
 "whatsnew.subtitle" = "TickLabがさらに便利になりました";
 "whatsnew.dismiss" = "見てみる";

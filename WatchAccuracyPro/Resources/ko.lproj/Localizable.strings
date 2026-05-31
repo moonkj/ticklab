@@ -218,6 +218,7 @@
 "common.collapse" = "접기";
 "menu.watchbox" = "시계 보관함";
 "collection.more_menu" = "더 보기";
+"photo.crop.hint" = "드래그·확대해서 시계를 맞추세요";
 "whatsnew.title" = "새로워진 기능";
 "whatsnew.subtitle" = "그동안 TickLab이 이만큼 좋아졌어요";
 "whatsnew.dismiss" = "둘러보기";

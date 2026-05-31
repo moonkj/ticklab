@@ -287,6 +287,7 @@
 "common.collapse" = "Réduire";
 "menu.watchbox" = "Écrin à montres";
 "collection.more_menu" = "Plus";
+"photo.crop.hint" = "Faites glisser et pincez pour cadrer la montre";
 "whatsnew.title" = "Nouveautés";
 "whatsnew.subtitle" = "Voici ce qui s'est amélioré dans TickLab";
 "whatsnew.dismiss" = "Découvrir";

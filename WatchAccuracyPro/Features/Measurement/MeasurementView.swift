@@ -281,8 +281,10 @@ struct MeasurementView: View {
 
     private var bigRateReadout: some View {
         let lm = viewModel.liveMetrics
-        return VStack(alignment: .leading, spacing: 16) {
+        return VStack(alignment: .leading, spacing: 10) {
+            // 사용자 보고: 01 라벨이 박스 안에 있어 02/03(박스 밖)과 불일치 → 라벨은 박스 밖, 콘텐츠만 카드.
             EyebrowLabel(text: String(localized: "measurement.eyebrow.live_rate"), number: "01")
+            VStack(alignment: .leading, spacing: 16) {
             // Round 158 (사용자 보고: 실시간 rate swing 으로 사용자 신뢰 낮아짐):
             // 실시간 정확도 숫자 숨김. 측정 중엔 "측정 중..." 만 표시, 최종 결과 화면에서만 rate 표시.
             HStack(alignment: .firstTextBaseline, spacing: 8) {
@@ -364,6 +366,7 @@ struct MeasurementView: View {
         .background(AppColors.paper0)
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 18))
+        }
     }
 
     private func rateText(_ rate: Double?) -> String {

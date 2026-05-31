@@ -294,6 +294,7 @@
 "common.collapse" = "Collapse";
 "menu.watchbox" = "Watch box";
 "collection.more_menu" = "More";
+"photo.crop.hint" = "Drag and pinch to frame the watch";
 "whatsnew.title" = "What's New";
 "whatsnew.subtitle" = "Here's what's improved in TickLab";
 "whatsnew.dismiss" = "Take a look";
