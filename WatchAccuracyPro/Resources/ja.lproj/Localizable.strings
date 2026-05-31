@@ -1222,3 +1222,11 @@
 "watch.nextsteps.photo" = "メイン写真を追加";
 "watch.nextsteps.measure" = "初めての精度測定";
 "watch.nextsteps.wear" = "今日の着用を記録";
+
+/* Sprint 1 — 写真品質設定 */
+"settings.section.photo" = "写真品質";
+"settings.photo.quality" = "JPEG 品質";
+"settings.photo.quality.standard" = "標準";
+"settings.photo.quality.high" = "高画質";
+"settings.photo.quality.original" = "オリジナルに近い";
+"settings.photo.quality.hint" = "標準は容量が少なく、オリジナルに近いは最も鮮明です。";

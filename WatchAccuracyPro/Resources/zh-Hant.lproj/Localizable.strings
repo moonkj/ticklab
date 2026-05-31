@@ -1222,3 +1222,11 @@
 "watch.nextsteps.photo" = "新增主要照片";
 "watch.nextsteps.measure" = "進行首次精度測量";
 "watch.nextsteps.wear" = "記錄今日佩戴";
+
+/* Sprint 1 — 照片品質設定 */
+"settings.section.photo" = "照片品質";
+"settings.photo.quality" = "JPEG 品質";
+"settings.photo.quality.standard" = "標準";
+"settings.photo.quality.high" = "高畫質";
+"settings.photo.quality.original" = "接近原圖";
+"settings.photo.quality.hint" = "標準佔用空間小;接近原圖最清晰。";

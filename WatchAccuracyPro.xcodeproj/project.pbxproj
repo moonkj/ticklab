@@ -130,6 +130,7 @@
 		BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E473958975512F4841DB00 /* MovementDatabaseTests.swift */; };
 		BDA01A9E488AB16B795BFBA7 /* ShakePickView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */; };
 		BF73D6A8D8F3C62DBD9D1073 /* WatchAccuracyProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */; };
+		C509FC401B8430A29D971920 /* DialColorExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD694460270D95643C92DEE /* DialColorExtractor.swift */; };
 		C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AADDCD5BE4B43AD047202477 /* ReviewRequestService.swift */; };
 		C863ACE28957E2C56F947358 /* WatchAccuracyProWidget.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 47D155157AC7BFF49F53E192 /* WatchAccuracyProWidget.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CCC8CA7C1F4F01F4679B538A /* DateFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9EDDAD4DABD6B3C60B30AD2 /* DateFormatters.swift */; };
@@ -372,6 +373,7 @@
 		D8C5CAA0588BDF3BFCD3981B /* SpecCardComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardComposerView.swift; sourceTree = "<group>"; };
 		DA49473933488382E08C687D /* MovementDBOTAService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementDBOTAService.swift; sourceTree = "<group>"; };
 		DB81C6DB8297A852A837F889 /* EXIFStripper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EXIFStripper.swift; sourceTree = "<group>"; };
+		DDD694460270D95643C92DEE /* DialColorExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialColorExtractor.swift; sourceTree = "<group>"; };
 		DF9660EAB5D100904BB55AF5 /* AddWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddWatchView.swift; sourceTree = "<group>"; };
 		E01DD25CF11FA896AD6774E4 /* BrandConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandConstants.swift; sourceTree = "<group>"; };
 		E092F461ECBA66FDF3B82B7E /* WatchAccuracyPro.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = WatchAccuracyPro.entitlements; sourceTree = "<group>"; };
@@ -532,6 +534,7 @@
 				BC2BA169AC73D969D4F2F6D5 /* Config */,
 				0A56FE9948780638DE650918 /* DSP */,
 				727AF183BD3B9D1E2A1711E2 /* Export */,
+				BF87B83BD6CF43CB81B6C389 /* Image */,
 				CC7DDE83DECE91295273403C /* LiveActivity */,
 				77F5D330083D5499314081A5 /* Models */,
 				56E6438654FBB9518FC1E058 /* Monetization */,
@@ -815,6 +818,14 @@
 				E733AA51EC69F71E8AA02809 /* Secrets.swift.template */,
 			);
 			path = Config;
+			sourceTree = "<group>";
+		};
+		BF87B83BD6CF43CB81B6C389 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				DDD694460270D95643C92DEE /* DialColorExtractor.swift */,
+			);
+			path = Image;
 			sourceTree = "<group>";
 		};
 		BF9BEF99A01FFE06E7E8A50E /* Journal */ = {
@@ -1181,6 +1192,7 @@
 				8A70BB1CD654EE24EB2BA6E1 /* DSPPipeline.swift in Sources */,
 				5D7923D43A23D69F31BA6F23 /* DataExportService.swift in Sources */,
 				CCC8CA7C1F4F01F4679B538A /* DateFormatters.swift in Sources */,
+				C509FC401B8430A29D971920 /* DialColorExtractor.swift in Sources */,
 				12F95F4FC5C3ECB525008AA1 /* DialFortuneView.swift in Sources */,
 				6B458C5CB512A7DFE23D2BBB /* EXIFStripper.swift in Sources */,
 				F7BFF81454F5C1996CE5B8D0 /* EditorialPageHeader.swift in Sources */,
@@ -1410,7 +1422,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1577,7 +1589,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 106;
+				CURRENT_PROJECT_VERSION = 107;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

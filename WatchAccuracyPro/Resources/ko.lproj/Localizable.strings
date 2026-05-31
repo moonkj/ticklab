@@ -1217,3 +1217,11 @@
 "watch.nextsteps.photo" = "대표 사진 추가하기";
 "watch.nextsteps.measure" = "첫 정확도 측정해보기";
 "watch.nextsteps.wear" = "오늘 착용 기록 시작하기";
+
+/* Sprint 1 — 사진 품질 설정 */
+"settings.section.photo" = "사진 품질";
+"settings.photo.quality" = "JPEG 품질";
+"settings.photo.quality.standard" = "표준";
+"settings.photo.quality.high" = "고화질";
+"settings.photo.quality.original" = "원본 가까이";
+"settings.photo.quality.hint" = "표준은 저장 공간이 적게 들고, 원본은 가장 선명합니다.";

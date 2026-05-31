@@ -1222,3 +1222,11 @@
 "watch.nextsteps.photo" = "Añade una foto principal";
 "watch.nextsteps.measure" = "Realiza tu primera medición de precisión";
 "watch.nextsteps.wear" = "Registra el uso de hoy";
+
+/* Sprint 1 — Configuración de calidad de foto */
+"settings.section.photo" = "Calidad de foto";
+"settings.photo.quality" = "Calidad JPEG";
+"settings.photo.quality.standard" = "Estándar";
+"settings.photo.quality.high" = "Alta";
+"settings.photo.quality.original" = "Casi original";
+"settings.photo.quality.hint" = "Estándar usa menos espacio; Casi original es la más nítida.";

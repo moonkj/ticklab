@@ -3,6 +3,28 @@ import ImageIO
 import UIKit
 import UniformTypeIdentifiers
 
+/// Sprint 1 (P0-4.4): 사진 품질 설정 — UserDefaults에서 동적으로 압축률 선택.
+/// 기본 0.85 (표준), 0.95 (고화질), 1.0 (원본 가까이).
+enum PhotoQuality: String, CaseIterable, Sendable {
+    case standard
+    case high
+    case original
+
+    /// Sprint 1 (P0-4.4): JPEG compressionQuality 값.
+    var jpegQuality: CGFloat {
+        switch self {
+        case .standard: return 0.85  // 기존 동작
+        case .high:     return 0.95
+        case .original: return 1.0
+        }
+    }
+
+    static var current: PhotoQuality {
+        let raw = UserDefaults.standard.string(forKey: "ticklab.photoQuality") ?? PhotoQuality.standard.rawValue
+        return PhotoQuality(rawValue: raw) ?? .standard
+    }
+}
+
 /// EXIF (GPS, device id, timestamps) strip 후 disk 저장.
 /// Pivot Addendum Security: 일기 사진 업로드 시 위치/촬영 metadata 절대 보존 X.
 enum EXIFStripper {
@@ -10,12 +32,13 @@ enum EXIFStripper {
     /// Round 142 (사용자 보고): 카메라 사진이 반시계 90° 회전돼 저장됨.
     /// 원인: EXIF Orientation 키까지 제거되어 raw pixel orientation 으로 디코드되는데,
     /// CGImage 자체는 항상 .up 으로 가정. UIImage 로 한 번 normalize 해 픽셀을 재배열한 후 jpeg 인코딩.
+    /// Sprint 1 (P0-4.4): hardcode 0.85 → PhotoQuality.current.jpegQuality.
     static func strippedJPEG(from data: Data) -> Data? {
         guard let uiImage = UIImage(data: data) else { return nil }
         let normalized = uiImage.imageOrientation == .up
             ? uiImage
             : normalizedImage(uiImage)
-        return normalized.jpegData(compressionQuality: 0.85)
+        return normalized.jpegData(compressionQuality: PhotoQuality.current.jpegQuality)
     }
 
     /// 회전 적용된 픽셀로 redraw — UIImage.normalizedOrientation.

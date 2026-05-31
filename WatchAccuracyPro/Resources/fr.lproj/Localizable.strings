@@ -1222,3 +1222,11 @@
 "watch.nextsteps.photo" = "Ajouter une photo principale";
 "watch.nextsteps.measure" = "Lancer votre première mesure de précision";
 "watch.nextsteps.wear" = "Enregistrer le port d'aujourd'hui";
+
+/* Sprint 1 — Paramètres de qualité photo */
+"settings.section.photo" = "Qualité photo";
+"settings.photo.quality" = "Qualité JPEG";
+"settings.photo.quality.standard" = "Standard";
+"settings.photo.quality.high" = "Haute";
+"settings.photo.quality.original" = "Proche de l'original";
+"settings.photo.quality.hint" = "Standard utilise moins d'espace; Proche de l'original est le plus net.";

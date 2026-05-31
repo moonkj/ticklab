@@ -261,6 +261,26 @@ struct SettingsView: View {
                 }
                 // Round 134 사용자 요청: 자기장 측정 토글 제거 — 오늘 탭에서 항상 노출.
                 Section {
+                    Picker(String(localized: "settings.photo.quality"),
+                           selection: Binding(
+                            get: { PhotoQuality.current.rawValue },
+                            set: { UserDefaults.standard.set($0, forKey: "ticklab.photoQuality") }
+                           )) {
+                        Text(String(localized: "settings.photo.quality.standard"))
+                            .tag(PhotoQuality.standard.rawValue)
+                        Text(String(localized: "settings.photo.quality.high"))
+                            .tag(PhotoQuality.high.rawValue)
+                        Text(String(localized: "settings.photo.quality.original"))
+                            .tag(PhotoQuality.original.rawValue)
+                    }
+                    Text(String(localized: "settings.photo.quality.hint"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(AppColors.ink3)
+                } header: {
+                    Text(String(localized: "settings.section.photo"))
+                }
+
+                Section {
                     let csvPayload = DataExportService.export(watches: allWatches, format: .csv)
                     if let url = csvPayload.tempURL {
                         ShareLink(item: url) {

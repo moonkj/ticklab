@@ -1222,3 +1222,11 @@
 "watch.nextsteps.photo" = "मुख्य फोटो जोड़ें";
 "watch.nextsteps.measure" = "पहली सटीकता माप लें";
 "watch.nextsteps.wear" = "आज का पहनावा रिकॉर्ड करें";
+
+/* Sprint 1 — फोटो गुणवत्ता सेटिंग */
+"settings.section.photo" = "फोटो गुणवत्ता";
+"settings.photo.quality" = "JPEG गुणवत्ता";
+"settings.photo.quality.standard" = "मानक";
+"settings.photo.quality.high" = "उच्च";
+"settings.photo.quality.original" = "मूल के निकट";
+"settings.photo.quality.hint" = "मानक कम स्थान लेता है; मूल के निकट सबसे स्पष्ट है।";

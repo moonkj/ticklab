@@ -1218,3 +1218,11 @@
 "watch.nextsteps.photo" = "Add a hero photo";
 "watch.nextsteps.measure" = "Run your first accuracy measurement";
 "watch.nextsteps.wear" = "Log today's wear";
+
+/* Sprint 1 — Photo quality settings */
+"settings.section.photo" = "Photo Quality";
+"settings.photo.quality" = "JPEG Quality";
+"settings.photo.quality.standard" = "Standard";
+"settings.photo.quality.high" = "High";
+"settings.photo.quality.original" = "Near Original";
+"settings.photo.quality.hint" = "Standard uses less storage; Near Original is sharpest.";
