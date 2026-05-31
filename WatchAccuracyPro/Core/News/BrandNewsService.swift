@@ -29,7 +29,7 @@ final class BrandNewsService: ObservableObject {
         ("WatchPro", "https://www.watchpro.com/feed/"),
     ]
 
-    func fetchNews(for brands: [String]) async {
+    func fetchNews(for brands: [String] = []) async {
         // 캐시 유효하면 재사용 (기사가 있고 30분 이내)
         if let last = lastFetchAt,
            Date().timeIntervalSince(last) < cacheDuration,
@@ -47,7 +47,7 @@ final class BrandNewsService: ObservableObject {
             all.append(contentsOf: items)
         }
 
-        // 1단계: 시계 관련 키워드 포함 기사만 통과 (RSS 피드의 비시계 기사 제거)
+        // 시계 관련 기사만 표시 — 브랜드 매칭 없이 전체 시계 뉴스
         let watchKeywords = ["watch", "timepiece", "chronograph", "movement", "caliber",
                              "rolex", "omega", "seiko", "iwc", "patek", "audemars",
                              "tudor", "breitling", "tag heuer", "longines", "tissot",
@@ -55,23 +55,9 @@ final class BrandNewsService: ObservableObject {
                              "grand seiko", "zenith", "oris", "hublot", "strap",
                              "caseback", "dial", "bezel", "tourbillon", "mechanical",
                              "automatic", "quartz", "luxury"]
-        let watchRelated = all.filter { article in
+        let filtered = all.filter { article in
             let title = article.title.lowercased()
             return watchKeywords.contains { title.contains($0) }
-        }
-
-        // 2단계: 내 브랜드 매칭 — 매칭 없으면 전체 시계 뉴스 표시 (unrelated 아닌 watch-related만)
-        let brandKeywords = brands.map { $0.lowercased() }
-        let filtered: [NewsArticle]
-        if brandKeywords.isEmpty {
-            filtered = watchRelated
-        } else {
-            let matched = watchRelated.filter { article in
-                let title = article.title.lowercased()
-                return brandKeywords.contains { title.contains($0) }
-            }
-            // 내 브랜드 매칭 기사가 있으면 그것만, 없으면 시계 관련 전체
-            filtered = matched.isEmpty ? watchRelated : matched
         }
 
         // 날짜 역순 정렬, 최대 20개
