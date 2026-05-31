@@ -104,16 +104,28 @@ struct StatsView: View {
                 }
                 .buttonStyle(.plain)
             }
-            // Sprint 4 (P3-3): 하이라이트 타임라인 진입
-            NavigationLink {
-                HighlightTimelineView()
-            } label: {
-                funEntryCard(emoji: "⭐",
-                             title: String(localized: "stats.entry.highlights"),
-                             subtitle: String(localized: "stats.entry.highlights.subtitle"),
-                             tint: AppColors.warning.opacity(0.15))
+            HStack(spacing: 10) {
+                // Sprint 4 (P3-3): 하이라이트 타임라인 진입
+                NavigationLink {
+                    HighlightTimelineView()
+                } label: {
+                    funEntryCard(emoji: "⭐",
+                                 title: String(localized: "stats.entry.highlights"),
+                                 subtitle: String(localized: "stats.entry.highlights.subtitle"),
+                                 tint: AppColors.warning.opacity(0.15))
+                }
+                .buttonStyle(.plain)
+                // Sprint 4 (P2-17): Wrapped 연간 리포트
+                NavigationLink {
+                    WrappedView()
+                } label: {
+                    funEntryCard(emoji: "🎁",
+                                 title: String(localized: "stats.entry.wrapped"),
+                                 subtitle: String(localized: "stats.entry.wrapped.subtitle"),
+                                 tint: Color.purple.opacity(0.15))
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
         }
     }
 

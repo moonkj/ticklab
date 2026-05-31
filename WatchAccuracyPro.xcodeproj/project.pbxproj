@@ -80,6 +80,7 @@
 		4EF79B15B3D74BE01CF9A2D9 /* SpecCardListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */; };
 		5060F80D248B19D2A07705CA /* TemplateMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB63D3C7FEDA364C607D1131 /* TemplateMatcher.swift */; };
 		53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2276895B7370448EDD723736 /* SyntheticAudioSource.swift */; };
+		53C406BC47FD0266CBFCBC40 /* WrappedReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */; };
 		5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */; };
 		56AB31E34521BD8E03F0CA09 /* JournalFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C61A0EC7E6B49980D6EAB40 /* JournalFeedView.swift */; };
 		57442566C961CA26627FE75E /* MeasurementMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B8082627ED465EBBC3B05 /* MeasurementMetadata.swift */; };
@@ -109,6 +110,7 @@
 		85CC6E1B805415BF20D21CC7 /* MeasurementLiveActivityWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73F23C24460A6D08DB54AE4D /* MeasurementLiveActivityWidget.swift */; };
 		8629EB70487A13566F4103C7 /* AppleIntelligenceVerdictService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1686561FE30C447D3AA4707A /* AppleIntelligenceVerdictService.swift */; };
 		874F5B379A7B9AB264709674 /* LinearRegressionRate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EB59B27C918A69243C8960 /* LinearRegressionRate.swift */; };
+		87C7A93106D6D38117C28AF2 /* WrappedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA71806471C899A041EC3ED7 /* WrappedView.swift */; };
 		890561467DEACD63387F0863 /* DSPPipelineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04E04C082DECC7909F8F86E7 /* DSPPipelineTests.swift */; };
 		8A4D5C648893A10C67B90CF9 /* SpectralFluxExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E6F59BEB9DB87D747A88169 /* SpectralFluxExtractor.swift */; };
 		8A70BB1CD654EE24EB2BA6E1 /* DSPPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */; };
@@ -296,6 +298,7 @@
 		52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidenceScorerTests.swift; sourceTree = "<group>"; };
 		52BBFA7D93997FBC867BC8E1 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		53F59D57012F94F1A917365E /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedReportGenerator.swift; sourceTree = "<group>"; };
 		56D001FBFE55C95EE047F4F0 /* COSCBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = COSCBar.swift; sourceTree = "<group>"; };
 		5958AF8CCF5F7A932120AD93 /* ModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelTests.swift; sourceTree = "<group>"; };
 		59C27B0BEC35633950882906 /* MovementMatcherTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementMatcherTests.swift; sourceTree = "<group>"; };
@@ -408,6 +411,7 @@
 		E8293C262F87D540B2E2C9E4 /* BadgesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesView.swift; sourceTree = "<group>"; };
 		E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOffboardingView.swift; sourceTree = "<group>"; };
 		E9EDDAD4DABD6B3C60B30AD2 /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
+		EA71806471C899A041EC3ED7 /* WrappedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedView.swift; sourceTree = "<group>"; };
 		ED3ACAC424B9D19F511D68F4 /* DataExportService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExportService.swift; sourceTree = "<group>"; };
 		EDF87D1399FFCFF2083C1B44 /* PhotoSourceSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSourceSheet.swift; sourceTree = "<group>"; };
 		EE4BD3A2700CBF9B22C7317C /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
@@ -557,6 +561,7 @@
 			isa = PBXGroup;
 			children = (
 				D77630A107E903F99E49AC29 /* ConditionReportGenerator.swift */,
+				55C10CC4AFF948E31B14A22A /* WrappedReportGenerator.swift */,
 			);
 			path = Reports;
 			sourceTree = "<group>";
@@ -848,6 +853,7 @@
 			children = (
 				DCF9C569CED7D145073DD70E /* HighlightTimelineView.swift */,
 				053FAD0D4E8E76E2546FB7D9 /* StatsView.swift */,
+				EA71806471C899A041EC3ED7 /* WrappedView.swift */,
 			);
 			path = Stats;
 			sourceTree = "<group>";
@@ -1356,6 +1362,8 @@
 				B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */,
 				16AF0E8A85F6F2382D141164 /* WelcomeFlowView.swift in Sources */,
 				EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */,
+				53C406BC47FD0266CBFCBC40 /* WrappedReportGenerator.swift in Sources */,
+				87C7A93106D6D38117C28AF2 /* WrappedView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1494,7 +1502,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 119;
+				CURRENT_PROJECT_VERSION = 120;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1661,7 +1669,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 119;
+				CURRENT_PROJECT_VERSION = 120;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

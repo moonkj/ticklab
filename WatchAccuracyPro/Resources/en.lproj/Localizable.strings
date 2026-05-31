@@ -1301,3 +1301,19 @@
 "highlight.empty.body" = "Star a wear or add event tags to collect your special moments here.";
 "stats.entry.highlights" = "Highlights";
 "stats.entry.highlights.subtitle" = "Your special wear moments";
+
+/* Sprint 4 — P2-17 TickLab Wrapped */
+"wrapped.cover.title" = "%d Watch Story";
+"wrapped.cover.subtitle" = "Your year in watches";
+"wrapped.wears.label" = "Total wears";
+"wrapped.wears.unit" = "times";
+"wrapped.highlights.label" = "Highlights";
+"wrapped.toptag.label" = "Top occasion";
+"wrapped.mostworn.label" = "Most worn watch";
+"wrapped.newwatches.label" = "New watches added";
+"wrapped.measurements.label" = "Total measurements";
+"wrapped.avgrate.label" = "Avg accuracy";
+"wrapped.closing.title" = "Here's to %d!";
+"wrapped.closing.subtitle" = "Keep recording special moments with your watches.";
+"stats.entry.wrapped" = "Wrapped";
+"stats.entry.wrapped.subtitle" = "Your year in watches";

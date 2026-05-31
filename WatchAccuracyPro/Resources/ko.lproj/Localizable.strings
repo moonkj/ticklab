@@ -1300,3 +1300,19 @@
 "highlight.empty.body" = "착용 기록 시 별표를 누르거나 이벤트 태그를 추가하면 특별한 순간을 모아볼 수 있어요.";
 "stats.entry.highlights" = "하이라이트";
 "stats.entry.highlights.subtitle" = "특별한 착용 순간 모음";
+
+/* Sprint 4 — P2-17 TickLab Wrapped */
+"wrapped.cover.title" = "%d 시계 이야기";
+"wrapped.cover.subtitle" = "올 한 해 시계와 함께한 순간들";
+"wrapped.wears.label" = "올해 착용";
+"wrapped.wears.unit" = "번";
+"wrapped.highlights.label" = "하이라이트";
+"wrapped.toptag.label" = "가장 많은 자리";
+"wrapped.mostworn.label" = "가장 많이 찬 시계";
+"wrapped.newwatches.label" = "새로 맞이한 시계";
+"wrapped.measurements.label" = "총 측정 횟수";
+"wrapped.avgrate.label" = "평균 정확도";
+"wrapped.closing.title" = "%d년도 기대해요!";
+"wrapped.closing.subtitle" = "내년에도 시계와의 특별한 순간들을 기록해요.";
+"stats.entry.wrapped" = "Wrapped";
+"stats.entry.wrapped.subtitle" = "올해의 시계 이야기";
