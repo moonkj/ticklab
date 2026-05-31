@@ -5,9 +5,16 @@ import SwiftUI
 /// 구매가 미입력 시 "구매가를 입력하면 가성비를 알 수 있어요" 넛지 표시.
 struct CostPerWearCard: View {
     let watch: Watch
-    @Environment(\.modelContext) private var context
+    // @Query 방식으로 교체 — 매 렌더 SwiftData fetch 제거
+    @Query private var wearLogs: [WearLog]
 
-    private var wearCount: Int { WearLogService.wearCount(for: watch, in: context) }
+    init(watch: Watch) {
+        self.watch = watch
+        let watchID = watch.id
+        _wearLogs = Query(filter: #Predicate<WearLog> { $0.watch?.id == watchID })
+    }
+
+    private var wearCount: Int { wearLogs.count }
 
     private var costPerWear: Decimal? {
         guard let price = watch.purchasePrice, wearCount > 0 else { return nil }

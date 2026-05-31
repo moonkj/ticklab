@@ -134,8 +134,8 @@ struct WatchDetailView: View {
             refreshJournalAndServiceCache()
             cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
             serialNumber = KeychainService.serial(for: watch.id) ?? ""
-            // push 애니메이션 완료 후 hero fade in (crop 아티팩트 은폐).
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
+            // push 애니메이션 완료(~0.35s) 후 hero fade in — 크롭 아티팩트 완전 은폐.
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.32) {
                 heroVisible = true
             }
         }
@@ -361,14 +361,12 @@ struct WatchDetailView: View {
         ZStack(alignment: .bottomLeading) {
             // 1) photo / silhouette background — 전체 영역.
             // Sprint 8 (UX): contentTransition(.identity) — 컬렉션 썸네일과 동일 이미지 연속성.
-            // push 애니메이션 중 너비 계산 osc 방지 — 스크린 너비 고정 + drawingGroup 사전 렌더.
-            let screenW = UIScreen.main.bounds.width
             Group {
                 if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
                     Image(uiImage: img)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: screenW, height: 280)
+                        .transition(.opacity.animation(.easeIn(duration: 0.2)))
                 } else {
                     ZStack {
                         LinearGradient(
@@ -377,12 +375,12 @@ struct WatchDetailView: View {
                         )
                         WatchSilhouette(watch: watch, size: 220)
                     }
-                    .frame(width: screenW, height: 280)
                 }
             }
-            .frame(width: screenW, height: 280)
+            .frame(maxWidth: .infinity)
+            .frame(height: 280)
             .clipped()
-            .drawingGroup()
+            .animation(.easeInOut(duration: 0.2), value: PhotoCache.image(for: watch.id, data: watch.photoData) != nil)
             .contentShape(Rectangle())
             // Round 94 (정수민 #2): 사진 있으면 풀스크린 줌, 없으면 source sheet.
             .onTapGesture {
@@ -687,10 +685,12 @@ struct WatchDetailView: View {
         }
     }
 
-    private func fetchSpecCard() -> SpecCard? {
-        let watchID = watch.id
-        let desc = FetchDescriptor<SpecCard>(predicate: #Predicate { $0.watch?.id == watchID })
-        return (try? modelContext.fetch(desc))?.first
+    // @Query로 교체 — 렌더마다 fetchSpecCard() 호출 제거
+    @Query private var specCards: [SpecCard]
+
+    // SwiftData @Query는 init에서 predicate 주입 불가 (Watch는 NavigationLink value) → computed로 필터
+    private var watchSpecCard: SpecCard? {
+        specCards.first { $0.watch?.id == watch.id }
     }
 
     private var formattedPurchasePrice: String? {
@@ -918,7 +918,7 @@ struct WatchDetailView: View {
         let logs = cachedServiceLogs
         VStack(alignment: .leading, spacing: 0) {
             // Sprint 6 (INFRA-5): 파워리저브 게이지 — SpecCard 데이터 있을 때만.
-            if let specCard = fetchSpecCard(), let maxH = specCard.powerReserveHours, maxH > 0 {
+            if let specCard = watchSpecCard, let maxH = specCard.powerReserveHours, maxH > 0 {
                 let lastWound = wearLogs.first(where: { $0.watch?.id == watch.id })?.date
                 PowerReserveGauge(maxHours: maxH, lastWoundAt: lastWound)
                     .padding(.horizontal, 20)

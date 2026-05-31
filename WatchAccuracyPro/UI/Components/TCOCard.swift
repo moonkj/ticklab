@@ -5,12 +5,12 @@ import SwiftUI
 /// WatchDetail 재무 탭에서 표시. CostPerWearCard 와 함께 배치.
 struct TCOCard: View {
     let watch: Watch
-    @Environment(\.modelContext) private var context
+    @Query private var serviceLogs: [ServiceLog]
 
-    private var serviceLogs: [ServiceLog] {
-        let id = watch.id
-        let desc = FetchDescriptor<ServiceLog>(predicate: #Predicate { $0.watch?.id == id })
-        return (try? context.fetch(desc)) ?? []
+    init(watch: Watch) {
+        self.watch = watch
+        let watchID = watch.id
+        _serviceLogs = Query(filter: #Predicate<ServiceLog> { $0.watch?.id == watchID })
     }
 
     private var totalServiceCost: Decimal {

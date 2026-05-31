@@ -788,18 +788,19 @@ struct WatchListRow: View {
     /// Round 71/131: WatchSilhouette 통일 + Watch.photoData 있으면 사진 / "오늘 착용" wear toggle 추가.
     @Environment(\.modelContext) private var modelContext
 
-    // Sprint 3 (P3-7): 다이얼 색상 추출 — 사진 없을 때 카드 배경 그라데이션.
-    private var dialColor: Color? {
-        guard watch.photoData == nil else { return nil }  // 사진 있으면 불필요
-        return nil  // photoData 기반 추출은 비동기 필요 — WatchSilhouette 컬러는 brand 기반
-    }
+    // Sprint 3 (P3-7): 다이얼 색상 추출 — @State 캐시로 매 렌더 CIAreaAverage 방지.
+    @State private var extractedColor: Color? = nil
 
-    // 사진 있을 때 추출한 평균 색상.
-    private var extractedColor: Color? {
-        guard let data = watch.photoData,
+    private func extractColorIfNeeded() {
+        guard extractedColor == nil,
+              let data = watch.photoData,
               let img = PhotoCache.image(for: watch.id, data: data),
-              let cg = img.cgImage else { return nil }
-        return DialColorExtractor.averageColor(from: cg)
+              let cg = img.cgImage else { return }
+        // 비동기 추출 — main thread 차단 없음
+        Task.detached(priority: .utility) {
+            let color = DialColorExtractor.averageColor(from: cg)
+            await MainActor.run { self.extractedColor = color }
+        }
     }
 
     var body: some View {
@@ -898,6 +899,7 @@ struct WatchListRow: View {
         .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
         .cardShadow(.low)  // Sprint 9 UX
+        .onAppear { extractColorIfNeeded() }
     }
 }
 

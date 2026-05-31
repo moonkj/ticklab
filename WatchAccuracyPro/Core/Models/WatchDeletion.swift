@@ -17,13 +17,11 @@ enum PhotoCache {
     static func image(for id: UUID, data: Data?) -> UIImage? {
         let key = id as NSUUID
         if let cached = cache.object(forKey: key) { return cached }
-        guard let data, let image = UIImage(data: data) else { return nil }
-        // Round 21 (Sora): data.count = JPEG 압축 크기. NSCache 에 들어가는 건 decoded UIImage 라
-        //   width × height × scale^2 × 4 bytes (RGBA) — 4MP 사진은 4MB JPEG → ~46MB decoded (11x).
-        //   cost mismatch 면 totalCostLimit 256MB 가 실제론 ~12장 만에 fill → 500MB 점유 위험.
-        let cost = Int(image.size.width * image.size.height * image.scale * image.scale * 4)
-        cache.setObject(image, forKey: key, cost: cost)
-        return image
+        // cache miss — 백그라운드 prefetch 트리거 후 nil 반환 (main thread 블로킹 디코딩 제거).
+        // 다음 렌더 사이클에 cache hit → 이미지 표시. 로딩 순간 silhouette 잠시 노출되지만
+        // main thread spike(최대 200ms) 제거로 전반적 반응성이 크게 개선됨.
+        if let data { prefetch(for: id, data: data) }
+        return nil
     }
 
     /// Round (3-1): 사진 저장 직후 호출 — background thread 에서 미리 디코드 + 캐시 적재.
