@@ -10,6 +10,7 @@ import SwiftUI
 /// 같은 탭을 재선택해도 루트로 복귀.
 struct RootTabView: View {
     @Environment(UserPreferences.self) private var preferences
+    @ObservedObject private var flags = FeatureFlags.shared
     @State private var selected: Tab = .collection
 
     // Round 176: 각 탭의 NavigationStack path — Binding 으로 child view 에 주입.
@@ -23,6 +24,7 @@ struct RootTabView: View {
     @State private var todayEpoch: Int = 0
     @State private var journalEpoch: Int = 0
     @State private var statsEpoch: Int = 0
+    @State private var communityEpoch: Int = 0
     /// Round 140 (Hyemi/Min H1 Critical): 측정 진행 중 탭 전환 시 epoch 증가가 측정 silent 폐기 유발.
     /// MeasurementViewModel.start/stop 이 notification post → 측정 중에는 epoch 증가 차단.
     @State private var measurementInProgress: Bool = false
@@ -36,6 +38,7 @@ struct RootTabView: View {
         case today
         case journal
         case stats
+        case community
     }
 
     var body: some View {
@@ -72,6 +75,8 @@ struct RootTabView: View {
                         statsPath = NavigationPath()
                         statsEpoch &+= 1
                     }
+                case .community:
+                    if allowReset { communityEpoch &+= 1 }
                 }
                 selected = newTab
             }
@@ -103,6 +108,16 @@ struct RootTabView: View {
                     Label(String(localized: "tab.stats"), systemImage: "chart.pie")
                 }
                 .tag(Tab.stats)
+
+            // 커뮤니티 — FeatureFlags.communityEnabled ON 일 때만 노출(백엔드 배포 후).
+            if flags.communityEnabled {
+                CommunityFeedView()
+                    .id(communityEpoch)
+                    .tabItem {
+                        Label(String(localized: "community.tab.title"), systemImage: "person.2")
+                    }
+                    .tag(Tab.community)
+            }
         }
         // 사용자 보고 fix: 글로벌 accent gold 가 alert 버튼까지 propagate → 가독성 ↓ (#C9A961 on white ~2.8:1).
         //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.

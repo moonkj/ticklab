@@ -11,6 +11,7 @@ final class PurchaseRouter {
         case dailyMeasurement
         case journalMonthly
         case aiTrial
+        case community
         case settings
 
         /// 사용자 보고 fix: 어떤 한도가 트리거했는지 PurchaseView heading 으로 context 노출.
@@ -20,6 +21,7 @@ final class PurchaseRouter {
             case .dailyMeasurement: return "purchase.context.daily_measurement"
             case .journalMonthly:   return "purchase.context.journal_monthly"
             case .aiTrial:          return "purchase.context.ai_trial"
+            case .community:        return "purchase.context.community"
             case .settings:         return nil  // generic — no context banner
             }
         }
