@@ -44,6 +44,8 @@ struct TodayView: View {
                     headerSection
                     // Round 176 (사용자 UX 요청 #2): 대표 시계 명확화. 설정 됐으면 큰 카드, 아니면 빈 상태 CTA.
                     primaryWatchSection
+                    // Sprint 14 (S3+S4): "오늘 할 일" — 점검 대기 시계 있으면 최상단 노출.
+                    todoCard
                     // Sprint 12 (UX3): 적응형 — 시계 2개 이상이면 추천/뽑기, 1개면 "이 시계와의 기록".
                     if watches.count >= 2 {
                         todayPickCard
@@ -265,6 +267,46 @@ struct TodayView: View {
     // MARK: - Today's Watch
 
     // MARK: - Sprint 5 (P2-15) AI 추천 카드
+
+    /// Sprint 14 (S3+S4): "오늘 할 일" — 점검 대기 시계. 없으면 표시 안 함.
+    @ViewBuilder
+    private var todoCard: some View {
+        let summary = WeeklyCheckService.summary(watches: watches)
+        if summary.total > 0, let target = summary.needsCheck.first ?? summary.neverMeasured.first {
+            NavigationLink {
+                WatchDetailView(watch: target)
+            } label: {
+                HStack(spacing: 12) {
+                    ZStack {
+                        Circle().fill(AppColors.warning.opacity(0.15)).frame(width: 52, height: 52)
+                        Image(systemName: "checklist").font(.system(size: 22)).foregroundStyle(AppColors.warning)
+                    }
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(String(localized: "today.todo.title"))
+                            .font(.system(size: 11, weight: .semibold))
+                            .tracking(1.2)
+                            .foregroundStyle(AppColors.warning)
+                        Text(summary.total == 1
+                             ? String(format: NSLocalizedString("today.todo.single", comment: ""), "\(target.brand) \(target.model)")
+                             : String(format: NSLocalizedString("today.todo.multi", comment: ""), summary.total))
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundStyle(AppColors.ink0)
+                            .lineLimit(2)
+                    }
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink3)
+                }
+                .padding(14)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(AppColors.warning.opacity(0.06))
+                .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.warning.opacity(0.25), lineWidth: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 14))
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+        }
+    }
 
     /// Sprint 12 (UX3): 시계 1개 사용자용 — 추천/뽑기 대신 "이 시계와의 기록".
     @ViewBuilder

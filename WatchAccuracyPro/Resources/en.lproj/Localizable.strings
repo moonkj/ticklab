@@ -1554,3 +1554,9 @@
 "trend.coach.advise_good" = "Just keep measuring periodically as you are.";
 "trend.disclaimer" = "Mic-based reference diagnosis. Consult a watchmaker for accuracy.";
 "referral.share.full_message" = "TickLab — track everything about your watches 📱\n%@\nInvite code: %@";
+
+/* Sprint 14 — S3/S4 today todo + S6 paywall personalization */
+"today.todo.title" = "TO DO TODAY";
+"today.todo.single" = "%@ hasn't been measured in over a week";
+"today.todo.multi" = "%d watches haven't been measured in over a week";
+"purchase.context.personalized" = "You measured %d times in the last 7 days. Go deeper with Pro.";

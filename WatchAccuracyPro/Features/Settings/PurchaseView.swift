@@ -1,4 +1,5 @@
 import StoreKit
+import SwiftData
 import SwiftUI
 
 /// TickLab Pro 페이월 — 월 $1.99 / 연 $9.99 / 평생 ₩25,000.
@@ -9,6 +10,13 @@ struct PurchaseView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.purchaseRouter) private var purchaseRouter
+    /// Sprint 14 (S6): 개인화 — 최근 7일 측정 횟수.
+    @Query private var allMeasurements: [WatchMeasurement]
+
+    private var recentMeasureCount: Int {
+        let cutoff = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
+        return allMeasurements.filter { $0.timestamp >= cutoff }.count
+    }
 
     @State private var monthlyProduct: Product?
     @State private var yearlyProduct: Product?
@@ -84,15 +92,23 @@ struct PurchaseView: View {
     @ViewBuilder
     private var contextBanner: some View {
         if let key = purchaseRouter?.lastIntent?.contextKey {
-            HStack(spacing: 8) {
-                Image(systemName: "info.circle.fill")
-                    .font(.system(size: 13))
-                    .foregroundStyle(AppColors.info)
-                Text(String(localized: String.LocalizationValue(key)))
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(AppColors.ink0)
-                    .multilineTextAlignment(.leading)
-                Spacer(minLength: 0)
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(spacing: 8) {
+                    Image(systemName: "info.circle.fill")
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.info)
+                    Text(String(localized: String.LocalizationValue(key)))
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(AppColors.ink0)
+                        .multilineTextAlignment(.leading)
+                    Spacer(minLength: 0)
+                }
+                // Sprint 14 (S6): 개인화 — 최근 활동을 보여줘 가치 환기.
+                if recentMeasureCount >= 2 {
+                    Text(String(format: NSLocalizedString("purchase.context.personalized", comment: ""), recentMeasureCount))
+                        .font(.system(size: 12))
+                        .foregroundStyle(AppColors.ink2)
+                }
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 10)

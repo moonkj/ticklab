@@ -59,6 +59,7 @@
 		2D338DBDDE3A68F846A60062 /* BrandConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = E01DD25CF11FA896AD6774E4 /* BrandConstants.swift */; };
 		2E65F8B30D3042AD28B9261F /* BrandLeagueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CE067C7F3DCA7A186DC6FE7 /* BrandLeagueView.swift */; };
 		2EAC9A7EA6B62E91A3FA696B /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F3FB0232C07394894BE9086 /* TodayView.swift */; };
+		2FDD200AA16D58A0DC46249E /* WeeklyCheckService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C7EC38E3391098342AB7E /* WeeklyCheckService.swift */; };
 		30814EB7EDDD89A9A26CC9DF /* PurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6984089EAA0E94FD1B3326F /* PurchaseView.swift */; };
 		30A1D7E3B9E8A3EC4FF2A3F3 /* SharedSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4817C4FF6E9CD72A586997 /* SharedSnapshotStore.swift */; };
 		367EB49536969E9791A23BCD /* BeatDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4995C3A82B5E708792DD27DE /* BeatDetectorProtocol.swift */; };
@@ -353,6 +354,7 @@
 		5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TCOCard.swift; sourceTree = "<group>"; };
 		5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpCard.swift; sourceTree = "<group>"; };
 		5F3FB0232C07394894BE9086 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		609C7EC38E3391098342AB7E /* WeeklyCheckService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyCheckService.swift; sourceTree = "<group>"; };
 		60BF10B3AEE5733B016B36E6 /* WatchPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchPhotoView.swift; sourceTree = "<group>"; };
 		60EE0C82CFEEA31BF0C27FD5 /* SmokeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmokeUITests.swift; sourceTree = "<group>"; };
 		6321C02B534578D2BF56FB2A /* TrendDiagnosisCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendDiagnosisCard.swift; sourceTree = "<group>"; };
@@ -848,6 +850,7 @@
 				EE4BD3A2700CBF9B22C7317C /* NotificationService.swift */,
 				880B162EEB36D3F0CB86912A /* OnThisDayService.swift */,
 				878DAD75031707410CFB1D7B /* RotationNudgeService.swift */,
+				609C7EC38E3391098342AB7E /* WeeklyCheckService.swift */,
 			);
 			path = Notifications;
 			sourceTree = "<group>";
@@ -1535,6 +1538,7 @@
 				8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */,
 				415504A195095049C4FFC03C /* WearLogService.swift in Sources */,
 				B030D217D97C64A5352F1EB1 /* WearTagPickerView.swift in Sources */,
+				2FDD200AA16D58A0DC46249E /* WeeklyCheckService.swift in Sources */,
 				16AF0E8A85F6F2382D141164 /* WelcomeFlowView.swift in Sources */,
 				EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */,
 				0A8E8B3E80CDF325E1487029 /* WishlistItem.swift in Sources */,
@@ -1679,7 +1683,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 165;
+				CURRENT_PROJECT_VERSION = 166;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1846,7 +1850,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 165;
+				CURRENT_PROJECT_VERSION = 166;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = QN975MTM7H;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;

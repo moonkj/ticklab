@@ -1553,3 +1553,9 @@
 "trend.coach.advise_good" = "지금처럼 주기적으로 측정만 해주면 충분해요.";
 "trend.disclaimer" = "마이크 기반 참고용 진단입니다. 정확한 진단은 워치메이커에게.";
 "referral.share.full_message" = "TickLab — 내 시계의 모든 기록 📱\n%@\n초대 코드: %@";
+
+/* Sprint 14 — S3/S4 오늘 할일 + S6 페이월 개인화 */
+"today.todo.title" = "오늘 할 일";
+"today.todo.single" = "%@ 측정한 지 일주일이 넘었어요";
+"today.todo.multi" = "%d개 시계가 측정한 지 일주일이 넘었어요";
+"purchase.context.personalized" = "지난 7일간 %d회 측정하셨어요. Pro로 더 깊이 분석해보세요.";
