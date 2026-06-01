@@ -237,6 +237,7 @@ final class CommunityService: ObservableObject {
         } catch {
             lastError = error.localizedDescription
         }
+        await heartbeat()
     }
 
     // MARK: - Like (멱등 — PK(post_id, uid))
@@ -429,6 +430,62 @@ final class CommunityService: ObservableObject {
         }
         markPostedToday()
         await loadFeed()
+    }
+
+    // MARK: - 운영 대시보드 (관리자)
+
+    /// presence 하트비트 — 커뮤니티 활동 시 community_presence(uid PK) UPSERT.
+    /// "현재 활동 사용자" 근사치용. (진짜 실시간 동시접속 presence 는 Realtime 필요 — 활동 기반 근사)
+    func heartbeat() async {
+        guard let uid = myUID, let url = URL(string: "\(baseURL)/rest/v1/community_presence") else { return }
+        var req = authedRequest(url, method: "POST")
+        req.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+        let nowISO = ISO8601DateFormatter().string(from: Date())
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["uid": uid, "last_seen": nowISO])
+        _ = try? await URLSession.shared.data(for: req)
+    }
+
+    /// 운영 통계. 전체/오늘 게시물은 public 읽기로 동작, 활동 사용자는 presence 테이블 필요.
+    func fetchOpsStats() async -> Community.OpsStats {
+        let todayISO = ISO8601DateFormatter().string(from: Calendar.current.startOfDay(for: Date()))
+        let activeCutoff = ISO8601DateFormatter().string(from: Date().addingTimeInterval(-120))
+        async let total = countRows(table: "community_posts", selectCol: "id", filter: "status=eq.approved")
+        async let today = countRows(table: "community_posts", selectCol: "id",
+                                    filter: "status=eq.approved&created_at=gte.\(todayISO)")
+        async let active = countRows(table: "community_presence", selectCol: "uid",
+                                     filter: "last_seen=gte.\(activeCutoff)")
+        return Community.OpsStats(activeUsers: await active, todayPosts: await today, totalPosts: await total)
+    }
+
+    /// 신고 목록 (admin SELECT RLS 필요 — 미배포 시 빈 배열).
+    func fetchReports() async -> [Community.AdminReport] {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_reports?select=post_id,reason,created_at&order=created_at.desc&limit=200") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let reports = try? Self.decoder.decode([Community.AdminReport].self, from: data) else { return [] }
+        return reports
+    }
+
+    /// 게시물 숨김 (admin UPDATE RLS 필요).
+    @discardableResult
+    func adminHidePost(_ postID: String) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?id=eq.\(postID)") else { return false }
+        var req = authedRequest(url, method: "PATCH")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["status": "hidden"])
+        guard let (_, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// PostgREST count=exact → Content-Range 헤더의 total 파싱.
+    private func countRows(table: String, selectCol: String, filter: String) async -> Int {
+        guard let url = URL(string: "\(baseURL)/rest/v1/\(table)?select=\(selectCol)&limit=1&\(filter)") else { return 0 }
+        var req = authedRequest(url, method: "GET")
+        req.setValue("count=exact", forHTTPHeaderField: "Prefer")
+        guard let (_, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse,
+              let range = http.value(forHTTPHeaderField: "Content-Range"),
+              let total = range.split(separator: "/").last.flatMap({ Int($0) }) else { return 0 }
+        return total
     }
 
     // MARK: - Helpers

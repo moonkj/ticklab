@@ -959,6 +959,81 @@ struct GlossaryDetailSheet: View {
 #if DEBUG
 /// 관리자 패널 — 개발/QA 테스트 기능. App Store 빌드 전 제거 필수.
 /// 사용자 요청: 데모 시계 10종 + 측정 20개씩 시드, wipe, preferences reset, cache invalidate.
+/// 관리자 운영 대시보드 — 신고 목록·숨김 + 통계(전체/오늘 게시물·현재 활동 사용자).
+/// 신고 조회·활동 사용자·숨김은 admin RLS 필요(docs/community/admin_ops.sql). 게시물 수는 공개 읽기로 동작.
+private struct AdminOpsView: View {
+    private let service = CommunityService.shared
+    @State private var stats = Community.OpsStats()
+    @State private var reports: [Community.AdminReport] = []
+    @State private var loaded = false
+
+    private struct ReportGroup: Identifiable {
+        let postID: String
+        let count: Int
+        let reasons: [String]
+        var id: String { postID }
+    }
+    private var grouped: [ReportGroup] {
+        Dictionary(grouping: reports, by: { $0.postID }).map { pid, items in
+            ReportGroup(postID: pid, count: items.count,
+                        reasons: Array(Set(items.map { $0.reason })).sorted())
+        }.sorted { $0.count > $1.count }
+    }
+
+    var body: some View {
+        List {
+            Section("통계") {
+                LabeledContent("현재 활동 사용자", value: "\(stats.activeUsers)")
+                LabeledContent("오늘 게시물", value: "\(stats.todayPosts)")
+                LabeledContent("전체 게시물", value: "\(stats.totalPosts)")
+                Text("‘현재 활동 사용자’는 최근 2분 내 커뮤니티 사용(presence) 근사치입니다. 진짜 실시간 동시접속은 Realtime 연동 시 정확해집니다.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            Section("신고") {
+                if grouped.isEmpty {
+                    Text(loaded
+                         ? "신고 없음 (또는 admin SELECT RLS 미배포 — docs/community/admin_ops.sql)"
+                         : "불러오는 중…")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    ForEach(grouped) { g in
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("게시물 \(g.postID.prefix(8))… — 신고 \(g.count)건")
+                                .font(.system(size: 14, weight: .semibold))
+                            Text(g.reasons.joined(separator: ", "))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Button(role: .destructive) {
+                                let pid = g.postID
+                                Task { if await service.adminHidePost(pid) { await reload() } }
+                            } label: {
+                                Label("숨김 처리", systemImage: "eye.slash")
+                            }
+                            .font(.caption)
+                            .buttonStyle(.bordered)
+                        }
+                        .padding(.vertical, 2)
+                    }
+                }
+            }
+        }
+        .navigationTitle("운영 대시보드")
+        .navigationBarTitleDisplayMode(.inline)
+        .task { await reload() }
+        .refreshable { await reload() }
+    }
+
+    private func reload() async {
+        async let s = service.fetchOpsStats()
+        async let r = service.fetchReports()
+        stats = await s
+        reports = await r
+        loaded = true
+    }
+}
+
 private struct AdminPanelView: View {
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.modelContext) private var modelContext
@@ -1012,6 +1087,11 @@ private struct AdminPanelView: View {
                         Text("커뮤니티 탭에 한 번 들어가 로그인하면 UID가 표시됩니다.")
                             .font(.caption)
                             .foregroundStyle(.orange)
+                    }
+                    NavigationLink {
+                        AdminOpsView()
+                    } label: {
+                        Label("운영 대시보드 (신고·통계·활동)", systemImage: "shield.lefthalf.filled")
                     }
                 }
                 Section("라이선스 모드") {

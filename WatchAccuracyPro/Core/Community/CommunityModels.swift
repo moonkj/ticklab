@@ -42,6 +42,26 @@ enum Community {
         }
     }
 
+    /// 운영 대시보드 — 신고 항목(관리자 조회용).
+    struct AdminReport: Codable, Identifiable {
+        let postID: String
+        let reason: String
+        let createdAt: Date
+        var id: String { "\(postID)|\(createdAt.timeIntervalSince1970)" }
+        enum CodingKeys: String, CodingKey {
+            case postID = "post_id"
+            case reason
+            case createdAt = "created_at"
+        }
+    }
+
+    /// 운영 통계.
+    struct OpsStats {
+        var activeUsers: Int = 0
+        var todayPosts: Int = 0
+        var totalPosts: Int = 0
+    }
+
     /// 신고 사유 — UGC 의무(Guideline 1.2).
     enum ReportReason: String, Codable, CaseIterable {
         case inappropriate   // 부적절/선정적
