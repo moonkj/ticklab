@@ -56,4 +56,43 @@ enum ConfidenceScorer {
 
         return min(100, Int(s.rounded()))
     }
+
+    /// T-02: 신뢰도 저하의 주된 원인 분류 — UI 가 개선 안내(HelpCard)로 노출. 우선순위 순.
+    /// `bphConfidence` 가 주어지면(DSP 경로) 직접 판정, nil(결과화면 경로)이면
+    /// SNR·측정시간으로 설명되지 않는 저점수를 BPH lock 문제로 추정한다.
+    static func reasons(snrDB: Double, durationSeconds: Double,
+                        confidenceScore: Int, bphConfidence: Double? = nil) -> [ConfidenceReason] {
+        var out: [ConfidenceReason] = []
+        if snrDB < 14 { out.append(.lowSNR) }
+        if durationSeconds < 30 { out.append(.shortDuration) }
+        if let c = bphConfidence {
+            if c < 0.6 { out.append(.bphUncertain) }
+        } else if confidenceScore < 70, snrDB >= 14, durationSeconds >= 30 {
+            out.append(.bphUncertain)
+        }
+        return out
+    }
+}
+
+/// 신뢰도 저하 원인 — 낮은 신뢰도일 때 사용자에게 개선 방법을 안내(T-02).
+enum ConfidenceReason: String, CaseIterable, Hashable, Sendable {
+    case lowSNR
+    case shortDuration
+    case bphUncertain
+
+    /// Localizable.strings 키 (Hard Rule #3: 인라인 문자열 금지).
+    var localizationKey: String {
+        switch self {
+        case .lowSNR:        return "confidence.reason.lowSNR"
+        case .shortDuration: return "confidence.reason.shortDuration"
+        case .bphUncertain:  return "confidence.reason.bphUncertain"
+        }
+    }
+    var icon: String {
+        switch self {
+        case .lowSNR:        return "speaker.wave.2"
+        case .shortDuration: return "clock"
+        case .bphUncertain:  return "waveform.badge.magnifyingglass"
+        }
+    }
 }

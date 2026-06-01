@@ -671,6 +671,10 @@
 
 /* Confidence */
 "confidence.label" = "Confianza";
+"confidence.reason.title" = "Para mejorar la precisión";
+"confidence.reason.lowSNR" = "Demasiado ruido de fondo. Inténtalo en un lugar más silencioso.";
+"confidence.reason.shortDuration" = "La medición fue corta. Medir 30 s o más mejora la precisión.";
+"confidence.reason.bphUncertain" = "No se pudo fijar el ritmo (BPH). Acerca el reloj al micrófono.";
 
 /* Glossary */
 "glossary.title" = "Glosario";

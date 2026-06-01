@@ -671,6 +671,10 @@
 
 /* Confidence */
 "confidence.label" = "विश्वास";
+"confidence.reason.title" = "सटीकता बढ़ाने के लिए";
+"confidence.reason.lowSNR" = "बहुत अधिक पृष्ठभूमि शोर। किसी शांत जगह पर फिर से मापें।";
+"confidence.reason.shortDuration" = "माप छोटा था। 30 सेकंड या अधिक मापने से सटीकता बढ़ती है।";
+"confidence.reason.bphUncertain" = "बीट (BPH) सटीक रूप से लॉक नहीं हो सका। घड़ी को माइक के पास रखें।";
 
 /* Glossary */
 "glossary.title" = "शब्दावली";

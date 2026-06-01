@@ -645,6 +645,10 @@
 
 /* Confidence */
 "confidence.label" = "측정 신뢰도";
+"confidence.reason.title" = "측정 정확도를 높이려면";
+"confidence.reason.lowSNR" = "주변 소음이 너무 큽니다. 조용한 곳에서 다시 측정해보세요.";
+"confidence.reason.shortDuration" = "측정 시간이 짧습니다. 30초 이상 측정하면 더 정확합니다.";
+"confidence.reason.bphUncertain" = "박자(BPH)를 정확히 파악하지 못했습니다. 시계를 마이크 가까이 놓아주세요.";
 
 /* Glossary 용어 */
 "glossary.title" = "용어 사전";

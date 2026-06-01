@@ -671,6 +671,10 @@
 
 /* Confidence */
 "confidence.label" = "信頼度";
+"confidence.reason.title" = "精度を上げるには";
+"confidence.reason.lowSNR" = "周囲の騒音が大きすぎます。静かな場所で再測定してください。";
+"confidence.reason.shortDuration" = "測定時間が短いです。30秒以上で精度が上がります。";
+"confidence.reason.bphUncertain" = "テンポ(BPH)を正確に検出できませんでした。時計をマイクに近づけてください。";
 
 /* Glossary */
 "glossary.title" = "用語集";

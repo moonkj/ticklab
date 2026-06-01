@@ -671,6 +671,10 @@
 
 /* Confidence */
 "confidence.label" = "信心度";
+"confidence.reason.title" = "提高準確度";
+"confidence.reason.lowSNR" = "背景噪音過大。請到更安靜的地方重新測量。";
+"confidence.reason.shortDuration" = "測量時間過短。測量30秒以上更準確。";
+"confidence.reason.bphUncertain" = "未能準確鎖定節拍(BPH)。請將手錶靠近麥克風。";
 
 /* Glossary */
 "glossary.title" = "詞彙";

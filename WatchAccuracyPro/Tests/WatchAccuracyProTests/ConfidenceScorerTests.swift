@@ -73,4 +73,39 @@ final class ConfidenceScorerTests: XCTestCase {
         // SNR≥22→20 + duration≥120→25 + BPH conf 1.0→30 + beatError≥2ms→0 = 75.
         XCTAssertEqual(score, 75, "beat error 2ms 이상이면 separation 점수는 0 → 총 75점")
     }
+
+    // MARK: - T-02 reasons()
+
+    func test_reason_lowSNR_when_noisy() {
+        let r = ConfidenceScorer.reasons(snrDB: 8, durationSeconds: 40, confidenceScore: 50)
+        XCTAssertTrue(r.contains(.lowSNR))
+    }
+
+    func test_reason_shortDuration_when_brief() {
+        let r = ConfidenceScorer.reasons(snrDB: 20, durationSeconds: 15, confidenceScore: 50)
+        XCTAssertTrue(r.contains(.shortDuration))
+    }
+
+    func test_reason_bphUncertain_ui_heuristic() {
+        // SNR·시간 양호한데 점수 낮음 → UI 경로(bphConfidence nil)에서 BPH 문제로 추정.
+        let r = ConfidenceScorer.reasons(snrDB: 20, durationSeconds: 60, confidenceScore: 50)
+        XCTAssertEqual(r, [.bphUncertain])
+    }
+
+    func test_reason_bphUncertain_dsp_path() {
+        // DSP 경로: bphConfidence 직접 제공 → 0.6 미만이면 분류.
+        let r = ConfidenceScorer.reasons(snrDB: 20, durationSeconds: 60, confidenceScore: 50, bphConfidence: 0.3)
+        XCTAssertTrue(r.contains(.bphUncertain))
+    }
+
+    func test_reasons_empty_when_healthy() {
+        let r = ConfidenceScorer.reasons(snrDB: 25, durationSeconds: 60, confidenceScore: 90)
+        XCTAssertTrue(r.isEmpty)
+    }
+
+    func test_reasons_priority_order() {
+        // 모든 원인 동시 → lowSNR, shortDuration 순서 보장(우선순위).
+        let r = ConfidenceScorer.reasons(snrDB: 8, durationSeconds: 15, confidenceScore: 30, bphConfidence: 0.2)
+        XCTAssertEqual(r, [.lowSNR, .shortDuration, .bphUncertain])
+    }
 }

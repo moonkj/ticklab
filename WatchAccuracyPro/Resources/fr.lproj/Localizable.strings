@@ -671,6 +671,10 @@
 
 /* Confidence */
 "confidence.label" = "Confiance";
+"confidence.reason.title" = "Pour améliorer la précision";
+"confidence.reason.lowSNR" = "Trop de bruit ambiant. Réessayez dans un endroit plus calme.";
+"confidence.reason.shortDuration" = "Mesure trop courte. Mesurer 30 s ou plus améliore la précision.";
+"confidence.reason.bphUncertain" = "Impossible de verrouiller le rythme (BPH). Rapprochez la montre du micro.";
 
 /* Glossary */
 "glossary.title" = "Glossaire";

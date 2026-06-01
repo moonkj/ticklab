@@ -679,6 +679,10 @@
 
 /* Confidence */
 "confidence.label" = "Confidence";
+"confidence.reason.title" = "To improve accuracy";
+"confidence.reason.lowSNR" = "Too much background noise. Try again in a quieter place.";
+"confidence.reason.shortDuration" = "The measurement was short. Measuring 30s or more improves accuracy.";
+"confidence.reason.bphUncertain" = "Couldn't lock the beat (BPH) precisely. Place the watch closer to the microphone.";
 
 /* Glossary */
 "glossary.title" = "Glossary";

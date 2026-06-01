@@ -402,6 +402,29 @@ struct MeasurementResultView: View {
         return VStack(alignment: .leading, spacing: 10) {
             EyebrowLabel(text: String(localized: "result.section.metrics"), number: "01")
             MetricGrid(cells: cells)
+            confidenceHelpCard
+        }
+    }
+
+    /// T-02: 신뢰도<70 이면 저하 원인별 개선 안내(1장으로 통합 — 동일 제목 반복 방지).
+    @ViewBuilder private var confidenceHelpCard: some View {
+        if result.confidenceScore < 70 {
+            let reasons = ConfidenceScorer.reasons(
+                snrDB: result.snrDB,
+                durationSeconds: Double(result.durationSeconds),
+                confidenceScore: result.confidenceScore
+            )
+            if !reasons.isEmpty {
+                HelpCard(
+                    icon: "lightbulb",
+                    title: String(localized: "confidence.reason.title"),
+                    body: reasons
+                        .map { String(localized: String.LocalizationValue($0.localizationKey)) }
+                        .joined(separator: "\n\n"),
+                    tone: .warning
+                )
+                .padding(.top, 4)
+            }
         }
     }
 
