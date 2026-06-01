@@ -48,4 +48,35 @@ final class MovementMatcherTests: XCTestCase {
         XCTAssertNil(matcher.suggest(brand: "", model: ""))
         XCTAssertNil(matcher.suggest(brand: "   ", model: "   "))
     }
+
+    // MARK: - 4-1 퍼지 검색 (MovementSearch)
+
+    func test_search_normalize_strips_separators_and_case() {
+        XCTAssertEqual(MovementSearch.normalize("Rolex_3135"), "rolex3135")
+        XCTAssertEqual(MovementSearch.normalize("ETA 2824-2"), "eta28242")
+    }
+
+    func test_search_separator_insensitive() {
+        XCTAssertNotNil(MovementSearch.score(query: "rolex 3135", id: "Rolex_3135", brandFamilies: []))
+        XCTAssertNotNil(MovementSearch.score(query: "ETA2824", id: "ETA_2824", brandFamilies: []))
+    }
+
+    func test_search_typo_tolerance() {
+        // 끝자리 오타 1자 — 여전히 매칭
+        XCTAssertNotNil(MovementSearch.score(query: "rolex3134", id: "Rolex_3135", brandFamilies: []))
+    }
+
+    func test_search_brand_family_match() {
+        XCTAssertNotNil(MovementSearch.score(query: "submariner", id: "Rolex_3135", brandFamilies: ["Rolex Submariner"]))
+    }
+
+    func test_search_no_match_returns_nil() {
+        XCTAssertNil(MovementSearch.score(query: "zzzzzz", id: "Rolex_3135", brandFamilies: ["Rolex Submariner"]))
+    }
+
+    func test_search_ranking_prefix_beats_substring() {
+        let prefix = MovementSearch.score(query: "rolex", id: "Rolex_3135", brandFamilies: []) ?? -1
+        let substring = MovementSearch.score(query: "3135", id: "Rolex_3135", brandFamilies: []) ?? -1
+        XCTAssertGreaterThan(prefix, substring)
+    }
 }

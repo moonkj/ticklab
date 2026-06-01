@@ -25,13 +25,16 @@ struct MovementPickerSheet: View {
         }
     }
 
+    /// 4-1: 퍼지 검색 — 구분자·대소문자 무시 + 캘리버 오타 허용, 점수순 정렬.
     private var filtered: [Movement] {
-        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        let q = query.trimmingCharacters(in: .whitespaces)
         guard !q.isEmpty else { return allMovements }
-        return allMovements.filter { m in
-            m.id.lowercased().contains(q)
-                || m.brandFamilies.contains { $0.lowercased().contains(q) }
-        }
+        return allMovements
+            .compactMap { m -> (Movement, Int)? in
+                MovementSearch.score(query: q, id: m.id, brandFamilies: m.brandFamilies).map { (m, $0) }
+            }
+            .sorted { $0.1 > $1.1 }
+            .map { $0.0 }
     }
 
     var body: some View {
