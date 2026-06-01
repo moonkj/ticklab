@@ -286,8 +286,7 @@ final class CommunityService: ObservableObject {
             "post_id": post.id, "reason": reason.rawValue
         ])
         _ = try? await URLSession.shared.data(for: req)
-        // 신고 즉시 로컬에서도 숨김.
-        feed.removeAll { $0.id == post.id }
+        // 신고해도 글은 계속 표시(사용자 요청). 안 보이게 하려면 차단(block), 다수 신고 시 서버 트리거가 자동 숨김.
     }
 
     func block(authorOf post: Community.Post) async {

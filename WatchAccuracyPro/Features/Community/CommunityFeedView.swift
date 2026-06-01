@@ -25,6 +25,8 @@ struct CommunityFeedView: View {
     /// 운영 ID(관리자) 활성 — 모든 글 삭제 권한 노출.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
     @State private var adminDeleteTarget: Community.Post?
+    /// 피드 범위 — false=전체, true=팔로잉한 계정만.
+    @State private var followingOnly = false
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -33,6 +35,9 @@ struct CommunityFeedView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 editorialHeader
+                if service.hasAcceptedViewerTerms && !service.feed.isEmpty {
+                    feedScopePicker
+                }
                 Group {
                     if !service.hasAcceptedViewerTerms {
                         viewerGate
@@ -164,10 +169,34 @@ struct CommunityFeedView: View {
         }
     }
 
+    /// 표시할 피드 — 팔로잉 모드면 팔로우한 작성자 글만.
+    private var displayedFeed: [Community.Post] {
+        followingOnly ? service.feed.filter { service.isFollowing($0.authorUID) } : service.feed
+    }
+
+    /// 전체 / 팔로잉 세그먼트.
+    private var feedScopePicker: some View {
+        Picker("피드 범위", selection: $followingOnly) {
+            Text("전체").tag(false)
+            Text("팔로잉").tag(true)
+        }
+        .pickerStyle(.segmented)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 6)
+    }
+
     private var feedList: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                ForEach(Array(service.feed.enumerated()), id: \.element.id) { index, post in
+                if followingOnly && displayedFeed.isEmpty {
+                    Text("팔로우한 계정의 글이 아직 없어요.\n관심 있는 계정을 팔로우해 보세요.")
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.ink3)
+                        .multilineTextAlignment(.center)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 48)
+                }
+                ForEach(Array(displayedFeed.enumerated()), id: \.element.id) { index, post in
                     CommunityPostCard(
                         post: post,
                         liked: service.isLiked(post),
