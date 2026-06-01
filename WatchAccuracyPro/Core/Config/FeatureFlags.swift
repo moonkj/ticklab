@@ -29,6 +29,11 @@ final class FeatureFlags: ObservableObject {
         communityEnabled = d.bool(forKey: "ticklab.flag.communityEnabled")
         communityGatingEnabled = d.bool(forKey: "ticklab.flag.communityGating")
         communityFreeVisibleCount = (d.object(forKey: "ticklab.flag.communityFreeN") as? Int) ?? 10
+        #if DEBUG
+        // DEBUG 미리보기 — 개발 빌드에서 커뮤니티 UX/UI 평가 가능. 릴리스는 백엔드 배포 후 원격 ON.
+        // 백엔드 미배포 상태에선 피드 로드 실패(빈 피드)지만 화면 흐름·게이트·작성기는 확인 가능.
+        communityEnabled = true
+        #endif
     }
 
     /// 커뮤니티 플래그 조정 (디버그/원격). 백엔드 준비 후 ON.
