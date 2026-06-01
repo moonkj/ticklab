@@ -331,6 +331,14 @@
 "community.daily_limit.body" = "Puedes publicar una foto al día. Inténtalo mañana.";
 "community.moderation.blocked.title" = "No se puede publicar esta foto";
 "community.moderation.blocked.body" = "Se detectó contenido sensible, así que no se puede publicar.";
+"community.caption.placeholder" = "Añade un comentario (opcional)";
+"community.review.title" = "Listo para publicar";
+"community.review.post" = "Publicar";
+"community.moderation.text.blocked.title" = "Comentario no permitido";
+"community.moderation.text.blocked.body" = "Se detectó lenguaje inapropiado. Edita tu comentario.";
+"share.post_to_community" = "Publicar en la comunidad";
+"text.filter.blocked.title" = "Texto no permitido";
+"text.filter.blocked.body" = "Se detectó lenguaje inapropiado. Edita el texto.";
 "community.upload.error" = "Error al subir";
 "community.report.title" = "Reportar";
 "community.report.inappropriate" = "Inapropiado";

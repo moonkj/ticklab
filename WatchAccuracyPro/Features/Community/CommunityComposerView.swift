@@ -11,6 +11,7 @@ struct CommunityComposerView: View {
     @State private var showingCamera = false
     @State private var showingLibrary = false
     @State private var cropPayload: CropImagePayload?
+    @State private var pendingPost: PendingPost?   // 크롭·검열 통과 → 캡션 입력(리뷰) 단계
     @State private var isUploading = false
     @State private var moderationBlocked = false
     @State private var uploadError: String?
@@ -80,6 +81,13 @@ struct CommunityComposerView: View {
                     onCancel: { cropPayload = nil }
                 )
             }
+            .fullScreenCover(item: $pendingPost) { pending in
+                CommunityReviewView(
+                    imageData: pending.data,
+                    onPost: { caption in pendingPost = nil; performUpload(data: pending.data, caption: caption) },
+                    onCancel: { pendingPost = nil }
+                )
+            }
             .overlay { if isUploading { uploadingOverlay } }
             .alert(String(localized: "community.moderation.blocked.title"), isPresented: $moderationBlocked) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
@@ -113,6 +121,7 @@ struct CommunityComposerView: View {
         }
     }
 
+    /// 크롭 완료 → 이미지 검열 + EXIF strip → 캡션 입력(리뷰) 단계로.
     private func handleCropped(_ data: Data) {
         Task {
             // 온디바이스 사전 검열 (민감 콘텐츠 차단).
@@ -122,9 +131,16 @@ struct CommunityComposerView: View {
             }
             // EXIF strip 강제 (Hard Rule #8 개정 조건: 위치/메타 제거).
             let clean = EXIFStripper.strippedJPEG(from: data) ?? data
+            await MainActor.run { pendingPost = PendingPost(data: clean) }
+        }
+    }
+
+    /// 리뷰에서 "게시" → 캡션과 함께 업로드. 캡션 텍스트 검열은 리뷰 화면에서 이미 통과.
+    private func performUpload(data: Data, caption: String) {
+        Task {
             isUploading = true
             do {
-                try await service.uploadPost(imageData: clean, brand: nil)
+                try await service.uploadPost(imageData: data, brand: nil, caption: caption)
                 isUploading = false
                 dismiss()
             } catch CommunityService.UploadError.dailyLimit {
@@ -134,6 +150,93 @@ struct CommunityComposerView: View {
                 isUploading = false
                 uploadError = error.localizedDescription
             }
+        }
+    }
+}
+
+/// 크롭·이미지검열·EXIF strip 통과한 JPEG — 캡션 입력 단계로 전달.
+struct PendingPost: Identifiable {
+    let id = UUID()
+    let data: Data
+}
+
+/// 게시 직전 리뷰 — 정사각 미리보기 + 짧은 캡션(선택) 입력 + 온디바이스 텍스트 검열.
+/// 사진 작성기와 "공유카드 → 커뮤니티" 양쪽에서 재사용.
+struct CommunityReviewView: View {
+    let imageData: Data
+    let onPost: (String) -> Void
+    let onCancel: () -> Void
+
+    @State private var caption = ""
+    @State private var textBlocked = false
+    @FocusState private var captionFocused: Bool
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if let ui = UIImage(data: imageData) {
+                        Image(uiImage: ui)
+                            .resizable()
+                            .scaledToFill()
+                            .aspectRatio(1, contentMode: .fit)
+                            .frame(maxWidth: .infinity)
+                            .clipped()
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                    }
+                    captionField
+                    Text(String(localized: "community.compose.anonymous_note"))
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColors.ink3)
+                }
+                .padding(20)
+            }
+            .background(AppColors.paper0)
+            .navigationTitle(String(localized: "community.review.title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(String(localized: "common.cancel")) { onCancel() }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(String(localized: "community.review.post")) { submit() }
+                        .fontWeight(.semibold)
+                }
+            }
+            .alert(String(localized: "community.moderation.text.blocked.title"), isPresented: $textBlocked) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: { Text(String(localized: "community.moderation.text.blocked.body")) }
+        }
+    }
+
+    private var captionField: some View {
+        VStack(alignment: .trailing, spacing: 4) {
+            TextField(String(localized: "community.caption.placeholder"),
+                      text: $caption, axis: .vertical)
+                .lineLimit(1...3)
+                .focused($captionFocused)
+                .font(AppTypography.body)
+                .padding(12)
+                .background(AppColors.paper1)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+                .onChange(of: caption) { _, new in
+                    if new.count > CommunityTextModerator.maxLength {
+                        caption = String(new.prefix(CommunityTextModerator.maxLength))
+                    }
+                }
+            Text("\(caption.count)/\(CommunityTextModerator.maxLength)")
+                .font(AppTypography.caption)
+                .foregroundStyle(AppColors.ink3)
+        }
+    }
+
+    private func submit() {
+        switch CommunityTextModerator.screen(caption) {
+        case .allowed:
+            onPost(caption)
+        case .profane, .tooLong:
+            textBlocked = true
         }
     }
 }

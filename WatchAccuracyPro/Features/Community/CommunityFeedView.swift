@@ -252,6 +252,15 @@ private struct CommunityPostCard: View {
             }
             .padding(.horizontal, 4)
             .padding(.top, 10)
+
+            if let caption = post.caption, !caption.isEmpty, !blurred {
+                Text(caption)
+                    .font(AppTypography.bodySmall)
+                    .foregroundStyle(AppColors.ink1)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 4)
+                    .padding(.top, 6)
+            }
         }
     }
 

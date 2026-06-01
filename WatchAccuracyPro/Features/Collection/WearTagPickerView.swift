@@ -10,6 +10,8 @@ struct WearTagPickerView: View {
     @State private var selected: Set<String> = []
     @State private var customTag: String = ""
     @State private var isHighlight: Bool = false
+    /// 욕설 등 금칙어 포함 시 추가/저장 차단 alert (커뮤니티 캡션 필터와 동일 정책).
+    @State private var showTextFilterAlert = false
 
     var body: some View {
         NavigationStack {
@@ -107,6 +109,11 @@ struct WearTagPickerView: View {
             isHighlight = wearLog.isHighlight
         }
         .presentationDetents([.medium])
+        .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+            Button(String(localized: "common.ok"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "text.filter.blocked.body"))
+        }
     }
 
     private func tagChip(_ label: String, icon: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
@@ -134,11 +141,21 @@ struct WearTagPickerView: View {
     private func addCustomTag() {
         let trimmed = customTag.trimmingCharacters(in: .whitespaces)
         guard !trimmed.isEmpty else { return }
+        // 욕설 등 금칙어 필터 — 커스텀 태그명은 자유 텍스트. 추가 전 차단.
+        if CommunityTextModerator.containsProfanity(trimmed) {
+            showTextFilterAlert = true
+            return
+        }
         selected.insert(trimmed)
         customTag = ""
     }
 
     private func save() {
+        // 욕설 등 금칙어 필터 — 선택된 커스텀 태그명 자유 텍스트 방어적 재검사. 저장 전 차단.
+        if selected.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return  // 저장 차단 — 시트 유지.
+        }
         wearLog.tags = Array(selected).sorted()
         wearLog.isHighlight = isHighlight
         try? context.save()

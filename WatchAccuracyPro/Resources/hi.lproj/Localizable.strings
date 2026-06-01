@@ -331,6 +331,14 @@
 "community.daily_limit.body" = "आप दिन में एक फ़ोटो पोस्ट कर सकते हैं। कल फिर कोशिश करें।";
 "community.moderation.blocked.title" = "यह फ़ोटो पोस्ट नहीं हो सकती";
 "community.moderation.blocked.body" = "संवेदनशील सामग्री का पता चला, इसलिए यह फ़ोटो पोस्ट नहीं हो सकती।";
+"community.caption.placeholder" = "एक कैप्शन जोड़ें (वैकल्पिक)";
+"community.review.title" = "पोस्ट करने के लिए तैयार";
+"community.review.post" = "पोस्ट करें";
+"community.moderation.text.blocked.title" = "कैप्शन अनुमत नहीं";
+"community.moderation.text.blocked.body" = "अनुचित भाषा पाई गई। कृपया अपना कैप्शन संपादित करें।";
+"share.post_to_community" = "कम्युनिटी में पोस्ट करें";
+"text.filter.blocked.title" = "टेक्स्ट अनुमत नहीं";
+"text.filter.blocked.body" = "अनुचित भाषा पाई गई। कृपया टेक्स्ट संपादित करें।";
 "community.upload.error" = "अपलोड विफल";
 "community.report.title" = "रिपोर्ट करें";
 "community.report.inappropriate" = "अनुचित";

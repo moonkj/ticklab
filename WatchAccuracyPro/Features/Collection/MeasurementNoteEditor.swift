@@ -11,6 +11,8 @@ struct MeasurementNoteEditor: View {
 
     @Environment(\.dismiss) private var dismiss
     @State private var draft: String = ""
+    /// 욕설 등 금칙어 포함 시 저장 차단 alert (커뮤니티 캡션 필터와 동일 정책).
+    @State private var showTextFilterAlert = false
     @FocusState private var focused: Bool
 
     /// 한 측정에 대한 메모 길이 cap — 길어지면 export/공유 시 잘림.
@@ -63,6 +65,11 @@ struct MeasurementNoteEditor: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(String(localized: "common.save")) {
+                        // 욕설 등 금칙어 필터 — 측정 메모는 자유 텍스트. 저장 전 차단.
+                        if CommunityTextModerator.containsProfanity(draft) {
+                            showTextFilterAlert = true
+                            return  // 저장 차단 — 시트 유지.
+                        }
                         let trimmed = draft.trimmingCharacters(in: .whitespacesAndNewlines)
                         measurement.notes = trimmed.isEmpty ? nil : trimmed
                         onSave()
@@ -79,6 +86,11 @@ struct MeasurementNoteEditor: View {
         .task {
             try? await Task.sleep(nanoseconds: 150_000_000)
             focused = true
+        }
+        .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+            Button(String(localized: "common.ok"), role: .cancel) {}
+        } message: {
+            Text(String(localized: "text.filter.blocked.body"))
         }
     }
 

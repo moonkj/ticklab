@@ -11,6 +11,7 @@ create table if not exists public.community_posts (
     author_uid    uuid not null default auth.uid(),
     image_path    text not null,                 -- Storage 'community' 버킷 경로
     brand         text,                          -- 선택: 브랜드 태그 (랭킹 연계)
+    caption       text,                          -- 선택: 짧은 한 줄 멘트(≤60자, 온디바이스 텍스트 검열 통과분)
     like_count    int  not null default 0,
     report_count  int  not null default 0,
     status        text not null default 'approved'  -- approved | hidden | blocked
@@ -101,6 +102,16 @@ drop trigger if exists trg_daily_limit on public.community_posts;
 create trigger trg_daily_limit
     before insert on public.community_posts
     for each row execute function public.enforce_daily_post_limit();
+
+-- 테스트 중 무제한 업로드가 필요하면 트리거만 임시 비활성:
+--   drop trigger if exists trg_daily_limit on public.community_posts;
+-- 정식 오픈 전 위 create 문을 다시 실행해 복구할 것.
+
+-- ────────────────────────────────────────────────────────────
+-- 3b. (이미 배포된 DB용) 증분 마이그레이션 — caption 컬럼 추가
+--     처음 schema 를 적용하는 경우 위 create table 에 이미 포함되어 불필요.
+-- ────────────────────────────────────────────────────────────
+alter table public.community_posts add column if not exists caption text;
 
 -- ────────────────────────────────────────────────────────────
 -- 4. RLS — 익명 Auth(auth.uid()) 기준

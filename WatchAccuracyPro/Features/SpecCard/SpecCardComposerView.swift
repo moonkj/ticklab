@@ -30,6 +30,8 @@ struct SpecCardComposerView: View {
     @StateObject private var recorder = SpecCardRecorder()
     /// Round 147: 무브먼트 picker mode.
     @State private var useCustomMovement: Bool = false
+    /// 욕설 필터 차단 alert (커뮤니티 캡션 필터와 동일 정책).
+    @State private var showTextFilterAlert: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -56,6 +58,11 @@ struct SpecCardComposerView: View {
                 }
             }
             .onAppear { loadExisting() }
+            .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "text.filter.blocked.body"))
+            }
         }
     }
 
@@ -317,6 +324,13 @@ struct SpecCardComposerView: View {
     }
 
     private func save() {
+        // 욕설 필터: 자유 입력 텍스트 필드(제목/무브먼트 커스텀/재질/다이얼/유리/노트)만 검사.
+        // 숫자 필드(사이즈/파워리저브/두께/러그/방수)는 제외. 차단 시 editor 유지.
+        let userTexts = [title, movement, caseMaterial, dialColor, crystal, note]
+        if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return
+        }
         // 사진 파일 저장 (EXIF stripped).
         var photoPath: String? = nil
         if let data = photoData {

@@ -50,8 +50,12 @@ final class CommunityService: ObservableObject {
 
     // MARK: - 하루 1장 (서버 트리거가 강제, 클라는 사전 가드 + UX)
     var canPostToday: Bool {
+        #if DEBUG
+        return true   // 개발/테스트 빌드: 하루 1장 제한 해제 (서버 trg_daily_limit 도 임시 drop 필요)
+        #else
         guard let last = defaults.object(forKey: Keys.lastPost) as? Date else { return true }
         return !Calendar.current.isDateInToday(last)
+        #endif
     }
     private func markPostedToday() { defaults.set(Date(), forKey: Keys.lastPost) }
 
@@ -194,7 +198,7 @@ final class CommunityService: ObservableObject {
     enum UploadError: Error { case notSignedIn, storageFailed, dailyLimit }
 
     /// 크롭·검열 통과한 JPEG 를 업로드. 성공 시 피드 갱신.
-    func uploadPost(imageData: Data, brand: String?) async throws {
+    func uploadPost(imageData: Data, brand: String?, caption: String? = nil) async throws {
         guard canPostToday else { throw UploadError.dailyLimit }
         await ensureSignedIn()
         guard let uid = myUID else { throw UploadError.notSignedIn }
@@ -222,6 +226,10 @@ final class CommunityService: ObservableObject {
         ins.setValue("return=representation", forHTTPHeaderField: "Prefer")
         var body: [String: Any] = ["image_path": path]
         if let brand, !brand.isEmpty { body["brand"] = brand }
+        if let caption {
+            let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
+        }
         ins.httpBody = try? JSONSerialization.data(withJSONObject: body)
         _ = try await URLSession.shared.data(for: ins)
         markPostedToday()

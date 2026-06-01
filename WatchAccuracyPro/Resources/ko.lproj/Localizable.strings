@@ -262,6 +262,14 @@
 "community.daily_limit.body" = "사진은 하루에 한 장만 올릴 수 있어요. 내일 다시 올려주세요.";
 "community.moderation.blocked.title" = "게시할 수 없는 사진";
 "community.moderation.blocked.body" = "민감한 콘텐츠가 감지되어 게시할 수 없습니다.";
+"community.caption.placeholder" = "한 줄 멘트 (선택)";
+"community.review.title" = "게시 준비";
+"community.review.post" = "게시";
+"community.moderation.text.blocked.title" = "게시할 수 없는 문구";
+"community.moderation.text.blocked.body" = "부적절한 표현이 감지되었어요. 멘트를 수정해주세요.";
+"share.post_to_community" = "커뮤니티에 올리기";
+"text.filter.blocked.title" = "사용할 수 없는 표현";
+"text.filter.blocked.body" = "부적절한 표현이 포함되어 있어요. 수정해주세요.";
 "community.upload.error" = "업로드 실패";
 "community.report.title" = "신고";
 "community.report.inappropriate" = "부적절/선정적";

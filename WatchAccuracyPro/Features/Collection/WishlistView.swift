@@ -146,6 +146,7 @@ struct WishlistComposerView: View {
     @State private var brandInputText = ""
     @State private var modelSuggestions: [String] = []
     @State private var showModelSuggestions = false
+    @State private var showTextFilterAlert = false
 
     private static let currencies = ["KRW", "USD", "EUR", "JPY", "GBP", "CHF"]
 
@@ -280,6 +281,9 @@ struct WishlistComposerView: View {
                 }
             }
             .onAppear { loadExisting() }
+            .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: { Text(String(localized: "text.filter.blocked.body")) }
             .onChange(of: photoItem) { _, new in
                 guard let new else { return }
                 Task {
@@ -301,6 +305,12 @@ struct WishlistComposerView: View {
     }
 
     private func save() {
+        // 욕설 등 부적절 텍스트 사전 필터(자유 입력 필드만 — 가격/통화 제외).
+        let userTexts = [brand, model, refNo, note]
+        if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return
+        }
         let item = existing ?? WishlistItem(brand: brand, model: model)
         item.brand = brand.trimmingCharacters(in: .whitespaces)
         item.model = model.trimmingCharacters(in: .whitespaces)

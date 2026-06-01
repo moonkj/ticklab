@@ -108,6 +108,7 @@ struct StrapComposerView: View {
     @State private var note = ""
     @State private var wearCountText = "0"
     @State private var replaceThresholdText = ""
+    @State private var showTextFilterAlert = false
 
     private static let materials = ["가죽", "러버", "나토", "메탈", "패브릭", "세라믹", "기타"]
 
@@ -153,6 +154,9 @@ struct StrapComposerView: View {
                 }
             }
             .onAppear { loadExisting() }
+            .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: { Text(String(localized: "text.filter.blocked.body")) }
         }
     }
 
@@ -165,6 +169,12 @@ struct StrapComposerView: View {
     }
 
     private func save() {
+        // 욕설 등 부적절 텍스트 사전 필터(자유 입력 필드만 — 소재 picker/숫자 제외).
+        let userTexts = [name, colorName, source, note]
+        if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return
+        }
         let strap = existing ?? Strap(watch: watch)
         strap.name = name; strap.material = material; strap.colorName = colorName
         strap.source = source.isEmpty ? nil : source; strap.note = note

@@ -39,6 +39,8 @@ struct AddWatchView: View {
     @State private var showingPhotosPicker = false
     @State private var showingPhotoSourceDialog = false
     @State private var showingDiscardAlert = false
+    /// 욕설 등 금칙어 포함 시 저장 차단 alert (커뮤니티 캡션 필터와 동일 정책).
+    @State private var showTextFilterAlert = false
     @State private var suggestion: MovementMatcher.Suggestion?
     /// 페르소나 (김재철, 워치메이커) wish: lift angle override.
     @State private var liftAngleOverride: String = ""
@@ -421,6 +423,11 @@ struct AddWatchView: View {
             } message: {
                 Text(String(localized: "addwatch.discard.message"))
             }
+            .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "text.filter.blocked.body"))
+            }
             .onAppear { loadExisting() }
         }
     }
@@ -679,6 +686,14 @@ struct AddWatchView: View {
     }
 
     private func save() {
+        // 욕설 등 금칙어 필터 — 자유 텍스트(프로즈) 필드만 검사. 저장 전 차단.
+        //   숫자(가격/lift/BPH)·통화 picker·시리얼(Keychain 별도)은 제외.
+        let userTexts = [brand, model, nickname, story, referenceNumber,
+                         receivedFrom, purchaseLocation, purchaseSalesperson]
+        if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return  // 저장 차단 — 시트 유지.
+        }
         // Round 112 (데이터 무결성 H-2): quartz + 기계식 caliber 불일치 → caliber 자동 초기화.
         if movementType == .quartz, let cal = caliber,
            let m = MovementDatabase.shared.movement(id: cal),

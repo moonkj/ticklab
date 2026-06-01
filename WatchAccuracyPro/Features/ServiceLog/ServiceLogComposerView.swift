@@ -15,6 +15,7 @@ struct ServiceLogComposerView: View {
     @State private var costText: String = ""
     @State private var note: String = ""
     @State private var showingDiscardAlert = false
+    @State private var showTextFilterAlert = false
     /// Sprint 3 (P2-11): 워치메이커 즐겨찾기 자동완성.
     @State private var showFavorites: Bool = false
     private var filteredFavorites: [String] {
@@ -94,6 +95,9 @@ struct ServiceLogComposerView: View {
             } message: {
                 Text(String(localized: "common.discard.message"))
             }
+            .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: { Text(String(localized: "text.filter.blocked.body")) }
         }
     }
 
@@ -109,6 +113,12 @@ struct ServiceLogComposerView: View {
     }
 
     private func save() {
+        // 욕설 등 부적절 텍스트 사전 필터(자유 입력 필드만 — 비용/날짜/타입 제외).
+        let userTexts = [center, note]
+        if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return
+        }
         let log = existing ?? ServiceLog(watch: watch)
         log.type = type
         log.timestamp = date

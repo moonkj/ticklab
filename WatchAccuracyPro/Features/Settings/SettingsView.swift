@@ -34,6 +34,12 @@ struct SettingsView: View {
     @State private var restoreResult: Int? = nil
     /// R6: 컬렉션 자랑 카드(이미지) 공유.
     @State private var shareCardItem: ShareCardItem? = nil
+    /// 기능 B: 공유카드 → 커뮤니티 직접 게시 흐름(크롭 → 캡션 리뷰 → 업로드).
+    @State private var communityCardCrop: CropImagePayload?
+    @State private var communityCardReview: PendingPost?
+    @State private var communityCardPendingImage: UIImage?
+    @State private var showCommunityCardEULA = false
+    @State private var communityCardError: String?
     /// Sprint 10 (P3-13): 사용자 프로필
     @State private var showingProfile: Bool = false
 
@@ -434,6 +440,51 @@ struct SettingsView: View {
                     .sheet(item: $shareCardItem) { item in
                         ActivityShareSheet(items: [item.url])
                     }
+                    // 기능 B: 공유카드를 커뮤니티에 바로 게시 (커뮤니티 활성 시에만 노출).
+                    if FeatureFlags.shared.communityEnabled {
+                        Button {
+                            startCommunityCardPost()
+                        } label: {
+                            HStack {
+                                Image(systemName: "person.2.fill").frame(width: 24)
+                                Text(String(localized: "share.post_to_community"))
+                                Spacer()
+                                Image(systemName: "paperplane")
+                                    .font(.system(size: 13)).foregroundStyle(AppColors.ink3)
+                            }
+                            .foregroundStyle(AppColors.ink0)
+                        }
+                        .fullScreenCover(item: $communityCardCrop) { payload in
+                            PhotoCropView(
+                                image: payload.image, aspect: 1.0,
+                                onComplete: { data in communityCardCrop = nil; handleCommunityCardCropped(data) },
+                                onCancel: { communityCardCrop = nil }
+                            )
+                        }
+                        .fullScreenCover(item: $communityCardReview) { pending in
+                            CommunityReviewView(
+                                imageData: pending.data,
+                                onPost: { caption in communityCardReview = nil; uploadCommunityCard(data: pending.data, caption: caption) },
+                                onCancel: { communityCardReview = nil }
+                            )
+                        }
+                        .sheet(isPresented: $showCommunityCardEULA) {
+                            CommunityEULAView {
+                                CommunityService.shared.acceptEULA()
+                                if let img = communityCardPendingImage {
+                                    communityCardPendingImage = nil
+                                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) {
+                                        communityCardCrop = CropImagePayload(image: img)
+                                    }
+                                }
+                            }
+                        }
+                        .alert(String(localized: "community.upload.error"), isPresented: Binding(
+                            get: { communityCardError != nil }, set: { if !$0 { communityCardError = nil } }
+                        )) {
+                            Button(String(localized: "common.ok"), role: .cancel) { communityCardError = nil }
+                        } message: { Text(communityCardError ?? "") }
+                    }
                     // Sprint 6 (P2-7): 컬렉션 마스터 리포트 PDF
                     let masterData = MasterReportGenerator.generate(watches: allWatches, includePrices: true)
                     let masterURL = FileManager.default.temporaryDirectory
@@ -700,6 +751,43 @@ struct SettingsView: View {
         defer { if access { url.stopAccessingSecurityScopedResource() } }
         guard let data = try? Data(contentsOf: url) else { restoreResult = 0; return }
         restoreResult = DataExportService.importWatches(from: data, into: modelContext)
+    }
+
+    // MARK: - 기능 B: 공유카드 → 커뮤니티 게시
+
+    /// 컬렉션 공유카드를 생성해 EULA → 1:1 크롭 → 캡션 리뷰 → 업로드 흐름으로 진입.
+    private func startCommunityCardPost() {
+        guard CommunityService.shared.canPostToday else {
+            communityCardError = String(localized: "community.daily_limit.body"); return
+        }
+        guard let url = CollectionShareCardGenerator.generate(watches: allWatches, ownerName: UserProfile.displayName),
+              let img = UIImage(contentsOfFile: url.path) else {
+            communityCardError = String(localized: "community.upload.error"); return
+        }
+        if CommunityService.shared.hasAcceptedEULA {
+            communityCardCrop = CropImagePayload(image: img)
+        } else {
+            communityCardPendingImage = img
+            showCommunityCardEULA = true
+        }
+    }
+
+    private func handleCommunityCardCropped(_ data: Data) {
+        // EXIF strip 강제(Hard Rule #8). 공유카드는 앱 생성물이라 민감콘텐츠 검열은 생략.
+        let clean = EXIFStripper.strippedJPEG(from: data) ?? data
+        communityCardReview = PendingPost(data: clean)
+    }
+
+    private func uploadCommunityCard(data: Data, caption: String) {
+        Task {
+            do {
+                try await CommunityService.shared.uploadPost(imageData: data, brand: nil, caption: caption)
+            } catch CommunityService.UploadError.dailyLimit {
+                communityCardError = String(localized: "community.daily_limit.body")
+            } catch {
+                communityCardError = error.localizedDescription
+            }
+        }
     }
 
     private func reschedulePick() {

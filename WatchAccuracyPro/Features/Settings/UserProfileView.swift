@@ -13,6 +13,8 @@ struct UserProfileView: View {
     @State private var profilePhotoData: Data?
     @State private var photoItem: PhotosPickerItem?
     @State private var referralCode: String = ReferralService.referralCode
+    /// 욕설 필터 차단 alert (커뮤니티 캡션 필터와 동일 정책).
+    @State private var showTextFilterAlert: Bool = false
 
     private let nameKey = "ticklab.profile.name"
     private let yearKey = "ticklab.profile.startYear"
@@ -112,11 +114,19 @@ struct UserProfileView: View {
                     Button(String(localized: "common.cancel")) { dismiss() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "common.save")) { save(); dismiss() }
-                        .fontWeight(.semibold)
+                    Button(String(localized: "common.save")) {
+                        // 욕설 필터 통과 시에만 저장·dismiss. 차단되면 editor 유지.
+                        if save() { dismiss() }
+                    }
+                    .fontWeight(.semibold)
                 }
             }
             .onAppear { load() }
+            .alert(String(localized: "text.filter.blocked.title"), isPresented: $showTextFilterAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "text.filter.blocked.body"))
+            }
             .onChange(of: photoItem) { _, new in
                 guard let new else { return }
                 Task {
@@ -140,7 +150,15 @@ struct UserProfileView: View {
         profilePhotoData = d.data(forKey: photoKey)
     }
 
-    private func save() {
+    /// 저장 성공 여부 반환. 욕설 필터 차단 시 false (저장 안 함, alert 표시).
+    /// 자유 입력 텍스트(이름/좋아하는 브랜드/소개글)만 검사. 연도·딜러 토글·사진은 제외.
+    @discardableResult
+    private func save() -> Bool {
+        let userTexts = [displayName, favoriteBrands, bio]
+        if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
+            showTextFilterAlert = true
+            return false
+        }
         let d = UserDefaults.standard
         d.set(displayName, forKey: nameKey)
         d.set(collectionStartYear, forKey: yearKey)
@@ -148,6 +166,7 @@ struct UserProfileView: View {
         d.set(isDealerBadge, forKey: dealerKey)
         d.set(bio, forKey: bioKey)
         d.set(profilePhotoData, forKey: photoKey)
+        return true
     }
 }
 

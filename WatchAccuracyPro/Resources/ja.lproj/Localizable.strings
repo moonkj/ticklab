@@ -331,6 +331,14 @@
 "community.daily_limit.body" = "写真は1日1枚まで。明日もう一度どうぞ。";
 "community.moderation.blocked.title" = "投稿できない写真";
 "community.moderation.blocked.body" = "センシティブなコンテンツが検出されたため投稿できません。";
+"community.caption.placeholder" = "ひとことコメント（任意）";
+"community.review.title" = "投稿の確認";
+"community.review.post" = "投稿";
+"community.moderation.text.blocked.title" = "投稿できない文章";
+"community.moderation.text.blocked.body" = "不適切な表現が検出されました。コメントを修正してください。";
+"share.post_to_community" = "コミュニティに投稿";
+"text.filter.blocked.title" = "使用できない表現";
+"text.filter.blocked.body" = "不適切な表現が含まれています。修正してください。";
 "community.upload.error" = "アップロード失敗";
 "community.report.title" = "報告";
 "community.report.inappropriate" = "不適切・わいせつ";

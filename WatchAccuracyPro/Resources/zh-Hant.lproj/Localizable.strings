@@ -331,6 +331,14 @@
 "community.daily_limit.body" = "每天只能發布一張照片。明天再來吧。";
 "community.moderation.blocked.title" = "無法發布此照片";
 "community.moderation.blocked.body" = "偵測到敏感內容，無法發布此照片。";
+"community.caption.placeholder" = "新增一句話（選填）";
+"community.review.title" = "準備發佈";
+"community.review.post" = "發佈";
+"community.moderation.text.blocked.title" = "無法發佈的文字";
+"community.moderation.text.blocked.body" = "偵測到不當用語，請修改文字。";
+"share.post_to_community" = "發佈到社群";
+"text.filter.blocked.title" = "無法使用的文字";
+"text.filter.blocked.body" = "包含不當用語，請修改。";
 "community.upload.error" = "上傳失敗";
 "community.report.title" = "檢舉";
 "community.report.inappropriate" = "不當/色情";

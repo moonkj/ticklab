@@ -331,6 +331,14 @@
 "community.daily_limit.body" = "每天只能发布一张照片。明天再来吧。";
 "community.moderation.blocked.title" = "无法发布该照片";
 "community.moderation.blocked.body" = "检测到敏感内容，无法发布该照片。";
+"community.caption.placeholder" = "添加一句话（可选）";
+"community.review.title" = "准备发布";
+"community.review.post" = "发布";
+"community.moderation.text.blocked.title" = "无法发布的文字";
+"community.moderation.text.blocked.body" = "检测到不当用语，请修改文字。";
+"share.post_to_community" = "发布到社区";
+"text.filter.blocked.title" = "无法使用的文字";
+"text.filter.blocked.body" = "包含不当用语，请修改。";
 "community.upload.error" = "上传失败";
 "community.report.title" = "举报";
 "community.report.inappropriate" = "不当/色情";

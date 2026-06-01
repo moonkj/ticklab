@@ -36,3 +36,52 @@ enum CommunityModerationService {
         #endif
     }
 }
+
+/// 커뮤니티 **캡션(짧은 멘트) 온디바이스 텍스트 검열**.
+/// 자유 텍스트 UGC 가 생기면 App Store Guideline 1.2 상 욕설·비방 1차 필터가 필요 →
+/// 외부 API 없이(비용·Hard Rule #6) 금칙어 리스트 기반 best-effort 차단 + 길이 제한.
+/// 못 잡는 케이스는 기존 신고/차단(서버) 흐름이 보완한다. 리스트는 시작 셋 — 운영하며 확장.
+enum CommunityTextModerator {
+
+    /// 캡션 최대 길이(자). UX·남용 방지.
+    static let maxLength = 60
+
+    /// 금칙어(소문자·기호제거 정규화 후 부분일치). 명백한 욕설·혐오·성적 표현 중심.
+    /// 한국어는 어절 경계가 없어 substring 매칭. 우회(공백·기호 삽입)는 정규화로 일부 차단.
+    private static let banned: Set<String> = [
+        // ko
+        "씨발", "시발", "씨바", "ㅅㅂ", "병신", "ㅂㅅ", "개새끼", "새끼", "지랄",
+        "좆", "보지", "자지", "섹스", "야동", "창녀", "걸레", "느금마", "니애미", "엠창",
+        // en
+        "fuck", "shit", "bitch", "asshole", "cunt", "dick", "pussy", "porn",
+        "nigger", "faggot", "whore", "slut", "rape",
+    ]
+
+    enum Result { case allowed, tooLong, profane }
+
+    /// 캡션 검열(길이 + 금칙어). trim 후 빈 문자열은 allowed(선택 항목).
+    static func screen(_ raw: String) -> Result {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty { return .allowed }
+        if trimmed.count > maxLength { return .tooLong }
+        return containsProfanity(trimmed) ? .profane : .allowed
+    }
+
+    /// 길이 무관 — 금칙어 포함 여부만. 앱 전역 텍스트 입력 필드(메모·이름 등)용.
+    /// 일반 필드는 길이 제한이 없으므로 `screen` 대신 이걸 쓴다.
+    static func containsProfanity(_ raw: String) -> Bool {
+        let normalized = normalize(raw)
+        for word in banned where normalized.contains(word) { return true }
+        return false
+    }
+
+    /// 소문자화 + 영숫자/한글 외 문자 제거(공백·기호 삽입 우회 완화).
+    private static func normalize(_ s: String) -> String {
+        let lowered = s.lowercased()
+        return String(lowered.unicodeScalars.filter {
+            CharacterSet.alphanumerics.contains($0)
+                || (0xAC00...0xD7A3).contains($0.value)   // 한글 음절
+                || (0x3130...0x318F).contains($0.value)   // 한글 자모(ㅅㅂ 등)
+        })
+    }
+}

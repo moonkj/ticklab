@@ -338,6 +338,14 @@
 "community.daily_limit.body" = "You can post one photo per day. Try again tomorrow.";
 "community.moderation.blocked.title" = "Can't post this photo";
 "community.moderation.blocked.body" = "Sensitive content was detected, so this photo can't be posted.";
+"community.caption.placeholder" = "Add a caption (optional)";
+"community.review.title" = "Ready to Post";
+"community.review.post" = "Post";
+"community.moderation.text.blocked.title" = "Caption Not Allowed";
+"community.moderation.text.blocked.body" = "Inappropriate language was detected. Please edit your caption.";
+"share.post_to_community" = "Post to Community";
+"text.filter.blocked.title" = "Text Not Allowed";
+"text.filter.blocked.body" = "Inappropriate language was detected. Please edit the text.";
 "community.upload.error" = "Upload failed";
 "community.report.title" = "Report";
 "community.report.inappropriate" = "Inappropriate";

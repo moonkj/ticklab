@@ -15,6 +15,7 @@ enum Community {
         let authorUID: String       // 내부 식별자(화면엔 비노출 — 익명)
         let imagePath: String       // Storage 'community' 경로
         let brand: String?
+        let caption: String?        // 짧은 한 줄 멘트(선택) — 온디바이스 텍스트 검열 통과분만
         var likeCount: Int
         let status: PostStatus
         let createdAt: Date
@@ -24,6 +25,7 @@ enum Community {
             case authorUID = "author_uid"
             case imagePath = "image_path"
             case brand
+            case caption
             case likeCount = "like_count"
             case status
             case createdAt = "created_at"
