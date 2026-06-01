@@ -22,6 +22,9 @@ struct CommunityFeedView: View {
     @State private var shareItem: ShareCardItem?
     @State private var showSaved = false
     @State private var showProfile = false
+    /// 운영 ID(관리자) 활성 — 모든 글 삭제 권한 노출.
+    @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
+    @State private var adminDeleteTarget: Community.Post?
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -97,6 +100,17 @@ struct CommunityFeedView: View {
                     }
                     Button(String(localized: "common.cancel"), role: .cancel) { reportTarget = nil }
                 }
+            }
+            .confirmationDialog(
+                "이 게시물을 삭제할까요? (관리자)",
+                isPresented: Binding(get: { adminDeleteTarget != nil }, set: { if !$0 { adminDeleteTarget = nil } }),
+                titleVisibility: .visible
+            ) {
+                Button(String(localized: "common.delete"), role: .destructive) {
+                    if let target = adminDeleteTarget { Task { await service.adminDeletePost(target) } }
+                    adminDeleteTarget = nil
+                }
+                Button(String(localized: "common.cancel"), role: .cancel) { adminDeleteTarget = nil }
             }
         }
     }
@@ -177,7 +191,8 @@ struct CommunityFeedView: View {
                             Task { await service.toggleBookmark(post) }
                         },
                         onShare: { sharePost(post) },
-                        onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil
+                        onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
+                        onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
                     )
                     // 인스타 스타일 게시물 구분선.
                     Rectangle().fill(AppColors.rule).frame(height: 0.5)
@@ -376,6 +391,8 @@ private struct CommunityPostCard: View {
     let onBookmark: () -> Void
     let onShare: () -> Void
     let onDelete: (() -> Void)?
+    /// 관리자(운영 ID) 전용 — 모든 글 삭제. nil 이면 미노출.
+    var onAdminDelete: (() -> Void)? = nil
 
     // 코드리뷰: 카드는 service 를 관찰하면 안 됨(좋아요 1개에 전체 피드 re-render). imageURL 은
     //   순수 함수라 shared 에서 직접 호출 — 관찰 제거로 피드 성능 보호.
@@ -518,6 +535,11 @@ private struct CommunityPostCard: View {
             if let onDelete {
                 Button(role: .destructive, action: onDelete) {
                     Label(String(localized: "common.delete"), systemImage: "trash")
+                }
+            }
+            if let onAdminDelete {
+                Button(role: .destructive, action: onAdminDelete) {
+                    Label("관리자 삭제", systemImage: "trash.slash")
                 }
             }
         } label: {

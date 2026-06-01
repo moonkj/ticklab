@@ -476,6 +476,16 @@ final class CommunityService: ObservableObject {
         return (200...299).contains(http.statusCode)
     }
 
+    /// 게시물 영구 삭제 (admin DELETE RLS 필요). 로컬 피드에서도 제거.
+    @discardableResult
+    func adminDeletePost(_ post: Community.Post) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?id=eq.\(post.id)") else { return false }
+        guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
+              let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode) else { return false }
+        feed.removeAll { $0.id == post.id }
+        return true
+    }
+
     /// PostgREST count=exact → Content-Range 헤더의 total 파싱.
     private func countRows(table: String, selectCol: String, filter: String) async -> Int {
         guard let url = URL(string: "\(baseURL)/rest/v1/\(table)?select=\(selectCol)&limit=1&\(filter)") else { return 0 }

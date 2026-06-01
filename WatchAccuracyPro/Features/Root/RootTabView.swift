@@ -15,6 +15,8 @@ struct RootTabView: View {
     @Environment(\.modelContext) private var modelContext
     @ObservedObject private var flags = FeatureFlags.shared
     @State private var selected: Tab = .collection
+    /// 운영 ID(관리자) 활성 — 앱 상단에 "관리자 모드" 배너 표시.
+    @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
 
     // Round 176: 각 탭의 NavigationStack path — Binding 으로 child view 에 주입.
     @State private var collectionPath = NavigationPath()
@@ -125,6 +127,18 @@ struct RootTabView: View {
         // 사용자 보고 fix: 글로벌 accent gold 가 alert 버튼까지 propagate → 가독성 ↓ (#C9A961 on white ~2.8:1).
         //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.
         .tint(AppColors.primaryDeep)
+        // 관리자(운영 ID) 활성 시 앱 상단에 상시 표시 — 일반/관리자 구분.
+        .safeAreaInset(edge: .top) {
+            if actingAsTickLab {
+                Text("관리자 모드")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(2)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 5)
+                    .background(AppColors.ink0)
+            }
+        }
         .environment(\.purchaseRouter, purchaseRouter)
         // shell-level paywall — 한 번에 하나만 띄움. 4 분산 sheet 대체.
         .sheet(isPresented: $purchaseRouter.isPresenting) {

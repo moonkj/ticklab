@@ -37,5 +37,10 @@ drop policy if exists posts_admin_update on public.community_posts;
 create policy posts_admin_update on public.community_posts
     for update using (public.is_admin(auth.uid())) with check (public.is_admin(auth.uid()));
 
+-- 4) 게시물 삭제 — admin 은 모든 글 DELETE 가능 (운영 모더레이션)
+drop policy if exists posts_admin_delete on public.community_posts;
+create policy posts_admin_delete on public.community_posts
+    for delete using (public.is_admin(auth.uid()));
+
 -- (선택) 오래된 presence 정리 — 5분 지난 행 삭제하는 스케줄 잡을 두면 테이블 가벼움.
 -- delete from public.community_presence where last_seen < now() - interval '10 minutes';
