@@ -17,9 +17,20 @@ struct CollectionValueCard: View {
     }
 
     private var formattedTotal: String {
+        let currency = priceWatches.first?.purchaseCurrency ?? "KRW"
+        // 사용자 요청: KRW 는 "1,234.5 만원" 형태(만 단위 · 천단위 콤마 · 소수 1자리).
+        if currency == "KRW" {
+            let manwon = NSDecimalNumber(decimal: totalValue).doubleValue / 10_000.0
+            let fmt = NumberFormatter()
+            fmt.numberStyle = .decimal
+            fmt.minimumFractionDigits = 1
+            fmt.maximumFractionDigits = 1
+            let num = fmt.string(from: NSNumber(value: manwon)) ?? "0.0"
+            return String(format: String(localized: "collection.value.manwon"), num)
+        }
         let fmt = NumberFormatter()
         fmt.numberStyle = .currency
-        fmt.currencyCode = priceWatches.first?.purchaseCurrency ?? "KRW"
+        fmt.currencyCode = currency
         fmt.maximumFractionDigits = 0
         return fmt.string(from: NSDecimalNumber(decimal: totalValue)) ?? "—"
     }

@@ -1581,6 +1581,7 @@
 
 /* Sprint 10 — P3-8 컬렉션 가치 투명성 */
 "collection.value.title" = "컬렉션 가치";
+"collection.value.manwon" = "%@ 만원";
 "collection.value.count" = "%d / 전체 %d개 시계 기준";
 "collection.value.info.title" = "계산 기준";
 "collection.value.info.updated" = "마지막 업데이트: %@";

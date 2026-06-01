@@ -1541,6 +1541,7 @@
 "wishlist.note" = "Note";
 "menu.wishlist" = "Dream Wishlist";
 "collection.value.title" = "Collection Value";
+"collection.value.manwon" = "%@ मान-वोन";
 "collection.value.count" = "%d of %d watches";
 "collection.value.info.title" = "How It's Calculated";
 "collection.value.info.updated" = "Last updated: %@";
