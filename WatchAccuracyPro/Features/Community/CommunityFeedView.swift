@@ -13,6 +13,8 @@ struct CommunityFeedView: View {
     @State private var showDailyLimit = false
     @State private var reportTarget: Community.Post?
     @State private var showViewerGate = false
+    /// 최초 피드 로드 완료 여부 — 로딩 중에 "게시물 없음"이 깜빡이는 것 방지.
+    @State private var didInitialLoad = false
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -23,7 +25,8 @@ struct CommunityFeedView: View {
                 if !service.hasAcceptedViewerTerms {
                     viewerGate
                 } else if service.feed.isEmpty {
-                    emptyState
+                    // 최초 로드 끝나기 전엔 로딩 표시 — "게시물 없음" 깜빡임 방지.
+                    if didInitialLoad { emptyState } else { loadingState }
                 } else {
                     feedList
                 }
@@ -46,7 +49,12 @@ struct CommunityFeedView: View {
             }
             .task {
                 // App Store 1.2: 뷰어도 약관 동의 후에만 UGC 노출 + 익명가입(Round 3 컴플라이언스).
-                if service.hasAcceptedViewerTerms { await service.loadFeed() } else { showViewerGate = true }
+                if service.hasAcceptedViewerTerms {
+                    await service.loadFeed()
+                    didInitialLoad = true
+                } else {
+                    showViewerGate = true
+                }
             }
             .refreshable { if service.hasAcceptedViewerTerms { await service.loadFeed() } }
             .sheet(isPresented: $showComposer) {
@@ -59,7 +67,7 @@ struct CommunityFeedView: View {
                 CommunityEULAView {
                     service.acceptViewerTerms()
                     showViewerGate = false
-                    Task { await service.loadFeed() }
+                    Task { await service.loadFeed(); didInitialLoad = true }
                 }
             }
             .alert(String(localized: "community.daily_limit.title"), isPresented: $showDailyLimit) {
@@ -144,6 +152,13 @@ struct CommunityFeedView: View {
         }
         .padding(40)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    /// 최초 로딩 — 빈 화면 대신 스피너(게시물 없음 깜빡임 방지).
+    private var loadingState: some View {
+        ProgressView()
+            .tint(AppColors.ink2)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyState: some View {
