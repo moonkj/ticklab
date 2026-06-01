@@ -70,6 +70,7 @@
 		36C2B82C6131CB8239301BFE /* MeasurementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D1006CC82C071853A73BD9 /* MeasurementViewModel.swift */; };
 		38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */; };
 		3A212C29B66687AD94FF5153 /* TrendDiagnosisService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0E1602A5A1672200C550B86 /* TrendDiagnosisService.swift */; };
+		3AA032EECACF48DB232C7F90 /* CommunityModerationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F6AF6DA667E214ECD8C46DA /* CommunityModerationTests.swift */; };
 		3B773AC96D9BCA257EA98347 /* MetricKitSubscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DA44D2E8DA78C271B994B1E /* MetricKitSubscriber.swift */; };
 		3FC8620F7EA308EFEADF4D3C /* DSPFiltersTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */; };
 		3FE38380443E433BA77C8EFE /* ConfidenceScorer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBAB929B812C45C8846F3FE7 /* ConfidenceScorer.swift */; };
@@ -77,6 +78,7 @@
 		4083CD91BD77B19A7B86FBAE /* DSPPipelineLiveStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D4666F7268951B503D87251 /* DSPPipelineLiveStreamTests.swift */; };
 		40D4EF784CD974B1938BC096 /* JournalComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CE37C38FFCCB336CA05EBCD /* JournalComposerView.swift */; };
 		415504A195095049C4FFC03C /* WearLogService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A257E0E10995A8BAF36082D9 /* WearLogService.swift */; };
+		41E6C178A8251B34FE437A06 /* CommunityModelDecodeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44DE537E12590F348FDE04AE /* CommunityModelDecodeTests.swift */; };
 		4213E52F2A52302167A13CD8 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434603408110ED068E285F1D /* Colors.swift */; };
 		424BAABA02A09B0AE4D9AD00 /* BeatDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50549C4E534FE82AB2BE1CE6 /* BeatDetectorTests.swift */; };
 		42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */; };
@@ -89,6 +91,7 @@
 		4A81DC530A0EB04922985073 /* WatchRecommendationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F3D35C570A97B6BFD596270 /* WatchRecommendationService.swift */; };
 		4AB6F1F297397E9A6D0620DE /* CameraImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 440628D64E2AD525A2B10DA3 /* CameraImagePicker.swift */; };
 		4ADD04419FE75C1D0BA9486C /* NoiseSuppressor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D108343299A885B737F001A1 /* NoiseSuppressor.swift */; };
+		4CFF49C6F4F0A99D43D1B990 /* CommunityJWTTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D0C205ABA318DC38E1FBC54 /* CommunityJWTTests.swift */; };
 		4D79179B03097BA6CA041622 /* SpecCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B32F34BE6A08EC72DF89798 /* SpecCard.swift */; };
 		4D8A3A5B93BE8965A5F2821E /* MockURLProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1D06D694095476911C61C1 /* MockURLProtocol.swift */; };
 		4DA466650FB44A1B4458FD84 /* Chip.swift in Sources */ = {isa = PBXBuildFile; fileRef = F341EE5EE217E7EB16CC927F /* Chip.swift */; };
@@ -147,6 +150,7 @@
 		8A70BB1CD654EE24EB2BA6E1 /* DSPPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */; };
 		8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E460665285032C7AAEBC05E4 /* Movement.swift */; };
 		8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B179281822F0A79F6C7494A1 /* WearLog.swift */; };
+		8D80677ACAB34AB22CB34AB6 /* SmartwatchBatteryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5D31E0AD826DDDB1AD488D /* SmartwatchBatteryTests.swift */; };
 		900D3F073538D3098D9AC89E /* ServiceLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09F8C4A5F535A21D8C8AEF /* ServiceLog.swift */; };
 		966D900DC82453601AA07667 /* LocalizationParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B67DE1AE5717360E55EB0 /* LocalizationParityTests.swift */; };
 		96E18BF4543AA4B570297798 /* MovementPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */; };
@@ -166,6 +170,7 @@
 		A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */; };
 		A85B3D645551F1C8177F6557 /* AudioInputManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B917C29646CD8DD43F3FFD6 /* AudioInputManager.swift */; };
 		A9EAB110F1CC595BD08AD4F9 /* WatchDetailRowComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */; };
+		AA08CCD233F01C0B355D6D0F /* YouTubeFeedTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D77448D95D10F23488C6044 /* YouTubeFeedTests.swift */; };
 		AA4C23FA890988DD78C469EF /* AudioCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */; };
 		AADCCD5D8C1AA5197C1A19FD /* ConfidenceBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D78FD673B1E745729ADB94 /* ConfidenceBadge.swift */; };
 		AB28B298A4F8237FA0768A8B /* PhotoGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 792CD44FF20A6072E7DCC678 /* PhotoGalleryView.swift */; };
@@ -332,6 +337,7 @@
 		38680208F755CAE7C44D2B6D /* MeasurementActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementActivityAttributes.swift; sourceTree = "<group>"; };
 		39ABF52B048CB4F9DA9040F9 /* StrapListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrapListView.swift; sourceTree = "<group>"; };
 		3BA28D60EFB1492D1A69505E /* MagneticFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticFieldView.swift; sourceTree = "<group>"; };
+		3D5D31E0AD826DDDB1AD488D /* SmartwatchBatteryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmartwatchBatteryTests.swift; sourceTree = "<group>"; };
 		3D7B73CA7D38E14891EFF33C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		3FA093E36FD71D6E5C18697B /* WatchDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDetailView.swift; sourceTree = "<group>"; };
 		3FBF743788714E3756024905 /* MovementDB.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = MovementDB.json; sourceTree = "<group>"; };
@@ -342,6 +348,7 @@
 		434603408110ED068E285F1D /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		440628D64E2AD525A2B10DA3 /* CameraImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraImagePicker.swift; sourceTree = "<group>"; };
 		44291BE24CC44FB16EFF8B60 /* WatchDetailRowComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDetailRowComponents.swift; sourceTree = "<group>"; };
+		44DE537E12590F348FDE04AE /* CommunityModelDecodeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityModelDecodeTests.swift; sourceTree = "<group>"; };
 		4579536C7CC814E82192FBCB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		45F3AD76B382E83F02230C55 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		47337BB60F08B5060EE99A57 /* ReferralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralView.swift; sourceTree = "<group>"; };
@@ -354,6 +361,7 @@
 		4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimator.swift; sourceTree = "<group>"; };
 		4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBandEnvelope.swift; sourceTree = "<group>"; };
 		4C71660316049739E9F0D772 /* BandPassFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandPassFilter.swift; sourceTree = "<group>"; };
+		4D0C205ABA318DC38E1FBC54 /* CommunityJWTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityJWTTests.swift; sourceTree = "<group>"; };
 		4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeatErrorCalculatorTests.swift; sourceTree = "<group>"; };
 		4D5F3B8F980C953CE9B08EA6 /* WindingHintToast.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindingHintToast.swift; sourceTree = "<group>"; };
 		4DAE00D3FC0E2D6BE9B20D5A /* MeasurementNoteEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementNoteEditor.swift; sourceTree = "<group>"; };
@@ -394,6 +402,7 @@
 		6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimator.swift; sourceTree = "<group>"; };
 		6F2A14F04A20422E0697A398 /* SupabaseBrandLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseBrandLeagueService.swift; sourceTree = "<group>"; };
 		6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementViewModelTests.swift; sourceTree = "<group>"; };
+		6F6AF6DA667E214ECD8C46DA /* CommunityModerationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityModerationTests.swift; sourceTree = "<group>"; };
 		715BC647776CCFC522EA86BC /* WatchModelSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModelSuggestionService.swift; sourceTree = "<group>"; };
 		7213C8CD99CB49E77B212DDC /* DSPDownsampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPDownsampleTests.swift; sourceTree = "<group>"; };
 		73F23C24460A6D08DB54AE4D /* MeasurementLiveActivityWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementLiveActivityWidget.swift; sourceTree = "<group>"; };
@@ -418,6 +427,7 @@
 		8ACF1236E13BBF5BC58E0E1A /* SpecCardListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardListView.swift; sourceTree = "<group>"; };
 		8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreEmphasisFilter.swift; sourceTree = "<group>"; };
 		8C61A0EC7E6B49980D6EAB40 /* JournalFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalFeedView.swift; sourceTree = "<group>"; };
+		8D77448D95D10F23488C6044 /* YouTubeFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeFeedTests.swift; sourceTree = "<group>"; };
 		8E6F59BEB9DB87D747A88169 /* SpectralFluxExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectralFluxExtractor.swift; sourceTree = "<group>"; };
 		9011AAB11CBD8E146ECAC6E1 /* BrandNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandNewsView.swift; sourceTree = "<group>"; };
 		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -1110,6 +1120,9 @@
 				50549C4E534FE82AB2BE1CE6 /* BeatDetectorTests.swift */,
 				4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */,
 				47442C30079AEE977B647474 /* BPHEstimatorTests.swift */,
+				4D0C205ABA318DC38E1FBC54 /* CommunityJWTTests.swift */,
+				44DE537E12590F348FDE04AE /* CommunityModelDecodeTests.swift */,
+				6F6AF6DA667E214ECD8C46DA /* CommunityModerationTests.swift */,
 				52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */,
 				147FD52A1A20999D7CCBD88E /* DataExportServiceTests.swift */,
 				7213C8CD99CB49E77B212DDC /* DSPDownsampleTests.swift */,
@@ -1128,9 +1141,11 @@
 				DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */,
 				90B8B019EE25542BDB9D3A2A /* SanitizationTests.swift */,
 				77C3343B7DA5DC9BE3451E21 /* SharedSnapshotStoreTests.swift */,
+				3D5D31E0AD826DDDB1AD488D /* SmartwatchBatteryTests.swift */,
 				5A97745FEBC88A23361251E8 /* SpectralFluxBPHIntegrationTests.swift */,
 				227978A140CA929AA168F9CD /* SpectralFluxExtractorTests.swift */,
 				906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */,
+				8D77448D95D10F23488C6044 /* YouTubeFeedTests.swift */,
 			);
 			path = WatchAccuracyProTests;
 			sourceTree = "<group>";
@@ -1410,6 +1425,9 @@
 				2CF97B809BB33540DCB76FBE /* BeatDetectorClusterSubPulsesTests.swift in Sources */,
 				424BAABA02A09B0AE4D9AD00 /* BeatDetectorTests.swift in Sources */,
 				0CF6D20369F26C6371F0B92F /* BeatErrorCalculatorTests.swift in Sources */,
+				4CFF49C6F4F0A99D43D1B990 /* CommunityJWTTests.swift in Sources */,
+				41E6C178A8251B34FE437A06 /* CommunityModelDecodeTests.swift in Sources */,
+				3AA032EECACF48DB232C7F90 /* CommunityModerationTests.swift in Sources */,
 				5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */,
 				DBE8CAD22D430E9DECC0FAED /* DSPDownsampleTests.swift in Sources */,
 				3FC8620F7EA308EFEADF4D3C /* DSPFiltersTests.swift in Sources */,
@@ -1429,11 +1447,13 @@
 				B4CEB0425189CF259812D3E2 /* ReviewRequestServiceTests.swift in Sources */,
 				2074B70DCD2BE24E32008ED9 /* SanitizationTests.swift in Sources */,
 				148D50004B9358C37DB6E1EF /* SharedSnapshotStoreTests.swift in Sources */,
+				8D80677ACAB34AB22CB34AB6 /* SmartwatchBatteryTests.swift in Sources */,
 				5A896560E27D0CE652E12A6F /* SpectralFluxBPHIntegrationTests.swift in Sources */,
 				80A433977287750B9080D2AB /* SpectralFluxExtractorTests.swift in Sources */,
 				53AC1BF60673AFE1E36A60A0 /* SyntheticAudioSource.swift in Sources */,
 				DAD07F22F7161CCDC0D90EA4 /* SyntheticSignal.swift in Sources */,
 				BAC8E110CABC5A3A5BE9401F /* WearLogServiceTests.swift in Sources */,
+				AA08CCD233F01C0B355D6D0F /* YouTubeFeedTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
