@@ -369,7 +369,7 @@ struct WatchDetailView: View {
                 dismiss()
             }
         } message: {
-            Text(String(localized: "watch.delete.confirm.body"))
+            Text(String(format: NSLocalizedString("watch.delete.confirm.body", comment: ""), watch.displayName))
         }
         // Round 175: 알림 권한 거부 안내.
         .alert(

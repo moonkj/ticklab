@@ -461,7 +461,7 @@
 "watch.menu.favorite.remove" = "पसंदीदा से हटाएँ";
 "watch.menu.delete" = "घड़ी हटाएँ";
 "watch.delete.confirm.title" = "घड़ी हटाएँ";
-"watch.delete.confirm.body" = "यह इस घड़ी की सभी माप, जर्नल प्रविष्टियाँ और स्पेक कार्ड हटा देगा। यह वापस नहीं किया जा सकता।";
+"watch.delete.confirm.body" = "%@ हटाने पर इसकी सभी माप, जर्नल प्रविष्टियाँ और स्पेक कार्ड भी हट जाएंगे। यह वापस नहीं किया जा सकता।";
 "battery.empty.hint" = "बैटरी जीवन यहाँ ट्रैक करने के लिए Collection टैब से 'Quartz' मूवमेंट टाइप वाली घड़ी जोड़ें।";
 "tamagotchi.empty.hint" = "परिवार का सदस्य जोड़ने के लिए Collection टैब से एक घड़ी जोड़ें।";
 "speccard.delete.title" = "स्पेक कार्ड हटाएँ";

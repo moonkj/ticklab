@@ -469,7 +469,7 @@
 "watch.menu.favorite.remove" = "Remove from favorites";
 "watch.menu.delete" = "Delete watch";
 "watch.delete.confirm.title" = "Delete watch";
-"watch.delete.confirm.body" = "This will delete all measurements, journal entries, and spec cards for this watch. This cannot be undone.";
+"watch.delete.confirm.body" = "Deleting %@ also removes all its measurements, journal entries, and spec cards. This cannot be undone.";
 "battery.empty.hint" = "Add a watch from the Collection tab with movement type 'Quartz' to track battery life here.";
 "tamagotchi.empty.hint" = "Add a watch from the Collection tab to add a family member.";
 "speccard.delete.title" = "Delete spec card";

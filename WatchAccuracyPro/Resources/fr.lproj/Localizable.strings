@@ -461,7 +461,7 @@
 "watch.menu.favorite.remove" = "Retirer des favoris";
 "watch.menu.delete" = "Supprimer la montre";
 "watch.delete.confirm.title" = "Supprimer la montre";
-"watch.delete.confirm.body" = "Cette action supprimera toutes les mesures, entrées de journal et cartes techniques de cette montre. Elle est définitive.";
+"watch.delete.confirm.body" = "Supprimer %@ effacera toutes ses mesures, entrées de journal et cartes techniques. Cette action est définitive.";
 "battery.empty.hint" = "Ajoutez une montre depuis l'onglet Collection avec le type de mouvement « Quartz » pour suivre la durée de vie de la pile.";
 "tamagotchi.empty.hint" = "Ajoutez une montre depuis l'onglet Collection pour accueillir un nouveau membre dans la famille.";
 "speccard.delete.title" = "Supprimer la carte technique";

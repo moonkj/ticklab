@@ -461,7 +461,7 @@
 "watch.menu.favorite.remove" = "お気に入りから削除";
 "watch.menu.delete" = "時計を削除";
 "watch.delete.confirm.title" = "時計を削除";
-"watch.delete.confirm.body" = "この時計のすべての計測・ジャーナル・スペックカードを削除します。この操作は取り消せません。";
+"watch.delete.confirm.body" = "%@を削除すると、すべての計測・ジャーナル・スペックカードも削除されます。この操作は取り消せません。";
 "battery.empty.hint" = "コレクションタブでムーブメント種別を「クォーツ」にして時計を追加すると、ここで電池寿命を管理できます。";
 "tamagotchi.empty.hint" = "コレクションタブから時計を追加してファミリーに加えましょう。";
 "speccard.delete.title" = "スペックカードを削除";

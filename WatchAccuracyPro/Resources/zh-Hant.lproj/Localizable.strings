@@ -461,7 +461,7 @@
 "watch.menu.favorite.remove" = "從最愛移除";
 "watch.menu.delete" = "刪除腕錶";
 "watch.delete.confirm.title" = "刪除腕錶";
-"watch.delete.confirm.body" = "將會刪除此腕錶的所有測量、日誌與規格卡。此動作無法復原。";
+"watch.delete.confirm.body" = "刪除 %@ 將一併刪除其所有測量、日誌與規格卡。此動作無法復原。";
 "battery.empty.hint" = "請於「收藏」分頁新增機芯類型為「石英」的腕錶,以便在此追蹤電池壽命。";
 "tamagotchi.empty.hint" = "請於「收藏」分頁新增腕錶以加入家族。";
 "speccard.delete.title" = "刪除規格卡";

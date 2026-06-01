@@ -494,8 +494,8 @@ struct CollectionView: View {
                     try? modelContext.save()
                     deletingWatch = nil
                 }
-            } message: { _ in
-                Text(String(localized: "watch.delete.confirm.body"))
+            } message: { watch in
+                Text(String(format: NSLocalizedString("watch.delete.confirm.body", comment: ""), watch.displayName))
             }
         }
     }

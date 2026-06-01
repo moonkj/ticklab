@@ -461,7 +461,7 @@
 "watch.menu.favorite.remove" = "取消收藏";
 "watch.menu.delete" = "删除腕表";
 "watch.delete.confirm.title" = "删除腕表";
-"watch.delete.confirm.body" = "将删除此腕表的所有测量、日志记录与规格卡。此操作无法撤销。";
+"watch.delete.confirm.body" = "删除 %@ 将同时删除其所有测量、日志记录与规格卡。此操作无法撤销。";
 "battery.empty.hint" = "请从“藏品”中添加一枚机芯类型为“石英”的腕表,以追踪其电池寿命。";
 "tamagotchi.empty.hint" = "请从“藏品”中添加一枚腕表,加入家族。";
 "speccard.delete.title" = "删除规格卡";

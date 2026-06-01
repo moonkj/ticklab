@@ -224,13 +224,25 @@ struct AddWatchView: View {
                 }
 
                 Section(String(localized: "addwatch.movement.type")) {
-                    Picker(String(localized: "addwatch.movement.type.label"), selection: $movementType) {
+                    // 스마트워치 추가로 5개 → 세그먼트가 짤림. 칩 그리드(2줄 자동 줄바꿈).
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 96), spacing: 8)], spacing: 8) {
                         ForEach(WatchMovementType.allCases, id: \.self) { t in
-                            Text(t.displayName).tag(t)
+                            Button { movementType = t } label: {
+                                Text(t.displayName)
+                                    .font(.system(size: 14, weight: movementType == t ? .semibold : .regular))
+                                    .lineLimit(1).minimumScaleFactor(0.85)
+                                    .foregroundStyle(movementType == t ? AppColors.paper0 : AppColors.ink1)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 9)
+                                    .background(movementType == t ? AppColors.accent : AppColors.paper1)
+                                    .clipShape(RoundedRectangle(cornerRadius: 9))
+                                    .overlay(RoundedRectangle(cornerRadius: 9)
+                                        .stroke(movementType == t ? Color.clear : AppColors.rule, lineWidth: 1))
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
-                    .pickerStyle(.segmented)
-                    .tint(AppColors.accent)
+                    .padding(.vertical, 4)
 
                     if movementType == .manual {
                         Toggle(String(localized: "addwatch.wind.toggle"), isOn: $windReminderEnabled)

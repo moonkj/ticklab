@@ -461,7 +461,7 @@
 "watch.menu.favorite.remove" = "Quitar de favoritos";
 "watch.menu.delete" = "Eliminar reloj";
 "watch.delete.confirm.title" = "Eliminar reloj";
-"watch.delete.confirm.body" = "Se eliminarán todas las mediciones, entradas del diario y tarjetas de ficha de este reloj. Esta acción no se puede deshacer.";
+"watch.delete.confirm.body" = "Al eliminar %@ se borrarán todas sus mediciones, entradas del diario y fichas. Esta acción no se puede deshacer.";
 "battery.empty.hint" = "Añade un reloj desde la pestaña Colección con tipo de movimiento 'Cuarzo' para seguir la pila aquí.";
 "tamagotchi.empty.hint" = "Añade un reloj desde la pestaña Colección para sumarlo a la familia.";
 "speccard.delete.title" = "Eliminar tarjeta de ficha";
