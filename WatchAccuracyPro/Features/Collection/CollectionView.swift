@@ -742,6 +742,9 @@ struct HeroWatchCard: View {
     /// Sprint 12 (UX1): 측정 단축 진입 콜백. nil 이면 버튼 숨김.
     var onMeasure: (() -> Void)? = nil
     @Environment(\.modelContext) private var modelContext
+    /// 착용 시 태그 피커(어떤 자리) — 다른 카드와 동일.
+    @State private var showingTagPicker: Bool = false
+    @State private var recentWearLog: WearLog?
 
     // Round 174: sorted() O(N log N) → max(by:) O(N).
     private var lastMeasurement: WatchMeasurement? {
@@ -826,7 +829,21 @@ struct HeroWatchCard: View {
                     let worn = WearLogService.isWornToday(watch, in: modelContext)
                     Button {
                         UISelectionFeedbackGenerator().selectionChanged()
-                        WearLogService.toggleToday(watch, in: modelContext)
+                        // 사용자 보고: 대표 시계도 착용 시 태그 피커("어떤 자리") 표시 — 다른 카드와 동일.
+                        let added = WearLogService.toggleToday(watch, in: modelContext)
+                        if added {
+                            let today = Calendar.current.startOfDay(for: Date())
+                            let watchID = watch.id
+                            let desc = FetchDescriptor<WearLog>(
+                                predicate: #Predicate { $0.watch?.id == watchID && $0.date == today }
+                            )
+                            recentWearLog = (try? modelContext.fetch(desc))?.first
+                            if recentWearLog != nil {
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                    showingTagPicker = true
+                                }
+                            }
+                        }
                     } label: {
                         HStack(spacing: 5) {
                             Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
@@ -843,6 +860,11 @@ struct HeroWatchCard: View {
                         .contentShape(Capsule())
                     }
                     .buttonStyle(.plain)
+                    .sheet(isPresented: $showingTagPicker) {
+                        if let log = recentWearLog {
+                            WearTagPickerView(wearLog: log)
+                        }
+                    }
                     // Sprint 12 (UX1): 측정 단축 — 기계식만, 콜백 있을 때.
                     if let onMeasure, watch.movementType != .quartz {
                         Button {
