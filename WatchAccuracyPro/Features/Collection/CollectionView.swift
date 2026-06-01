@@ -149,6 +149,12 @@ struct CollectionView: View {
         Watch.setPrimary(watch, in: modelContext)
     }
 
+    /// 삭제 확인 메시지(시계명 포함) — body 타입체커 부하 분리.
+    private func deleteConfirmBody(_ watch: Watch) -> String {
+        let name = "\(watch.brand) \(watch.model)".trimmingCharacters(in: .whitespaces)
+        return String(format: NSLocalizedString("watch.delete.confirm.body", comment: ""), name)
+    }
+
     var body: some View {
         NavigationStack(path: pathBinding) {
             ZStack {
@@ -495,7 +501,7 @@ struct CollectionView: View {
                     deletingWatch = nil
                 }
             } message: { watch in
-                Text(String(format: NSLocalizedString("watch.delete.confirm.body", comment: ""), watch.displayName))
+                Text(deleteConfirmBody(watch))
             }
         }
     }
