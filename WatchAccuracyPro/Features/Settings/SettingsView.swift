@@ -1335,15 +1335,15 @@ private struct AdminChannelSheet: View {
     @State private var error: String?
 
     private let locales = ["ko", "en", "ja", "zh-Hans", "zh-Hant", "es", "hi", "fr"]
-    private var validID: Bool {
-        let t = channelID.trimmingCharacters(in: .whitespaces)
-        return t.hasPrefix("UC") && t.count >= 20
+    private var canSave: Bool {
+        !channelID.trimmingCharacters(in: .whitespaces).isEmpty
+            && !title.trimmingCharacters(in: .whitespaces).isEmpty && !saving
     }
 
     var body: some View {
         Form {
             Section("채널") {
-                TextField("채널 ID (UCxxxx)", text: $channelID)
+                TextField("채널 ID · @핸들 · URL", text: $channelID)
                     .autocorrectionDisabled().textInputAutocapitalization(.never)
                 TextField("채널명", text: $title)
                 TextField("썸네일 URL (선택)", text: $thumbnailURL)
@@ -1360,8 +1360,14 @@ private struct AdminChannelSheet: View {
             Section {
                 Button(existing == nil ? "추가" : "수정 저장") {
                     saving = true
+                    error = nil
                     Task {
-                        let cid = channelID.trimmingCharacters(in: .whitespaces)
+                        // @핸들·URL·UCxxxx 모두 받아 RSS용 채널 ID(UCxxxx)로 변환.
+                        guard let cid = await YouTubeFeedService.resolveChannelID(from: channelID) else {
+                            saving = false
+                            error = "채널 ID를 찾지 못했어요. @핸들·채널 URL이 정확한지 확인하거나 UCxxxx를 직접 입력하세요."
+                            return
+                        }
                         let ok: Bool
                         if let e = existing {
                             ok = await service.updateCuratedChannel(id: e.id, channelID: cid, title: title, thumbnailURL: thumbnailURL, locale: locale, category: category, sortOrder: sortOrder, active: active)
@@ -1369,11 +1375,14 @@ private struct AdminChannelSheet: View {
                             ok = await service.addCuratedChannel(channelID: cid, title: title, thumbnailURL: thumbnailURL, locale: locale, category: category, sortOrder: sortOrder)
                         }
                         saving = false
-                        if ok { await onSaved(); dismiss() } else { error = "저장 실패 (admin RLS·channel_id 확인)" }
+                        if ok { await onSaved(); dismiss() } else { error = "저장 실패 (admin RLS 확인)" }
                     }
                 }
-                .disabled(!validID || title.trimmingCharacters(in: .whitespaces).isEmpty || saving)
-                Text("채널 ID는 YouTube 채널 URL의 /channel/UC… 부분. 핸들(@name)은 채널 ‘공유 → 채널 ID 복사’로 변환.")
+                .disabled(!canSave)
+                if saving {
+                    HStack(spacing: 8) { ProgressView(); Text("채널 ID 변환·저장 중…").font(.caption).foregroundStyle(.secondary) }
+                }
+                Text("@핸들·채널 URL·UCxxxx 모두 가능 — 자동으로 채널 ID로 변환합니다.")
                     .font(.caption2).foregroundStyle(.secondary)
                 if let error { Text(error).font(.caption).foregroundStyle(.red) }
             }

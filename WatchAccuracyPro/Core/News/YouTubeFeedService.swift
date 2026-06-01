@@ -52,6 +52,41 @@ final class YouTubeFeedService: ObservableObject {
         lastFetchAt = Date()
     }
 
+    /// 입력(UCxxxx · @handle · 채널 URL)을 RSS용 channel_id(UCxxxx)로 해석. 실패 시 nil.
+    /// 핸들/URL은 공개 채널 페이지 HTML에서 channelId 추출(API 키 불필요). 운영자 1회 입력용.
+    nonisolated static func resolveChannelID(from raw: String) async -> String? {
+        let input = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !input.isEmpty else { return nil }
+        // 이미 UCxxxx
+        if input.range(of: "^UC[A-Za-z0-9_-]{20,}$", options: .regularExpression) != nil {
+            return input
+        }
+        // URL/핸들 → 채널 페이지
+        let pageURLString: String
+        if input.hasPrefix("http") {
+            pageURLString = input
+        } else if input.hasPrefix("@") {
+            pageURLString = "https://www.youtube.com/\(input)"
+        } else {
+            pageURLString = "https://www.youtube.com/@\(input)"
+        }
+        guard let url = URL(string: pageURLString) else { return nil }
+        var req = URLRequest(url: url)
+        req.setValue("Mozilla/5.0", forHTTPHeaderField: "User-Agent")
+        guard let (data, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode),
+              let html = String(data: data, encoding: .utf8) else { return nil }
+        // "channelId":"UC..." 또는 canonical .../channel/UC...
+        for pattern in ["\"channelId\":\"UC[A-Za-z0-9_-]+\"", "channel/UC[A-Za-z0-9_-]+"] {
+            if let r = html.range(of: pattern, options: .regularExpression) {
+                if let idRange = html[r].range(of: "UC[A-Za-z0-9_-]+", options: .regularExpression) {
+                    return String(html[r][idRange])
+                }
+            }
+        }
+        return nil
+    }
+
     /// 채널 RSS 1건 수집(Atom). 실패하면 빈 배열(다른 채널은 계속).
     nonisolated static func fetchChannelRSS(channelID: String, channelTitle: String) async -> [YouTubeVideo] {
         guard let url = URL(string: "https://www.youtube.com/feeds/videos.xml?channel_id=\(channelID)"),
