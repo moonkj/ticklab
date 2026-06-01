@@ -366,6 +366,12 @@
 "speccard.photo.add" = "添加照片";
 "speccard.photo.change" = "更换照片";
 "speccard.field.case_size" = "表壳尺寸(mm)";
+"speccard.field.case_thickness" = "厚度(mm)";
+"speccard.field.lug_to_lug" = "表耳间距(mm)";
+"speccard.field.water_resistance" = "防水(m)";
+"speccard.field.material" = "表壳材质";
+"speccard.field.dial_color" = "表盘颜色";
+"speccard.field.crystal" = "表镜";
 "speccard.field.power_reserve" = "动力储存(小时)";
 "speccard.field.placeholder.case" = "例如 40";
 "speccard.field.placeholder.power" = "例如 70";

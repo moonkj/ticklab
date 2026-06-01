@@ -297,6 +297,12 @@
 "speccard.photo.add" = "사진 추가";
 "speccard.photo.change" = "사진 변경";
 "speccard.field.case_size" = "케이스 사이즈 (mm)";
+"speccard.field.case_thickness" = "케이스 두께 (mm)";
+"speccard.field.lug_to_lug" = "러그투러그 (mm)";
+"speccard.field.water_resistance" = "방수 (m)";
+"speccard.field.material" = "케이스 재질";
+"speccard.field.dial_color" = "다이얼 색상";
+"speccard.field.crystal" = "크리스털";
 "speccard.field.power_reserve" = "파워리저브 (h)";
 "speccard.field.placeholder.case" = "예: 40";
 "speccard.field.placeholder.power" = "예: 70";

@@ -32,9 +32,9 @@ struct PhotoCropView: View {
             let cropH = cropW / aspect
             let img = upright ?? image
             ZStack {
-                Color.black
+                Color.black.ignoresSafeArea()
 
-                // 중앙 4:3 크롭 — 드래그·핀치로 위치/확대. 바깥은 검정 밴드(인스타식).
+                // 중앙 크롭 — 드래그·핀치로 위치/확대. 바깥은 검정 밴드(인스타식).
                 cropContent(img: img, cropW: cropW, cropH: cropH)
                     .frame(width: cropW, height: cropH)
                     .clipped()
@@ -63,7 +63,7 @@ struct PhotoCropView: View {
                         }
                     }
                     .padding(.horizontal, 20)
-                    .padding(.top, geo.safeAreaInsets.top + 8)
+                    .padding(.top, 8)
                     .padding(.bottom, 16)
                     .background(
                         LinearGradient(colors: [.black.opacity(0.55), .clear],
@@ -75,10 +75,9 @@ struct PhotoCropView: View {
                         .foregroundStyle(.white.opacity(0.85))
                         .padding(.horizontal, 16).padding(.vertical, 8)
                         .background(Capsule().fill(.black.opacity(0.4)))
-                        .padding(.bottom, geo.safeAreaInsets.bottom + 28)
+                        .padding(.bottom, 28)
                 }
             }
-            .ignoresSafeArea()
             .onAppear {
                 if upright == nil { upright = image.uprightCopy() }
             }

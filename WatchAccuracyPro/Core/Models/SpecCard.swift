@@ -25,8 +25,15 @@ final class SpecCard {
     var audioPath: String?
     /// 부가 코멘트.
     var note: String
-    /// AI 생성 모델 설명 + 착장 의견 캐시 — 1회 생성 후 재사용(매번 LLM 호출 방지). lightweight migration.
+    /// AI 생성 모델 설명 + 착장 의견 캐시 — (현재 미사용, 추후 정리). lightweight migration.
     var aiDescription: String? = nil
+    /// 팀 기획 2단계: 사용자 입력 스펙(DB·Watch가 모르는 것). 전부 optional·기본 nil — lightweight migration.
+    var caseThickness: Double? = nil      // mm
+    var lugToLug: Double? = nil           // mm
+    var waterResistanceM: Int? = nil      // m
+    var crystal: String? = nil            // 사파이어/미네랄/아크릴 등
+    var dialColor: String? = nil
+    var caseMaterial: String? = nil       // 스틸/티타늄/골드 등
 
     init(
         id: UUID = UUID(),

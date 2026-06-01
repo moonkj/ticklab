@@ -17,6 +17,12 @@ struct SpecCardComposerView: View {
     @State private var movement: String = ""
     @State private var caseSizeText: String = ""
     @State private var powerReserveText: String = ""
+    @State private var caseThicknessText: String = ""
+    @State private var lugToLugText: String = ""
+    @State private var waterResistanceText: String = ""
+    @State private var crystal: String = ""
+    @State private var dialColor: String = ""
+    @State private var caseMaterial: String = ""
     @State private var note: String = ""
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
@@ -140,6 +146,19 @@ struct SpecCardComposerView: View {
                       value: $powerReserveText,
                       placeholder: String(localized: "speccard.field.placeholder.power"),
                       keyboard: .decimalPad)
+            // 팀 기획 2단계: 케이스/다이얼 사용자 입력(모르면 비우면 카드에서 숨김).
+            specField(label: String(localized: "speccard.field.case_thickness"),
+                      value: $caseThicknessText, placeholder: "", keyboard: .decimalPad)
+            specField(label: String(localized: "speccard.field.lug_to_lug"),
+                      value: $lugToLugText, placeholder: "", keyboard: .decimalPad)
+            specField(label: String(localized: "speccard.field.water_resistance"),
+                      value: $waterResistanceText, placeholder: "", keyboard: .numberPad)
+            specField(label: String(localized: "speccard.field.material"),
+                      value: $caseMaterial, placeholder: "")
+            specField(label: String(localized: "speccard.field.dial_color"),
+                      value: $dialColor, placeholder: "")
+            specField(label: String(localized: "speccard.field.crystal"),
+                      value: $crystal, placeholder: "")
         }
     }
 
@@ -281,6 +300,12 @@ struct SpecCardComposerView: View {
         movement = existing.movement
         caseSizeText = existing.caseSize.map { String(format: "%.1f", $0) } ?? ""
         powerReserveText = existing.powerReserveHours.map { String(format: "%.0f", $0) } ?? ""
+        caseThicknessText = existing.caseThickness.map { String(format: "%.1f", $0) } ?? ""
+        lugToLugText = existing.lugToLug.map { String(format: "%.1f", $0) } ?? ""
+        waterResistanceText = existing.waterResistanceM.map { String($0) } ?? ""
+        crystal = existing.crystal ?? ""
+        dialColor = existing.dialColor ?? ""
+        caseMaterial = existing.caseMaterial ?? ""
         note = existing.note
         // photo / audio load — 파일 path 읽음.
         if let pp = existing.photoPath, let data = try? Data(contentsOf: URL(fileURLWithPath: pp)) {
@@ -305,6 +330,12 @@ struct SpecCardComposerView: View {
         card.movement = movement
         card.caseSize = Double(caseSizeText)
         card.powerReserveHours = Double(powerReserveText)
+        card.caseThickness = Double(caseThicknessText)
+        card.lugToLug = Double(lugToLugText)
+        card.waterResistanceM = Int(waterResistanceText.trimmingCharacters(in: .whitespaces))
+        card.crystal = crystal.trimmingCharacters(in: .whitespaces).isEmpty ? nil : crystal.trimmingCharacters(in: .whitespaces)
+        card.dialColor = dialColor.trimmingCharacters(in: .whitespaces).isEmpty ? nil : dialColor.trimmingCharacters(in: .whitespaces)
+        card.caseMaterial = caseMaterial.trimmingCharacters(in: .whitespaces).isEmpty ? nil : caseMaterial.trimmingCharacters(in: .whitespaces)
         if let photoPath { card.photoPath = photoPath }
         if let audioPath { card.audioPath = audioPath }
         card.note = note

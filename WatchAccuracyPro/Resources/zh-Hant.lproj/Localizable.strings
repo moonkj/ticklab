@@ -366,6 +366,12 @@
 "speccard.photo.add" = "新增照片";
 "speccard.photo.change" = "更換照片";
 "speccard.field.case_size" = "錶徑(mm)";
+"speccard.field.case_thickness" = "厚度(mm)";
+"speccard.field.lug_to_lug" = "錶耳間距(mm)";
+"speccard.field.water_resistance" = "防水(m)";
+"speccard.field.material" = "錶殼材質";
+"speccard.field.dial_color" = "錶盤顏色";
+"speccard.field.crystal" = "錶鏡";
 "speccard.field.power_reserve" = "動力儲存(小時)";
 "speccard.field.placeholder.case" = "例:40";
 "speccard.field.placeholder.power" = "例:70";

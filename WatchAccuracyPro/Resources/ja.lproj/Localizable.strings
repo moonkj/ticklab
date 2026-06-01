@@ -366,6 +366,12 @@
 "speccard.photo.add" = "写真を追加";
 "speccard.photo.change" = "写真を変更";
 "speccard.field.case_size" = "ケースサイズ (mm)";
+"speccard.field.case_thickness" = "厚さ (mm)";
+"speccard.field.lug_to_lug" = "ラグ-ラグ (mm)";
+"speccard.field.water_resistance" = "防水 (m)";
+"speccard.field.material" = "ケース素材";
+"speccard.field.dial_color" = "ダイヤル色";
+"speccard.field.crystal" = "風防";
 "speccard.field.power_reserve" = "パワーリザーブ (h)";
 "speccard.field.placeholder.case" = "例: 40";
 "speccard.field.placeholder.power" = "例: 70";

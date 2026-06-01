@@ -366,6 +366,12 @@
 "speccard.photo.add" = "तस्वीर जोड़ें";
 "speccard.photo.change" = "तस्वीर बदलें";
 "speccard.field.case_size" = "केस आकार (mm)";
+"speccard.field.case_thickness" = "मोटाई (mm)";
+"speccard.field.lug_to_lug" = "लग-टू-लग (mm)";
+"speccard.field.water_resistance" = "जल प्रतिरोध (m)";
+"speccard.field.material" = "केस सामग्री";
+"speccard.field.dial_color" = "डायल रंग";
+"speccard.field.crystal" = "क्रिस्टल";
 "speccard.field.power_reserve" = "पावर रिज़र्व (h)";
 "speccard.field.placeholder.case" = "उदा., 40";
 "speccard.field.placeholder.power" = "उदा., 70";

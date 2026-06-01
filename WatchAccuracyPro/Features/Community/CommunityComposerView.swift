@@ -75,6 +75,7 @@ struct CommunityComposerView: View {
             .fullScreenCover(item: $cropPayload) { payload in
                 PhotoCropView(
                     image: payload.image,
+                    aspect: 1.0,   // 인스타 스타일 정사각(1:1) — 커뮤니티 피드.
                     onComplete: { data in cropPayload = nil; handleCropped(data) },
                     onCancel: { cropPayload = nil }
                 )

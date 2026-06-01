@@ -205,7 +205,7 @@ private struct CommunityPostCard: View {
                     Color(AppColors.paper2)
                 }
             }
-            .aspectRatio(4.0 / 3.0, contentMode: .fit)
+            .aspectRatio(1.0, contentMode: .fit)   // 인스타 스타일 정사각(1:1)
             .frame(maxWidth: .infinity)
             .clipped()
             .overlay { if blurred { blurOverlay } }

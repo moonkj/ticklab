@@ -366,6 +366,12 @@
 "speccard.photo.add" = "Añadir foto";
 "speccard.photo.change" = "Cambiar foto";
 "speccard.field.case_size" = "Tamaño de caja (mm)";
+"speccard.field.case_thickness" = "Grosor (mm)";
+"speccard.field.lug_to_lug" = "Asa a asa (mm)";
+"speccard.field.water_resistance" = "Resistencia al agua (m)";
+"speccard.field.material" = "Material de caja";
+"speccard.field.dial_color" = "Color de esfera";
+"speccard.field.crystal" = "Cristal";
 "speccard.field.power_reserve" = "Reserva de marcha (h)";
 "speccard.field.placeholder.case" = "p. ej., 40";
 "speccard.field.placeholder.power" = "p. ej., 70";

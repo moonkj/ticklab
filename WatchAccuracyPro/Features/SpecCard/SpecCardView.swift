@@ -130,6 +130,24 @@ struct SpecCardView: View {
             if let cs = card.caseSize {
                 specRow(String(localized: "speccard.spec.case"), String(format: "%.1f mm", cs))
             }
+            if let ct = card.caseThickness {
+                specRow(String(localized: "speccard.field.case_thickness"), String(format: "%.1f mm", ct))
+            }
+            if let ll = card.lugToLug {
+                specRow(String(localized: "speccard.field.lug_to_lug"), String(format: "%.1f mm", ll))
+            }
+            if let wr = card.waterResistanceM {
+                specRow(String(localized: "speccard.field.water_resistance"), "\(wr) m")
+            }
+            if let mat = card.caseMaterial, !mat.isEmpty {
+                specRow(String(localized: "speccard.field.material"), mat)
+            }
+            if let dc = card.dialColor, !dc.isEmpty {
+                specRow(String(localized: "speccard.field.dial_color"), dc)
+            }
+            if let cr = card.crystal, !cr.isEmpty {
+                specRow(String(localized: "speccard.field.crystal"), cr)
+            }
             if let pr = card.powerReserveHours {
                 specRow(String(localized: "speccard.spec.power_reserve"), String(format: "%.0f h", pr))
             }

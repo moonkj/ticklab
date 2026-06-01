@@ -373,6 +373,12 @@
 "speccard.photo.add" = "Add photo";
 "speccard.photo.change" = "Change photo";
 "speccard.field.case_size" = "Case size (mm)";
+"speccard.field.case_thickness" = "Thickness (mm)";
+"speccard.field.lug_to_lug" = "Lug-to-lug (mm)";
+"speccard.field.water_resistance" = "Water resistance (m)";
+"speccard.field.material" = "Case material";
+"speccard.field.dial_color" = "Dial color";
+"speccard.field.crystal" = "Crystal";
 "speccard.field.power_reserve" = "Power reserve (h)";
 "speccard.field.placeholder.case" = "e.g., 40";
 "speccard.field.placeholder.power" = "e.g., 70";
