@@ -436,6 +436,7 @@ final class CommunityService: ObservableObject {
     /// presence 하트비트 — 커뮤니티 활동 시 community_presence(uid PK) UPSERT.
     /// "현재 활동 사용자" 근사치용. (진짜 실시간 동시접속 presence 는 Realtime 필요 — 활동 기반 근사)
     func heartbeat() async {
+        await ensureSignedIn()
         guard let uid = myUID, let url = URL(string: "\(baseURL)/rest/v1/community_presence") else { return }
         var req = authedRequest(url, method: "POST")
         req.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
@@ -446,6 +447,7 @@ final class CommunityService: ObservableObject {
 
     /// 운영 통계. 전체/오늘 게시물은 public 읽기로 동작, 활동 사용자는 presence 테이블 필요.
     func fetchOpsStats() async -> Community.OpsStats {
+        await ensureSignedIn()
         let todayISO = ISO8601DateFormatter().string(from: Calendar.current.startOfDay(for: Date()))
         let activeCutoff = ISO8601DateFormatter().string(from: Date().addingTimeInterval(-120))
         async let total = countRows(table: "community_posts", selectCol: "id", filter: "status=eq.approved")
@@ -458,6 +460,7 @@ final class CommunityService: ObservableObject {
 
     /// 신고 목록 (admin SELECT RLS 필요 — 미배포 시 빈 배열).
     func fetchReports() async -> [Community.AdminReport] {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_reports?select=post_id,reason,created_at&order=created_at.desc&limit=200") else { return [] }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
               let reports = try? Self.decoder.decode([Community.AdminReport].self, from: data) else { return [] }
@@ -466,6 +469,7 @@ final class CommunityService: ObservableObject {
 
     /// 신고된 게시물 본문 조회 (admin SELECT RLS 필요 — 숨김/차단 글 포함해 확인).
     func fetchReportedPosts(ids: [String]) async -> [Community.Post] {
+        await ensureSignedIn()
         guard !ids.isEmpty,
               let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=*&id=in.(\(ids.joined(separator: ",")))") else { return [] }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
@@ -475,7 +479,8 @@ final class CommunityService: ObservableObject {
 
     /// 신고 총 건수 (admin RLS 필요 — 미배포 시 0). 관리자 배지 알림용.
     func fetchReportCount() async -> Int {
-        await countRows(table: "community_reports", selectCol: "id", filter: "")
+        await ensureSignedIn()
+        return await countRows(table: "community_reports", selectCol: "id", filter: "")
     }
 
     // MARK: - 공지 / 경고 (관리자)
@@ -483,6 +488,7 @@ final class CommunityService: ObservableObject {
     /// 공지 발송 (admin insert RLS 필요). 노출 기간 starts~ends.
     @discardableResult
     func postAnnouncement(body: String, startsAt: Date, endsAt: Date) async -> Bool {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements") else { return false }
         var req = authedRequest(url, method: "POST")
         let iso = ISO8601DateFormatter()
@@ -496,6 +502,7 @@ final class CommunityService: ObservableObject {
     /// 공지 수정 (기간·내용·활성). admin update RLS.
     @discardableResult
     func updateAnnouncement(id: String, body: String, startsAt: Date, endsAt: Date, active: Bool) async -> Bool {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?id=eq.\(id)") else { return false }
         var req = authedRequest(url, method: "PATCH")
         let iso = ISO8601DateFormatter()
@@ -508,6 +515,7 @@ final class CommunityService: ObservableObject {
 
     /// 공지 전체 목록 (admin — 편집용).
     func fetchAnnouncements() async -> [Community.Announcement] {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?select=*&order=created_at.desc&limit=50") else { return [] }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
               let arr = try? Self.decoder.decode([Community.Announcement].self, from: data) else { return [] }
@@ -516,6 +524,7 @@ final class CommunityService: ObservableObject {
 
     /// 현재 노출할 활성 공지 1건 (active + 기간 내). 모든 사용자.
     func fetchActiveAnnouncement() async -> Community.Announcement? {
+        await ensureSignedIn()
         let nowISO = ISO8601DateFormatter().string(from: Date())
         guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?select=*&active=eq.true&starts_at=lte.\(nowISO)&ends_at=gte.\(nowISO)&order=created_at.desc&limit=1") else { return nil }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
@@ -526,6 +535,7 @@ final class CommunityService: ObservableObject {
     /// 특정 사용자에게 경고 발송 (admin insert RLS 필요).
     @discardableResult
     func sendWarning(toUID uid: String, message: String) async -> Bool {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_warnings") else { return false }
         var req = authedRequest(url, method: "POST")
         req.httpBody = try? JSONSerialization.data(withJSONObject: ["target_uid": uid, "message": message])
@@ -535,6 +545,7 @@ final class CommunityService: ObservableObject {
 
     /// 내 미확인 경고 (본인 select RLS).
     func fetchMyWarnings() async -> [Community.Warning] {
+        await ensureSignedIn()
         guard let uid = myUID,
               let url = URL(string: "\(baseURL)/rest/v1/community_warnings?select=*&target_uid=eq.\(uid)&seen=eq.false&order=created_at.desc") else { return [] }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
@@ -544,6 +555,7 @@ final class CommunityService: ObservableObject {
 
     /// 경고 확인 처리(seen=true).
     func markWarningsSeen(_ ids: [String]) async {
+        await ensureSignedIn()
         for id in ids {
             guard let url = URL(string: "\(baseURL)/rest/v1/community_warnings?id=eq.\(id)") else { continue }
             var req = authedRequest(url, method: "PATCH")
@@ -555,6 +567,7 @@ final class CommunityService: ObservableObject {
     /// 게시물 숨김 (admin UPDATE RLS 필요).
     @discardableResult
     func adminHidePost(_ postID: String) async -> Bool {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?id=eq.\(postID)") else { return false }
         var req = authedRequest(url, method: "PATCH")
         req.httpBody = try? JSONSerialization.data(withJSONObject: ["status": "hidden"])
@@ -566,6 +579,7 @@ final class CommunityService: ObservableObject {
     /// 게시물 영구 삭제 (admin DELETE RLS 필요). 로컬 피드에서도 제거.
     @discardableResult
     func adminDeletePost(_ post: Community.Post) async -> Bool {
+        await ensureSignedIn()
         guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?id=eq.\(post.id)") else { return false }
         guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
               let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode) else { return false }
