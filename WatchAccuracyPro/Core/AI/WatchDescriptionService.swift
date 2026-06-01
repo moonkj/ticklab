@@ -32,7 +32,7 @@ final class WatchDescriptionService {
             }
         }
         #endif
-        return ruleBased(movement: movement)
+        return ruleBased(movement: movement, specSummary: specSummary)
     }
 
     #if canImport(FoundationModels)
@@ -45,7 +45,7 @@ final class WatchDescriptionService {
             .map { AppleIntelligenceVerdictService.sanitizeUserContent($0, maxLength: 40) } ?? ""
         let safeSpecs = AppleIntelligenceVerdictService.sanitizeUserContent(specSummary, maxLength: 160)
         // 팀 토론 가드: 주어진 스펙만 해설, 외부 사실(연도·가격·역사·한정) 생성 금지, 착장 조언 금지.
-        let instructions = "당신은 시계 스펙을 입문자에게 설명하는 시계 교육 에디터입니다. 규칙: (1) 아래 주어진 스펙 수치만 해설한다. (2) 연도·가격·역사·한정판 등 입력에 없는 사실은 절대 생성·추정하지 않는다. (3) 착장·패션 조언은 하지 않는다. (4) 모델명은 호명만 가능. (5) 마크다운/특수기호 금지. 각 스펙이 이 시계의 측정·기계·실사용에 무슨 의미인지 2~4문장으로."
+        let instructions = "당신은 시계 스펙을 입문자에게 설명하는 시계 교육 에디터입니다. 규칙: (1) 아래 주어진 스펙 수치만 해설한다. (2) 연도·가격·역사·한정판·생산국 등 입력에 없는 사실은 절대 생성·추정하지 않는다. (3) **제공되지 않은 BPH·파워리저브·케이스 크기·방수 등 구체 수치를 임의로 지어내지 말 것** — 주어진 값만 인용하고, 없는 항목은 무브먼트 타입의 일반 개념만 설명한다. (4) 착장·패션 조언 금지. (5) 모델명은 호명만 가능. (6) 마크다운/특수기호 금지. 주어진 스펙이 이 시계의 측정·기계·실사용에 무슨 의미인지 2~4문장으로."
         var prompt = "다음 시계의 스펙을 해설하세요.\n<user_data>\n시계: \(safeBrand) \(safeModel)"
         if !safeCaliber.isEmpty { prompt += " · 캘리버 \(safeCaliber)" }
         prompt += " · \(movement.displayName)"
@@ -63,8 +63,9 @@ final class WatchDescriptionService {
     }
     #endif
 
-    /// rule-based 폴백 — 무브먼트 타입별 일반 설명(항상 사용 가능, 8개국어 localized).
-    nonisolated func ruleBased(movement: WatchMovementType) -> String {
+    /// rule-based 폴백 — **사용자 실제 스펙(specSummary)에 grounding** + 무브먼트 타입 개념 설명.
+    /// 거짓 일반 수치를 단정하지 않음(시계 불일치 방지). 항상 사용 가능·8개국어.
+    nonisolated func ruleBased(movement: WatchMovementType, specSummary: String) -> String {
         let key: String
         switch movement {
         case .automatic: key = "speccard.ai.fallback.automatic"
@@ -72,6 +73,8 @@ final class WatchDescriptionService {
         case .quartz:    key = "speccard.ai.fallback.quartz"
         case .solar:     key = "speccard.ai.fallback.solar"
         }
-        return NSLocalizedString(key, comment: "")
+        let concept = NSLocalizedString(key, comment: "")
+        let specs = specSummary.trimmingCharacters(in: .whitespaces)
+        return specs.isEmpty ? concept : "\(specs)\n\(concept)"
     }
 }

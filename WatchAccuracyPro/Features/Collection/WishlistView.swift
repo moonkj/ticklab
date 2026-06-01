@@ -72,6 +72,28 @@ struct WishlistView: View {
                             .font(.system(size: 12, weight: .semibold)).foregroundStyle(AppColors.accentDark)
                     }
                 }
+                // 팀 토론: 저축 진행 트래커 — 게이지 + 예상 도달 시점(목표가·저축액 있을 때).
+                if let progress = item.savingsProgress {
+                    VStack(alignment: .leading, spacing: 3) {
+                        ProgressView(value: progress).tint(AppColors.accentDark)
+                            .frame(maxWidth: 180)
+                        HStack(spacing: 6) {
+                            Text("\(Int(progress * 100))%")
+                                .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                                .foregroundStyle(AppColors.ink2)
+                            if let months = item.monthsToGoal {
+                                Text(String(format: NSLocalizedString("wishlist.months_to_goal", comment: ""), months))
+                                    .font(.system(size: 11))
+                                    .foregroundStyle(AppColors.ink3)
+                            } else if progress >= 1.0 {
+                                Text(String(localized: "wishlist.goal_reached"))
+                                    .font(.system(size: 11, weight: .semibold))
+                                    .foregroundStyle(AppColors.success)
+                            }
+                        }
+                    }
+                    .padding(.top, 2)
+                }
             }
             Spacer()
             Image(systemName: "chevron.right").font(.system(size: 13)).foregroundStyle(AppColors.ink3)
@@ -80,6 +102,29 @@ struct WishlistView: View {
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .contextMenu {
+            // 위시 → 컬렉션 원탭 전환(필드 승계). 갖게 됐을 때.
+            Button {
+                convertToCollection(item)
+            } label: {
+                Label(String(localized: "wishlist.convert"), systemImage: "checkmark.seal")
+            }
+        }
+    }
+
+    /// 위시 항목을 보유 시계로 승격 — brand/model/ref/목표가/사진 승계 후 위시 삭제.
+    private func convertToCollection(_ item: WishlistItem) {
+        let watch = Watch(
+            brand: item.brand,
+            model: item.model,
+            photoData: item.imageData,
+            referenceNumber: item.referenceNumber,
+            purchasePrice: item.targetPrice,
+            purchaseCurrency: item.currency
+        )
+        context.insert(watch)
+        context.delete(item)
+        try? context.save()
     }
 }
 
@@ -93,6 +138,8 @@ struct WishlistComposerView: View {
     @State private var priceText = ""
     @State private var currency = Locale.current.currency?.identifier ?? "KRW"
     @State private var note = ""
+    @State private var savedText = ""
+    @State private var monthlyText = ""
     @State private var photoItem: PhotosPickerItem?
     @State private var imageData: Data?
     @State private var showingBrandInputSheet = false
@@ -217,6 +264,9 @@ struct WishlistComposerView: View {
                             ForEach(Self.currencies, id: \.self) { Text($0).tag($0) }
                         }.pickerStyle(.menu).labelsHidden()
                     }
+                    // 팀 토론: 저축 진행 트래커 입력(외부 시세 API 없음·수동).
+                    TextField(String(localized: "wishlist.saved_amount"), text: $savedText).keyboardType(.decimalPad)
+                    TextField(String(localized: "wishlist.monthly_goal"), text: $monthlyText).keyboardType(.decimalPad)
                     TextField(String(localized: "wishlist.note"), text: $note, axis: .vertical).lineLimit(2...4)
                 }
             }
@@ -246,6 +296,8 @@ struct WishlistComposerView: View {
         brand = e.brand; model = e.model; refNo = e.referenceNumber ?? ""
         priceText = e.targetPrice.map { NSDecimalNumber(decimal: $0).stringValue } ?? ""
         currency = e.currency; note = e.note; imageData = e.imageData
+        savedText = e.savedAmount > 0 ? NSDecimalNumber(decimal: e.savedAmount).stringValue : ""
+        monthlyText = e.monthlyGoal.map { NSDecimalNumber(decimal: $0).stringValue } ?? ""
     }
 
     private func save() {
@@ -255,6 +307,8 @@ struct WishlistComposerView: View {
         item.referenceNumber = refNo.isEmpty ? nil : refNo
         item.targetPrice = Decimal(string: priceText.trimmingCharacters(in: .whitespaces))
         item.currency = currency; item.note = note; item.imageData = imageData
+        item.savedAmount = Decimal(string: savedText.trimmingCharacters(in: .whitespaces)) ?? 0
+        item.monthlyGoal = Decimal(string: monthlyText.trimmingCharacters(in: .whitespaces))
         if existing == nil { context.insert(item) }
         try? context.save(); dismiss()
     }

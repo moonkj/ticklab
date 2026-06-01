@@ -133,6 +133,17 @@ struct SpecCardView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(1.5)
                     .foregroundStyle(AppColors.ink2)
+                Spacer()
+                // 다시 생성 — 캐시된 해설이 시계와 안 맞을 때 갱신.
+                if (aiText ?? card.aiDescription) != nil, !aiLoading {
+                    Button { Task { await regenerateAIDescription() } } label: {
+                        Image(systemName: "arrow.clockwise")
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppColors.ink3)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(String(localized: "common.refresh"))
+                }
             }
             if let text = aiText ?? card.aiDescription {
                 Text(text)
@@ -179,6 +190,14 @@ struct SpecCardView: View {
         try? modelContext.save()
         aiText = text
         aiLoading = false
+    }
+
+    /// 캐시된 해설 폐기 후 현재 스펙으로 재생성 — "시계와 안 맞을 때" 사용자 갱신.
+    private func regenerateAIDescription() async {
+        card.aiDescription = nil
+        aiText = nil
+        try? modelContext.save()
+        await loadAIDescription()
     }
 
     private var specTable: some View {
