@@ -23,6 +23,9 @@ struct CommunityFeedView: View {
     @State private var showSaved = false
     @State private var showProfile = false
     @State private var showBlocked = false
+    /// 활동 알림(좋아요·팔로워) — 종 배지. 컬렉션과 동일 소스(CommunityService).
+    @State private var showNotifications = false
+    @State private var notifCount = 0
     /// 운영 ID(관리자) 활성 — 모든 글 삭제 권한 노출.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
     @State private var adminDeleteTarget: Community.Post?
@@ -64,6 +67,7 @@ struct CommunityFeedView: View {
                     didInitialLoad = true
                     myWarnings = await service.fetchMyWarnings()
                     if !myWarnings.isEmpty { showWarning = true }
+                    notifCount = await service.unseenNotificationCount()
                 } else {
                     showViewerGate = true
                 }
@@ -86,6 +90,9 @@ struct CommunityFeedView: View {
             }
             .sheet(isPresented: $showBlocked) {
                 BlockedUsersView()
+            }
+            .sheet(isPresented: $showNotifications) {
+                CommunityNotificationsView()
             }
             .sheet(isPresented: $showEULA) {
                 CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
@@ -143,6 +150,14 @@ struct CommunityFeedView: View {
     /// 우상단 버튼 — 저장됨 · 계정 · 작성. (제목과 같은 줄/영역)
     private var headerButtons: some View {
         HStack(spacing: 0) {
+            Button { openNotifications() } label: {
+                Image(systemName: notifCount > 0 ? "bell.badge.fill" : "bell")
+                    .font(.system(size: 18))
+                    .foregroundStyle(notifCount > 0 ? AppColors.accent : AppColors.ink0)
+                    .symbolRenderingMode(notifCount > 0 ? .multicolor : .monochrome)
+                    .frame(width: 40, height: 40)
+            }
+            .accessibilityLabel(String(localized: "collection.notifications"))
             Button { showSavedTab() } label: {
                 Image(systemName: "bookmark").font(.system(size: 18))
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
@@ -336,6 +351,13 @@ struct CommunityFeedView: View {
     private func showSavedTab() {
         guard service.isSignedIn else { showLogin = true; return }
         showSaved = true
+    }
+
+    /// 종 탭 — 즉시 배지 클리어("확인하면 없어지고") + 알림 목록. 익명 세션도 본인 글 알림 표시.
+    private func openNotifications() {
+        service.markNotificationsSeen()
+        notifCount = 0
+        showNotifications = true
     }
 }
 
