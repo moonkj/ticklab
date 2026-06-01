@@ -621,18 +621,21 @@ private struct CommunityPostCard: View {
             Button(action: onShare) {
                 Label(String(localized: "community.share"), systemImage: "square.and.arrow.up")
             }
-            // 신고 — "..." 안에서 사유 하위 메뉴로 펼침(중앙 팝업 X, 글에 anchor).
-            Menu {
-                ForEach(Community.ReportReason.allCases, id: \.self) { reason in
-                    Button(role: .destructive) { onReport(reason) } label: {
-                        Text(String(localized: String.LocalizationValue(reason.localizationKey)))
+            // 신고·차단은 타인 글에만 — 본인 글엔 자기신고/자기차단 무의미(자기차단은 피드 노출 버그까지).
+            if !isMine {
+                // 신고 — "..." 안에서 사유 하위 메뉴로 펼침(중앙 팝업 X, 글에 anchor).
+                Menu {
+                    ForEach(Community.ReportReason.allCases, id: \.self) { reason in
+                        Button(role: .destructive) { onReport(reason) } label: {
+                            Text(String(localized: String.LocalizationValue(reason.localizationKey)))
+                        }
                     }
+                } label: {
+                    Label(String(localized: "community.report.title"), systemImage: "flag")
                 }
-            } label: {
-                Label(String(localized: "community.report.title"), systemImage: "flag")
-            }
-            Button(role: .destructive, action: onBlock) {
-                Label(String(localized: "community.block"), systemImage: "hand.raised")
+                Button(role: .destructive, action: onBlock) {
+                    Label(String(localized: "community.block"), systemImage: "hand.raised")
+                }
             }
             if let onDelete {
                 Button(role: .destructive, action: onDelete) {
@@ -704,10 +707,15 @@ private struct BlockedUsersView: View {
     @ObservedObject private var service = CommunityService.shared
     @Environment(\.dismiss) private var dismiss
 
+    /// 본인 uid 는 제외(자기차단 방어) — 끝 4자리 정렬.
+    private var blockedList: [String] {
+        service.blockedUIDs.filter { $0 != service.myUID }.sorted()
+    }
+
     var body: some View {
         NavigationStack {
             List {
-                if service.blockedUIDs.isEmpty {
+                if blockedList.isEmpty {
                     Section {
                         Text(String(localized: "community.blocked.empty"))
                             .font(.system(size: 14))
@@ -715,7 +723,7 @@ private struct BlockedUsersView: View {
                     }
                 } else {
                     Section {
-                        ForEach(Array(service.blockedUIDs).sorted(), id: \.self) { uid in
+                        ForEach(blockedList, id: \.self) { uid in
                             HStack(spacing: 12) {
                                 Image(systemName: "person.crop.circle.badge.xmark")
                                     .font(.system(size: 20))

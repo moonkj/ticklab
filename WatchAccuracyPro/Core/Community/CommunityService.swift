@@ -233,6 +233,11 @@ final class CommunityService: ObservableObject {
         do {
             let (data, _) = try await URLSession.shared.data(for: req)
             let posts = try Self.decoder.decode([Community.Post].self, from: data)
+            // 자기차단 자동 해제(과거 버그 자가치유) — 본인 uid 가 차단목록에 있으면 본인 글이 사라짐.
+            if let uid = myUID, blockedUIDs.contains(uid) {
+                blockedUIDs.remove(uid)
+                defaults.set(Array(blockedUIDs), forKey: Keys.blocked)
+            }
             // 차단한 작성자 제외.
             feed = posts.filter { !blockedUIDs.contains($0.authorUID) }
         } catch {
@@ -292,6 +297,7 @@ final class CommunityService: ObservableObject {
 
     func block(authorOf post: Community.Post) async {
         await ensureSignedIn()
+        guard post.authorUID != myUID else { return }   // 본인은 차단 불가(자기차단 시 본인 글이 피드에서 사라짐)
         blockedUIDs.insert(post.authorUID)
         defaults.set(Array(blockedUIDs), forKey: Keys.blocked)
         feed.removeAll { $0.authorUID == post.authorUID }
