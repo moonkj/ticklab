@@ -731,7 +731,7 @@ final class DSPPipeline {
         // 8) Amplitude — 기존 AmplitudeEstimator 재사용. high-reliability 만.
         let beatEvents: [BeatEvent] = refined
         let amplitude: Double? = {
-            guard reliabilityLabel == .high else { return nil }
+            guard reliabilityLabel.displaysAmplitude else { return nil }
             return AmplitudeEstimator.estimate(
                 envelope: envSlice,
                 beats: beatEvents,
@@ -755,8 +755,8 @@ final class DSPPipeline {
         let elapsed = Date().timeIntervalSince(startTime ?? Date())
         let reliabilityNote: ReliabilityNote? = {
             switch reliabilityLabel {
-            case .medium, .low: return .generic
-            case .high:         return nil
+            case .medium, .low, .unverified: return .generic
+            case .high, .veryHigh:           return nil
             }
         }()
 
@@ -1071,7 +1071,7 @@ final class DSPPipeline {
         let snr = Self.estimateSNR(envelope: analyzeBuffer, raw: rawSnapshot)
 
         let amplitude: Double? = {
-            guard reliabilityLabel == .high else { return nil }
+            guard reliabilityLabel.displaysAmplitude else { return nil }
             return AmplitudeEstimator.estimate(
                 envelope: analyzeBuffer,
                 beats: beats,
@@ -1106,9 +1106,9 @@ final class DSPPipeline {
         // 도 일관성 위해 비활성화. medium/low 캘리버의 측정 정확도 안내(generic) 만 유지.
         let reliabilityNote: ReliabilityNote? = {
             switch reliabilityLabel {
-            case .medium, .low:
+            case .medium, .low, .unverified:
                 return .generic
-            case .high:
+            case .high, .veryHigh:
                 return nil
             }
         }()

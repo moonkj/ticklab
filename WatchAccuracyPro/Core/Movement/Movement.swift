@@ -12,9 +12,14 @@ enum Escapement: String, Codable, Sendable {
 }
 
 enum ReliabilityLabel: String, Codable, Sendable {
+    case veryHigh    // T-08: COSC 인증 등 실기기 검증 완료 — 최상 신뢰
     case high
     case medium
     case low
+    case unverified  // T-08: 커뮤니티 제보·미검증 — amplitude 비표시(Hard Rule 9)
+
+    /// amplitude 표시 가능 등급 — high/veryHigh 만. medium·low·unverified 는 비표시.
+    var displaysAmplitude: Bool { self == .high || self == .veryHigh }
 }
 
 struct Movement: Codable, Identifiable, Sendable, Equatable {
@@ -39,8 +44,8 @@ struct Movement: Codable, Identifiable, Sendable, Equatable {
         return min...max
     }
 
-    /// `medium` 또는 `low` 신뢰도 무브먼트는 amplitude를 표시하지 않는다.
+    /// high/veryHigh 외(medium·low·unverified) 신뢰도 무브먼트는 amplitude를 표시하지 않는다.
     var shouldDisplayAmplitude: Bool {
-        confidenceLabel == .high
+        confidenceLabel.displaysAmplitude
     }
 }

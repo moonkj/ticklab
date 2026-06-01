@@ -37,6 +37,29 @@ final class MovementDatabaseTests: XCTestCase {
         XCTAssertNil(omega.typicalAmplitudeRange, "코악시얼은 typical amplitude range 가 없어야 한다")
     }
 
+    // MARK: - T-08 신뢰등급 세분화 (veryHigh / unverified)
+
+    func test_reliabilityLabel_veryHigh_displaysAmplitude() {
+        let m = Movement(id: "X", brandFamilies: ["X"], bph: 28800, liftAngleDegrees: 52,
+                         escapement: .swissLever, typicalAmplitudeMin: 270, typicalAmplitudeMax: 310,
+                         coscToleranceMin: nil, coscToleranceMax: nil, confidenceLabel: .veryHigh)
+        XCTAssertTrue(m.shouldDisplayAmplitude, "veryHigh 는 high 처럼 amplitude 표시")
+    }
+
+    func test_reliabilityLabel_unverified_hidesAmplitude() {
+        let m = Movement(id: "X", brandFamilies: ["X"], bph: 28800, liftAngleDegrees: 52,
+                         escapement: .swissLever, typicalAmplitudeMin: 270, typicalAmplitudeMax: 310,
+                         coscToleranceMin: nil, coscToleranceMax: nil, confidenceLabel: .unverified)
+        XCTAssertFalse(m.shouldDisplayAmplitude, "unverified 는 medium/low 처럼 amplitude 비표시(Hard Rule 9)")
+    }
+
+    func test_reliabilityLabel_rawValues_decode() {
+        XCTAssertEqual(ReliabilityLabel(rawValue: "veryHigh"), .veryHigh)
+        XCTAssertEqual(ReliabilityLabel(rawValue: "unverified"), .unverified)
+        XCTAssertEqual(ReliabilityLabel(rawValue: "high"), .high)
+        XCTAssertNil(ReliabilityLabel(rawValue: "bogus"))
+    }
+
     func test_database_lookup_by_id() throws {
         let db = try MovementDatabase(movements: MovementDatabase.loadFromBundle(.main))
         XCTAssertNotNil(db.movement(id: "Rolex_3135"))
