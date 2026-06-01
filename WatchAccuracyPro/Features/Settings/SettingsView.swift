@@ -973,11 +973,26 @@ private struct AdminPanelView: View {
     @State private var seedToast: String? = nil
     @State private var showWipeConfirm = false
     @State private var showResetPrefsConfirm = false
+    /// 운영 ID — ON 이면 커뮤니티 게시 시 닉네임 'TickLab' + 앱 아이콘 아바타로 표시.
+    /// ⚠️ 클라 편의용. 위조 방지는 Supabase RLS 필요(docs/community/admin_rls.sql).
+    @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
 
     var body: some View {
         @Bindable var prefs = preferences
         NavigationStack {
             Form {
+                Section("운영 ID") {
+                    Picker("커뮤니티 게시 신원", selection: $actingAsTickLab) {
+                        Text("사용자").tag(false)
+                        Text("관리자 (TickLab)").tag(true)
+                    }
+                    .pickerStyle(.segmented)
+                    Text(actingAsTickLab
+                         ? "커뮤니티 게시 시 닉네임 'TickLab' + 앱 아이콘 아바타로 표시됩니다."
+                         : "일반 사용자 프로필 이름으로 게시됩니다.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
                 Section("라이선스 모드") {
                     Toggle("Pro 잠금 해제", isOn: Binding(
                         get: { prefs.isPro },

@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// 커뮤니티 익명 사진 피드. 좋아요·신고·차단 + (게이팅 ON 시) 인기글 부분 흐림.
 /// FeatureFlags.communityEnabled OFF 면 RootTabView 가 탭 자체를 노출 안 함.
@@ -349,6 +350,17 @@ struct CommunitySavedView: View {
 }
 
 /// 피드 카드 — 사진 + 좋아요 + 신고/차단 메뉴 + (게이팅) 흐림.
+/// 앱 아이콘을 런타임 UIImage 로 — 커뮤니티 운영(TickLab) 계정 아바타용. 실패 시 nil → 글자 아바타 폴백.
+enum AppIconProvider {
+    static let image: UIImage? = {
+        guard let icons = Bundle.main.infoDictionary?["CFBundleIcons"] as? [String: Any],
+              let primary = icons["CFBundlePrimaryIcon"] as? [String: Any],
+              let files = primary["CFBundleIconFiles"] as? [String],
+              let name = files.last else { return nil }
+        return UIImage(named: name)
+    }()
+}
+
 private struct CommunityPostCard: View {
     let post: Community.Post
     let liked: Bool
@@ -402,14 +414,19 @@ private struct CommunityPostCard: View {
     private var header: some View {
         HStack(spacing: 10) {
             ZStack {
-                Circle().fill(avatarColor)
-                if let path = post.authorAvatarPath, let url = CommunityService.shared.imageURL(for: path) {
-                    AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { Color.clear }
-                        .clipShape(Circle())
+                if post.authorName == "TickLab", let icon = AppIconProvider.image {
+                    // 운영(TickLab) 계정 — 앱 아이콘 아바타로 고정.
+                    Image(uiImage: icon).resizable().scaledToFill().clipShape(Circle())
                 } else {
-                    Text(initial)
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundStyle(.white)
+                    Circle().fill(avatarColor)
+                    if let path = post.authorAvatarPath, let url = CommunityService.shared.imageURL(for: path) {
+                        AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { Color.clear }
+                            .clipShape(Circle())
+                    } else {
+                        Text(initial)
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(.white)
+                    }
                 }
             }
             .frame(width: 32, height: 32)

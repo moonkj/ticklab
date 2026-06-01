@@ -404,10 +404,16 @@ final class CommunityService: ObservableObject {
         ins.setValue("return=representation", forHTTPHeaderField: "Prefer")
         var body: [String: Any] = ["image_path": path]
         if let brand, !brand.isEmpty { body["brand"] = brand }
-        // 작성자 표시명(공개 프로필) — 설정 프로필 이름, 없으면 기본값.
-        let authorName = (defaults.string(forKey: "ticklab.profile.name") ?? "")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        body["author_name"] = authorName.isEmpty ? "Collector" : authorName
+        // 작성자 표시명(공개 프로필). 운영 ID(관리자) 활성 시 "TickLab" 으로 고정 게시.
+        // ⚠️ 클라이언트 표시/편의용 — 위조 방지는 서버 RLS(admin_users)로 "TickLab" 사용을
+        //    admin uid 로 제한해야 함. docs/community/admin_rls.sql 참고.
+        if defaults.bool(forKey: "ticklab.admin.actingAsTickLab") {
+            body["author_name"] = "TickLab"
+        } else {
+            let authorName = (defaults.string(forKey: "ticklab.profile.name") ?? "")
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            body["author_name"] = authorName.isEmpty ? "Collector" : authorName
+        }
         if let caption {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
