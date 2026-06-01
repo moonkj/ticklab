@@ -61,22 +61,23 @@ struct JournalFeedView: View {
                 .padding(.vertical, 12)
             }
             .background(AppColors.paper0.ignoresSafeArea())
-            .toolbar(.hidden, for: .navigationBar)
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    composing = true
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 44, height: 44)
-                        .background(AppColors.ink0)
-                        .clipShape(Circle())
+            // 하이브리드 C: 내비바 숨김 제거 → 투명 inline 내비바, + 버튼은 toolbar 로(컬렉션과 동일).
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppColors.paper0, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { composing = true } label: {
+                        Image(systemName: "plus")
+                            .font(.system(size: 14, weight: .bold))
+                            .foregroundStyle(AppColors.paper0)
+                            .frame(width: 32, height: 32)
+                            .background(AppColors.ink0)
+                            .clipShape(Circle())
+                    }
+                    .accessibilityLabel(String(localized: "journal.compose.title"))
                 }
-                .buttonStyle(.plain)
-                .padding(.top, 12)
-                .padding(.trailing, 20)
-                .accessibilityLabel(String(localized: "journal.compose.title"))
             }
             .sheet(isPresented: $composing) {
                 JournalComposerView()

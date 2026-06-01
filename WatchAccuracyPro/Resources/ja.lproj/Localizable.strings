@@ -836,6 +836,7 @@
 /* Round 92 — Today tab */
 "tab.today" = "今日";
 "today.greeting" = "今日はどの時計を?";
+"today.eyebrow" = "デイリー";
 "today.stat.watches" = "ウォッチファミリー";
 "today.stat.this_week" = "今週";
 "today.shake.title" = "今日の一本";

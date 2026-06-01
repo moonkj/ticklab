@@ -836,6 +836,7 @@
 /* Round 92 — Today tab */
 "tab.today" = "今天";
 "today.greeting" = "今天戴哪只手表?";
+"today.eyebrow" = "每日";
 "today.stat.watches" = "腕表家族";
 "today.stat.this_week" = "本周";
 "today.shake.title" = "今日腕表挑选";

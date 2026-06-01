@@ -844,6 +844,7 @@
 /* Round 92 — Today tab */
 "tab.today" = "Today";
 "today.greeting" = "Which watch today?";
+"today.eyebrow" = "DAILY";
 "today.stat.watches" = "Watch family";
 "today.stat.this_week" = "This week";
 "today.shake.title" = "Today's watch pick";

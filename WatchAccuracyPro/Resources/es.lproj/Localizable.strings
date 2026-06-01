@@ -836,6 +836,7 @@
 /* Round 92 — Today tab */
 "tab.today" = "Hoy";
 "today.greeting" = "¿Qué reloj llevarás hoy?";
+"today.eyebrow" = "DIARIO";
 "today.stat.watches" = "Familia de relojes";
 "today.stat.this_week" = "Esta semana";
 "today.shake.title" = "Reloj elegido para hoy";

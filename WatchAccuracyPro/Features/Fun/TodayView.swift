@@ -41,6 +41,11 @@ struct TodayView: View {
         NavigationStack(path: pathBinding) {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
+                    // 하이브리드 C: 4탭 일관 에디토리얼 헤더(제목 부활). 환영 카드는 아래 유지.
+                    EditorialPageHeader(
+                        eyebrow: String(localized: "today.eyebrow"),
+                        title: String(localized: "tab.today")
+                    )
                     headerSection
                     // Round 176 (사용자 UX 요청 #2): 대표 시계 명확화. 설정 됐으면 큰 카드, 아니면 빈 상태 CTA.
                     primaryWatchSection
@@ -64,8 +69,7 @@ struct TodayView: View {
                 .padding(.bottom, 80)
             }
             .background(AppColors.paper0.ignoresSafeArea())
-            .navigationTitle(String(localized: "tab.today"))
-            // Round 138 사용자 요청: 기록/통계처럼 inline 고정.
+            // 하이브리드 C: inline "오늘" 제목 제거 → 4탭 내비바 통일(본문 headerSection 환영 카드 유지).
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.paper0, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)

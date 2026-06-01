@@ -22,19 +22,20 @@ struct PhotoCropView: View {
     @State private var offset: CGSize = .zero
     @State private var baseOffset: CGSize = .zero
     @State private var upright: UIImage?
+    /// 크롭 프레임 크기 — export 가 컨트롤(GeometryReader 밖)에서 접근하려고 저장.
+    @State private var cropSize: CGSize = .zero
 
     private let maxScale: CGFloat = 5
 
     var body: some View {
-        GeometryReader { geo in
-            // 인스타 스타일: 크롭 프레임을 화면 풀폭 4:3 엣지투엣지로(중앙), 컨트롤은 오버레이.
-            let cropW = geo.size.width
-            let cropH = cropW / aspect
-            let img = upright ?? image
-            ZStack {
-                Color.black.ignoresSafeArea()
+        ZStack {
+            Color.black.ignoresSafeArea()
 
-                // 중앙 크롭 — 드래그·핀치로 위치/확대. 바깥은 검정 밴드(인스타식).
+            // 크롭 이미지 레이어 — 풀스크린(세이프에어리어 무시), 중앙 정렬. 드래그·핀치.
+            GeometryReader { geo in
+                let cropW = geo.size.width
+                let cropH = cropW / aspect
+                let img = upright ?? image
                 cropContent(img: img, cropW: cropW, cropH: cropH)
                     .frame(width: cropW, height: cropH)
                     .clipped()
@@ -42,46 +43,56 @@ struct PhotoCropView: View {
                     .contentShape(Rectangle())
                     .gesture(dragGesture(img: img, cropW: cropW, cropH: cropH))
                     .simultaneousGesture(magnifyGesture(img: img, cropW: cropW, cropH: cropH))
-
-                // 상단 바(취소/완료) — 세이프에어리어 아래로(상태바·노치 회피) + 가독성 그라데이션.
-                VStack(spacing: 0) {
-                    HStack {
-                        Button(action: onCancel) {
-                            Text(String(localized: "common.cancel"))
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundStyle(.white)
-                        }
-                        Spacer()
-                        Button { export(img: img, cropW: cropW, cropH: cropH) } label: {
-                            Text(String(localized: "common.done"))
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundStyle(.black)
-                                .padding(.horizontal, 18)
-                                .padding(.vertical, 9)
-                                .background(.white)
-                                .clipShape(Capsule())
-                        }
+                    .frame(width: geo.size.width, height: geo.size.height)  // 풀스크린 중앙
+                    .onAppear {
+                        cropSize = CGSize(width: cropW, height: cropH)
+                        if upright == nil { upright = image.uprightCopy() }
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
-                    .padding(.bottom, 16)
-                    .background(
-                        LinearGradient(colors: [.black.opacity(0.55), .clear],
-                                       startPoint: .top, endPoint: .bottom)
-                    )
-                    Spacer()
-                    Text(String(localized: "photo.crop.hint"))
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.85))
-                        .padding(.horizontal, 16).padding(.vertical, 8)
-                        .background(Capsule().fill(.black.opacity(0.4)))
-                        .padding(.bottom, 28)
-                }
             }
-            .onAppear {
-                if upright == nil { upright = image.uprightCopy() }
+            .ignoresSafeArea()
+
+            // 컨트롤 레이어 — ZStack 직속 자식이라 **세이프에어리어 준수**(상태바·노치 아래). 버튼 클릭 보장.
+            VStack(spacing: 0) {
+                HStack {
+                    Button(action: onCancel) {
+                        Text(String(localized: "common.cancel"))
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(.white)
+                    }
+                    Spacer()
+                    Button { exportCurrent() } label: {
+                        Text(String(localized: "common.done"))
+                            .font(.system(size: 16, weight: .semibold))
+                            .foregroundStyle(.black)
+                            .padding(.horizontal, 18)
+                            .padding(.vertical, 9)
+                            .background(.white)
+                            .clipShape(Capsule())
+                    }
+                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(
+                    LinearGradient(colors: [.black.opacity(0.55), .clear],
+                                   startPoint: .top, endPoint: .bottom)
+                )
+                Spacer()
+                Text(String(localized: "photo.crop.hint"))
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.85))
+                    .padding(.horizontal, 16).padding(.vertical, 8)
+                    .background(Capsule().fill(.black.opacity(0.4)))
+                    .padding(.bottom, 20)
             }
         }
+    }
+
+    /// 컨트롤(GeometryReader 밖)에서 호출 — 저장된 cropSize 로 export.
+    @MainActor
+    private func exportCurrent() {
+        let img = upright ?? image
+        let w = cropSize.width > 0 ? cropSize.width : UIScreen.main.bounds.width
+        export(img: img, cropW: w, cropH: w / aspect)
     }
 
     @ViewBuilder

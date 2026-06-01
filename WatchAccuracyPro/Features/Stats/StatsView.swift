@@ -56,7 +56,11 @@ struct StatsView: View {
                 .padding(20)
             }
             .background(AppColors.paper0.ignoresSafeArea())
-            .toolbar(.hidden, for: .navigationBar)
+            // 하이브리드 C: 내비바 숨김 제거 → 투명 inline 내비바로 4탭 통일.
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppColors.paper0, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             // Round (4): wearLogs 변화 시에만 무거운 fetch + group 재계산. body re-render 마다 fetch 차단.
             .onAppear { refreshWearStats() }
             .onChange(of: wearLogs.count) { _, _ in refreshWearStats() }

@@ -496,20 +496,13 @@ struct CollectionView: View {
 
     // MARK: - Header
 
+    /// 하이브리드 C: 공용 EditorialPageHeader 로 4탭 헤더 톤 통일(수제 복제 제거).
     private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(String(localized: "collection.eyebrow").uppercased())
-                .font(.system(size: 10.5, weight: .semibold))
-                .tracking(2.5)
-                .foregroundStyle(AppColors.ink2)
-            Text(String(localized: "collection.title"))
-                .font(.system(size: 38, weight: .medium, design: .serif).italic())
-                .foregroundStyle(AppColors.ink0)
-            Text(String(localized: "collection.subtitle"))
-                .font(.system(size: 16, design: .serif).italic())
-                .foregroundStyle(AppColors.ink2)
-                .padding(.top, 2)
-        }
+        EditorialPageHeader(
+            eyebrow: String(localized: "collection.eyebrow"),
+            title: String(localized: "collection.title"),
+            subtitle: String(localized: "collection.subtitle")
+        )
         .padding(.horizontal, 20)
         .padding(.top, 4)
     }
