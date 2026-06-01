@@ -1568,6 +1568,12 @@
 "news.empty.body" = "Check your internet connection and pull to refresh.";
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
+"video.feed.title" = "動画";
+"video.empty.title" = "まだ動画がありません";
+"video.empty.body" = "まもなく新しい時計動画が追加されます。";
+"video.watch_on_youtube" = "YouTubeで見る";
+"stats.entry.videos" = "おすすめ動画";
+"stats.entry.videos.subtitle" = "専門家が選ぶ時計動画";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 "sort.custom" = "Custom Order";
 "sort.brand" = "Brand";

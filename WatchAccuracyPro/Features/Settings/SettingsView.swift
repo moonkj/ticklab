@@ -969,6 +969,8 @@ private struct AdminOpsView: View {
     @State private var loaded = false
     @State private var composingAnnouncement = false
     @State private var announcements: [Community.Announcement] = []
+    @State private var composingChannel = false
+    @State private var channels: [Community.CuratedChannel] = []
 
     private struct ReportGroup: Identifiable {
         let postID: String
@@ -1034,6 +1036,32 @@ private struct AdminOpsView: View {
                     Text("작성한 공지 없음").font(.caption).foregroundStyle(.secondary)
                 }
             }
+            Section("큐레이션 영상 채널") {
+                Button { composingChannel = true } label: {
+                    Label("새 채널 추가", systemImage: "play.rectangle")
+                }
+                ForEach(channels) { ch in
+                    NavigationLink {
+                        AdminChannelSheet(existing: ch) { await reloadChannels() }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(ch.title).font(.system(size: 13)).lineLimit(1)
+                            Text("\(ch.locale.uppercased()) · \(ch.channelID)" + (ch.active ? "" : " · 비활성"))
+                                .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                        }
+                    }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            Task { await deleteChannel(ch) }
+                        } label: { Label("삭제", systemImage: "trash") }
+                    }
+                }
+                if channels.isEmpty {
+                    Text("등록된 채널 없음").font(.caption).foregroundStyle(.secondary)
+                }
+                Text("YouTube 채널 ID(UCxxxx)를 언어별로 등록. 채널 RSS로 신규 영상을 분석 탭 ‘영상’에 표시.")
+                    .font(.caption2).foregroundStyle(.secondary)
+            }
             Section("신고된 게시물") {
                 if grouped.isEmpty {
                     Text(loaded
@@ -1063,6 +1091,20 @@ private struct AdminOpsView: View {
                 AdminAnnouncementSheet(existing: nil) { await reloadAnnouncements() }
             }
         }
+        .sheet(isPresented: $composingChannel) {
+            NavigationStack {
+                AdminChannelSheet(existing: nil) { await reloadChannels() }
+            }
+        }
+    }
+
+    private func reloadChannels() async {
+        channels = await service.fetchAllCuratedChannels()
+    }
+
+    private func deleteChannel(_ ch: Community.CuratedChannel) async {
+        channels.removeAll { $0.id == ch.id }
+        if !(await service.deleteCuratedChannel(id: ch.id)) { await reloadChannels() }
     }
 
     @ViewBuilder
@@ -1106,10 +1148,12 @@ private struct AdminOpsView: View {
         async let s = service.fetchOpsStats()
         async let r = service.fetchReports()
         async let a = service.fetchAnnouncements()
+        async let c = service.fetchAllCuratedChannels()
         stats = await s
         let rep = await r
         reports = rep
         announcements = await a
+        channels = await c
         let ids = Array(Set(rep.map { $0.postID }))
         let posts = await service.fetchReportedPosts(ids: ids)
         reportedPosts = Dictionary(posts.map { ($0.id, $0) }, uniquingKeysWith: { x, _ in x })
@@ -1269,6 +1313,78 @@ private struct AdminAnnouncementSheet: View {
                 startsAt = e.startsAt ?? Date()
                 endsAt = e.endsAt ?? Date().addingTimeInterval(7 * 86400)
                 active = e.active
+            }
+        }
+    }
+}
+
+/// 큐레이션 YouTube 채널 추가/수정 — 채널 ID(UCxxxx)·채널명·언어·정렬·활성.
+private struct AdminChannelSheet: View {
+    let existing: Community.CuratedChannel?
+    let onSaved: () async -> Void
+    private let service = CommunityService.shared
+    @Environment(\.dismiss) private var dismiss
+    @State private var channelID = ""
+    @State private var title = ""
+    @State private var thumbnailURL = ""
+    @State private var locale = "en"
+    @State private var category = ""
+    @State private var sortOrder = 0
+    @State private var active = true
+    @State private var saving = false
+    @State private var error: String?
+
+    private let locales = ["ko", "en", "ja", "zh-Hans", "zh-Hant", "es", "hi", "fr"]
+    private var validID: Bool {
+        let t = channelID.trimmingCharacters(in: .whitespaces)
+        return t.hasPrefix("UC") && t.count >= 20
+    }
+
+    var body: some View {
+        Form {
+            Section("채널") {
+                TextField("채널 ID (UCxxxx)", text: $channelID)
+                    .autocorrectionDisabled().textInputAutocapitalization(.never)
+                TextField("채널명", text: $title)
+                TextField("썸네일 URL (선택)", text: $thumbnailURL)
+                    .autocorrectionDisabled().textInputAutocapitalization(.never)
+            }
+            Section("노출") {
+                Picker("언어", selection: $locale) {
+                    ForEach(locales, id: \.self) { Text($0).tag($0) }
+                }
+                TextField("카테고리 (선택: review/news…)", text: $category).autocorrectionDisabled()
+                Stepper("정렬 순서: \(sortOrder)", value: $sortOrder, in: 0...999)
+                Toggle("활성", isOn: $active)
+            }
+            Section {
+                Button(existing == nil ? "추가" : "수정 저장") {
+                    saving = true
+                    Task {
+                        let cid = channelID.trimmingCharacters(in: .whitespaces)
+                        let ok: Bool
+                        if let e = existing {
+                            ok = await service.updateCuratedChannel(id: e.id, channelID: cid, title: title, thumbnailURL: thumbnailURL, locale: locale, category: category, sortOrder: sortOrder, active: active)
+                        } else {
+                            ok = await service.addCuratedChannel(channelID: cid, title: title, thumbnailURL: thumbnailURL, locale: locale, category: category, sortOrder: sortOrder)
+                        }
+                        saving = false
+                        if ok { await onSaved(); dismiss() } else { error = "저장 실패 (admin RLS·channel_id 확인)" }
+                    }
+                }
+                .disabled(!validID || title.trimmingCharacters(in: .whitespaces).isEmpty || saving)
+                Text("채널 ID는 YouTube 채널 URL의 /channel/UC… 부분. 핸들(@name)은 채널 ‘공유 → 채널 ID 복사’로 변환.")
+                    .font(.caption2).foregroundStyle(.secondary)
+                if let error { Text(error).font(.caption).foregroundStyle(.red) }
+            }
+        }
+        .navigationTitle(existing == nil ? "채널 추가" : "채널 수정")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } } }
+        .onAppear {
+            if let e = existing {
+                channelID = e.channelID; title = e.title; thumbnailURL = e.thumbnailURL ?? ""
+                locale = e.locale; category = e.category ?? ""; sortOrder = e.sortOrder; active = e.active
             }
         }
     }

@@ -139,6 +139,15 @@ struct StatsView: View {
                                      subtitle: String(localized: "stats.entry.news.subtitle"),
                                      tint: Color.orange.opacity(0.15))
                     }.buttonStyle(.plain)
+                    // 큐레이션 YouTube 영상 — 백엔드(curated_channels) 준비 후 플래그 ON.
+                    if FeatureFlags.shared.videoFeedEnabled {
+                        NavigationLink { VideoFeedView() } label: {
+                            funEntryCard(emoji: "▶️",
+                                         title: String(localized: "stats.entry.videos"),
+                                         subtitle: String(localized: "stats.entry.videos.subtitle"),
+                                         tint: Color.red.opacity(0.14))
+                        }.buttonStyle(.plain)
+                    }
                 }
             }
         }

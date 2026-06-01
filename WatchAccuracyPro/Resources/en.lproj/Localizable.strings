@@ -1603,6 +1603,12 @@
 "news.empty.body" = "Check your internet connection and pull to refresh.";
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
+"video.feed.title" = "Videos";
+"video.empty.title" = "No videos yet";
+"video.empty.body" = "New watch videos coming soon.";
+"video.watch_on_youtube" = "Watch on YouTube";
+"stats.entry.videos" = "Featured Videos";
+"stats.entry.videos.subtitle" = "Hand-picked watch videos";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 
 /* Sprint 8 — Sort options */

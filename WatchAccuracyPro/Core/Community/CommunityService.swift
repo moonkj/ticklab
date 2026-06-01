@@ -318,6 +318,66 @@ final class CommunityService: ObservableObject {
         await loadFeed()
     }
 
+    // MARK: - Curated YouTube Channels (운영자 큐레이션 — 영상 피드)
+
+    /// 활성 채널 — locale 매칭. 호출 측에서 비면 'en' 폴백. 모든 사용자 읽기.
+    func fetchCuratedChannels(locale: String) async -> [Community.CuratedChannel] {
+        await ensureSignedIn()
+        guard let enc = locale.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(baseURL)/rest/v1/curated_channels?select=*&locale=eq.\(enc)&active=eq.true&order=sort_order.asc") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.CuratedChannel].self, from: data) else { return [] }
+        return arr
+    }
+
+    /// 운영자 편집용 — active/locale 무관 전체.
+    func fetchAllCuratedChannels() async -> [Community.CuratedChannel] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels?select=*&order=locale.asc,sort_order.asc") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.CuratedChannel].self, from: data) else { return [] }
+        return arr
+    }
+
+    @discardableResult
+    func addCuratedChannel(channelID: String, title: String, thumbnailURL: String?,
+                           locale: String, category: String?, sortOrder: Int) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels") else { return false }
+        var req = authedRequest(url, method: "POST")
+        var body: [String: Any] = ["channel_id": channelID, "title": title, "locale": locale, "sort_order": sortOrder, "active": true]
+        if let t = thumbnailURL, !t.isEmpty { body["thumbnail_url"] = t }
+        if let c = category, !c.isEmpty { body["category"] = c }
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    @discardableResult
+    func updateCuratedChannel(id: String, channelID: String, title: String, thumbnailURL: String?,
+                              locale: String, category: String?, sortOrder: Int, active: Bool) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels?id=eq.\(id)") else { return false }
+        var req = authedRequest(url, method: "PATCH")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: [
+            "channel_id": channelID, "title": title,
+            "thumbnail_url": (thumbnailURL?.isEmpty == false ? thumbnailURL! : NSNull()) as Any,
+            "locale": locale, "category": (category?.isEmpty == false ? category! : NSNull()) as Any,
+            "sort_order": sortOrder, "active": active
+        ])
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    @discardableResult
+    func deleteCuratedChannel(id: String) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels?id=eq.\(id)") else { return false }
+        guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
     // MARK: - Profile / Nickname (서버 등록 + 중복 검사)
 
     /// 닉네임이 **다른 사용자**에게 선점됐는지(대소문자 무시). 본인 것은 제외. 비어있으면 false.

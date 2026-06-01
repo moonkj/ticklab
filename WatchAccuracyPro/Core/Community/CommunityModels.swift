@@ -95,6 +95,24 @@ enum Community {
         let createdAt: Date
     }
 
+    /// 운영자 큐레이션 YouTube 채널(영상 피드). 언어별. RSS는 channelId 로 앱이 직접 읽음.
+    struct CuratedChannel: Codable, Identifiable {
+        let id: String
+        let channelID: String
+        let title: String
+        let thumbnailURL: String?
+        let locale: String
+        let category: String?
+        let sortOrder: Int
+        let active: Bool
+        enum CodingKeys: String, CodingKey {
+            case id, title, locale, category, active
+            case channelID = "channel_id"
+            case thumbnailURL = "thumbnail_url"
+            case sortOrder = "sort_order"
+        }
+    }
+
     /// 신고 사유 — UGC 의무(Guideline 1.2).
     enum ReportReason: String, Codable, CaseIterable {
         case inappropriate   // 부적절/선정적

@@ -1568,6 +1568,12 @@
 "news.empty.body" = "Check your internet connection and pull to refresh.";
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
+"video.feed.title" = "Vídeos";
+"video.empty.title" = "No hay vídeos todavía";
+"video.empty.body" = "Pronto añadiremos nuevos vídeos de relojes.";
+"video.watch_on_youtube" = "Ver en YouTube";
+"stats.entry.videos" = "Vídeos destacados";
+"stats.entry.videos.subtitle" = "Vídeos de relojes seleccionados";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 "sort.custom" = "Custom Order";
 "sort.brand" = "Brand";

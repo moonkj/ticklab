@@ -18,6 +18,7 @@
 		0A8E8B3E80CDF325E1487029 /* WishlistItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03D5E47884BC08DBF3B9E979 /* WishlistItem.swift */; };
 		0AF05D132A01F4584655E85D /* Watch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97B0BF3889B7C279B96913C8 /* Watch.swift */; };
 		0B416ACF36F8E8619915B8D3 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 15760E394B5817EC63E9E57B /* PrivacyInfo.xcprivacy */; };
+		0B92521B6728F926EBEE72FD /* VideoFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0615168852F5EE80E779D84 /* VideoFeedView.swift */; };
 		0C475AE81DA480D90B67BC77 /* ConditionReportGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D77630A107E903F99E49AC29 /* ConditionReportGenerator.swift */; };
 		0C96AF50F78003395D7730C8 /* CollectionValueCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB6C7E11831324D6C5BB937 /* CollectionValueCard.swift */; };
 		0CF6D20369F26C6371F0B92F /* BeatErrorCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D319417FE4AD2AEE3FACD65 /* BeatErrorCalculatorTests.swift */; };
@@ -203,6 +204,7 @@
 		D515CDB9F4B7FDD774B7F335 /* CommunityEULAView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D055CFF6CD7B879E160435 /* CommunityEULAView.swift */; };
 		D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45F3AD76B382E83F02230C55 /* Secrets.swift */; };
 		D9164317CF032DE33A7CDDFE /* ServiceLogComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353479AEF5F399DDE278E742 /* ServiceLogComposerView.swift */; };
+		DA8B8E71183F93A999BBBD5E /* YouTubeFeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67729A8C8633CABBF5FC5506 /* YouTubeFeedService.swift */; };
 		DA905BE42112412325D23E64 /* PINSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C09D7C9D6BA476268354A860 /* PINSetupView.swift */; };
 		DAD07F22F7161CCDC0D90EA4 /* SyntheticSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C7CB354C788C3226BAF8FAF /* SyntheticSignal.swift */; };
 		DBE8CAD22D430E9DECC0FAED /* DSPDownsampleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7213C8CD99CB49E77B212DDC /* DSPDownsampleTests.swift */; };
@@ -381,6 +383,7 @@
 		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakePickView.swift; sourceTree = "<group>"; };
 		66DCCBEDCDAED7D7BEDE087F /* AudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSource.swift; sourceTree = "<group>"; };
+		67729A8C8633CABBF5FC5506 /* YouTubeFeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeFeedService.swift; sourceTree = "<group>"; };
 		691023A66AE599737D98CAE7 /* PINEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINEntryView.swift; sourceTree = "<group>"; };
 		69D2295B7834A646CE946315 /* SpecCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardView.swift; sourceTree = "<group>"; };
 		6A42707A0286E4620D0F3829 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -463,6 +466,7 @@
 		BD030531747E34B54A19412F /* AccuracyGradeChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccuracyGradeChip.swift; sourceTree = "<group>"; };
 		BE3199A00E2F396AD697AB82 /* CommunityComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityComposerView.swift; sourceTree = "<group>"; };
 		C0274767AAF6167667358503 /* CollectionShareCardGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionShareCardGenerator.swift; sourceTree = "<group>"; };
+		C0615168852F5EE80E779D84 /* VideoFeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoFeedView.swift; sourceTree = "<group>"; };
 		C09D7C9D6BA476268354A860 /* PINSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupView.swift; sourceTree = "<group>"; };
 		C1FF870CF2C7781C49AFBBF3 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		C47ABF66B3DE34B94929919A /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
@@ -1004,6 +1008,7 @@
 			isa = PBXGroup;
 			children = (
 				F4DA4EFFE1238185232C696F /* BrandNewsService.swift */,
+				67729A8C8633CABBF5FC5506 /* YouTubeFeedService.swift */,
 			);
 			path = News;
 			sourceTree = "<group>";
@@ -1021,6 +1026,7 @@
 				6F2A14F04A20422E0697A398 /* SupabaseBrandLeagueService.swift */,
 				286091247745D80CC0F014B0 /* TamagotchiView.swift */,
 				5F3FB0232C07394894BE9086 /* TodayView.swift */,
+				C0615168852F5EE80E779D84 /* VideoFeedView.swift */,
 			);
 			path = Fun;
 			sourceTree = "<group>";
@@ -1600,6 +1606,7 @@
 				49312D264DF8EF8D7C3755CB /* Typography.swift in Sources */,
 				E87A9E6561A1E7A78F0156C6 /* UserPreferences.swift in Sources */,
 				74BEA8A8ABA4477195771546 /* UserProfileView.swift in Sources */,
+				0B92521B6728F926EBEE72FD /* VideoFeedView.swift in Sources */,
 				0AF05D132A01F4584655E85D /* Watch.swift in Sources */,
 				38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */,
 				2B4BAA5D1BD153C47D0FD778 /* WatchBoxView.swift in Sources */,
@@ -1629,6 +1636,7 @@
 				53222385DC5A8173E97DFB7F /* WishlistView.swift in Sources */,
 				53C406BC47FD0266CBFCBC40 /* WrappedReportGenerator.swift in Sources */,
 				87C7A93106D6D38117C28AF2 /* WrappedView.swift in Sources */,
+				DA8B8E71183F93A999BBBD5E /* YouTubeFeedService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

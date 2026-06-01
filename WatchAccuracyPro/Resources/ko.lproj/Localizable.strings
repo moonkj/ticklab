@@ -1602,6 +1602,12 @@
 "news.empty.body" = "인터넷 연결을 확인하고 당겨서 새로고침해보세요.";
 "news.read_more" = "더 보기 →";
 "stats.entry.news" = "브랜드 뉴스";
+"video.feed.title" = "영상";
+"video.empty.title" = "아직 영상이 없어요";
+"video.empty.body" = "곧 새로운 시계 영상이 추가됩니다.";
+"video.watch_on_youtube" = "YouTube에서 보기";
+"stats.entry.videos" = "추천 영상";
+"stats.entry.videos.subtitle" = "전문가가 고른 시계 영상";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 
 /* Sprint 8 — 정렬 옵션 */

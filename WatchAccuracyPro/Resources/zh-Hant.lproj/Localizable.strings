@@ -1568,6 +1568,12 @@
 "news.empty.body" = "Check your internet connection and pull to refresh.";
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
+"video.feed.title" = "影片";
+"video.empty.title" = "暫無影片";
+"video.empty.body" = "即將新增新的腕錶影片。";
+"video.watch_on_youtube" = "在 YouTube 觀看";
+"stats.entry.videos" = "精選影片";
+"stats.entry.videos.subtitle" = "專家精選腕錶影片";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 "sort.custom" = "Custom Order";
 "sort.brand" = "Brand";
