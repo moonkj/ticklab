@@ -139,10 +139,31 @@ final class CommunityService: ObservableObject {
         return Date().timeIntervalSince1970 >= (exp - 60)
     }
 
+    /// JWT payload 디코드(base64url). 실패 시 nil.
+    static func decodeJWTPayload(_ jwt: String) -> [String: Any]? {
+        let parts = jwt.split(separator: ".")
+        guard parts.count == 3 else { return nil }
+        var b64 = String(parts[1])
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        while b64.count % 4 != 0 { b64 += "=" }
+        guard let data = Data(base64Encoded: b64) else { return nil }
+        return (try? JSONSerialization.jsonObject(with: data)) as? [String: Any]
+    }
+
+    /// 익명 세션 여부(`is_anonymous` 클레임). 신원 전환 후 익명 토큰은 비로그인 취급.
+    static func isAnonymousJWT(_ jwt: String) -> Bool {
+        (decodeJWTPayload(jwt)?["is_anonymous"] as? Bool) ?? false
+    }
+
     // MARK: - Sign in with Apple (신원 전환: 익명 → 공개 프로필)
 
-    /// Apple 로그인 세션 보유 여부. 게시·팔로우·스크랩 등 액션 게이트.
-    var isSignedIn: Bool { accessToken != nil && myUID != nil }
+    /// 진짜 로그인(Apple) 세션 보유 여부. **익명 세션(is_anonymous)은 비로그인 취급** —
+    /// 신원 전환 전 캐시된 익명 토큰이 게이트를 우회하던 버그 방지.
+    var isSignedIn: Bool {
+        guard let token = accessToken, myUID != nil else { return false }
+        return !Self.isAnonymousJWT(token)
+    }
 
     /// 네이티브 Sign in with Apple 의 identity token 을 Supabase 와 교환(영구 계정·같은 uid 유지).
     /// 콘솔에서 Apple provider 활성화 필요. 성공 시 true.
