@@ -377,6 +377,8 @@
 "community.report.offensive" = "Abusif / haineux";
 "community.report.copyright" = "Droits d'auteur / photo d'autrui";
 "community.report.other" = "Autre";
+"community.report.trade" = "Vente/échange";
+"community.report.scam" = "Arnaque suspectée";
 "community.eula.title" = "Règles de la communauté";
 "community.eula.body" = "La communauté TickLab n'a aucune tolérance pour les contenus répréhensibles. En publiant, vous acceptez les conditions ci-dessous.";
 "community.eula.agree" = "Accepter et continuer";

@@ -377,6 +377,8 @@
 "community.report.offensive" = "अपमानजनक / घृणित";
 "community.report.copyright" = "कॉपीराइट / किसी और की फ़ोटो";
 "community.report.other" = "अन्य";
+"community.report.trade" = "बिक्री/व्यापार";
+"community.report.scam" = "संदिग्ध धोखाधड़ी";
 "community.eula.title" = "समुदाय दिशानिर्देश";
 "community.eula.body" = "TickLab समुदाय आपत्तिजनक सामग्री को बिल्कुल सहन नहीं करता। पोस्ट करके आप नीचे दी गई शर्तों से सहमत होते हैं।";
 "community.eula.agree" = "सहमत हों और जारी रखें";

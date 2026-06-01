@@ -377,6 +377,8 @@
 "community.report.offensive" = "辱罵/仇恨";
 "community.report.copyright" = "版權/他人照片";
 "community.report.other" = "其他";
+"community.report.trade" = "交易/銷售引導";
+"community.report.scam" = "疑似詐騙";
 "community.eula.title" = "社群準則";
 "community.eula.body" = "TickLab 社群對不當內容零容忍。發布即表示您同意以下條款。";
 "community.eula.agree" = "同意並繼續";

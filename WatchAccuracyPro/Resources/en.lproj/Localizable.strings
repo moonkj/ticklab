@@ -384,6 +384,8 @@
 "community.report.offensive" = "Abusive / hateful";
 "community.report.copyright" = "Copyright / someone else's photo";
 "community.report.other" = "Other";
+"community.report.trade" = "Trade/sale solicitation";
+"community.report.scam" = "Suspected scam";
 "community.eula.title" = "Community Guidelines";
 "community.eula.body" = "The TickLab community has zero tolerance for objectionable content. By posting, you agree to the terms below.";
 "community.eula.agree" = "Agree & continue";

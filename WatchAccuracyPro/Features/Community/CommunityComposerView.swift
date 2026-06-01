@@ -176,6 +176,7 @@ struct CommunityReviewView: View {
 
     @State private var caption = ""
     @State private var textBlocked = false
+    @State private var blockMessage = ""
     @FocusState private var captionFocused: Bool
 
     var body: some View {
@@ -195,6 +196,7 @@ struct CommunityReviewView: View {
                     Text(String(localized: "community.compose.anonymous_note"))
                         .font(AppTypography.caption)
                         .foregroundStyle(AppColors.ink3)
+                    communityGuidelineNote
                 }
                 .padding(20)
             }
@@ -212,7 +214,7 @@ struct CommunityReviewView: View {
             }
             .alert(String(localized: "community.moderation.text.blocked.title"), isPresented: $textBlocked) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
-            } message: { Text(String(localized: "community.moderation.text.blocked.body")) }
+            } message: { Text(blockMessage.isEmpty ? String(localized: "community.moderation.text.blocked.body") : blockMessage) }
         }
     }
 
@@ -242,8 +244,28 @@ struct CommunityReviewView: View {
         switch CommunityTextModerator.screen(caption) {
         case .allowed:
             onPost(caption)
+        case .tradeBan:
+            blockMessage = "거래·판매·연락처 유도는 허용되지 않습니다. TickLab은 감상·기록 커뮤니티예요."
+            textBlocked = true
         case .profane, .tooLong:
+            blockMessage = String(localized: "community.moderation.text.blocked.body")
             textBlocked = true
         }
+    }
+
+    /// 콘텐츠 정책 고지 — 거래 금지 등(가이드라인 요약).
+    private var communityGuidelineNote: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Label("커뮤니티 가이드라인", systemImage: "info.circle")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(AppColors.ink2)
+            Text("거래·판매·가격 흥정·연락처 유도 금지 · 욕설/차별 금지 · 타인 사진 금지. 위반 시 삭제·제재될 수 있어요.")
+                .font(.system(size: 11))
+                .foregroundStyle(AppColors.ink3)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(12)
+        .background(AppColors.paper1)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }

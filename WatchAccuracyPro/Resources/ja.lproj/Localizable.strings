@@ -377,6 +377,8 @@
 "community.report.offensive" = "暴言・ヘイト";
 "community.report.copyright" = "著作権・他人の写真";
 "community.report.other" = "その他";
+"community.report.trade" = "取引/販売の誘導";
+"community.report.scam" = "詐欺の疑い";
 "community.eula.title" = "コミュニティガイドライン";
 "community.eula.body" = "TickLabコミュニティは不適切なコンテンツを一切許容しません。投稿は以下への同意とみなされます。";
 "community.eula.agree" = "同意して開始";

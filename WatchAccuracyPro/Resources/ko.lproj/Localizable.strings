@@ -308,6 +308,8 @@
 "community.report.offensive" = "욕설/혐오";
 "community.report.copyright" = "저작권/타인 사진";
 "community.report.other" = "기타";
+"community.report.trade" = "거래/판매 유도";
+"community.report.scam" = "거래 사기 의심";
 "community.eula.title" = "커뮤니티 이용 약관";
 "community.eula.body" = "TickLab 커뮤니티는 부적절한 콘텐츠를 일절 허용하지 않습니다. 게시하면 아래에 동의하는 것으로 간주됩니다.";
 "community.eula.agree" = "동의하고 시작";

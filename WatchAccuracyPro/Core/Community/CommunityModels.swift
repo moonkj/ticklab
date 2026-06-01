@@ -92,6 +92,8 @@ enum Community {
         case spam            // 스팸/광고
         case offensive       // 욕설/혐오
         case copyright       // 저작권/타인 사진
+        case trade           // 거래/판매 유도 (거래 금지 정책)
+        case scam            // 거래 사기 의심
         case other
 
         /// l10n 키 (Localizable.strings). 인라인 문자열 금지(Hard Rule #3).
@@ -101,6 +103,8 @@ enum Community {
             case .spam:          return "community.report.spam"
             case .offensive:     return "community.report.offensive"
             case .copyright:     return "community.report.copyright"
+            case .trade:         return "community.report.trade"
+            case .scam:          return "community.report.scam"
             case .other:         return "community.report.other"
             }
         }
