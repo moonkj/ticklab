@@ -37,6 +37,25 @@ enum PurchaseCondition: String, CaseIterable, Codable, Sendable {
     }
 }
 
+/// 인기 브랜드 목록(스마트워치 포함) — 프로필·등록 공용.
+enum WatchBrands {
+    static let popular: [String] = [
+        "A. Lange & Söhne", "Amazfit", "Anonimo", "Apple", "Aquastar", "Audemars Piguet", "Ball",
+        "Bell & Ross", "Blancpain", "Breguet", "Breitling", "Bremont", "Bulgari", "Bulova",
+        "Carl F. Bucherer", "Cartier", "Casio", "Chanel", "Chopard", "Christopher Ward",
+        "Citizen", "Czapek", "De Bethune", "Dior", "Doxa", "Eterna", "Fitbit", "Fortis",
+        "F.P. Journe", "Franck Muller", "Frederique Constant", "Garmin", "Girard-Perregaux",
+        "Glashütte Original", "Google", "Grand Seiko", "Greubel Forsey", "H. Moser & Cie",
+        "Hamilton", "Hermès", "Huawei", "Hublot", "IWC", "Jacob & Co", "Jaeger-LeCoultre",
+        "Junghans", "Laurent Ferrier", "Longines", "Louis Vuitton", "MB&F",
+        "Maurice Lacroix", "Mido", "Montblanc", "Movado", "Nomos", "Omega", "Oris",
+        "Panerai", "Parmigiani Fleurier", "Patek Philippe", "Piaget", "Polar", "Rado", "Ressence",
+        "Richard Mille", "Roger Dubuis", "Rolex", "Samsung", "Seiko", "Sinn", "Suunto", "Swatch",
+        "TAG Heuer", "Tissot", "Tudor", "Tutima", "Ulysse Nardin", "Universal Genève", "Urwerk",
+        "Vacheron Constantin", "Van Cleef & Arpels", "Withings", "Xiaomi", "Zenith"
+    ]
+}
+
 @Model
 final class Watch {
     @Attribute(.unique) var id: UUID

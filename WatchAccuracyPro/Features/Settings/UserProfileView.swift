@@ -68,15 +68,52 @@ struct UserProfileView: View {
                 }
 
                 Section(String(localized: "profile.section.collector")) {
+                    // 시작 연도 — 선택형(Menu).
                     HStack {
                         Text(String(localized: "profile.start_year"))
                         Spacer()
-                        TextField("2020", text: $collectionStartYear)
-                            .keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing)
-                            .frame(width: 80)
+                        Menu {
+                            Button(String(localized: "common.unspecified")) { collectionStartYear = "" }
+                            ForEach(yearOptions, id: \.self) { y in
+                                Button(String(y)) { collectionStartYear = String(y) }
+                            }
+                        } label: {
+                            Text(collectionStartYear.isEmpty ? String(localized: "common.unspecified") : collectionStartYear)
+                                .foregroundStyle(collectionStartYear.isEmpty ? AppColors.ink3 : AppColors.ink0)
+                        }
                     }
-                    TextField(String(localized: "profile.fav_brands"), text: $favoriteBrands)
+                    // 좋아하는 브랜드 — 선택형(추가 메뉴 + 칩 제거).
+                    VStack(alignment: .leading, spacing: 8) {
+                        HStack {
+                            Text(String(localized: "profile.fav_brands"))
+                            Spacer()
+                            Menu {
+                                ForEach(WatchBrands.popular, id: \.self) { b in
+                                    Button { addFavoriteBrand(b) } label: {
+                                        if favoriteBrandList.contains(b) { Label(b, systemImage: "checkmark") } else { Text(b) }
+                                    }
+                                }
+                            } label: {
+                                Label(String(localized: "common.add"), systemImage: "plus.circle")
+                            }
+                        }
+                        if !favoriteBrandList.isEmpty {
+                            LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 6)], spacing: 6) {
+                                ForEach(favoriteBrandList, id: \.self) { b in
+                                    Button { removeFavoriteBrand(b) } label: {
+                                        HStack(spacing: 4) {
+                                            Text(b).font(.system(size: 12)).lineLimit(1)
+                                            Image(systemName: "xmark").font(.system(size: 9))
+                                        }
+                                        .padding(.horizontal, 10).padding(.vertical, 5)
+                                        .background(AppColors.paper2).clipShape(Capsule())
+                                        .foregroundStyle(AppColors.ink1)
+                                    }
+                                    .buttonStyle(.plain)
+                                }
+                            }
+                        }
+                    }
                     TextField(String(localized: "profile.bio"), text: $bio, axis: .vertical)
                         .lineLimit(2...4)
                 }
@@ -138,6 +175,28 @@ struct UserProfileView: View {
                 }
             }
         }
+    }
+
+    // MARK: - 선택형 헬퍼
+
+    /// 시작 연도 옵션 — 1950 ~ 올해(내림차순).
+    private var yearOptions: [Int] {
+        let current = Calendar.current.component(.year, from: Date())
+        return Array((1950...current).reversed())
+    }
+
+    /// favoriteBrands(콤마 구분) → 배열.
+    private var favoriteBrandList: [String] {
+        favoriteBrands.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty }
+    }
+    private func addFavoriteBrand(_ b: String) {
+        var list = favoriteBrandList
+        guard !list.contains(b) else { return }
+        list.append(b)
+        favoriteBrands = list.joined(separator: ", ")
+    }
+    private func removeFavoriteBrand(_ b: String) {
+        favoriteBrands = favoriteBrandList.filter { $0 != b }.joined(separator: ", ")
     }
 
     private func load() {
