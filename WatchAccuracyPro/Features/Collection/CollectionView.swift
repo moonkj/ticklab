@@ -11,6 +11,9 @@ struct CollectionView: View {
     @State private var showingAdd = false
     @State private var showingSettings = false
     @State private var showingWatchBox = false
+    /// 커뮤니티 활동 알림(내 글 좋아요·새 팔로워) — 종 배지.
+    @State private var showingNotifications = false
+    @State private var notifCount = 0
     /// Round 113 (수익화 Critical): Pro 게이팅 - 무료 한계 초과 시 안내.
     @State private var showingProLimit = false
     /// shell-level paywall.
@@ -352,6 +355,10 @@ struct CollectionView: View {
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
             }
+            .sheet(isPresented: $showingNotifications) {
+                CommunityNotificationsView()
+            }
+            .task { await refreshNotifBadge() }
             .sheet(isPresented: $showingReorderSheet) {
                 ReorderSheet(
                     watches: filtered.filter { !$0.isPrimary },
@@ -431,6 +438,14 @@ struct CollectionView: View {
     /// 아이콘 크기·프레임을 커뮤니티 헤더와 동일하게 통일(40x40, symbol 18).
     private var headerActionButtons: some View {
         HStack(spacing: 0) {
+            Button { openNotifications() } label: {
+                Image(systemName: notifCount > 0 ? "bell.badge.fill" : "bell")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(notifCount > 0 ? AppColors.accent : AppColors.ink1)
+                    .symbolRenderingMode(notifCount > 0 ? .multicolor : .monochrome)
+                    .frame(width: 40, height: 40)
+            }
+            .accessibilityLabel(String(localized: "collection.notifications"))
             Menu {
                 Button { showingWatchBox = true } label: {
                     Label(String(localized: "menu.watchbox"), systemImage: "shippingbox")
@@ -470,6 +485,18 @@ struct CollectionView: View {
             .accessibilityLabel(String(localized: "tab.settings"))
             .accessibilityIdentifier("nav.settings")
         }
+    }
+
+    /// 종 탭 — 즉시 배지 클리어("확인하면 없어지고") + 알림 목록 시트.
+    private func openNotifications() {
+        CommunityService.shared.markNotificationsSeen()
+        notifCount = 0
+        showingNotifications = true
+    }
+
+    /// 미확인 알림 수 갱신 — 컬렉션 진입 시.
+    private func refreshNotifBadge() async {
+        notifCount = await CommunityService.shared.unseenNotificationCount()
     }
 
     /// 검색·필터·정렬 — 5개 이상 보유 시 헤더 아래 줄.

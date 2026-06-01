@@ -48,6 +48,7 @@ final class CommunityService: ObservableObject {
         static let blocked = "ticklab.community.blockedUIDs"
         static let followed = "ticklab.community.followedUIDs"
         static let bookmarked = "ticklab.community.bookmarkedIDs"
+        static let notifSeen = "ticklab.community.notifSeenAt"
     }
 
     // MARK: - EULA (UGC 의무 — zero tolerance 동의)
@@ -309,6 +310,58 @@ final class CommunityService: ObservableObject {
             _ = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE"))
         }
         await loadFeed()
+    }
+
+    // MARK: - Activity Notifications (인앱 — 내 글 좋아요 · 새 팔로워)
+
+    /// 마지막으로 알림을 확인한 시각. 미확인 판정 기준.
+    var lastNotifSeen: Date { (defaults.object(forKey: Keys.notifSeen) as? Date) ?? .distantPast }
+    /// 종 아이콘 탭(알림 열람) 시 호출 — 현재 시각으로 갱신해 배지 클리어.
+    func markNotificationsSeen() { defaults.set(Date(), forKey: Keys.notifSeen) }
+
+    /// 내 게시물 좋아요(본인 제외) + 새 팔로워 이벤트를 최신순으로. 댓글은 미구현이라 제외.
+    func fetchNotifications() async -> [Community.Notice] {
+        await ensureSignedIn()
+        guard let uid = myUID else { return [] }
+        var events: [Community.Notice] = []
+        // 1) 내 게시물 id·썸네일 경로
+        struct PostRow: Decodable { let id: String; let image_path: String? }
+        var pathByID: [String: String?] = [:]
+        if let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=id,image_path&author_uid=eq.\(uid)"),
+           let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+           let rows = try? Self.decoder.decode([PostRow].self, from: data) {
+            for r in rows { pathByID[r.id] = r.image_path }
+        }
+        // 2) 내 글 좋아요(본인 제외)
+        if !pathByID.isEmpty {
+            let ids = Array(pathByID.keys).joined(separator: ",")
+            struct LikeRow: Decodable { let post_id: String; let created_at: Date }
+            if let url = URL(string: "\(baseURL)/rest/v1/community_likes?select=post_id,created_at&post_id=in.(\(ids))&uid=neq.\(uid)&order=created_at.desc&limit=50"),
+               let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+               let rows = try? Self.decoder.decode([LikeRow].self, from: data) {
+                for r in rows {
+                    events.append(.init(id: "like-\(r.post_id)-\(Int(r.created_at.timeIntervalSince1970))",
+                                        kind: .like, postImagePath: pathByID[r.post_id] ?? nil, createdAt: r.created_at))
+                }
+            }
+        }
+        // 3) 새 팔로워
+        struct FollowRow: Decodable { let created_at: Date }
+        if let url = URL(string: "\(baseURL)/rest/v1/community_follows?select=created_at&followed_uid=eq.\(uid)&order=created_at.desc&limit=50"),
+           let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+           let rows = try? Self.decoder.decode([FollowRow].self, from: data) {
+            for r in rows {
+                events.append(.init(id: "follow-\(Int(r.created_at.timeIntervalSince1970))",
+                                    kind: .follow, postImagePath: nil, createdAt: r.created_at))
+            }
+        }
+        return events.sorted { $0.createdAt > $1.createdAt }
+    }
+
+    /// 미확인 알림 수(컬렉션 종 배지).
+    func unseenNotificationCount() async -> Int {
+        let seen = lastNotifSeen
+        return (await fetchNotifications()).filter { $0.createdAt > seen }.count
     }
 
     // MARK: - Follow (신원 전환)

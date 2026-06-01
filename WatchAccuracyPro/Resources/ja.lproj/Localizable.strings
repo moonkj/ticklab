@@ -355,6 +355,10 @@
 "community.empty.body" = "最初に今日の時計をシェアしましょう。";
 "community.like" = "いいね";
 "community.block" = "このユーザーをブロック";
+"collection.notifications" = "お知らせ";
+"community.notif.like" = "あなたの投稿にいいねがつきました";
+"community.notif.follow" = "新しいフォロワーがいます";
+"community.notif.empty" = "新しいお知らせはありません";
 "community.report.done" = "通報を受け付けました。確認のうえ対応します。";
 "community.image_unavailable" = "写真を読み込めません";
 "community.blocked.manage" = "ブロック管理";

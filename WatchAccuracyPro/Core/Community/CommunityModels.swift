@@ -86,6 +86,15 @@ enum Community {
         enum CodingKeys: String, CodingKey { case id; case message; case createdAt = "created_at" }
     }
 
+    /// 인앱 활동 알림(컬렉션 종 배지) — 내 글 좋아요 · 새 팔로워. 댓글 미구현이라 제외.
+    struct Notice: Identifiable {
+        enum Kind { case like, follow }
+        let id: String
+        let kind: Kind
+        let postImagePath: String?
+        let createdAt: Date
+    }
+
     /// 신고 사유 — UGC 의무(Guideline 1.2).
     enum ReportReason: String, Codable, CaseIterable {
         case inappropriate   // 부적절/선정적

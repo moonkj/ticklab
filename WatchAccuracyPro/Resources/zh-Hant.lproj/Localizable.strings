@@ -355,6 +355,10 @@
 "community.empty.body" = "成為第一個分享今天腕錶的人。";
 "community.like" = "讚";
 "community.block" = "封鎖此使用者";
+"collection.notifications" = "通知";
+"community.notif.like" = "有人讚了你的貼文";
+"community.notif.follow" = "你有新粉絲了";
+"community.notif.empty" = "暫無新通知";
 "community.report.done" = "已收到檢舉，我們會審核並處理。";
 "community.image_unavailable" = "無法載入相片";
 "community.blocked.manage" = "封鎖管理";

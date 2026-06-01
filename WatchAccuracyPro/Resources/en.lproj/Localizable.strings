@@ -362,6 +362,10 @@
 "community.empty.body" = "Be the first to share today's watch.";
 "community.like" = "Like";
 "community.block" = "Block this user";
+"collection.notifications" = "Notifications";
+"community.notif.like" = "Someone liked your post";
+"community.notif.follow" = "You have a new follower";
+"community.notif.empty" = "No notifications yet";
 "community.report.done" = "Report received. We'll review and take action.";
 "community.image_unavailable" = "Photo unavailable";
 "community.blocked.manage" = "Manage blocked";

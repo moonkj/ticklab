@@ -355,6 +355,10 @@
 "community.empty.body" = "Sé el primero en compartir el reloj de hoy.";
 "community.like" = "Me gusta";
 "community.block" = "Bloquear a este usuario";
+"collection.notifications" = "Notificaciones";
+"community.notif.like" = "A alguien le gustó tu publicación";
+"community.notif.follow" = "Tienes un nuevo seguidor";
+"community.notif.empty" = "No hay notificaciones";
 "community.report.done" = "Reporte recibido. Lo revisaremos y actuaremos.";
 "community.image_unavailable" = "Foto no disponible";
 "community.blocked.manage" = "Gestionar bloqueados";

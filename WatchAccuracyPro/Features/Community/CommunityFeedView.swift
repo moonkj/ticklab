@@ -710,3 +710,74 @@ private struct BlockedUsersView: View {
         String(localized: "community.blocked.anon") + " #" + uid.suffix(4)
     }
 }
+
+/// 활동 알림 목록(컬렉션 종) — 내 글 좋아요 · 새 팔로워. 익명 커뮤니티라 행위자명은 비표시.
+struct CommunityNotificationsView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var notices: [Community.Notice] = []
+    @State private var loaded = false
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if loaded && notices.isEmpty {
+                    EmptyState(
+                        icon: "bell.slash",
+                        title: String(localized: "collection.notifications"),
+                        message: String(localized: "community.notif.empty")
+                    )
+                } else {
+                    List(notices) { notice in
+                        row(notice)
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                    }
+                    .listStyle(.plain)
+                }
+            }
+            .background(AppColors.paper0)
+            .navigationTitle(String(localized: "collection.notifications"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "common.done")) { dismiss() }
+                }
+            }
+            .task {
+                notices = await CommunityService.shared.fetchNotifications()
+                loaded = true
+                CommunityService.shared.markNotificationsSeen()
+            }
+        }
+    }
+
+    private func row(_ n: Community.Notice) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle().fill((n.kind == .like ? AppColors.danger : AppColors.accent).opacity(0.14))
+                Image(systemName: n.kind == .like ? "heart.fill" : "person.fill.badge.plus")
+                    .font(.system(size: 15))
+                    .foregroundStyle(n.kind == .like ? AppColors.danger : AppColors.accent)
+            }
+            .frame(width: 38, height: 38)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(String(localized: n.kind == .like ? "community.notif.like" : "community.notif.follow"))
+                    .font(.system(size: 14))
+                    .foregroundStyle(AppColors.ink0)
+                Text(Self.relative.localizedString(for: n.createdAt, relativeTo: Date()))
+                    .font(.caption)
+                    .foregroundStyle(AppColors.ink3)
+            }
+            Spacer()
+            if let path = n.postImagePath, let url = CommunityService.shared.imageURL(for: path) {
+                AsyncImage(url: url) { img in img.resizable().scaledToFill() }
+                    placeholder: { Color(AppColors.paper2) }
+                    .frame(width: 44, height: 44)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
+            }
+        }
+    }
+
+    private static let relative: RelativeDateTimeFormatter = {
+        let f = RelativeDateTimeFormatter(); f.unitsStyle = .short; return f
+    }()
+}

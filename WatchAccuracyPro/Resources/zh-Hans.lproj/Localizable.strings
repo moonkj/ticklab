@@ -355,6 +355,10 @@
 "community.empty.body" = "成为第一个分享今天腕表的人。";
 "community.like" = "赞";
 "community.block" = "屏蔽该用户";
+"collection.notifications" = "通知";
+"community.notif.like" = "有人赞了你的帖子";
+"community.notif.follow" = "你有新粉丝了";
+"community.notif.empty" = "暂无新通知";
 "community.report.done" = "已收到举报，我们会审核并处理。";
 "community.image_unavailable" = "无法加载照片";
 "community.blocked.manage" = "屏蔽管理";

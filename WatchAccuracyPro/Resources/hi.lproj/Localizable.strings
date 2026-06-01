@@ -355,6 +355,10 @@
 "community.empty.body" = "आज की घड़ी साझा करने वाले पहले बनें।";
 "community.like" = "पसंद";
 "community.block" = "इस उपयोगकर्ता को ब्लॉक करें";
+"collection.notifications" = "सूचनाएं";
+"community.notif.like" = "किसी ने आपकी पोस्ट को पसंद किया";
+"community.notif.follow" = "आपका एक नया फ़ॉलोअर है";
+"community.notif.empty" = "कोई नई सूचना नहीं";
 "community.report.done" = "रिपोर्ट मिल गई। हम समीक्षा कर कार्रवाई करेंगे।";
 "community.image_unavailable" = "फ़ोटो उपलब्ध नहीं";
 "community.blocked.manage" = "ब्लॉक प्रबंधन";
