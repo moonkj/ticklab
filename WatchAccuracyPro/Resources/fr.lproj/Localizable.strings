@@ -355,6 +355,13 @@
 "community.empty.body" = "Soyez le premier à partager la montre du jour.";
 "community.like" = "J'aime";
 "community.block" = "Bloquer cet utilisateur";
+"community.comment.title" = "Commentaires";
+"community.comment.empty" = "Aucun commentaire. Soyez le premier.";
+"community.comment.placeholder" = "Ajouter un commentaire…";
+"community.comment.post" = "Publier";
+"community.comment.too_long" = "Le commentaire est trop long.";
+"community.comment.profane" = "Contient un langage non autorisé.";
+"community.comment.trade" = "Le commerce ou la sollicitation de contacts n'est pas autorisé.";
 "collection.notifications" = "Notifications";
 "community.notif.like" = "Quelqu'un a aimé votre publication";
 "community.notif.follow" = "Vous avez un nouvel abonné";

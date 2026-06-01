@@ -355,6 +355,13 @@
 "community.empty.body" = "最初に今日の時計をシェアしましょう。";
 "community.like" = "いいね";
 "community.block" = "このユーザーをブロック";
+"community.comment.title" = "コメント";
+"community.comment.empty" = "まだコメントがありません。最初のコメントを残しましょう。";
+"community.comment.placeholder" = "コメントを追加…";
+"community.comment.post" = "投稿";
+"community.comment.too_long" = "コメントが長すぎます。";
+"community.comment.profane" = "使用できない表現が含まれています。";
+"community.comment.trade" = "取引・連絡先の誘導は許可されていません。";
 "collection.notifications" = "お知らせ";
 "community.notif.like" = "あなたの投稿にいいねがつきました";
 "community.notif.follow" = "新しいフォロワーがいます";

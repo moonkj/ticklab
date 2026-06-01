@@ -355,6 +355,13 @@
 "community.empty.body" = "Sé el primero en compartir el reloj de hoy.";
 "community.like" = "Me gusta";
 "community.block" = "Bloquear a este usuario";
+"community.comment.title" = "Comentarios";
+"community.comment.empty" = "No hay comentarios todavía. Sé el primero.";
+"community.comment.placeholder" = "Añade un comentario…";
+"community.comment.post" = "Publicar";
+"community.comment.too_long" = "El comentario es demasiado largo.";
+"community.comment.profane" = "Contiene lenguaje no permitido.";
+"community.comment.trade" = "No se permite comercio ni solicitar contactos.";
 "collection.notifications" = "Notificaciones";
 "community.notif.like" = "A alguien le gustó tu publicación";
 "community.notif.follow" = "Tienes un nuevo seguidor";

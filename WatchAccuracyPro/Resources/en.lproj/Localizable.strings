@@ -362,6 +362,13 @@
 "community.empty.body" = "Be the first to share today's watch.";
 "community.like" = "Like";
 "community.block" = "Block this user";
+"community.comment.title" = "Comments";
+"community.comment.empty" = "No comments yet. Be the first to comment.";
+"community.comment.placeholder" = "Add a comment…";
+"community.comment.post" = "Post";
+"community.comment.too_long" = "Comment is too long.";
+"community.comment.profane" = "Contains language that isn't allowed.";
+"community.comment.trade" = "Trade or contact solicitation isn't allowed.";
 "collection.notifications" = "Notifications";
 "community.notif.like" = "Someone liked your post";
 "community.notif.follow" = "You have a new follower";

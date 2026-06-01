@@ -355,6 +355,13 @@
 "community.empty.body" = "आज की घड़ी साझा करने वाले पहले बनें।";
 "community.like" = "पसंद";
 "community.block" = "इस उपयोगकर्ता को ब्लॉक करें";
+"community.comment.title" = "टिप्पणियाँ";
+"community.comment.empty" = "अभी कोई टिप्पणी नहीं। पहली टिप्पणी करें।";
+"community.comment.placeholder" = "टिप्पणी जोड़ें…";
+"community.comment.post" = "पोस्ट";
+"community.comment.too_long" = "टिप्पणी बहुत लंबी है।";
+"community.comment.profane" = "अनुमति न दी गई भाषा शामिल है।";
+"community.comment.trade" = "व्यापार या संपर्क मांगना अनुमत नहीं है।";
 "collection.notifications" = "सूचनाएं";
 "community.notif.like" = "किसी ने आपकी पोस्ट को पसंद किया";
 "community.notif.follow" = "आपका एक नया फ़ॉलोअर है";

@@ -355,6 +355,13 @@
 "community.empty.body" = "成为第一个分享今天腕表的人。";
 "community.like" = "赞";
 "community.block" = "屏蔽该用户";
+"community.comment.title" = "评论";
+"community.comment.empty" = "还没有评论。来发表第一条评论吧。";
+"community.comment.placeholder" = "添加评论…";
+"community.comment.post" = "发布";
+"community.comment.too_long" = "评论太长了。";
+"community.comment.profane" = "包含不允许的用语。";
+"community.comment.trade" = "不允许交易或索要联系方式。";
 "collection.notifications" = "通知";
 "community.notif.like" = "有人赞了你的帖子";
 "community.notif.follow" = "你有新粉丝了";

@@ -506,6 +506,45 @@ final class CommunityService: ObservableObject {
         return (await fetchNotifications()).filter { $0.createdAt > seen }.count
     }
 
+    // MARK: - Comments (커뮤니티 댓글)
+
+    /// 게시물 댓글(오름차순) — 차단한 작성자 댓글 제외.
+    func fetchComments(postID: String) async -> [Community.Comment] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_comments?select=*&post_id=eq.\(postID)&status=eq.visible&order=created_at.asc&limit=300") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Comment].self, from: data) else { return [] }
+        return arr.filter { !blockedUIDs.contains($0.uid) }
+    }
+
+    /// 댓글 작성. 작성자명은 운영 ID면 TickLab, 아니면 프로필명/Collector.
+    @discardableResult
+    func addComment(to post: Community.Post, body: String) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_comments") else { return false }
+        var req = authedRequest(url, method: "POST")
+        var dict: [String: Any] = ["post_id": post.id, "body": body]
+        if defaults.bool(forKey: "ticklab.admin.actingAsTickLab") {
+            dict["author_name"] = "TickLab"
+        } else {
+            let n = (defaults.string(forKey: "ticklab.profile.name") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            dict["author_name"] = n.isEmpty ? "Collector" : n
+        }
+        req.httpBody = try? JSONSerialization.data(withJSONObject: dict)
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 댓글 삭제(본인 또는 운영자 — RLS).
+    @discardableResult
+    func deleteComment(_ id: String) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_comments?id=eq.\(id)") else { return false }
+        guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
     // MARK: - Follow (신원 전환)
 
     func isFollowing(_ authorUID: String) -> Bool { followedUIDs.contains(authorUID) }

@@ -59,16 +59,15 @@ struct VideoFeedView: View {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
                     // 채널이 2개 이상일 때만 — 전체 / 채널 복수 선택.
+                    // Toggle 사용: 체크 칼럼이 항상 고정폭이라 토글해도 메뉴 너비가 안 바뀜(상자 이동 방지).
                     if distinctChannels.count >= 2 {
-                        Button { selectedChannels.removeAll() } label: {
-                            if activeChannels.isEmpty {
-                                Label(String(localized: "video.filter.all"), systemImage: "checkmark")
-                            } else { Text(String(localized: "video.filter.all")) }
-                        }
+                        Toggle(String(localized: "video.filter.all"), isOn: Binding(
+                            get: { activeChannels.isEmpty },
+                            set: { on in if on { selectedChannels.removeAll() } }))
                         ForEach(distinctChannels, id: \.self) { ch in
-                            Button { toggleChannel(ch) } label: {
-                                if selectedChannels.contains(ch) { Label(ch, systemImage: "checkmark") } else { Text(ch) }
-                            }
+                            Toggle(ch, isOn: Binding(
+                                get: { selectedChannels.contains(ch) },
+                                set: { _ in toggleChannel(ch) }))
                         }
                         Divider()
                     }
@@ -77,21 +76,12 @@ struct VideoFeedView: View {
                         Label(String(localized: "video.suggest.menu"), systemImage: "paperplane")
                     }
                 } label: {
-                    if distinctChannels.count >= 2 {
-                        HStack(spacing: 4) {
-                            Image(systemName: "line.3.horizontal.decrease.circle")
-                            if activeChannels.isEmpty {
-                                Text(String(localized: "video.filter.all"))
-                            } else if activeChannels.count == 1, let only = activeChannels.first {
-                                Text(only).lineLimit(1)
-                            } else {
-                                Text("\(activeChannels.count)")
-                            }
-                        }
-                        .font(.system(size: 14, weight: .semibold))
-                    } else {
-                        Image(systemName: "ellipsis.circle").font(.system(size: 17))
-                    }
+                    // 고정폭 아이콘(텍스트 X) — 선택이 바뀌어도 버튼 너비 불변 → 메뉴 anchor 고정.
+                    let filtered = distinctChannels.count >= 2 && !activeChannels.isEmpty
+                    Image(systemName: distinctChannels.count < 2 ? "ellipsis.circle"
+                          : (filtered ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle"))
+                        .font(.system(size: 17))
+                        .foregroundStyle(filtered ? AppColors.accent : AppColors.ink0)
                 }
                 .menuActionDismissBehavior(.disabled)   // 복수 선택 — 토글해도 메뉴 유지.
             }

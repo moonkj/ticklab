@@ -19,6 +19,7 @@ enum Community {
         let authorName: String?     // 공개 프로필 표시명(신원 전환). nil = 구 익명 글
         let authorAvatarPath: String?
         var likeCount: Int
+        var commentCount: Int?      // 비정규화(트리거). 미배포 시 nil → 0 처리.
         let status: PostStatus
         let createdAt: Date
 
@@ -31,6 +32,7 @@ enum Community {
             case authorName = "author_name"
             case authorAvatarPath = "author_avatar_path"
             case likeCount = "like_count"
+            case commentCount = "comment_count"
             case status
             case createdAt = "created_at"
         }
@@ -93,6 +95,23 @@ enum Community {
         let kind: Kind
         let postImagePath: String?
         let createdAt: Date
+    }
+
+    /// 커뮤니티 댓글.
+    struct Comment: Codable, Identifiable {
+        let id: String
+        let postID: String
+        let uid: String
+        let authorName: String?
+        let body: String
+        let createdAt: Date
+        enum CodingKeys: String, CodingKey {
+            case id, uid, body
+            case postID = "post_id"
+            case authorName = "author_name"
+            case createdAt = "created_at"
+        }
+        func isMine(_ myUID: String?) -> Bool { myUID != nil && uid == myUID }
     }
 
     /// 사용자 채널 제안(영상 피드) — 사용자가 추천 채널 주소를 운영자에게. 운영자만 조회.

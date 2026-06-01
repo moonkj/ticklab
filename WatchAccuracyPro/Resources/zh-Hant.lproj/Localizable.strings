@@ -355,6 +355,13 @@
 "community.empty.body" = "成為第一個分享今天腕錶的人。";
 "community.like" = "讚";
 "community.block" = "封鎖此使用者";
+"community.comment.title" = "留言";
+"community.comment.empty" = "還沒有留言。來發表第一則留言吧。";
+"community.comment.placeholder" = "新增留言…";
+"community.comment.post" = "發佈";
+"community.comment.too_long" = "留言太長了。";
+"community.comment.profane" = "包含不允許的用語。";
+"community.comment.trade" = "不允許交易或索取聯絡方式。";
 "collection.notifications" = "通知";
 "community.notif.like" = "有人讚了你的貼文";
 "community.notif.follow" = "你有新粉絲了";
