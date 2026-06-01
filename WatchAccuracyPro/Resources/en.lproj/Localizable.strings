@@ -310,6 +310,12 @@
 "community.login.title" = "Sign in to the community";
 "community.login.body" = "Sign in with Apple to post, follow, and save.";
 "community.login.failed" = "Sign-in failed";
+"community.follow" = "Follow";
+"community.following" = "Following";
+"community.share" = "Share";
+"community.bookmark" = "Save";
+"community.saved.title" = "Saved";
+"community.saved.empty" = "No saved posts yet";
 "timeline.title" = "Watch Story";
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";

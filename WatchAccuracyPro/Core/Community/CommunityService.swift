@@ -14,6 +14,8 @@ final class CommunityService: ObservableObject {
         myUID = defaults.string(forKey: Keys.uid)
         if let arr = defaults.array(forKey: Keys.liked) as? [String] { likedPostIDs = Set(arr) }
         if let arr = defaults.array(forKey: Keys.blocked) as? [String] { blockedUIDs = Set(arr) }
+        if let arr = defaults.array(forKey: Keys.followed) as? [String] { followedUIDs = Set(arr) }
+        if let arr = defaults.array(forKey: Keys.bookmarked) as? [String] { bookmarkedPostIDs = Set(arr) }
     }
 
     private let baseURL = Secrets.supabaseURL
@@ -26,6 +28,10 @@ final class CommunityService: ObservableObject {
     @Published private(set) var lastError: String?
     @Published private(set) var likedPostIDs: Set<String> = []
     @Published private(set) var blockedUIDs: Set<String> = []
+    @Published private(set) var followedUIDs: Set<String> = []
+    @Published private(set) var bookmarkedPostIDs: Set<String> = []
+    /// 저장(스크랩) 탭에 보여줄 게시물 — loadSavedPosts() 로 채움.
+    @Published private(set) var savedFeed: [Community.Post] = []
 
     private(set) var myUID: String?
     private var accessToken: String?
@@ -40,6 +46,8 @@ final class CommunityService: ObservableObject {
         static let lastPost = "ticklab.community.lastPostDate"
         static let liked = "ticklab.community.likedIDs"
         static let blocked = "ticklab.community.blockedUIDs"
+        static let followed = "ticklab.community.followedUIDs"
+        static let bookmarked = "ticklab.community.bookmarkedIDs"
     }
 
     // MARK: - EULA (UGC 의무 — zero tolerance 동의)
@@ -290,6 +298,66 @@ final class CommunityService: ObservableObject {
         var req = authedRequest(url, method: "POST")
         req.httpBody = try? JSONSerialization.data(withJSONObject: ["blocked_uid": post.authorUID])
         _ = try? await URLSession.shared.data(for: req)
+    }
+
+    // MARK: - Follow (신원 전환)
+
+    func isFollowing(_ authorUID: String) -> Bool { followedUIDs.contains(authorUID) }
+
+    /// 작성자 팔로우 토글. 로그인 필요(호출 측 게이트). 본인은 무시.
+    func toggleFollow(_ authorUID: String) async {
+        guard authorUID != myUID else { return }
+        await ensureSignedIn()
+        let following = followedUIDs.contains(authorUID)
+        if following { followedUIDs.remove(authorUID) } else { followedUIDs.insert(authorUID) }
+        defaults.set(Array(followedUIDs), forKey: Keys.followed)
+        if following {
+            guard let uid = myUID,
+                  let url = URL(string: "\(baseURL)/rest/v1/community_follows?follower_uid=eq.\(uid)&followed_uid=eq.\(authorUID)") else { return }
+            _ = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE"))
+        } else {
+            guard let url = URL(string: "\(baseURL)/rest/v1/community_follows") else { return }
+            var req = authedRequest(url, method: "POST")
+            req.httpBody = try? JSONSerialization.data(withJSONObject: ["followed_uid": authorUID])
+            _ = try? await URLSession.shared.data(for: req)
+        }
+    }
+
+    // MARK: - Bookmark / 스크랩
+
+    func isBookmarked(_ post: Community.Post) -> Bool { bookmarkedPostIDs.contains(post.id) }
+
+    func toggleBookmark(_ post: Community.Post) async {
+        await ensureSignedIn()
+        let saved = bookmarkedPostIDs.contains(post.id)
+        if saved { bookmarkedPostIDs.remove(post.id) } else { bookmarkedPostIDs.insert(post.id) }
+        defaults.set(Array(bookmarkedPostIDs), forKey: Keys.bookmarked)
+        if saved {
+            savedFeed.removeAll { $0.id == post.id }
+            guard let uid = myUID,
+                  let url = URL(string: "\(baseURL)/rest/v1/community_bookmarks?uid=eq.\(uid)&post_id=eq.\(post.id)") else { return }
+            _ = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE"))
+        } else {
+            guard let url = URL(string: "\(baseURL)/rest/v1/community_bookmarks") else { return }
+            var req = authedRequest(url, method: "POST")
+            req.httpBody = try? JSONSerialization.data(withJSONObject: ["post_id": post.id])
+            _ = try? await URLSession.shared.data(for: req)
+        }
+    }
+
+    /// 저장(스크랩)한 게시물 로드 — bookmark id 목록으로 posts in.() 조회.
+    func loadSavedPosts() async {
+        await ensureSignedIn()
+        guard !bookmarkedPostIDs.isEmpty else { savedFeed = []; return }
+        let ids = bookmarkedPostIDs.joined(separator: ",")
+        let query = "select=*&id=in.(\(ids))&order=created_at.desc"
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?\(query)") else { return }
+        do {
+            let (data, _) = try await URLSession.shared.data(for: authedRequest(url, method: "GET"))
+            savedFeed = try Self.decoder.decode([Community.Post].self, from: data)
+        } catch {
+            lastError = error.localizedDescription
+        }
     }
 
     func deleteMyPost(_ post: Community.Post) async {

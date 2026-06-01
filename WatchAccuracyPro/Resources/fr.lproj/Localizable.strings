@@ -303,6 +303,12 @@
 "community.login.title" = "Se connecter à la communauté";
 "community.login.body" = "Connectez-vous avec Apple pour publier, suivre et enregistrer.";
 "community.login.failed" = "Échec de la connexion";
+"community.follow" = "Suivre";
+"community.following" = "Suivi";
+"community.share" = "Partager";
+"community.bookmark" = "Enregistrer";
+"community.saved.title" = "Enregistrés";
+"community.saved.empty" = "Aucune publication enregistrée";
 "timeline.title" = "Histoire de la montre";
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";

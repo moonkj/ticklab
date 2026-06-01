@@ -303,6 +303,12 @@
 "community.login.title" = "登录社区";
 "community.login.body" = "使用 Apple 登录即可发布、关注和收藏。";
 "community.login.failed" = "登录失败";
+"community.follow" = "关注";
+"community.following" = "已关注";
+"community.share" = "分享";
+"community.bookmark" = "收藏";
+"community.saved.title" = "已收藏";
+"community.saved.empty" = "暂无收藏";
 "timeline.title" = "腕表生平";
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";

@@ -17,6 +17,9 @@ struct CommunityFeedView: View {
     @State private var showLogin = false
     /// 최초 피드 로드 완료 여부 — 로딩 중에 "게시물 없음"이 깜빡이는 것 방지.
     @State private var didInitialLoad = false
+    /// 공유시트 + 저장(스크랩) 탭.
+    @State private var shareItem: ShareCardItem?
+    @State private var showSaved = false
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -41,6 +44,14 @@ struct CommunityFeedView: View {
             .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
+                    Button { showSavedTab() } label: {
+                        Image(systemName: "bookmark")
+                            .font(.system(size: 18))
+                            .foregroundStyle(AppColors.ink0)
+                    }
+                    .accessibilityLabel(String(localized: "community.saved.title"))
+                }
+                ToolbarItem(placement: .topBarTrailing) {
                     Button { startCompose() } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 22))
@@ -64,6 +75,12 @@ struct CommunityFeedView: View {
             }
             .sheet(isPresented: $showLogin) {
                 CommunityLoginView()
+            }
+            .sheet(item: $shareItem) { item in
+                ActivityShareSheet(items: [item.url])
+            }
+            .sheet(isPresented: $showSaved) {
+                CommunitySavedView()
             }
             .sheet(isPresented: $showEULA) {
                 CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
@@ -117,6 +134,9 @@ struct CommunityFeedView: View {
                         post: post,
                         liked: service.isLiked(post),
                         blurred: isBlurred(post, index: index),
+                        following: service.isFollowing(post.authorUID),
+                        bookmarked: service.isBookmarked(post),
+                        isMine: post.isMine(currentUID: service.myUID),
                         onLike: {
                             guard service.isSignedIn else { showLogin = true; return }
                             Task { await service.toggleLike(post) }
@@ -124,6 +144,15 @@ struct CommunityFeedView: View {
                         onUnlock: { purchaseRouter?.intend(.community) },
                         onReport: { reportTarget = post },
                         onBlock: { Task { await service.block(authorOf: post) } },
+                        onFollow: {
+                            guard service.isSignedIn else { showLogin = true; return }
+                            Task { await service.toggleFollow(post.authorUID) }
+                        },
+                        onBookmark: {
+                            guard service.isSignedIn else { showLogin = true; return }
+                            Task { await service.toggleBookmark(post) }
+                        },
+                        onShare: { sharePost(post) },
                         onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil
                     )
                     // 인스타 스타일 게시물 구분선.
@@ -216,6 +245,78 @@ struct CommunityFeedView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { showComposer = true }
         }
     }
+    private func sharePost(_ post: Community.Post) {
+        guard let url = service.imageURL(for: post.imagePath) else { return }
+        shareItem = ShareCardItem(url: url)
+    }
+    private func showSavedTab() {
+        guard service.isSignedIn else { showLogin = true; return }
+        showSaved = true
+    }
+}
+
+/// 저장(스크랩) 탭 — 북마크한 게시물 목록.
+struct CommunitySavedView: View {
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var service = CommunityService.shared
+    @State private var shareItem: ShareCardItem?
+    @State private var loaded = false
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if !loaded && service.savedFeed.isEmpty {
+                    ProgressView().tint(AppColors.ink2)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if service.savedFeed.isEmpty {
+                    VStack(spacing: 14) {
+                        Image(systemName: "bookmark")
+                            .font(.system(size: 44)).foregroundStyle(AppColors.ink3)
+                        Text(String(localized: "community.saved.empty"))
+                            .font(AppTypography.bodySmall).foregroundStyle(AppColors.ink2)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(service.savedFeed) { post in
+                                CommunityPostCard(
+                                    post: post,
+                                    liked: service.isLiked(post),
+                                    blurred: false,
+                                    following: service.isFollowing(post.authorUID),
+                                    bookmarked: service.isBookmarked(post),
+                                    isMine: post.isMine(currentUID: service.myUID),
+                                    onLike: { Task { await service.toggleLike(post) } },
+                                    onUnlock: {},
+                                    onReport: {},
+                                    onBlock: {},
+                                    onFollow: { Task { await service.toggleFollow(post.authorUID) } },
+                                    onBookmark: { Task { await service.toggleBookmark(post) } },
+                                    onShare: {
+                                        if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) }
+                                    },
+                                    onDelete: nil
+                                )
+                                Rectangle().fill(AppColors.rule).frame(height: 0.5)
+                            }
+                        }
+                        .padding(.top, 2)
+                    }
+                }
+            }
+            .background(AppColors.paper0)
+            .navigationTitle(String(localized: "community.saved.title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(String(localized: "common.done")) { dismiss() }
+                }
+            }
+            .task { await service.loadSavedPosts(); loaded = true }
+            .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
+        }
+    }
 }
 
 /// 피드 카드 — 사진 + 좋아요 + 신고/차단 메뉴 + (게이팅) 흐림.
@@ -223,10 +324,16 @@ private struct CommunityPostCard: View {
     let post: Community.Post
     let liked: Bool
     let blurred: Bool
+    let following: Bool
+    let bookmarked: Bool
+    let isMine: Bool
     let onLike: () -> Void
     let onUnlock: () -> Void
     let onReport: () -> Void
     let onBlock: () -> Void
+    let onFollow: () -> Void
+    let onBookmark: () -> Void
+    let onShare: () -> Void
     let onDelete: (() -> Void)?
 
     // 코드리뷰: 카드는 service 를 관찰하면 안 됨(좋아요 1개에 전체 피드 re-render). imageURL 은
@@ -287,6 +394,19 @@ private struct CommunityPostCard: View {
                     .foregroundStyle(AppColors.ink3)
             }
             Spacer()
+            // 팔로우 — 본인 글 제외.
+            if !isMine {
+                Button(action: onFollow) {
+                    Text(String(localized: following ? "community.following" : "community.follow"))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
+                        .padding(.horizontal, 12).padding(.vertical, 5)
+                        .background(following ? Color.clear : AppColors.ink0)
+                        .overlay(Capsule().stroke(following ? AppColors.rule : Color.clear, lineWidth: 1))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+            }
             moreMenu
         }
         .padding(.horizontal, 14)
@@ -317,7 +437,22 @@ private struct CommunityPostCard: View {
             }
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: "community.like"))
+            Button(action: onShare) {
+                Image(systemName: "paperplane")
+                    .font(.system(size: 21))
+                    .foregroundStyle(AppColors.ink0)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "community.share"))
             Spacer()
+            // 스크랩(저장).
+            Button(action: onBookmark) {
+                Image(systemName: bookmarked ? "bookmark.fill" : "bookmark")
+                    .font(.system(size: 21))
+                    .foregroundStyle(bookmarked ? AppColors.accentDark : AppColors.ink0)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "community.bookmark"))
         }
         .padding(.horizontal, 14)
         .padding(.top, 9)
@@ -325,6 +460,9 @@ private struct CommunityPostCard: View {
 
     private var moreMenu: some View {
         Menu {
+            Button(action: onShare) {
+                Label(String(localized: "community.share"), systemImage: "square.and.arrow.up")
+            }
             Button(role: .destructive, action: onReport) {
                 Label(String(localized: "community.report.title"), systemImage: "flag")
             }

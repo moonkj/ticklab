@@ -303,6 +303,12 @@
 "community.login.title" = "コミュニティにログイン";
 "community.login.body" = "Appleでログインすると投稿・フォロー・保存ができます。";
 "community.login.failed" = "ログイン失敗";
+"community.follow" = "フォロー";
+"community.following" = "フォロー中";
+"community.share" = "共有";
+"community.bookmark" = "保存";
+"community.saved.title" = "保存済み";
+"community.saved.empty" = "保存した投稿はありません";
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";

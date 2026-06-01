@@ -303,6 +303,12 @@
 "community.login.title" = "登入社群";
 "community.login.body" = "使用 Apple 登入即可發佈、追蹤與收藏。";
 "community.login.failed" = "登入失敗";
+"community.follow" = "追蹤";
+"community.following" = "追蹤中";
+"community.share" = "分享";
+"community.bookmark" = "收藏";
+"community.saved.title" = "已收藏";
+"community.saved.empty" = "尚無收藏";
 "timeline.title" = "腕錶生平";
 "timeline.entry" = "生平時間線";
 "timeline.first_meeting" = "初次相遇";

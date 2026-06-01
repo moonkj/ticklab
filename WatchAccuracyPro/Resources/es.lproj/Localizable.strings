@@ -303,6 +303,12 @@
 "community.login.title" = "Iniciar sesión en la comunidad";
 "community.login.body" = "Inicia sesión con Apple para publicar, seguir y guardar.";
 "community.login.failed" = "Error al iniciar sesión";
+"community.follow" = "Seguir";
+"community.following" = "Siguiendo";
+"community.share" = "Compartir";
+"community.bookmark" = "Guardar";
+"community.saved.title" = "Guardados";
+"community.saved.empty" = "Aún no hay publicaciones guardadas";
 "timeline.title" = "Historia del reloj";
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";

@@ -234,6 +234,12 @@
 "community.login.title" = "커뮤니티 로그인";
 "community.login.body" = "Apple로 로그인하면 게시·팔로우·스크랩을 쓸 수 있어요.";
 "community.login.failed" = "로그인 실패";
+"community.follow" = "팔로우";
+"community.following" = "팔로잉";
+"community.share" = "공유";
+"community.bookmark" = "저장";
+"community.saved.title" = "저장됨";
+"community.saved.empty" = "저장한 게시물이 없어요";
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";

@@ -303,6 +303,12 @@
 "community.login.title" = "कम्युनिटी में साइन इन करें";
 "community.login.body" = "पोस्ट, फ़ॉलो और सेव के लिए Apple से साइन इन करें।";
 "community.login.failed" = "साइन इन विफल";
+"community.follow" = "फ़ॉलो";
+"community.following" = "फ़ॉलोइंग";
+"community.share" = "शेयर";
+"community.bookmark" = "सेव";
+"community.saved.title" = "सेव किए गए";
+"community.saved.empty" = "अभी तक कोई सेव पोस्ट नहीं";
 "timeline.title" = "घड़ी की कहानी";
 "timeline.entry" = "जीवन समयरेखा";
 "timeline.first_meeting" = "पहली मुलाकात";
