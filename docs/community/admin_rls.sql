@@ -33,10 +33,12 @@ as $$
 $$;
 
 -- 3) 예약 닉네임 게시 제한 ----------------------------------------------------
---    community_posts INSERT 시: author_name 이 예약어면 admin uid 만 허용.
---    (일반 사용자는 예약어 외 자유 닉네임 사용 가능)
-drop policy if exists community_posts_insert_guard on public.community_posts;
-create policy community_posts_insert_guard on public.community_posts
+--    ⚠️ 중요: 기존 스키마의 posts_insert 정책(author_uid 만 확인 = author_name 무제한)을
+--    그대로 두고 새 정책을 "추가" 하면, RLS 가 같은 명령(INSERT) 정책을 OR 로 합치므로
+--    기존 허용 정책 때문에 제한이 무력화된다. → 반드시 기존 posts_insert 정책 자체를 교체.
+--    (schema.sql 의 posts_insert 와 동일한 이름으로 덮어쓴다)
+drop policy if exists posts_insert on public.community_posts;
+create policy posts_insert on public.community_posts
     for insert
     with check (
         author_uid = auth.uid()
