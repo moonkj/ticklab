@@ -9,14 +9,10 @@ struct SpecCardView: View {
     @Bindable var card: SpecCard
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
-    @Environment(UserPreferences.self) private var preferences
     @State private var player: AVAudioPlayer?
     @State private var isPlaying = false
     /// Round 174: SpecCard 삭제 확인 alert.
     @State private var deleteAlert: Bool = false
-    /// AI 모델 설명/착장 의견.
-    @State private var aiText: String?
-    @State private var aiLoading = false
 
     var body: some View {
         NavigationStack {
@@ -117,87 +113,8 @@ struct SpecCardView: View {
             if !card.note.isEmpty {
                 noteSection
             }
-            aiSection
         }
         .padding(20)
-    }
-
-    /// 사용자 요청: 스펙카드 하단 AI 모델 설명 + 착장 의견 (Apple Intelligence, 없으면 rule 폴백).
-    private var aiSection: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack(spacing: 5) {
-                Image(systemName: "sparkles")
-                    .font(.system(size: 11))
-                    .foregroundStyle(AppColors.accentDark)
-                Text(String(localized: "speccard.ai.title"))
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.5)
-                    .foregroundStyle(AppColors.ink2)
-                Spacer()
-                // 다시 생성 — 캐시된 해설이 시계와 안 맞을 때 갱신.
-                if (aiText ?? card.aiDescription) != nil, !aiLoading {
-                    Button { Task { await regenerateAIDescription() } } label: {
-                        Image(systemName: "arrow.clockwise")
-                            .font(.system(size: 12))
-                            .foregroundStyle(AppColors.ink3)
-                    }
-                    .buttonStyle(.plain)
-                    .accessibilityLabel(String(localized: "common.refresh"))
-                }
-            }
-            if let text = aiText ?? card.aiDescription {
-                Text(text)
-                    .font(.system(size: 14, design: .serif))
-                    .foregroundStyle(AppColors.ink0)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            } else if aiLoading {
-                HStack(spacing: 8) {
-                    ProgressView().scaleEffect(0.8)
-                    Text(String(localized: "speccard.ai.loading"))
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.ink3)
-                }
-            }
-        }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColors.accent50)
-        .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.accentLight, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
-        .task { await loadAIDescription() }
-    }
-
-    private func loadAIDescription() async {
-        // 캐시 있으면 재사용(매번 LLM 호출 방지).
-        if let cached = card.aiDescription, !cached.isEmpty { aiText = cached; return }
-        guard let watch = card.watch else { return }
-        aiLoading = true
-        let lang = Locale.current.language.languageCode?.identifier ?? "en"
-        // 스펙 요약(주어진 수치만) — AI가 이것만 grounding 해설하도록(할루시네이션 방지).
-        var parts: [String] = []
-        if !card.movement.isEmpty { parts.append(card.movement) }
-        if let cs = card.caseSize { parts.append(String(format: "%.1f mm", cs)) }
-        if let pr = card.powerReserveHours { parts.append(String(format: "%.0f h", pr)) }
-        if let la = card.liftAngle { parts.append(String(format: "lift %.0f°", la)) }
-        let specSummary = parts.joined(separator: " · ")
-        let text = await WatchDescriptionService.shared.describe(
-            brand: watch.brand, model: watch.model, caliber: watch.caliber,
-            specSummary: specSummary, movement: watch.movementType,
-            aiEnabled: preferences.aiVerdictEnabled, languageCode: lang
-        )
-        card.aiDescription = text
-        try? modelContext.save()
-        aiText = text
-        aiLoading = false
-    }
-
-    /// 캐시된 해설 폐기 후 현재 스펙으로 재생성 — "시계와 안 맞을 때" 사용자 갱신.
-    private func regenerateAIDescription() async {
-        card.aiDescription = nil
-        aiText = nil
-        try? modelContext.save()
-        await loadAIDescription()
     }
 
     private var specTable: some View {
