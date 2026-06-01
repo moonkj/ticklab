@@ -1570,6 +1570,13 @@
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "影片";
 "video.filter.all" = "全部";
+"video.suggest.menu" = "推薦頻道";
+"video.suggest.title" = "推薦頻道";
+"video.suggest.url" = "YouTube 頻道網址";
+"video.suggest.note" = "留言（選填）";
+"video.suggest.submit" = "傳送";
+"video.suggest.hint" = "留下你想推薦的腕錶 YouTube 頻道網址，運營會審核。";
+"video.suggest.done" = "已收到你的推薦，謝謝！";
 "video.empty.title" = "暫無影片";
 "video.empty.body" = "即將新增新的腕錶影片。";
 "video.watch_on_youtube" = "在 YouTube 觀看";

@@ -1570,6 +1570,13 @@
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "Vídeos";
 "video.filter.all" = "Todos";
+"video.suggest.menu" = "Sugerir un canal";
+"video.suggest.title" = "Sugerir un canal";
+"video.suggest.url" = "URL del canal de YouTube";
+"video.suggest.note" = "Nota (opcional)";
+"video.suggest.submit" = "Enviar";
+"video.suggest.hint" = "Comparte un canal de YouTube de relojes que te gustaría ver. Lo revisaremos.";
+"video.suggest.done" = "¡Gracias! Recibimos tu sugerencia.";
 "video.empty.title" = "No hay vídeos todavía";
 "video.empty.body" = "Pronto añadiremos nuevos vídeos de relojes.";
 "video.watch_on_youtube" = "Ver en YouTube";

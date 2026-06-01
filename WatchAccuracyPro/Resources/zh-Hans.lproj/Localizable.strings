@@ -1570,6 +1570,13 @@
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "视频";
 "video.filter.all" = "全部";
+"video.suggest.menu" = "推荐频道";
+"video.suggest.title" = "推荐频道";
+"video.suggest.url" = "YouTube 频道网址";
+"video.suggest.note" = "留言（可选）";
+"video.suggest.submit" = "发送";
+"video.suggest.hint" = "留下你想推荐的腕表 YouTube 频道网址，运营会审核。";
+"video.suggest.done" = "已收到你的推荐，谢谢！";
 "video.empty.title" = "暂无视频";
 "video.empty.body" = "即将添加新的腕表视频。";
 "video.watch_on_youtube" = "在 YouTube 观看";

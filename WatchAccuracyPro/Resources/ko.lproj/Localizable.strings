@@ -1604,6 +1604,13 @@
 "stats.entry.news" = "브랜드 뉴스";
 "video.feed.title" = "영상";
 "video.filter.all" = "전체";
+"video.suggest.menu" = "채널 제안";
+"video.suggest.title" = "채널 제안";
+"video.suggest.url" = "YouTube 채널 주소";
+"video.suggest.note" = "한마디 (선택)";
+"video.suggest.submit" = "보내기";
+"video.suggest.hint" = "추천하고 싶은 시계 유튜브 채널 주소를 남겨주세요. 운영자가 검토 후 반영합니다.";
+"video.suggest.done" = "제안이 접수되었어요. 감사합니다!";
 "video.empty.title" = "아직 영상이 없어요";
 "video.empty.body" = "곧 새로운 시계 영상이 추가됩니다.";
 "video.watch_on_youtube" = "YouTube에서 보기";

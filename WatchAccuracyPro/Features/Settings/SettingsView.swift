@@ -971,6 +971,7 @@ private struct AdminOpsView: View {
     @State private var announcements: [Community.Announcement] = []
     @State private var composingChannel = false
     @State private var channels: [Community.CuratedChannel] = []
+    @State private var suggestions: [Community.ChannelSuggestion] = []
 
     private struct ReportGroup: Identifiable {
         let postID: String
@@ -1062,6 +1063,32 @@ private struct AdminOpsView: View {
                 Text("YouTube 채널 ID(UCxxxx)를 언어별로 등록. 채널 RSS로 신규 영상을 분석 탭 ‘영상’에 표시.")
                     .font(.caption2).foregroundStyle(.secondary)
             }
+            Section("채널 제안 (사용자)") {
+                if suggestions.isEmpty {
+                    Text("받은 제안 없음").font(.caption).foregroundStyle(.secondary)
+                } else {
+                    ForEach(suggestions) { s in
+                        VStack(alignment: .leading, spacing: 3) {
+                            if let link = URL(string: s.url) {
+                                Link(s.url, destination: link)
+                                    .font(.system(size: 13)).lineLimit(2)
+                            } else {
+                                Text(s.url).font(.system(size: 13)).lineLimit(2)
+                            }
+                            if let note = s.note, !note.isEmpty {
+                                Text(note).font(.caption).foregroundStyle(.secondary).lineLimit(3)
+                            }
+                            Text(s.createdAt.formatted(.relative(presentation: .named)))
+                                .font(.caption2).foregroundStyle(.secondary)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                Task { await deleteSuggestion(s) }
+                            } label: { Label("삭제", systemImage: "trash") }
+                        }
+                    }
+                }
+            }
             Section("신고된 게시물") {
                 if grouped.isEmpty {
                     Text(loaded
@@ -1107,6 +1134,13 @@ private struct AdminOpsView: View {
         if !(await service.deleteCuratedChannel(id: ch.id)) { await reloadChannels() }
     }
 
+    private func deleteSuggestion(_ s: Community.ChannelSuggestion) async {
+        suggestions.removeAll { $0.id == s.id }
+        if !(await service.deleteChannelSuggestion(id: s.id)) {
+            suggestions = await service.fetchChannelSuggestions()
+        }
+    }
+
     @ViewBuilder
     private func reportRow(_ g: ReportGroup) -> some View {
         let post = reportedPosts[g.postID]
@@ -1149,11 +1183,13 @@ private struct AdminOpsView: View {
         async let r = service.fetchReports()
         async let a = service.fetchAnnouncements()
         async let c = service.fetchAllCuratedChannels()
+        async let sg = service.fetchChannelSuggestions()
         stats = await s
         let rep = await r
         reports = rep
         announcements = await a
         channels = await c
+        suggestions = await sg
         let ids = Array(Set(rep.map { $0.postID }))
         let posts = await service.fetchReportedPosts(ids: ids)
         reportedPosts = Dictionary(posts.map { ($0.id, $0) }, uniquingKeysWith: { x, _ in x })

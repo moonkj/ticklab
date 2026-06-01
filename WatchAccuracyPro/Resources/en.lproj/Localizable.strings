@@ -1605,6 +1605,13 @@
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "Videos";
 "video.filter.all" = "All";
+"video.suggest.menu" = "Suggest a channel";
+"video.suggest.title" = "Suggest a channel";
+"video.suggest.url" = "YouTube channel URL";
+"video.suggest.note" = "Note (optional)";
+"video.suggest.submit" = "Send";
+"video.suggest.hint" = "Share a watch YouTube channel you'd like to see. We'll review it.";
+"video.suggest.done" = "Thanks! Your suggestion was received.";
 "video.empty.title" = "No videos yet";
 "video.empty.body" = "New watch videos coming soon.";
 "video.watch_on_youtube" = "Watch on YouTube";

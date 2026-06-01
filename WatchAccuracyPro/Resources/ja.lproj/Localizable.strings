@@ -1570,6 +1570,13 @@
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "動画";
 "video.filter.all" = "すべて";
+"video.suggest.menu" = "チャンネルを提案";
+"video.suggest.title" = "チャンネルを提案";
+"video.suggest.url" = "YouTubeチャンネルのURL";
+"video.suggest.note" = "ひとこと（任意）";
+"video.suggest.submit" = "送信";
+"video.suggest.hint" = "おすすめの時計YouTubeチャンネルのURLを教えてください。運営が確認します。";
+"video.suggest.done" = "提案を受け付けました。ありがとうございます！";
 "video.empty.title" = "まだ動画がありません";
 "video.empty.body" = "まもなく新しい時計動画が追加されます。";
 "video.watch_on_youtube" = "YouTubeで見る";

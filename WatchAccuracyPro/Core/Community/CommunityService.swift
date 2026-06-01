@@ -318,6 +318,40 @@ final class CommunityService: ObservableObject {
         await loadFeed()
     }
 
+    // MARK: - Channel Suggestions (사용자 → 운영자 제안)
+
+    /// 사용자: 추천 채널 주소 제출. 익명 세션도 가능(본인 uid INSERT).
+    @discardableResult
+    func submitChannelSuggestion(url: String, note: String?) async -> Bool {
+        await ensureSignedIn()
+        guard let endpoint = URL(string: "\(baseURL)/rest/v1/channel_suggestions") else { return false }
+        var req = authedRequest(endpoint, method: "POST")
+        var body: [String: Any] = ["url": url]
+        if let n = note, !n.isEmpty { body["note"] = n }
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 운영자: 제안 목록(최신순).
+    func fetchChannelSuggestions() async -> [Community.ChannelSuggestion] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/channel_suggestions?select=*&order=created_at.desc&limit=200") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.ChannelSuggestion].self, from: data) else { return [] }
+        return arr
+    }
+
+    /// 운영자: 제안 삭제(처리 완료).
+    @discardableResult
+    func deleteChannelSuggestion(id: String) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/channel_suggestions?id=eq.\(id)") else { return false }
+        guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
     // MARK: - Curated YouTube Channels (운영자 큐레이션 — 영상 피드)
 
     /// 활성 채널 — locale 매칭. 호출 측에서 비면 'en' 폴백. 모든 사용자 읽기.

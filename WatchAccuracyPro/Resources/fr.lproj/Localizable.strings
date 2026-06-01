@@ -1570,6 +1570,13 @@
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "Vidéos";
 "video.filter.all" = "Tous";
+"video.suggest.menu" = "Suggérer une chaîne";
+"video.suggest.title" = "Suggérer une chaîne";
+"video.suggest.url" = "URL de la chaîne YouTube";
+"video.suggest.note" = "Note (facultatif)";
+"video.suggest.submit" = "Envoyer";
+"video.suggest.hint" = "Partagez une chaîne YouTube de montres que vous aimeriez voir. Nous l'examinerons.";
+"video.suggest.done" = "Merci ! Votre suggestion a été reçue.";
 "video.empty.title" = "Aucune vidéo pour le moment";
 "video.empty.body" = "De nouvelles vidéos de montres arrivent bientôt.";
 "video.watch_on_youtube" = "Voir sur YouTube";

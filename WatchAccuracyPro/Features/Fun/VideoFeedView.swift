@@ -7,6 +7,7 @@ struct VideoFeedView: View {
     @Environment(\.openURL) private var openURL
     /// nil = 전체, 값 = 해당 채널만.
     @State private var selectedChannel: String?
+    @State private var showSuggest = false
 
     /// 피드에 등장하는 채널(중복 제거, 가나다/알파벳 정렬).
     private var distinctChannels: [String] {
@@ -45,10 +46,10 @@ struct VideoFeedView: View {
         .navigationBarTitleDisplayMode(.inline)
         .background(AppColors.paper0.ignoresSafeArea())
         .toolbar {
-            // 채널이 2개 이상일 때만 — 전체 / 채널 선택.
-            if distinctChannels.count >= 2 {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    // 채널이 2개 이상일 때만 — 전체 / 채널 선택.
+                    if distinctChannels.count >= 2 {
                         Button { selectedChannel = nil } label: {
                             if selectedChannel == nil {
                                 Label(String(localized: "video.filter.all"), systemImage: "checkmark")
@@ -59,17 +60,26 @@ struct VideoFeedView: View {
                                 if selectedChannel == ch { Label(ch, systemImage: "checkmark") } else { Text(ch) }
                             }
                         }
-                    } label: {
+                        Divider()
+                    }
+                    // 항상 하단에 — 채널 제안.
+                    Button { showSuggest = true } label: {
+                        Label(String(localized: "video.suggest.menu"), systemImage: "paperplane")
+                    }
+                } label: {
+                    if distinctChannels.count >= 2 {
                         HStack(spacing: 4) {
                             Image(systemName: "line.3.horizontal.decrease.circle")
-                            Text(selectedChannel ?? String(localized: "video.filter.all"))
-                                .lineLimit(1)
+                            Text(selectedChannel ?? String(localized: "video.filter.all")).lineLimit(1)
                         }
                         .font(.system(size: 14, weight: .semibold))
+                    } else {
+                        Image(systemName: "ellipsis.circle").font(.system(size: 17))
                     }
                 }
             }
         }
+        .sheet(isPresented: $showSuggest) { ChannelSuggestSheet() }
         .task { await service.load() }
         .refreshable { await service.load(force: true) }
     }
@@ -127,5 +137,59 @@ struct VideoFeedView: View {
             }
         }
         .buttonStyle(.plain)
+    }
+}
+
+/// 채널 제안 — 사용자가 추천 YouTube 채널 주소를 운영자에게 제출.
+private struct ChannelSuggestSheet: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var url = ""
+    @State private var note = ""
+    @State private var sending = false
+    @State private var done = false
+
+    private var canSend: Bool {
+        !url.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && !sending
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField(String(localized: "video.suggest.url"), text: $url)
+                        .autocorrectionDisabled().textInputAutocapitalization(.never)
+                        .keyboardType(.URL)
+                    TextField(String(localized: "video.suggest.note"), text: $note, axis: .vertical)
+                        .lineLimit(1...3)
+                } footer: {
+                    Text(String(localized: "video.suggest.hint"))
+                }
+                Section {
+                    Button {
+                        sending = true
+                        Task {
+                            let ok = await CommunityService.shared.submitChannelSuggestion(
+                                url: url.trimmingCharacters(in: .whitespacesAndNewlines),
+                                note: note.trimmingCharacters(in: .whitespacesAndNewlines))
+                            sending = false
+                            if ok { done = true }
+                        }
+                    } label: {
+                        if sending { ProgressView() } else { Text(String(localized: "video.suggest.submit")) }
+                    }
+                    .disabled(!canSend)
+                }
+            }
+            .navigationTitle(String(localized: "video.suggest.title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(String(localized: "common.cancel")) { dismiss() }
+                }
+            }
+            .alert(String(localized: "video.suggest.done"), isPresented: $done) {
+                Button(String(localized: "common.done")) { dismiss() }
+            }
+        }
     }
 }

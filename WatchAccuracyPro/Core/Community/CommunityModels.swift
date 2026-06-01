@@ -95,6 +95,15 @@ enum Community {
         let createdAt: Date
     }
 
+    /// 사용자 채널 제안(영상 피드) — 사용자가 추천 채널 주소를 운영자에게. 운영자만 조회.
+    struct ChannelSuggestion: Codable, Identifiable {
+        let id: String
+        let url: String
+        let note: String?
+        let createdAt: Date
+        enum CodingKeys: String, CodingKey { case id, url, note; case createdAt = "created_at" }
+    }
+
     /// 운영자 큐레이션 YouTube 채널(영상 피드). 언어별. RSS는 channelId 로 앱이 직접 읽음.
     struct CuratedChannel: Codable, Identifiable {
         let id: String
