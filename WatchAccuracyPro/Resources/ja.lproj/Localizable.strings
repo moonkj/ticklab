@@ -355,6 +355,14 @@
 "community.empty.body" = "最初に今日の時計をシェアしましょう。";
 "community.like" = "いいね";
 "community.block" = "このユーザーをブロック";
+"community.report.done" = "通報を受け付けました。確認のうえ対応します。";
+"community.image_unavailable" = "写真を読み込めません";
+"community.blocked.manage" = "ブロック管理";
+"community.blocked.title" = "ブロックしたユーザー";
+"community.blocked.empty" = "ブロックしたユーザーはいません";
+"community.blocked.unblock" = "ブロック解除";
+"community.blocked.anon" = "匿名ユーザー";
+"community.blocked.footer" = "ブロックを解除すると、このユーザーの投稿が再び表示されます。";
 "community.gate.cta" = "Proですべて見る";
 "community.daily_limit.title" = "今日はもう投稿しました";
 "community.daily_limit.body" = "写真は1日1枚まで。明日もう一度どうぞ。";

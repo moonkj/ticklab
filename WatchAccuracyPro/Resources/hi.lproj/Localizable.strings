@@ -355,6 +355,14 @@
 "community.empty.body" = "आज की घड़ी साझा करने वाले पहले बनें।";
 "community.like" = "पसंद";
 "community.block" = "इस उपयोगकर्ता को ब्लॉक करें";
+"community.report.done" = "रिपोर्ट मिल गई। हम समीक्षा कर कार्रवाई करेंगे।";
+"community.image_unavailable" = "फ़ोटो उपलब्ध नहीं";
+"community.blocked.manage" = "ब्लॉक प्रबंधन";
+"community.blocked.title" = "ब्लॉक किए गए उपयोगकर्ता";
+"community.blocked.empty" = "कोई ब्लॉक किया गया उपयोगकर्ता नहीं";
+"community.blocked.unblock" = "अनब्लॉक करें";
+"community.blocked.anon" = "गुमनाम उपयोगकर्ता";
+"community.blocked.footer" = "अनब्लॉक करने पर आप इस उपयोगकर्ता की पोस्ट फिर से देख पाएंगे।";
 "community.gate.cta" = "Pro के साथ सब देखें";
 "community.daily_limit.title" = "आज पहले ही पोस्ट कर चुके हैं";
 "community.daily_limit.body" = "आप दिन में एक फ़ोटो पोस्ट कर सकते हैं। कल फिर कोशिश करें।";

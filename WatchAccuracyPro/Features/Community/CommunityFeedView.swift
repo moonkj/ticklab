@@ -12,7 +12,7 @@ struct CommunityFeedView: View {
     @State private var showComposer = false
     @State private var showEULA = false
     @State private var showDailyLimit = false
-    @State private var reportTarget: Community.Post?
+    @State private var reportDone = false
     @State private var showViewerGate = false
     /// 신원 전환: 게시·좋아요 등 액션 전 Apple 로그인 게이트.
     @State private var showLogin = false
@@ -22,6 +22,7 @@ struct CommunityFeedView: View {
     @State private var shareItem: ShareCardItem?
     @State private var showSaved = false
     @State private var showProfile = false
+    @State private var showBlocked = false
     /// 운영 ID(관리자) 활성 — 모든 글 삭제 권한 노출.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
     @State private var adminDeleteTarget: Community.Post?
@@ -83,6 +84,9 @@ struct CommunityFeedView: View {
             .sheet(isPresented: $showProfile) {
                 UserProfileView()
             }
+            .sheet(isPresented: $showBlocked) {
+                BlockedUsersView()
+            }
             .sheet(isPresented: $showEULA) {
                 CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
             }
@@ -104,20 +108,8 @@ struct CommunityFeedView: View {
             } message: {
                 Text(myWarnings.map { $0.message }.joined(separator: "\n\n"))
             }
-            .confirmationDialog(
-                String(localized: "community.report.title"),
-                isPresented: Binding(get: { reportTarget != nil }, set: { if !$0 { reportTarget = nil } }),
-                titleVisibility: .visible
-            ) {
-                if let target = reportTarget {
-                    ForEach(Community.ReportReason.allCases, id: \.self) { reason in
-                        Button(String(localized: String.LocalizationValue(reason.localizationKey)), role: .destructive) {
-                            Task { await service.report(target, reason: reason) }
-                            reportTarget = nil
-                        }
-                    }
-                    Button(String(localized: "common.cancel"), role: .cancel) { reportTarget = nil }
-                }
+            .alert(String(localized: "community.report.done"), isPresented: $reportDone) {
+                Button(String(localized: "common.done"), role: .cancel) {}
             }
             .confirmationDialog(
                 "이 게시물을 삭제할까요? (관리자)",
@@ -164,6 +156,9 @@ struct CommunityFeedView: View {
             Menu {
                 Button { showProfile = true } label: {
                     Label(String(localized: "community.menu.profile"), systemImage: "person.crop.circle")
+                }
+                Button { showBlocked = true } label: {
+                    Label(String(localized: "community.blocked.manage"), systemImage: "hand.raised.slash")
                 }
                 if service.isSignedIn {
                     Button(role: .destructive) { service.signOut() } label: {
@@ -222,7 +217,9 @@ struct CommunityFeedView: View {
                             Task { await service.toggleLike(post) }
                         },
                         onUnlock: { purchaseRouter?.intend(.community) },
-                        onReport: { reportTarget = post },
+                        onReport: { reason in
+                            Task { await service.report(post, reason: reason); reportDone = true }
+                        },
                         onBlock: { Task { await service.block(authorOf: post) } },
                         onFollow: {
                             guard service.isSignedIn else { showLogin = true; return }
@@ -376,7 +373,7 @@ struct CommunitySavedView: View {
                                     isMine: post.isMine(currentUID: service.myUID),
                                     onLike: { Task { await service.toggleLike(post) } },
                                     onUnlock: {},
-                                    onReport: {},
+                                    onReport: { _ in },
                                     onBlock: {},
                                     onFollow: { Task { await service.toggleFollow(post.authorUID) } },
                                     onBookmark: { Task { await service.toggleBookmark(post) } },
@@ -427,7 +424,7 @@ private struct CommunityPostCard: View {
     let isMine: Bool
     let onLike: () -> Void
     let onUnlock: () -> Void
-    let onReport: () -> Void
+    let onReport: (Community.ReportReason) -> Void
     let onBlock: () -> Void
     let onFollow: () -> Void
     let onBookmark: () -> Void
@@ -523,12 +520,27 @@ private struct CommunityPostCard: View {
             AsyncImage(url: url) { phase in
                 switch phase {
                 case .success(let img): img.resizable().scaledToFill()
-                case .failure: Color(AppColors.paper2)
+                case .failure: missingImagePlaceholder   // 삭제·만료 등으로 사진 소실
                 default: ZStack { Color(AppColors.paper2); ProgressView() }
                 }
             }
         } else {
+            missingImagePlaceholder
+        }
+    }
+
+    /// 사진이 사라진(스토리지 소실·경로 없음) 게시물 — 빈 공백 대신 안내.
+    private var missingImagePlaceholder: some View {
+        ZStack {
             Color(AppColors.paper2)
+            VStack(spacing: 8) {
+                Image(systemName: "photo.badge.exclamationmark")
+                    .font(.system(size: 30, weight: .regular))
+                    .foregroundStyle(AppColors.ink3)
+                Text(String(localized: "community.image_unavailable"))
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.ink3)
+            }
         }
     }
 
@@ -568,7 +580,14 @@ private struct CommunityPostCard: View {
             Button(action: onShare) {
                 Label(String(localized: "community.share"), systemImage: "square.and.arrow.up")
             }
-            Button(role: .destructive, action: onReport) {
+            // 신고 — "..." 안에서 사유 하위 메뉴로 펼침(중앙 팝업 X, 글에 anchor).
+            Menu {
+                ForEach(Community.ReportReason.allCases, id: \.self) { reason in
+                    Button(role: .destructive) { onReport(reason) } label: {
+                        Text(String(localized: String.LocalizationValue(reason.localizationKey)))
+                    }
+                }
+            } label: {
                 Label(String(localized: "community.report.title"), systemImage: "flag")
             }
             Button(role: .destructive, action: onBlock) {
@@ -635,5 +654,59 @@ private struct CommunityPostCard: View {
             }
             .buttonStyle(.plain)
         }
+    }
+}
+
+/// 차단 관리 — 사용자가 차단한 작성자 목록 + 차단 해제.
+/// 익명 커뮤니티라 닉네임이 없어 UID 끝 4자리로만 구분 표기(본인만 보는 본인 데이터).
+private struct BlockedUsersView: View {
+    @ObservedObject private var service = CommunityService.shared
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                if service.blockedUIDs.isEmpty {
+                    Section {
+                        Text(String(localized: "community.blocked.empty"))
+                            .font(.system(size: 14))
+                            .foregroundStyle(AppColors.ink3)
+                    }
+                } else {
+                    Section {
+                        ForEach(Array(service.blockedUIDs).sorted(), id: \.self) { uid in
+                            HStack(spacing: 12) {
+                                Image(systemName: "person.crop.circle.badge.xmark")
+                                    .font(.system(size: 20))
+                                    .foregroundStyle(AppColors.ink3)
+                                Text(blockedLabel(uid))
+                                    .font(.system(size: 15))
+                                    .foregroundStyle(AppColors.ink0)
+                                Spacer()
+                                Button(String(localized: "community.blocked.unblock")) {
+                                    Task { await service.unblock(uid) }
+                                }
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundStyle(AppColors.accent)
+                                .buttonStyle(.borderless)
+                            }
+                        }
+                    } footer: {
+                        Text(String(localized: "community.blocked.footer"))
+                    }
+                }
+            }
+            .navigationTitle(String(localized: "community.blocked.title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "common.done")) { dismiss() }
+                }
+            }
+        }
+    }
+
+    private func blockedLabel(_ uid: String) -> String {
+        String(localized: "community.blocked.anon") + " #" + uid.suffix(4)
     }
 }

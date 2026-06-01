@@ -355,6 +355,14 @@
 "community.empty.body" = "Soyez le premier à partager la montre du jour.";
 "community.like" = "J'aime";
 "community.block" = "Bloquer cet utilisateur";
+"community.report.done" = "Signalement reçu. Nous allons l'examiner et agir.";
+"community.image_unavailable" = "Photo indisponible";
+"community.blocked.manage" = "Gérer les blocages";
+"community.blocked.title" = "Utilisateurs bloqués";
+"community.blocked.empty" = "Aucun utilisateur bloqué";
+"community.blocked.unblock" = "Débloquer";
+"community.blocked.anon" = "Utilisateur anonyme";
+"community.blocked.footer" = "Débloquer vous permet de revoir les publications de cet utilisateur.";
 "community.gate.cta" = "Tout voir avec Pro";
 "community.daily_limit.title" = "Déjà publié aujourd'hui";
 "community.daily_limit.body" = "Vous pouvez publier une photo par jour. Réessayez demain.";

@@ -286,6 +286,14 @@
 "community.empty.body" = "첫 번째로 오늘의 시계를 공유해보세요.";
 "community.like" = "좋아요";
 "community.block" = "이 사용자 차단";
+"community.report.done" = "신고가 접수되었어요. 검토 후 조치할게요.";
+"community.image_unavailable" = "사진을 불러올 수 없어요";
+"community.blocked.manage" = "차단 관리";
+"community.blocked.title" = "차단한 사용자";
+"community.blocked.empty" = "차단한 사용자가 없어요";
+"community.blocked.unblock" = "차단 해제";
+"community.blocked.anon" = "익명 사용자";
+"community.blocked.footer" = "차단을 해제하면 이 사용자의 게시물이 다시 보여요.";
 "community.gate.cta" = "Pro로 전체 보기";
 "community.daily_limit.title" = "오늘은 이미 올렸어요";
 "community.daily_limit.body" = "사진은 하루에 한 장만 올릴 수 있어요. 내일 다시 올려주세요.";

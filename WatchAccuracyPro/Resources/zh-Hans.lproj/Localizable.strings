@@ -355,6 +355,14 @@
 "community.empty.body" = "成为第一个分享今天腕表的人。";
 "community.like" = "赞";
 "community.block" = "屏蔽该用户";
+"community.report.done" = "已收到举报，我们会审核并处理。";
+"community.image_unavailable" = "无法加载照片";
+"community.blocked.manage" = "屏蔽管理";
+"community.blocked.title" = "已屏蔽用户";
+"community.blocked.empty" = "没有屏蔽的用户";
+"community.blocked.unblock" = "解除屏蔽";
+"community.blocked.anon" = "匿名用户";
+"community.blocked.footer" = "解除屏蔽后将重新显示该用户的帖子。";
 "community.gate.cta" = "用 Pro 查看全部";
 "community.daily_limit.title" = "今天已经发布过了";
 "community.daily_limit.body" = "每天只能发布一张照片。明天再来吧。";

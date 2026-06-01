@@ -300,6 +300,17 @@ final class CommunityService: ObservableObject {
         _ = try? await URLSession.shared.data(for: req)
     }
 
+    /// 차단 해제 — 로컬 목록·서버(community_blocks)에서 제거 후 피드 재로딩(해제한 작성자 글 복귀).
+    func unblock(_ uid: String) async {
+        await ensureSignedIn()
+        blockedUIDs.remove(uid)
+        defaults.set(Array(blockedUIDs), forKey: Keys.blocked)
+        if let url = URL(string: "\(baseURL)/rest/v1/community_blocks?blocked_uid=eq.\(uid)") {
+            _ = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE"))
+        }
+        await loadFeed()
+    }
+
     // MARK: - Follow (신원 전환)
 
     func isFollowing(_ authorUID: String) -> Bool { followedUIDs.contains(authorUID) }

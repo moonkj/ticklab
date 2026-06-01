@@ -362,6 +362,14 @@
 "community.empty.body" = "Be the first to share today's watch.";
 "community.like" = "Like";
 "community.block" = "Block this user";
+"community.report.done" = "Report received. We'll review and take action.";
+"community.image_unavailable" = "Photo unavailable";
+"community.blocked.manage" = "Manage blocked";
+"community.blocked.title" = "Blocked users";
+"community.blocked.empty" = "No blocked users";
+"community.blocked.unblock" = "Unblock";
+"community.blocked.anon" = "Anonymous user";
+"community.blocked.footer" = "Unblocking lets you see this user's posts again.";
 "community.gate.cta" = "See all with Pro";
 "community.daily_limit.title" = "Already posted today";
 "community.daily_limit.body" = "You can post one photo per day. Try again tomorrow.";

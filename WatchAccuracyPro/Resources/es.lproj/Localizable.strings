@@ -355,6 +355,14 @@
 "community.empty.body" = "Sé el primero en compartir el reloj de hoy.";
 "community.like" = "Me gusta";
 "community.block" = "Bloquear a este usuario";
+"community.report.done" = "Reporte recibido. Lo revisaremos y actuaremos.";
+"community.image_unavailable" = "Foto no disponible";
+"community.blocked.manage" = "Gestionar bloqueados";
+"community.blocked.title" = "Usuarios bloqueados";
+"community.blocked.empty" = "No hay usuarios bloqueados";
+"community.blocked.unblock" = "Desbloquear";
+"community.blocked.anon" = "Usuario anónimo";
+"community.blocked.footer" = "Al desbloquear, volverás a ver las publicaciones de este usuario.";
 "community.gate.cta" = "Ver todo con Pro";
 "community.daily_limit.title" = "Ya publicaste hoy";
 "community.daily_limit.body" = "Puedes publicar una foto al día. Inténtalo mañana.";

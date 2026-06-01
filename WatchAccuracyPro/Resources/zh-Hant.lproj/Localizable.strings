@@ -355,6 +355,14 @@
 "community.empty.body" = "成為第一個分享今天腕錶的人。";
 "community.like" = "讚";
 "community.block" = "封鎖此使用者";
+"community.report.done" = "已收到檢舉，我們會審核並處理。";
+"community.image_unavailable" = "無法載入相片";
+"community.blocked.manage" = "封鎖管理";
+"community.blocked.title" = "已封鎖用戶";
+"community.blocked.empty" = "沒有封鎖的用戶";
+"community.blocked.unblock" = "解除封鎖";
+"community.blocked.anon" = "匿名用戶";
+"community.blocked.footer" = "解除封鎖後將重新顯示該用戶的貼文。";
 "community.gate.cta" = "用 Pro 查看全部";
 "community.daily_limit.title" = "今天已經發布過了";
 "community.daily_limit.body" = "每天只能發布一張照片。明天再來吧。";
