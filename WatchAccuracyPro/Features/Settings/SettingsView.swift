@@ -261,7 +261,7 @@ struct SettingsView: View {
                                     rescheduleOverhaulReminders()
                                 }
                                )) {
-                            ForEach(2...7, id: \.self) { y in
+                            ForEach(2...10, id: \.self) { y in
                                 Text(String(format: NSLocalizedString("settings.overhaul_reminder.years.value", comment: ""), y))
                                     .tag(y)
                             }

@@ -1,6 +1,7 @@
 import SwiftData
 import SwiftUI
 import UIKit
+import UniformTypeIdentifiers
 
 /// 시계 보관함 (Watchbox) — 디자인 SSOT screens-watchbox.jsx port.
 /// 3/6/12 슬롯 × 4 마감재 (walnut/ebony/leather/linen) — pillow shape 받침대 + 시계 silhouette + brass nameplate.
@@ -9,8 +10,22 @@ struct WatchBoxView: View {
     @State private var slotCount: Int = 6
     @State private var material: Material = .walnut
     @State private var editing: Bool = false
+    @State private var draggingWatch: Watch?
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// 사용자 정의 순서(sortOrder) 기준 — 컬렉션과 일관. 편집 시 드래그로 재정렬.
+    private var orderedWatches: [Watch] {
+        watches.sorted {
+            switch ($0.sortOrder, $1.sortOrder) {
+            case let (a?, b?): return a < b
+            case (_?, nil): return true
+            case (nil, _?): return false
+            case (nil, nil): return $0.createdAt < $1.createdAt
+            }
+        }
+    }
 
     enum Material: String, CaseIterable, Identifiable {
         case walnut, ebony, leather, linen
@@ -59,9 +74,21 @@ struct WatchBoxView: View {
     }
 
     private var slots: [Watch?] {
-        Array(repeating: nil as Watch?, count: slotCount)
+        let ordered = orderedWatches
+        return Array(repeating: nil as Watch?, count: slotCount)
             .enumerated()
-            .map { idx, _ in idx < watches.count ? watches[idx] : nil }
+            .map { idx, _ in idx < ordered.count ? ordered[idx] : nil }
+    }
+
+    /// 드래그 재정렬 — 라이브로 sortOrder 재할당(저장은 drop 완료 시).
+    private func move(_ dragging: Watch, before target: Watch) {
+        guard dragging.id != target.id else { return }
+        var arr = orderedWatches
+        guard let from = arr.firstIndex(where: { $0.id == dragging.id }),
+              let to = arr.firstIndex(where: { $0.id == target.id }) else { return }
+        arr.remove(at: from)
+        arr.insert(dragging, at: to)
+        for (i, w) in arr.enumerated() { w.sortOrder = Double(i) }
     }
 
     private var cols: Int { slotCount == 3 ? 1 : slotCount == 6 ? 2 : 3 }
@@ -266,10 +293,26 @@ struct WatchBoxView: View {
     private func pillowSlot(idx: Int, watch: Watch?) -> some View {
         Group {
             if let watch {
-                pillowSlotBody(idx: idx, watch: watch)
+                let base = pillowSlotBody(idx: idx, watch: watch)
                     .accessibilityElement(children: .combine)
                     .accessibilityLabel("\(watch.brand) \(watch.model)")
                     .accessibilityValue(String(format: NSLocalizedString("watchbox.slot.a11y.position", comment: ""), idx + 1))
+                if editing {
+                    // 편집 모드: 드래그로 위치 변경 (sortOrder 재할당, drop 완료 시 저장).
+                    base
+                        .onDrag {
+                            draggingWatch = watch
+                            return NSItemProvider(object: watch.id.uuidString as NSString)
+                        }
+                        .onDrop(of: [UTType.text], delegate: WatchBoxDropDelegate(
+                            target: watch,
+                            dragging: $draggingWatch,
+                            onMove: move(_:before:),
+                            commit: { try? modelContext.save() }
+                        ))
+                } else {
+                    base
+                }
             } else {
                 pillowSlotBody(idx: idx, watch: nil)
                     .accessibilityHint(String(localized: "watchbox.empty.a11y_hint"))
@@ -419,5 +462,26 @@ struct WatchBoxView: View {
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+/// WatchBox 슬롯 드래그 재정렬 — 드래그가 target 위로 들어오면 즉시 순서 교체(라이브), drop 시 저장.
+private struct WatchBoxDropDelegate: DropDelegate {
+    let target: Watch
+    @Binding var dragging: Watch?
+    let onMove: (Watch, Watch) -> Void
+    let commit: () -> Void
+
+    func dropUpdated(info: DropInfo) -> DropProposal? { DropProposal(operation: .move) }
+
+    func dropEntered(info: DropInfo) {
+        guard let d = dragging, d.id != target.id else { return }
+        onMove(d, target)
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        commit()
+        dragging = nil
+        return true
     }
 }
