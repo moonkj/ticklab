@@ -464,6 +464,20 @@ final class CommunityService: ObservableObject {
         return reports
     }
 
+    /// 신고된 게시물 본문 조회 (admin SELECT RLS 필요 — 숨김/차단 글 포함해 확인).
+    func fetchReportedPosts(ids: [String]) async -> [Community.Post] {
+        guard !ids.isEmpty,
+              let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=*&id=in.(\(ids.joined(separator: ",")))") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let posts = try? Self.decoder.decode([Community.Post].self, from: data) else { return [] }
+        return posts
+    }
+
+    /// 신고 총 건수 (admin RLS 필요 — 미배포 시 0). 관리자 배지 알림용.
+    func fetchReportCount() async -> Int {
+        await countRows(table: "community_reports", selectCol: "id", filter: "")
+    }
+
     /// 게시물 숨김 (admin UPDATE RLS 필요).
     @discardableResult
     func adminHidePost(_ postID: String) async -> Bool {

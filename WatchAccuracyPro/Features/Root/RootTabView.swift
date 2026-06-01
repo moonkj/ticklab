@@ -17,6 +17,8 @@ struct RootTabView: View {
     @State private var selected: Tab = .collection
     /// 운영 ID(관리자) 활성 — 앱 상단에 "관리자 모드" 배너 표시.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
+    /// 관리자 배지 — 신고 건수(종 아이콘) 표시용.
+    @State private var reportCount = 0
 
     // Round 176: 각 탭의 NavigationStack path — Binding 으로 child view 에 주입.
     @State private var collectionPath = NavigationPath()
@@ -131,17 +133,33 @@ struct RootTabView: View {
         // 오버레이(레이아웃 비점유) + allowsHitTesting(false)(탭 통과). 탭바 위에 위치.
         .overlay(alignment: .bottomTrailing) {
             if actingAsTickLab {
-                Text("관리자")
-                    .font(.system(size: 11, weight: .heavy))
-                    .foregroundStyle(.red)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 5)
-                    .background(.ultraThinMaterial, in: Capsule())
-                    .overlay(Capsule().stroke(Color.red.opacity(0.55), lineWidth: 1))
-                    .shadow(color: .black.opacity(0.15), radius: 3, y: 1)
-                    .padding(.trailing, 12)
-                    .padding(.bottom, 64)
-                    .allowsHitTesting(false)
+                HStack(spacing: 6) {
+                    Image(systemName: reportCount > 0 ? "bell.badge.fill" : "bell")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(.red)
+                    if reportCount > 0 {
+                        Text("\(reportCount)")
+                            .font(.system(size: 11, weight: .heavy))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 5).padding(.vertical, 1)
+                            .background(Capsule().fill(.red))
+                    }
+                    Text("관리자")
+                        .font(.system(size: 11, weight: .heavy))
+                        .foregroundStyle(.red)
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 5)
+                .background(.ultraThinMaterial, in: Capsule())
+                .overlay(Capsule().stroke(Color.red.opacity(0.55), lineWidth: 1))
+                .shadow(color: .black.opacity(0.15), radius: 3, y: 1)
+                .padding(.trailing, 12)
+                .padding(.bottom, 64)
+                .allowsHitTesting(false)
+                // 탭 전환/배지 등장 시 신고 건수 갱신.
+                .task(id: selected) {
+                    reportCount = await CommunityService.shared.fetchReportCount()
+                }
             }
         }
         .environment(\.purchaseRouter, purchaseRouter)

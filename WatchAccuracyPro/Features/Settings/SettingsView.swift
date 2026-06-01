@@ -965,6 +965,7 @@ private struct AdminOpsView: View {
     private let service = CommunityService.shared
     @State private var stats = Community.OpsStats()
     @State private var reports: [Community.AdminReport] = []
+    @State private var reportedPosts: [String: Community.Post] = [:]
     @State private var loaded = false
 
     private struct ReportGroup: Identifiable {
@@ -976,8 +977,14 @@ private struct AdminOpsView: View {
     private var grouped: [ReportGroup] {
         Dictionary(grouping: reports, by: { $0.postID }).map { pid, items in
             ReportGroup(postID: pid, count: items.count,
-                        reasons: Array(Set(items.map { $0.reason })).sorted())
+                        reasons: Array(Set(items.map { reasonLabel($0.reason) })).sorted())
         }.sorted { $0.count > $1.count }
+    }
+    private func reasonLabel(_ raw: String) -> String {
+        if let r = Community.ReportReason(rawValue: raw) {
+            return String(localized: String.LocalizationValue(r.localizationKey))
+        }
+        return raw
     }
 
     var body: some View {
@@ -990,32 +997,15 @@ private struct AdminOpsView: View {
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }
-            Section("신고") {
+            Section("신고된 게시물") {
                 if grouped.isEmpty {
                     Text(loaded
-                         ? "신고 없음 (또는 admin SELECT RLS 미배포 — docs/community/admin_ops.sql)"
+                         ? "신고된 게시물 없음 (또는 admin RLS 미배포 — docs/community/admin_ops.sql)"
                          : "불러오는 중…")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(grouped) { g in
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("게시물 \(g.postID.prefix(8))… — 신고 \(g.count)건")
-                                .font(.system(size: 14, weight: .semibold))
-                            Text(g.reasons.joined(separator: ", "))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Button(role: .destructive) {
-                                let pid = g.postID
-                                Task { if await service.adminHidePost(pid) { await reload() } }
-                            } label: {
-                                Label("숨김 처리", systemImage: "eye.slash")
-                            }
-                            .font(.caption)
-                            .buttonStyle(.bordered)
-                        }
-                        .padding(.vertical, 2)
-                    }
+                    ForEach(grouped) { g in reportRow(g) }
                 }
             }
         }
@@ -1025,11 +1015,59 @@ private struct AdminOpsView: View {
         .refreshable { await reload() }
     }
 
+    @ViewBuilder
+    private func reportRow(_ g: ReportGroup) -> some View {
+        let post = reportedPosts[g.postID]
+        HStack(alignment: .top, spacing: 10) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 8).fill(AppColors.paper2)
+                if let post, let url = service.imageURL(for: post.imagePath) {
+                    AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { Color.clear }
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                } else {
+                    Image(systemName: "photo").foregroundStyle(AppColors.ink3)
+                }
+            }
+            .frame(width: 60, height: 60)
+            VStack(alignment: .leading, spacing: 3) {
+                HStack(spacing: 6) {
+                    Text(post?.authorName ?? "—").font(.system(size: 13, weight: .semibold))
+                    if let st = post?.status, st != .approved {
+                        Text(st == .hidden ? "숨김" : "차단")
+                            .font(.system(size: 9, weight: .bold)).foregroundStyle(.orange)
+                    }
+                }
+                if let cap = post?.caption, !cap.isEmpty {
+                    Text(cap).font(.caption).foregroundStyle(.secondary).lineLimit(2)
+                }
+                Text("신고 \(g.count)건 · \(g.reasons.joined(separator: ", "))")
+                    .font(.system(size: 11)).foregroundStyle(.red)
+                HStack(spacing: 8) {
+                    Button { Task { if await service.adminHidePost(g.postID) { await reload() } } } label: {
+                        Label("숨김", systemImage: "eye.slash")
+                    }.font(.caption).buttonStyle(.bordered)
+                    if let post {
+                        Button(role: .destructive) {
+                            Task { if await service.adminDeletePost(post) { await reload() } }
+                        } label: { Label("삭제", systemImage: "trash") }
+                            .font(.caption).buttonStyle(.bordered)
+                    }
+                }
+                .padding(.top, 2)
+            }
+        }
+        .padding(.vertical, 4)
+    }
+
     private func reload() async {
         async let s = service.fetchOpsStats()
         async let r = service.fetchReports()
         stats = await s
-        reports = await r
+        let rep = await r
+        reports = rep
+        let ids = Array(Set(rep.map { $0.postID }))
+        let posts = await service.fetchReportedPosts(ids: ids)
+        reportedPosts = Dictionary(posts.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
         loaded = true
     }
 }
@@ -1093,6 +1131,9 @@ private struct AdminPanelView: View {
                     } label: {
                         Label("운영 대시보드 (신고·통계·활동)", systemImage: "shield.lefthalf.filled")
                     }
+                    if let toast = seedToast {
+                        Text(toast).font(.caption).foregroundStyle(.green)
+                    }
                 }
                 Section("라이선스 모드") {
                     Toggle("Pro 잠금 해제", isOn: Binding(
@@ -1107,89 +1148,6 @@ private struct AdminPanelView: View {
                          : "Free: 시계 최대 \(ProEntitlement.freeWatchLimit)개")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                }
-                Section("상태") {
-                    LabeledContent("시계", value: "\(allWatches.count)")
-                    LabeledContent("측정", value: "\(allMeasurements.count)")
-                    LabeledContent("일기", value: "\(allJournalEntries.count)")
-                    LabeledContent("서비스 로그", value: "\(allServiceLogs.count)")
-                    LabeledContent("착용 기록", value: "\(allWearLogs.count)")
-                    LabeledContent("스펙 카드", value: "\(allSpecCards.count)")
-                }
-                Section("데모 데이터 시드") {
-                    Button {
-                        let added = seedDemoWatches(in: modelContext)
-                        seedToast = "✅ \(added) 시계 + 측정 데이터 시드 완료"
-                    } label: {
-                        Label("시계 10종 + 각 측정 20개 시드", systemImage: "sparkles")
-                    }
-                    Button {
-                        let counts = seedJournalServiceWearSpecCard(watches: allWatches, in: modelContext)
-                        seedToast = "✅ 일기 \(counts.0) / 서비스 \(counts.1) / 착용 \(counts.2) / 스펙 \(counts.3) 시드 완료"
-                    } label: {
-                        Label("기존 시계에 일기/서비스/착용/스펙 시드", systemImage: "doc.text.fill")
-                    }
-                    .disabled(allWatches.isEmpty)
-                    if let toast = seedToast {
-                        Text(toast)
-                            .font(.caption)
-                            .foregroundStyle(.green)
-                    }
-                }
-                Section("데이터 삭제") {
-                    Button(role: .destructive) {
-                        showWipeConfirm = true
-                    } label: {
-                        Label("모든 데이터 삭제 (시계/측정/일기/…)", systemImage: "trash.fill")
-                    }
-                    .confirmationDialog("모든 데이터 삭제할까요?", isPresented: $showWipeConfirm) {
-                        Button("전부 삭제", role: .destructive) {
-                            wipeAllData(in: modelContext, watches: allWatches)
-                            seedToast = "🗑️ 모든 데이터 삭제 완료"
-                        }
-                        Button("취소", role: .cancel) {}
-                    } message: {
-                        Text("시계 + 측정 + 일기 + 서비스 로그 + 착용 기록 + 스펙 카드 모두 삭제됩니다.")
-                    }
-                }
-                Section("환경설정 초기화") {
-                    Button(role: .destructive) {
-                        showResetPrefsConfirm = true
-                    } label: {
-                        Label("모든 UserDefaults 플래그 초기화", systemImage: "arrow.counterclockwise.circle")
-                    }
-                    .confirmationDialog("모든 환경설정 초기화", isPresented: $showResetPrefsConfirm) {
-                        Button("초기화", role: .destructive) {
-                            resetAllPreferences(prefs: prefs, watches: allWatches)
-                            seedToast = "🔄 환경설정 초기화 (onboarding/winding hint/알림/PIN 등)"
-                        }
-                        Button("취소", role: .cancel) {}
-                    } message: {
-                        Text("Pro mode 토글은 유지되며, 나머지 flag 가 default 로 reset 됩니다.")
-                    }
-                }
-                Section("캐시") {
-                    Button {
-                        WatchMoodService.invalidateAll()
-                        for w in allWatches { PhotoCache.invalidate(id: w.id) }
-                        seedToast = "🧹 Cache 비움 (WatchMood + PhotoCache)"
-                    } label: {
-                        Label("WatchMood + PhotoCache 무효화", systemImage: "memorychip")
-                    }
-                }
-                Section("디버그 초기화") {
-                    Button("온보딩 초기화", role: .destructive) {
-                        dismiss()
-                        prefs.hasCompletedOnboarding = false
-                    }
-                    Button("PIN 삭제", role: .destructive) {
-                        prefs.pinEnabled = false
-                        PINService.shared.clearPIN()
-                    }
-                    Button("와인딩 안내 초기화") {
-                        UserDefaults.standard.removeObject(forKey: "ticklab.windingHintShownAt")
-                        seedToast = "✅ 와인딩 안내 토스트 한 번 더 표시"
-                    }
                 }
             }
             .navigationTitle("관리자 패널")

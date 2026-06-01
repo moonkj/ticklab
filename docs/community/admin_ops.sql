@@ -31,6 +31,11 @@ drop policy if exists reports_admin_select on public.community_reports;
 create policy reports_admin_select on public.community_reports
     for select using (public.is_admin(auth.uid()));
 
+-- 2-1) 게시물 열람 — admin 은 모든 글(숨김/차단 포함) SELECT 가능 (신고 게시물 본문 확인용)
+drop policy if exists posts_admin_select on public.community_posts;
+create policy posts_admin_select on public.community_posts
+    for select using (public.is_admin(auth.uid()));
+
 -- 3) 게시물 숨김 — admin 은 모든 글 status UPDATE 가능
 --    (기존 posts_update_own = 본인 글만, 과 OR 로 합쳐져 admin 은 전체 가능)
 drop policy if exists posts_admin_update on public.community_posts;
