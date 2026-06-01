@@ -356,6 +356,9 @@
 "community.like" = "Me gusta";
 "community.block" = "Bloquear a este usuario";
 "community.comment.title" = "Comentarios";
+"community.comment.view_all" = "Ver los %d comentarios";
+"community.likers.title" = "Me gusta";
+"community.likers.empty" = "Aún no hay me gusta";
 "community.comment.empty" = "No hay comentarios todavía. Sé el primero.";
 "community.comment.placeholder" = "Añade un comentario…";
 "community.comment.post" = "Publicar";

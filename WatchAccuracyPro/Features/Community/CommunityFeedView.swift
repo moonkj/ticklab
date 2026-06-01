@@ -14,6 +14,7 @@ struct CommunityFeedView: View {
     @State private var showDailyLimit = false
     @State private var reportDone = false
     @State private var commentTarget: Community.Post?
+    @State private var likersTarget: Community.Post?
     @State private var showViewerGate = false
     /// 신원 전환: 게시·좋아요 등 액션 전 Apple 로그인 게이트.
     @State private var showLogin = false
@@ -94,6 +95,9 @@ struct CommunityFeedView: View {
             }
             .sheet(item: $commentTarget) { post in
                 CommentsView(post: post)
+            }
+            .sheet(item: $likersTarget) { post in
+                LikersView(post: post)
             }
             .sheet(isPresented: $showNotifications) {
                 CommunityNotificationsView()
@@ -269,6 +273,7 @@ struct CommunityFeedView: View {
                         },
                         onShare: { sharePost(post) },
                         onComment: { commentTarget = post },
+                        onLikers: { likersTarget = post },
                         onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
                         onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
                     )
@@ -476,6 +481,7 @@ private struct CommunityPostCard: View {
     let onBookmark: () -> Void
     let onShare: () -> Void
     var onComment: () -> Void = {}
+    var onLikers: () -> Void = {}
     let onDelete: (() -> Void)?
     /// 관리자(운영 ID) 전용 — 모든 글 삭제. nil 이면 미노출.
     var onAdminDelete: (() -> Void)? = nil
@@ -493,11 +499,15 @@ private struct CommunityPostCard: View {
                 .overlay { if blurred { blurOverlay } }
             actions
             if post.likeCount > 0 {
-                Text(String(format: String(localized: "community.likes_count"), post.likeCount))
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppColors.ink0)
-                    .padding(.horizontal, 14)
-                    .padding(.top, 6)
+                // 인스타식 — 좋아요 수 탭하면 누가 눌렀는지(라이커) 목록.
+                Button(action: onLikers) {
+                    Text(String(format: String(localized: "community.likes_count"), post.likeCount))
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(AppColors.ink0)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 14)
+                .padding(.top, 6)
             }
             if let caption = post.caption, !caption.isEmpty, !blurred {
                 (Text(handle).font(.system(size: 13, weight: .semibold)).foregroundColor(AppColors.ink0)
@@ -506,6 +516,17 @@ private struct CommunityPostCard: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 14)
                     .padding(.top, 3)
+            }
+            // 인스타식 — "댓글 N개 모두 보기" → 댓글창.
+            if let c = post.commentCount, c > 0 {
+                Button(action: onComment) {
+                    Text(String(format: String(localized: "community.comment.view_all"), c))
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.ink3)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 14)
+                .padding(.top, 3)
             }
         }
         .padding(.bottom, 10)
@@ -602,14 +623,9 @@ private struct CommunityPostCard: View {
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: "community.like"))
             Button(action: onComment) {
-                HStack(spacing: 5) {
-                    Image(systemName: "bubble.right")
-                        .font(.system(size: 21))
-                    if let c = post.commentCount, c > 0 {
-                        Text("\(c)").font(.system(size: 14, weight: .semibold))
-                    }
-                }
-                .foregroundStyle(AppColors.ink0)
+                Image(systemName: "bubble.right")
+                    .font(.system(size: 21))
+                    .foregroundStyle(AppColors.ink0)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: "community.comment.title"))
@@ -974,5 +990,75 @@ private struct CommentsView: View {
     private func delete(_ c: Community.Comment) async {
         comments.removeAll { $0.id == c.id }
         if !(await service.deleteComment(c.id)) { await reload() }
+    }
+}
+
+/// 좋아요 라이커 목록(인스타 "누가 좋아요") — 표시명 + 팔로우 토글. 차단 작성자는 service가 제외.
+private struct LikersView: View {
+    let post: Community.Post
+    @Environment(\.dismiss) private var dismiss
+    @ObservedObject private var service = CommunityService.shared
+    @State private var likers: [Community.Liker] = []
+    @State private var loaded = false
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if loaded && likers.isEmpty {
+                    EmptyState(
+                        icon: "heart",
+                        title: String(localized: "community.likers.title"),
+                        message: String(localized: "community.likers.empty")
+                    )
+                } else {
+                    List(likers) { liker in
+                        row(liker)
+                            .listRowBackground(AppColors.paper0)
+                    }
+                    .listStyle(.plain)
+                }
+            }
+            .background(AppColors.paper0.ignoresSafeArea())
+            .navigationTitle(String(localized: "community.likers.title"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "common.done")) { dismiss() }
+                }
+            }
+            .task { likers = await service.fetchLikers(postID: post.id); loaded = true }
+        }
+    }
+
+    private func row(_ liker: Community.Liker) -> some View {
+        let isMe = liker.uid == service.myUID
+        let following = service.isFollowing(liker.uid)
+        return HStack(spacing: 12) {
+            ZStack {
+                if liker.authorName == "TickLab", let icon = AppIconProvider.image {
+                    Image(uiImage: icon).resizable().scaledToFill().clipShape(Circle())
+                } else {
+                    Circle().fill(AppColors.paper2)
+                    Text(String((liker.authorName ?? "C").first.map(String.init) ?? "C").uppercased())
+                        .font(.system(size: 13, weight: .bold)).foregroundStyle(AppColors.ink2)
+                }
+            }
+            .frame(width: 34, height: 34)
+            Text(liker.authorName ?? String(localized: "community.anon_handle"))
+                .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
+            Spacer()
+            if !isMe {
+                Button { Task { await service.toggleFollow(liker.uid) } } label: {
+                    Text(String(localized: following ? "community.following" : "community.follow"))
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
+                        .padding(.horizontal, 14).padding(.vertical, 6)
+                        .background(following ? Color.clear : AppColors.ink0)
+                        .overlay(Capsule().stroke(following ? AppColors.rule : Color.clear, lineWidth: 1))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.borderless)
+            }
+        }
     }
 }

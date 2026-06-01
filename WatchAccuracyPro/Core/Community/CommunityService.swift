@@ -271,9 +271,25 @@ final class CommunityService: ObservableObject {
         } else {
             guard let url = URL(string: "\(baseURL)/rest/v1/community_likes") else { return }
             var req = authedRequest(url, method: "POST")
-            req.httpBody = try? JSONSerialization.data(withJSONObject: ["post_id": post.id])
+            var dict: [String: Any] = ["post_id": post.id]
+            if defaults.bool(forKey: "ticklab.admin.actingAsTickLab") {
+                dict["author_name"] = "TickLab"
+            } else {
+                let n = (defaults.string(forKey: "ticklab.profile.name") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                dict["author_name"] = n.isEmpty ? "Collector" : n
+            }
+            req.httpBody = try? JSONSerialization.data(withJSONObject: dict)
             _ = try? await URLSession.shared.data(for: req)
         }
+    }
+
+    /// 게시물 라이커 목록(인스타 "누가 좋아요") — 차단 작성자 제외. likes 전체 읽기 RLS 필요.
+    func fetchLikers(postID: String) async -> [Community.Liker] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_likes?select=uid,author_name&post_id=eq.\(postID)&order=created_at.desc&limit=200") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Liker].self, from: data) else { return [] }
+        return arr.filter { !blockedUIDs.contains($0.uid) }
     }
 
     private func adjustLocalLike(_ id: String, delta: Int) {

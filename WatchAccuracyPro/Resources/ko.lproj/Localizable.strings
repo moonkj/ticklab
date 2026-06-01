@@ -287,6 +287,9 @@
 "community.like" = "좋아요";
 "community.block" = "이 사용자 차단";
 "community.comment.title" = "댓글";
+"community.comment.view_all" = "댓글 %d개 모두 보기";
+"community.likers.title" = "좋아요";
+"community.likers.empty" = "아직 좋아요가 없어요";
 "community.comment.empty" = "아직 댓글이 없어요. 첫 댓글을 남겨보세요.";
 "community.comment.placeholder" = "댓글 달기…";
 "community.comment.post" = "게시";

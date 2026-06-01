@@ -97,6 +97,14 @@ enum Community {
         let createdAt: Date
     }
 
+    /// 좋아요 라이커(인스타 "누가 좋아요"). 익명 닉네임 표시 + 팔로우용 uid.
+    struct Liker: Codable, Identifiable {
+        let uid: String
+        let authorName: String?
+        var id: String { uid }
+        enum CodingKeys: String, CodingKey { case uid; case authorName = "author_name" }
+    }
+
     /// 커뮤니티 댓글.
     struct Comment: Codable, Identifiable {
         let id: String

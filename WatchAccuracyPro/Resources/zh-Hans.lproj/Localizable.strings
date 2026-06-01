@@ -356,6 +356,9 @@
 "community.like" = "赞";
 "community.block" = "屏蔽该用户";
 "community.comment.title" = "评论";
+"community.comment.view_all" = "查看全部 %d 条评论";
+"community.likers.title" = "赞";
+"community.likers.empty" = "还没有赞";
 "community.comment.empty" = "还没有评论。来发表第一条评论吧。";
 "community.comment.placeholder" = "添加评论…";
 "community.comment.post" = "发布";
