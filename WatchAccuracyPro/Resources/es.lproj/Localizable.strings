@@ -293,6 +293,9 @@
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";
 "watch.gift.ribbon" = "Un regalo de %@";
+"collection.sharecard.entry" = "Tarjeta de colección";
+"collection.sharecard.tagline" = "Mi colección de relojes";
+"collection.sharecard.stats" = "%1$d relojes · %2$d marcas · %3$d años";
 "journal.people.label" = "Personas";
 "journal.people.placeholder" = "Separar con comas (p. ej. papá, amigo)";
 "journal.event.label" = "Evento";

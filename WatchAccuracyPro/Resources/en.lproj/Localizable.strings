@@ -300,6 +300,9 @@
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";
 "watch.gift.ribbon" = "A gift from %@";
+"collection.sharecard.entry" = "Collection card";
+"collection.sharecard.tagline" = "My Watch Collection";
+"collection.sharecard.stats" = "%1$d watches · %2$d brands · %3$d yrs";
 "journal.people.label" = "People";
 "journal.people.placeholder" = "Comma-separated (e.g. Dad, friend)";
 "journal.event.label" = "Event";

@@ -224,6 +224,9 @@
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";
 "watch.gift.ribbon" = "%@님께 받은 시계";
+"collection.sharecard.entry" = "컬렉션 자랑 카드";
+"collection.sharecard.tagline" = "나의 시계 컬렉션";
+"collection.sharecard.stats" = "%1$d개 시계 · %2$d개 브랜드 · %3$d년차";
 "journal.people.label" = "함께한 사람";
 "journal.people.placeholder" = "쉼표로 구분 (예: 아버지, 친구)";
 "journal.event.label" = "이벤트";

@@ -293,6 +293,9 @@
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";
 "watch.gift.ribbon" = "来自%@的礼物";
+"collection.sharecard.entry" = "收藏卡片";
+"collection.sharecard.tagline" = "我的腕表收藏";
+"collection.sharecard.stats" = "%1$d 只 · %2$d 个品牌 · 第 %3$d 年";
 "journal.people.label" = "同行的人";
 "journal.people.placeholder" = "用逗号分隔（如 父亲、朋友）";
 "journal.event.label" = "事件";

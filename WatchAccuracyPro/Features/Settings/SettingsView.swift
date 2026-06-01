@@ -32,6 +32,8 @@ struct SettingsView: View {
     /// #10 백업/복원: 로컬 JSON 가져오기.
     @State private var showingRestoreImporter: Bool = false
     @State private var restoreResult: Int? = nil
+    /// R6: 컬렉션 자랑 카드(이미지) 공유.
+    @State private var shareCardItem: ShareCardItem? = nil
     /// Sprint 10 (P3-13): 사용자 프로필
     @State private var showingProfile: Bool = false
 
@@ -413,6 +415,24 @@ struct SettingsView: View {
                                     .font(.system(size: 13)).foregroundStyle(AppColors.ink3)
                             }
                         }
+                    }
+                    // R6 비측정 바이럴: 컬렉션 자랑 카드(이미지) — 탭 시 생성 후 공유시트(인스타 등).
+                    Button {
+                        shareCardItem = CollectionShareCardGenerator.generate(
+                            watches: allWatches, ownerName: UserProfile.displayName
+                        ).map { ShareCardItem(url: $0) }
+                    } label: {
+                        HStack {
+                            Image(systemName: "rectangle.portrait.on.rectangle.portrait.angled").frame(width: 24)
+                            Text(String(localized: "collection.sharecard.entry"))
+                            Spacer()
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.system(size: 13)).foregroundStyle(AppColors.ink3)
+                        }
+                        .foregroundStyle(AppColors.ink0)
+                    }
+                    .sheet(item: $shareCardItem) { item in
+                        ActivityShareSheet(items: [item.url])
                     }
                     // Sprint 6 (P2-7): 컬렉션 마스터 리포트 PDF
                     let masterData = MasterReportGenerator.generate(watches: allWatches, includePrices: true)

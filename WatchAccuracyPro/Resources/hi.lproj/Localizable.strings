@@ -293,6 +293,9 @@
 "timeline.entry" = "जीवन समयरेखा";
 "timeline.first_meeting" = "पहली मुलाकात";
 "watch.gift.ribbon" = "%@ की ओर से उपहार";
+"collection.sharecard.entry" = "कलेक्शन कार्ड";
+"collection.sharecard.tagline" = "मेरा घड़ी संग्रह";
+"collection.sharecard.stats" = "%1$d घड़ियाँ · %2$d ब्रांड · %3$d वर्ष";
 "journal.people.label" = "साथ में लोग";
 "journal.people.placeholder" = "अल्पविराम से अलग (जैसे पिता, मित्र)";
 "journal.event.label" = "अवसर";

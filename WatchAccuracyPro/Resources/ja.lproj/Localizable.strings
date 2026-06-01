@@ -293,6 +293,9 @@
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";
 "watch.gift.ribbon" = "%@さんからの贈り物";
+"collection.sharecard.entry" = "コレクションカード";
+"collection.sharecard.tagline" = "私の時計コレクション";
+"collection.sharecard.stats" = "%1$d本 · %2$dブランド · %3$d年目";
 "journal.people.label" = "一緒にいた人";
 "journal.people.placeholder" = "カンマ区切り（例: 父、友人）";
 "journal.event.label" = "イベント";

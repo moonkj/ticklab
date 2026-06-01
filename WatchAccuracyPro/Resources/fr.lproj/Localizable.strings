@@ -293,6 +293,9 @@
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";
 "watch.gift.ribbon" = "Un cadeau de %@";
+"collection.sharecard.entry" = "Carte de collection";
+"collection.sharecard.tagline" = "Ma collection de montres";
+"collection.sharecard.stats" = "%1$d montres · %2$d marques · %3$d ans";
 "journal.people.label" = "Personnes";
 "journal.people.placeholder" = "Séparés par des virgules (ex. papa, ami)";
 "journal.event.label" = "Événement";

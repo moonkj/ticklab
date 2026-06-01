@@ -131,6 +131,7 @@
 		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
 		76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA49473933488382E08C687D /* MovementDBOTAService.swift */; };
 		78B6EDB3C335BE21E1E1058F /* MatchedFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D6F05B7D6C49E563D6B7F1 /* MatchedFilter.swift */; };
+		7B2D09108649A77232213F87 /* CollectionShareCardGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0274767AAF6167667358503 /* CollectionShareCardGenerator.swift */; };
 		7D721D082E524EB989AF94EC /* BatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A1210C79FC5876A632B764 /* BatteryView.swift */; };
 		80A433977287750B9080D2AB /* SpectralFluxExtractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 227978A140CA929AA168F9CD /* SpectralFluxExtractorTests.swift */; };
 		83ADE22AA89CEA2028CB6F42 /* ProEntitlement.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC41F6299A97CA2A50A55E4A /* ProEntitlement.swift */; };
@@ -454,6 +455,7 @@
 		BCB8C9BC27CC5FC79172A7C9 /* AtomicTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicTimeServiceTests.swift; sourceTree = "<group>"; };
 		BD030531747E34B54A19412F /* AccuracyGradeChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccuracyGradeChip.swift; sourceTree = "<group>"; };
 		BE3199A00E2F396AD697AB82 /* CommunityComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityComposerView.swift; sourceTree = "<group>"; };
+		C0274767AAF6167667358503 /* CollectionShareCardGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionShareCardGenerator.swift; sourceTree = "<group>"; };
 		C09D7C9D6BA476268354A860 /* PINSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupView.swift; sourceTree = "<group>"; };
 		C1FF870CF2C7781C49AFBBF3 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		C47ABF66B3DE34B94929919A /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
@@ -732,6 +734,7 @@
 			isa = PBXGroup;
 			children = (
 				7F85CB710BDB6E5CCE4BEEFE /* CollectionGalleryGenerator.swift */,
+				C0274767AAF6167667358503 /* CollectionShareCardGenerator.swift */,
 				1C4817C4FF6E9CD72A586997 /* SharedSnapshotStore.swift */,
 			);
 			path = Sharing;
@@ -1460,6 +1463,7 @@
 				520B0BC0AA32863772A9865A /* CasebackOCRService.swift in Sources */,
 				4DA466650FB44A1B4458FD84 /* Chip.swift in Sources */,
 				ECD94829EBE2AB0201C514F7 /* CollectionGalleryGenerator.swift in Sources */,
+				7B2D09108649A77232213F87 /* CollectionShareCardGenerator.swift in Sources */,
 				0C96AF50F78003395D7730C8 /* CollectionValueCard.swift in Sources */,
 				42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */,
 				4213E52F2A52302167A13CD8 /* Colors.swift in Sources */,
