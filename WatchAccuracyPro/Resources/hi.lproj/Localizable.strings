@@ -336,6 +336,8 @@
 "community.review.post" = "पोस्ट करें";
 "community.moderation.text.blocked.title" = "कैप्शन अनुमत नहीं";
 "community.moderation.text.blocked.body" = "अनुचित भाषा पाई गई। कृपया अपना कैप्शन संपादित करें।";
+"community.anon_handle" = "गुमनाम";
+"community.likes_count" = "%d लाइक";
 "share.post_to_community" = "कम्युनिटी में पोस्ट करें";
 "text.filter.blocked.title" = "टेक्स्ट अनुमत नहीं";
 "text.filter.blocked.body" = "अनुचित भाषा पाई गई। कृपया टेक्स्ट संपादित करें।";

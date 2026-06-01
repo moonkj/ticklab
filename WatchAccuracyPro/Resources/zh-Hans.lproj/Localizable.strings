@@ -336,6 +336,8 @@
 "community.review.post" = "发布";
 "community.moderation.text.blocked.title" = "无法发布的文字";
 "community.moderation.text.blocked.body" = "检测到不当用语，请修改文字。";
+"community.anon_handle" = "匿名藏家";
+"community.likes_count" = "%d 个赞";
 "share.post_to_community" = "发布到社区";
 "text.filter.blocked.title" = "无法使用的文字";
 "text.filter.blocked.body" = "包含不当用语，请修改。";

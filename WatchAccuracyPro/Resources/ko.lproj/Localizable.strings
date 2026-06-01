@@ -267,6 +267,8 @@
 "community.review.post" = "게시";
 "community.moderation.text.blocked.title" = "게시할 수 없는 문구";
 "community.moderation.text.blocked.body" = "부적절한 표현이 감지되었어요. 멘트를 수정해주세요.";
+"community.anon_handle" = "익명 컬렉터";
+"community.likes_count" = "좋아요 %d개";
 "share.post_to_community" = "커뮤니티에 올리기";
 "text.filter.blocked.title" = "사용할 수 없는 표현";
 "text.filter.blocked.body" = "부적절한 표현이 포함되어 있어요. 수정해주세요.";

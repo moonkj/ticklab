@@ -336,6 +336,8 @@
 "community.review.post" = "Publier";
 "community.moderation.text.blocked.title" = "Légende non autorisée";
 "community.moderation.text.blocked.body" = "Un langage inapproprié a été détecté. Modifiez votre légende.";
+"community.anon_handle" = "Anonyme";
+"community.likes_count" = "%d j'aime";
 "share.post_to_community" = "Publier dans la communauté";
 "text.filter.blocked.title" = "Texte non autorisé";
 "text.filter.blocked.body" = "Un langage inapproprié a été détecté. Modifiez le texte.";

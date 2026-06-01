@@ -336,6 +336,8 @@
 "community.review.post" = "Publicar";
 "community.moderation.text.blocked.title" = "Comentario no permitido";
 "community.moderation.text.blocked.body" = "Se detectó lenguaje inapropiado. Edita tu comentario.";
+"community.anon_handle" = "Anónimo";
+"community.likes_count" = "%d Me gusta";
 "share.post_to_community" = "Publicar en la comunidad";
 "text.filter.blocked.title" = "Texto no permitido";
 "text.filter.blocked.body" = "Se detectó lenguaje inapropiado. Edita el texto.";

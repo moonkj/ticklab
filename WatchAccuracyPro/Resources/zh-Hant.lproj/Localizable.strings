@@ -336,6 +336,8 @@
 "community.review.post" = "發佈";
 "community.moderation.text.blocked.title" = "無法發佈的文字";
 "community.moderation.text.blocked.body" = "偵測到不當用語，請修改文字。";
+"community.anon_handle" = "匿名藏家";
+"community.likes_count" = "%d 個讚";
 "share.post_to_community" = "發佈到社群";
 "text.filter.blocked.title" = "無法使用的文字";
 "text.filter.blocked.body" = "包含不當用語，請修改。";

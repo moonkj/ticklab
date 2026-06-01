@@ -81,7 +81,7 @@ struct CommunityFeedView: View {
 
     private var feedList: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: 0) {
                 ForEach(Array(service.feed.enumerated()), id: \.element.id) { index, post in
                     CommunityPostCard(
                         post: post,
@@ -93,10 +93,11 @@ struct CommunityFeedView: View {
                         onBlock: { Task { await service.block(authorOf: post) } },
                         onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil
                     )
+                    // 인스타 스타일 게시물 구분선.
+                    Rectangle().fill(AppColors.rule).frame(height: 0.5)
                 }
             }
-            .padding(.horizontal, 20)
-            .padding(.vertical, 16)
+            .padding(.top, 2)
         }
     }
 
@@ -192,76 +193,130 @@ private struct CommunityPostCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            ZStack {
-                if let url = CommunityService.shared.imageURL(for: post.imagePath) {
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case .success(let img): img.resizable().scaledToFill()
-                        case .failure: Color(AppColors.paper2)
-                        default: ZStack { Color(AppColors.paper2); ProgressView() }
-                        }
-                    }
-                } else {
-                    Color(AppColors.paper2)
-                }
-            }
-            .aspectRatio(1.0, contentMode: .fit)   // 인스타 스타일 정사각(1:1)
-            .frame(maxWidth: .infinity)
-            .clipped()
-            .overlay { if blurred { blurOverlay } }
-            .clipShape(RoundedRectangle(cornerRadius: 16))
-
-            HStack(spacing: 12) {
-                Button(action: onLike) {
-                    HStack(spacing: 5) {
-                        Image(systemName: liked ? "heart.fill" : "heart")
-                            .foregroundStyle(liked ? AppColors.danger : AppColors.ink2)
-                        Text("\(post.likeCount)")
-                            .font(.system(size: 14, weight: .medium, design: .monospaced))
-                            .foregroundStyle(AppColors.ink2)
-                    }
-                }
-                .buttonStyle(.plain)
-                .accessibilityLabel(String(localized: "community.like"))
-                Spacer()
-                if let brand = post.brand, !brand.isEmpty {
-                    Text(brand.uppercased())
-                        .font(AppTypography.eyebrow)
-                        .tracking(1.5)
-                        .foregroundStyle(AppColors.ink3)
-                }
-                Menu {
-                    Button(role: .destructive, action: onReport) {
-                        Label(String(localized: "community.report.title"), systemImage: "flag")
-                    }
-                    Button(role: .destructive, action: onBlock) {
-                        Label(String(localized: "community.block"), systemImage: "hand.raised")
-                    }
-                    if let onDelete {
-                        Button(role: .destructive, action: onDelete) {
-                            Label(String(localized: "common.delete"), systemImage: "trash")
-                        }
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 16))
-                        .foregroundStyle(AppColors.ink3)
-                        .frame(width: 32, height: 32)
-                }
-                .accessibilityLabel(String(localized: "collection.more_menu"))
-            }
-            .padding(.horizontal, 4)
-            .padding(.top, 10)
-
-            if let caption = post.caption, !caption.isEmpty, !blurred {
-                Text(caption)
-                    .font(AppTypography.bodySmall)
-                    .foregroundStyle(AppColors.ink1)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.horizontal, 4)
+            header
+            imageView
+                .aspectRatio(1.0, contentMode: .fit)   // 인스타 정사각, 풀폭(edge-to-edge)
+                .frame(maxWidth: .infinity)
+                .clipped()
+                .overlay { if blurred { blurOverlay } }
+            actions
+            if post.likeCount > 0 {
+                Text(String(format: String(localized: "community.likes_count"), post.likeCount))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                    .padding(.horizontal, 14)
                     .padding(.top, 6)
             }
+            if let caption = post.caption, !caption.isEmpty, !blurred {
+                (Text(handle).font(.system(size: 13, weight: .semibold)).foregroundColor(AppColors.ink0)
+                    + Text("  ")
+                    + Text(caption).font(.system(size: 13)).foregroundColor(AppColors.ink1))
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.horizontal, 14)
+                    .padding(.top, 3)
+            }
         }
+        .padding(.bottom, 10)
+    }
+
+    // MARK: - Subviews (인스타 스타일)
+
+    /// 헤더 — 아바타 + 핸들(브랜드/익명) + 시간 + 더보기.
+    private var header: some View {
+        HStack(spacing: 10) {
+            ZStack {
+                Circle().fill(avatarColor)
+                Image(systemName: "applewatch")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+            }
+            .frame(width: 32, height: 32)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(handle)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                    .lineLimit(1)
+                Text(timeAgo)
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppColors.ink3)
+            }
+            Spacer()
+            moreMenu
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 9)
+    }
+
+    @ViewBuilder private var imageView: some View {
+        if let url = CommunityService.shared.imageURL(for: post.imagePath) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let img): img.resizable().scaledToFill()
+                case .failure: Color(AppColors.paper2)
+                default: ZStack { Color(AppColors.paper2); ProgressView() }
+                }
+            }
+        } else {
+            Color(AppColors.paper2)
+        }
+    }
+
+    /// 액션 줄 — 좋아요(인스타처럼 큰 하트).
+    private var actions: some View {
+        HStack(spacing: 18) {
+            Button(action: onLike) {
+                Image(systemName: liked ? "heart.fill" : "heart")
+                    .font(.system(size: 23))
+                    .foregroundStyle(liked ? AppColors.danger : AppColors.ink0)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(String(localized: "community.like"))
+            Spacer()
+        }
+        .padding(.horizontal, 14)
+        .padding(.top, 9)
+    }
+
+    private var moreMenu: some View {
+        Menu {
+            Button(role: .destructive, action: onReport) {
+                Label(String(localized: "community.report.title"), systemImage: "flag")
+            }
+            Button(role: .destructive, action: onBlock) {
+                Label(String(localized: "community.block"), systemImage: "hand.raised")
+            }
+            if let onDelete {
+                Button(role: .destructive, action: onDelete) {
+                    Label(String(localized: "common.delete"), systemImage: "trash")
+                }
+            }
+        } label: {
+            Image(systemName: "ellipsis")
+                .font(.system(size: 16))
+                .foregroundStyle(AppColors.ink2)
+                .frame(width: 32, height: 32)
+        }
+        .accessibilityLabel(String(localized: "collection.more_menu"))
+    }
+
+    // MARK: - Derived
+
+    /// 핸들 — 브랜드 태그가 있으면 그걸, 없으면 익명 라벨(익명성 유지).
+    private var handle: String {
+        if let b = post.brand, !b.isEmpty { return b }
+        return String(localized: "community.anon_handle")
+    }
+    private var timeAgo: String {
+        let f = RelativeDateTimeFormatter()
+        f.unitsStyle = .short
+        return f.localizedString(for: post.createdAt, relativeTo: Date())
+    }
+    /// authorUID 기반 안정 해시 → 아바타 색. 익명은 유지하되 글마다 시각적 구분.
+    private var avatarColor: Color {
+        var h = 5381
+        for byte in post.authorUID.utf8 { h = ((h << 5) &+ h) &+ Int(byte) }
+        let hue = Double(abs(h) % 360) / 360.0
+        return Color(hue: hue, saturation: 0.5, brightness: 0.7)
     }
 
     private var blurOverlay: some View {

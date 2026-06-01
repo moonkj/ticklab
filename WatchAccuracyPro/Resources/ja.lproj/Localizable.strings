@@ -336,6 +336,8 @@
 "community.review.post" = "投稿";
 "community.moderation.text.blocked.title" = "投稿できない文章";
 "community.moderation.text.blocked.body" = "不適切な表現が検出されました。コメントを修正してください。";
+"community.anon_handle" = "匿名コレクター";
+"community.likes_count" = "いいね %d件";
 "share.post_to_community" = "コミュニティに投稿";
 "text.filter.blocked.title" = "使用できない表現";
 "text.filter.blocked.body" = "不適切な表現が含まれています。修正してください。";

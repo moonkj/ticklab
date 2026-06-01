@@ -343,6 +343,8 @@
 "community.review.post" = "Post";
 "community.moderation.text.blocked.title" = "Caption Not Allowed";
 "community.moderation.text.blocked.body" = "Inappropriate language was detected. Please edit your caption.";
+"community.anon_handle" = "Anonymous";
+"community.likes_count" = "%d likes";
 "share.post_to_community" = "Post to Community";
 "text.filter.blocked.title" = "Text Not Allowed";
 "text.filter.blocked.body" = "Inappropriate language was detected. Please edit the text.";
