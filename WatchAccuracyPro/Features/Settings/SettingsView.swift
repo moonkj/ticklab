@@ -646,10 +646,10 @@ struct SettingsView: View {
             }
             // Round 138 (관리자 모드 — DEBUG 전용 영역) {
             #if DEBUG
-            .alert("Admin Access", isPresented: $showingAdminPinPrompt) {
+            .alert("관리자 접근", isPresented: $showingAdminPinPrompt) {
                 SecureField("PIN", text: $adminPinInput)
                     .keyboardType(.numberPad)
-                Button("Enter") {
+                Button("입력") {
                     if adminPinInput == "1639316" {
                         adminPinInput = ""
                         showingAdminPanel = true
@@ -657,11 +657,11 @@ struct SettingsView: View {
                         adminPinError = true
                     }
                 }
-                Button("Cancel", role: .cancel) {
+                Button("취소", role: .cancel) {
                     adminPinInput = ""
                 }
             } message: {
-                Text(adminPinError ? "Wrong PIN." : "Enter admin PIN.")
+                Text(adminPinError ? "PIN이 틀렸습니다." : "관리자 PIN을 입력하세요.")
             }
             #endif
             // Round 149 (Hyemi 7 C3): sheet 자체도 #if DEBUG — release 빌드 안 컴파일.
@@ -978,8 +978,8 @@ private struct AdminPanelView: View {
         @Bindable var prefs = preferences
         NavigationStack {
             Form {
-                Section("License Mode") {
-                    Toggle("Pro Unlocked", isOn: Binding(
+                Section("라이선스 모드") {
+                    Toggle("Pro 잠금 해제", isOn: Binding(
                         get: { prefs.isPro },
                         set: { newValue in
                             prefs.isPro = newValue
@@ -992,26 +992,26 @@ private struct AdminPanelView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
-                Section("Status") {
-                    LabeledContent("Watches", value: "\(allWatches.count)")
-                    LabeledContent("Measurements", value: "\(allMeasurements.count)")
-                    LabeledContent("Journals", value: "\(allJournalEntries.count)")
-                    LabeledContent("Service logs", value: "\(allServiceLogs.count)")
-                    LabeledContent("Wear logs", value: "\(allWearLogs.count)")
-                    LabeledContent("Spec cards", value: "\(allSpecCards.count)")
+                Section("상태") {
+                    LabeledContent("시계", value: "\(allWatches.count)")
+                    LabeledContent("측정", value: "\(allMeasurements.count)")
+                    LabeledContent("일기", value: "\(allJournalEntries.count)")
+                    LabeledContent("서비스 로그", value: "\(allServiceLogs.count)")
+                    LabeledContent("착용 기록", value: "\(allWearLogs.count)")
+                    LabeledContent("스펙 카드", value: "\(allSpecCards.count)")
                 }
-                Section("Seed Demo Data") {
+                Section("데모 데이터 시드") {
                     Button {
                         let added = seedDemoWatches(in: modelContext)
                         seedToast = "✅ \(added) 시계 + 측정 데이터 시드 완료"
                     } label: {
-                        Label("Seed 10 watches + 20 measurements each", systemImage: "sparkles")
+                        Label("시계 10종 + 각 측정 20개 시드", systemImage: "sparkles")
                     }
                     Button {
                         let counts = seedJournalServiceWearSpecCard(watches: allWatches, in: modelContext)
                         seedToast = "✅ 일기 \(counts.0) / 서비스 \(counts.1) / 착용 \(counts.2) / 스펙 \(counts.3) 시드 완료"
                     } label: {
-                        Label("Seed journal/service/wear/spec for existing watches", systemImage: "doc.text.fill")
+                        Label("기존 시계에 일기/서비스/착용/스펙 시드", systemImage: "doc.text.fill")
                     }
                     .disabled(allWatches.isEmpty)
                     if let toast = seedToast {
@@ -1020,11 +1020,11 @@ private struct AdminPanelView: View {
                             .foregroundStyle(.green)
                     }
                 }
-                Section("Wipe Data") {
+                Section("데이터 삭제") {
                     Button(role: .destructive) {
                         showWipeConfirm = true
                     } label: {
-                        Label("Wipe ALL data (watches/measurements/journals/...)", systemImage: "trash.fill")
+                        Label("모든 데이터 삭제 (시계/측정/일기/…)", systemImage: "trash.fill")
                     }
                     .confirmationDialog("모든 데이터 삭제할까요?", isPresented: $showWipeConfirm) {
                         Button("전부 삭제", role: .destructive) {
@@ -1036,11 +1036,11 @@ private struct AdminPanelView: View {
                         Text("시계 + 측정 + 일기 + 서비스 로그 + 착용 기록 + 스펙 카드 모두 삭제됩니다.")
                     }
                 }
-                Section("Preferences Reset") {
+                Section("환경설정 초기화") {
                     Button(role: .destructive) {
                         showResetPrefsConfirm = true
                     } label: {
-                        Label("Reset all UserDefaults flags", systemImage: "arrow.counterclockwise.circle")
+                        Label("모든 UserDefaults 플래그 초기화", systemImage: "arrow.counterclockwise.circle")
                     }
                     .confirmationDialog("모든 환경설정 초기화", isPresented: $showResetPrefsConfirm) {
                         Button("초기화", role: .destructive) {
@@ -1052,35 +1052,35 @@ private struct AdminPanelView: View {
                         Text("Pro mode 토글은 유지되며, 나머지 flag 가 default 로 reset 됩니다.")
                     }
                 }
-                Section("Caches") {
+                Section("캐시") {
                     Button {
                         WatchMoodService.invalidateAll()
                         for w in allWatches { PhotoCache.invalidate(id: w.id) }
                         seedToast = "🧹 Cache 비움 (WatchMood + PhotoCache)"
                     } label: {
-                        Label("Invalidate WatchMood + PhotoCache", systemImage: "memorychip")
+                        Label("WatchMood + PhotoCache 무효화", systemImage: "memorychip")
                     }
                 }
-                Section("Debug Reset") {
-                    Button("Reset onboarding", role: .destructive) {
+                Section("디버그 초기화") {
+                    Button("온보딩 초기화", role: .destructive) {
                         dismiss()
                         prefs.hasCompletedOnboarding = false
                     }
-                    Button("Clear PIN", role: .destructive) {
+                    Button("PIN 삭제", role: .destructive) {
                         prefs.pinEnabled = false
                         PINService.shared.clearPIN()
                     }
-                    Button("Reset winding hint") {
+                    Button("와인딩 안내 초기화") {
                         UserDefaults.standard.removeObject(forKey: "ticklab.windingHintShownAt")
                         seedToast = "✅ 와인딩 안내 토스트 한 번 더 표시"
                     }
                 }
             }
-            .navigationTitle("Admin Panel")
+            .navigationTitle("관리자 패널")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Done") { dismiss() }
+                    Button("완료") { dismiss() }
                 }
             }
         }
