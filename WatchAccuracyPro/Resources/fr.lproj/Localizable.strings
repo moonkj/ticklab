@@ -836,7 +836,7 @@
 /* Round 92 — Today tab */
 "tab.today" = "Aujourd'hui";
 "today.greeting" = "Quelle montre aujourd'hui ?";
-"today.eyebrow" = "QUOTIDIEN";
+"today.eyebrow" = "DAILY";
 "today.stat.watches" = "Famille horlogère";
 "today.stat.this_week" = "Cette semaine";
 "today.shake.title" = "Choix de la montre du jour";

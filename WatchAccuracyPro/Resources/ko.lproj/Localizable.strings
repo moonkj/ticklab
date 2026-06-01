@@ -844,7 +844,7 @@
 /* Round 92 — Today tab (사용자 요청: 설정 탭 제거 + 오늘 탭) */
 "tab.today" = "오늘";
 "today.greeting" = "오늘의 손목, 무엇을 두를까요";
-"today.eyebrow" = "데일리";
+"today.eyebrow" = "DAILY";
 "today.stat.watches" = "시계 가족";
 "today.stat.this_week" = "이번 주 측정";
 "today.shake.title" = "오늘의 시계 뽑기";

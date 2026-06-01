@@ -21,11 +21,8 @@ enum WatchPhotoProcessor {
         switch style {
 
         case .standard:
-            // 자연스러운 시계 사진 — 반사 억제 + 미세 샤프닝
-            ci = exposure(ci, ev: 0.2)
-            ci = reduceHighlights(ci, amount: 0.55)   // 사파이어 반사 강하게 억제
-            ci = sharpen(ci, radius: 2.5, intensity: 0.65)
-            ci = toneCurve(ci, shadows: 0.05, highlights: -0.05)  // 살짝 플랫
+            // 사용자 보고: "표준"은 원본 그대로여야 함. 색 보정 없음 — EXIF strip + JPEG 재인코딩만(아래 공통 경로).
+            break
 
         case .caseback:
             // 케이스백/각인 전용 — 명암 대비 극대화, 텍스트 가독성

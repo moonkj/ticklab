@@ -27,6 +27,16 @@ struct PhotoCropView: View {
 
     private let maxScale: CGFloat = 5
 
+    /// 활성 윈도우의 안전영역 인셋 — 중첩 fullScreenCover에서 geo.safeAreaInsets가 0을 반환하는
+    /// 문제를 회피하기 위해 윈도우에서 직접 읽는다(상태바/노치/Dynamic Island 확실 회피).
+    private var safeInsets: UIEdgeInsets {
+        (UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .flatMap { $0.windows }
+            .first { $0.isKeyWindow }?.safeAreaInsets)
+            ?? UIEdgeInsets(top: 47, left: 0, bottom: 34, right: 0)
+    }
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
@@ -71,7 +81,8 @@ struct PhotoCropView: View {
                     }
                 }
                 .padding(.horizontal, 20)
-                .padding(.vertical, 12)
+                .padding(.top, safeInsets.top + 8)   // 윈도우 실제 상단 인셋 + 여유 → 상태바/노치 확실 회피
+                .padding(.bottom, 12)
                 .background(
                     LinearGradient(colors: [.black.opacity(0.55), .clear],
                                    startPoint: .top, endPoint: .bottom)
@@ -82,9 +93,10 @@ struct PhotoCropView: View {
                     .foregroundStyle(.white.opacity(0.85))
                     .padding(.horizontal, 16).padding(.vertical, 8)
                     .background(Capsule().fill(.black.opacity(0.4)))
-                    .padding(.bottom, 20)
+                    .padding(.bottom, safeInsets.bottom + 20)
             }
         }
+        .ignoresSafeArea()
     }
 
     /// 컨트롤(GeometryReader 밖)에서 호출 — 저장된 cropSize 로 export.
