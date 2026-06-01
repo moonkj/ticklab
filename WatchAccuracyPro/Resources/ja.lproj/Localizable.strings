@@ -289,6 +289,7 @@
 "collection.more_menu" = "その他";
 "photo.crop.hint" = "ドラッグ・ピンチで時計を合わせてください";
 "community.tab.title" = "コミュニティ";
+"community.subtitle" = "匿名で分かち合う、今日の手首";
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";

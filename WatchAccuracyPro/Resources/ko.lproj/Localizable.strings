@@ -220,6 +220,7 @@
 "collection.more_menu" = "더 보기";
 "photo.crop.hint" = "드래그·확대해서 시계를 맞추세요";
 "community.tab.title" = "커뮤니티";
+"community.subtitle" = "익명으로 나누는 오늘의 손목";
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";

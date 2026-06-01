@@ -289,6 +289,7 @@
 "collection.more_menu" = "Plus";
 "photo.crop.hint" = "Faites glisser et pincez pour cadrer la montre";
 "community.tab.title" = "Communauté";
+"community.subtitle" = "Photos au poignet, partagées en anonyme";
 "timeline.title" = "Histoire de la montre";
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";

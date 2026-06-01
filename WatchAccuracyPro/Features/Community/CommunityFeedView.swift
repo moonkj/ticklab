@@ -29,7 +29,11 @@ struct CommunityFeedView: View {
                 }
             }
             .background(AppColors.paper0)
-            .navigationTitle(String(localized: "community.tab.title"))
+            // 하이브리드 C: 다른 탭과 동일 — 투명 inline 내비바, 제목은 에디토리얼 헤더로.
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(AppColors.paper0, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
+            .toolbarColorScheme(.light, for: .navigationBar)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { startCompose() } label: {
@@ -79,9 +83,22 @@ struct CommunityFeedView: View {
         }
     }
 
+    /// 다른 탭과 동일한 에디토리얼 헤더 — 상단이 비어 보이지 않도록.
+    private var editorialHeader: some View {
+        EditorialPageHeader(
+            eyebrow: "THE LOUNGE",
+            title: String(localized: "community.tab.title"),
+            subtitle: String(localized: "community.subtitle")
+        )
+        .padding(.horizontal, 20)
+        .padding(.top, 8)
+        .padding(.bottom, 6)
+    }
+
     private var feedList: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
+                editorialHeader
                 ForEach(Array(service.feed.enumerated()), id: \.element.id) { index, post in
                     CommunityPostCard(
                         post: post,
