@@ -64,16 +64,12 @@ final class CommunityService: ObservableObject {
 
     // MARK: - Anonymous auth
 
-    /// 익명 세션 보장. 토큰 없으면 가입, **만료(또는 임박)면 refresh 로 같은 uid 세션 갱신**,
-    /// refresh 실패 시에만 신규 가입. (이전 버그: 만료 토큰을 그대로 재사용 → 403 "exp claim".)
+    /// 세션 유지 보장 — **기존 세션이 있으면** 만료 시 refresh. 세션이 없으면 아무것도 안 함.
+    /// 신원 전환(Apple 전용): 더 이상 자동 익명 가입하지 않는다. 로그인은 UI 게이트가 유도.
+    /// (만료 토큰 재사용 → 403 "exp claim" 버그는 refresh 로 방지.)
     func ensureSignedIn() async {
-        guard let token = accessToken, myUID != nil else {
-            await signInAnonymously()
-            return
-        }
-        if Self.isJWTExpired(token) {
-            if !(await refreshSession()) { await signInAnonymously() }
-        }
+        guard let token = accessToken, myUID != nil else { return }
+        if Self.isJWTExpired(token) { _ = await refreshSession() }
     }
 
     private func signInAnonymously() async {
@@ -319,6 +315,10 @@ final class CommunityService: ObservableObject {
         ins.setValue("return=representation", forHTTPHeaderField: "Prefer")
         var body: [String: Any] = ["image_path": path]
         if let brand, !brand.isEmpty { body["brand"] = brand }
+        // 작성자 표시명(공개 프로필) — 설정 프로필 이름, 없으면 기본값.
+        let authorName = (defaults.string(forKey: "ticklab.profile.name") ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        body["author_name"] = authorName.isEmpty ? "Collector" : authorName
         if let caption {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }

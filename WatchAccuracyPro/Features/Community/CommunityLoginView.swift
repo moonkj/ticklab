@@ -63,6 +63,15 @@ struct CommunityLoginView: View {
             failed = true
             return
         }
+        // Apple 은 최초 1회만 이름을 준다 → 프로필 이름이 비어있으면 시드(작성자 표시명에 사용).
+        if let nm = cred.fullName {
+            let full = [nm.givenName, nm.familyName].compactMap { $0 }
+                .joined(separator: " ").trimmingCharacters(in: .whitespaces)
+            let key = "ticklab.profile.name"
+            if !full.isEmpty, (UserDefaults.standard.string(forKey: key) ?? "").isEmpty {
+                UserDefaults.standard.set(full, forKey: key)
+            }
+        }
         working = true
         Task {
             let ok = await service.signInWithApple(idToken: idToken, rawNonce: currentNonce)

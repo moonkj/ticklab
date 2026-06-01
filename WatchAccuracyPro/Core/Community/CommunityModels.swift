@@ -16,6 +16,8 @@ enum Community {
         let imagePath: String       // Storage 'community' 경로
         let brand: String?
         let caption: String?        // 짧은 한 줄 멘트(선택) — 온디바이스 텍스트 검열 통과분만
+        let authorName: String?     // 공개 프로필 표시명(신원 전환). nil = 구 익명 글
+        let authorAvatarPath: String?
         var likeCount: Int
         let status: PostStatus
         let createdAt: Date
@@ -26,6 +28,8 @@ enum Community {
             case imagePath = "image_path"
             case brand
             case caption
+            case authorName = "author_name"
+            case authorAvatarPath = "author_avatar_path"
             case likeCount = "like_count"
             case status
             case createdAt = "created_at"

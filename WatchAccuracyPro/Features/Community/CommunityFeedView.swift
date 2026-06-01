@@ -13,6 +13,8 @@ struct CommunityFeedView: View {
     @State private var showDailyLimit = false
     @State private var reportTarget: Community.Post?
     @State private var showViewerGate = false
+    /// 신원 전환: 게시·좋아요 등 액션 전 Apple 로그인 게이트.
+    @State private var showLogin = false
     /// 최초 피드 로드 완료 여부 — 로딩 중에 "게시물 없음"이 깜빡이는 것 방지.
     @State private var didInitialLoad = false
 
@@ -59,6 +61,9 @@ struct CommunityFeedView: View {
             .refreshable { if service.hasAcceptedViewerTerms { await service.loadFeed() } }
             .sheet(isPresented: $showComposer) {
                 CommunityComposerView()
+            }
+            .sheet(isPresented: $showLogin) {
+                CommunityLoginView()
             }
             .sheet(isPresented: $showEULA) {
                 CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
@@ -112,7 +117,10 @@ struct CommunityFeedView: View {
                         post: post,
                         liked: service.isLiked(post),
                         blurred: isBlurred(post, index: index),
-                        onLike: { Task { await service.toggleLike(post) } },
+                        onLike: {
+                            guard service.isSignedIn else { showLogin = true; return }
+                            Task { await service.toggleLike(post) }
+                        },
                         onUnlock: { purchaseRouter?.intend(.community) },
                         onReport: { reportTarget = post },
                         onBlock: { Task { await service.block(authorOf: post) } },
@@ -199,6 +207,7 @@ struct CommunityFeedView: View {
     // MARK: - Compose flow
 
     private func startCompose() {
+        guard service.isSignedIn else { showLogin = true; return }
         guard service.canPostToday else { showDailyLimit = true; return }
         if service.hasAcceptedEULA { showComposer = true } else { showEULA = true }
     }
@@ -258,9 +267,14 @@ private struct CommunityPostCard: View {
         HStack(spacing: 10) {
             ZStack {
                 Circle().fill(avatarColor)
-                Image(systemName: "applewatch")
-                    .font(.system(size: 14, weight: .semibold))
-                    .foregroundStyle(.white)
+                if let path = post.authorAvatarPath, let url = CommunityService.shared.imageURL(for: path) {
+                    AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { Color.clear }
+                        .clipShape(Circle())
+                } else {
+                    Text(initial)
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(.white)
+                }
             }
             .frame(width: 32, height: 32)
             VStack(alignment: .leading, spacing: 1) {
@@ -333,10 +347,15 @@ private struct CommunityPostCard: View {
 
     // MARK: - Derived
 
-    /// 핸들 — 브랜드 태그가 있으면 그걸, 없으면 익명 라벨(익명성 유지).
+    /// 핸들 — 작성자 표시명 > 브랜드 태그 > (구 익명 글) 익명 라벨.
     private var handle: String {
+        if let n = post.authorName, !n.isEmpty { return n }
         if let b = post.brand, !b.isEmpty { return b }
         return String(localized: "community.anon_handle")
+    }
+    /// 아바타 이니셜 — 핸들 첫 글자.
+    private var initial: String {
+        String(handle.first.map(String.init) ?? "?").uppercased()
     }
     private var timeAgo: String {
         let f = RelativeDateTimeFormatter()
