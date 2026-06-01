@@ -331,6 +331,7 @@
 "speccard.ai.fallback.manual" = "हाथ से चाबी देने वाली यांत्रिक घड़ी: दिन में एक बार चाबी दें। सरल मूवमेंट के कारण केस अक्सर पतला होता है।";
 "speccard.ai.fallback.quartz" = "बैटरी चालित क्वार्ट्ज़: यांत्रिक से कहीं अधिक सटीक और कम रखरखाव; सेकंड सुई आमतौर पर हर सेकंड टिक करती है।";
 "speccard.ai.fallback.solar" = "प्रकाश से चार्ज होने वाली क्वार्ट्ज़: बैटरी बदले बिना चलती है, क्वार्ट्ज़ जैसी सटीकता।";
+"speccard.ai.fallback.smartwatch" = "स्मार्टवॉच एक डिजिटल घड़ी है और इसकी यांत्रिक सटीकता नहीं मापी जाती।";
 "collection.sharecard.stats" = "%1$d घड़ियाँ · %2$d ब्रांड · %3$d वर्ष";
 "journal.people.label" = "साथ में लोग";
 "journal.people.placeholder" = "अल्पविराम से अलग (जैसे पिता, मित्र)";
@@ -1322,6 +1323,7 @@
 
 /* Sprint 1 — सोलर + खरीद जानकारी + डेटा बैकअप */
 "movementtype.solar" = "सोलर";
+"movementtype.smartwatch" = "स्मार्टवॉच";
 "addwatch.section.purchase" = "खरीद जानकारी";
 "addwatch.purchase.location" = "खरीद स्थान (बुटीक/स्टोर)";
 "addwatch.purchase.salesperson" = "विक्रेता";

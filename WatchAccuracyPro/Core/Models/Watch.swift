@@ -6,15 +6,20 @@ enum WatchMovementType: String, CaseIterable, Codable, Sendable {
     case manual
     case quartz
     case solar
+    case smartwatch   // Apple Watch 등 스마트워치 — 측정 대상 아님(생활기록용)
 
     var displayName: String {
         switch self {
-        case .automatic: return String(localized: "movementtype.automatic")
-        case .manual:    return String(localized: "movementtype.manual")
-        case .quartz:    return String(localized: "movementtype.quartz")
-        case .solar:     return String(localized: "movementtype.solar")
+        case .automatic:  return String(localized: "movementtype.automatic")
+        case .manual:     return String(localized: "movementtype.manual")
+        case .quartz:     return String(localized: "movementtype.quartz")
+        case .solar:      return String(localized: "movementtype.solar")
+        case .smartwatch: return String(localized: "movementtype.smartwatch")
         }
     }
+
+    /// 마이크 정확도 측정 대상 여부. 스마트워치는 기계식 무브먼트가 없어 측정 불가.
+    var isMeasurable: Bool { self != .smartwatch }
 }
 
 @Model

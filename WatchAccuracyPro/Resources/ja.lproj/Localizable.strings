@@ -331,6 +331,7 @@
 "speccard.ai.fallback.manual" = "手巻きの機械式です。1日1回ほど巻く必要があり、ムーブメントが簡素なため薄型ケースが多いです。";
 "speccard.ai.fallback.quartz" = "電池駆動のクオーツです。機械式よりはるかに正確で手間が少なく、秒針は1秒ごとに進むことが多いです。";
 "speccard.ai.fallback.solar" = "光で充電するクオーツ系です。電池交換不要でクオーツ並みの精度です。";
+"speccard.ai.fallback.smartwatch" = "スマートウォッチはデジタル時計で、機械式精度の測定対象ではありません。";
 "collection.sharecard.stats" = "%1$d本 · %2$dブランド · %3$d年目";
 "journal.people.label" = "一緒にいた人";
 "journal.people.placeholder" = "カンマ区切り（例: 父、友人）";
@@ -1322,6 +1323,7 @@
 
 /* Sprint 1 — ソーラー + 購入情報 + データバックアップ */
 "movementtype.solar" = "ソーラー";
+"movementtype.smartwatch" = "スマートウォッチ";
 "addwatch.section.purchase" = "購入情報";
 "addwatch.purchase.location" = "購入場所 (ブティック/百貨店など)";
 "addwatch.purchase.salesperson" = "担当者";

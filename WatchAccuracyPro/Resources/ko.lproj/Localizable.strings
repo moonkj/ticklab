@@ -262,6 +262,7 @@
 "speccard.ai.fallback.manual" = "직접 태엽을 감는 수동 기계식입니다. 보통 하루 한 번 감아 주어야 하며, 무브먼트 구조가 단순해 얇은 케이스가 많습니다.";
 "speccard.ai.fallback.quartz" = "배터리로 구동되는 쿼츠입니다. 기계식보다 훨씬 정확하고 유지보수가 적으며, 초침이 1초 단위로 움직이는 경우가 많습니다.";
 "speccard.ai.fallback.solar" = "빛으로 충전하는 쿼츠 계열입니다. 배터리 교체 없이 작동하고 쿼츠 수준의 정확도를 가집니다.";
+"speccard.ai.fallback.smartwatch" = "스마트워치는 디지털 시계로, 기계식 정확도 측정 대상이 아닙니다.";
 "collection.sharecard.stats" = "%1$d개 시계 · %2$d개 브랜드 · %3$d년차";
 "journal.people.label" = "함께한 사람";
 "journal.people.placeholder" = "쉼표로 구분 (예: 아버지, 친구)";
@@ -1317,6 +1318,7 @@
 
 /* Sprint 1 — solar 무브먼트 + 구매처/담당자 + 데이터 백업 */
 "movementtype.solar" = "솔라";
+"movementtype.smartwatch" = "스마트워치";
 "addwatch.section.purchase" = "구매처 정보";
 "addwatch.purchase.location" = "구매처 (부티크/백화점 등)";
 "addwatch.purchase.salesperson" = "담당자/세일즈";

@@ -331,6 +331,7 @@
 "speccard.ai.fallback.manual" = "手動上鍊機械錶：每天上鍊一次。機芯結構較簡單，錶殼往往更薄。";
 "speccard.ai.fallback.quartz" = "電池驅動的石英錶：比機械錶精準得多且維護少；秒針通常每秒跳動一次。";
 "speccard.ai.fallback.solar" = "光能充電的石英錶：無需更換電池，具備石英級精度。";
+"speccard.ai.fallback.smartwatch" = "智慧手錶是數位手錶，不進行機械精度測量。";
 "collection.sharecard.stats" = "%1$d 只 · %2$d 個品牌 · 第 %3$d 年";
 "journal.people.label" = "同行的人";
 "journal.people.placeholder" = "用逗號分隔（如 父親、朋友）";
@@ -1322,6 +1323,7 @@
 
 /* Sprint 1 — 太陽能 + 購買資訊 + 資料備份 */
 "movementtype.solar" = "太陽能";
+"movementtype.smartwatch" = "智慧手錶";
 "addwatch.section.purchase" = "購買資訊";
 "addwatch.purchase.location" = "購買地點 (精品店/商場)";
 "addwatch.purchase.salesperson" = "銷售員";

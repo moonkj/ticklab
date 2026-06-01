@@ -68,10 +68,11 @@ final class WatchDescriptionService {
     nonisolated func ruleBased(movement: WatchMovementType, specSummary: String) -> String {
         let key: String
         switch movement {
-        case .automatic: key = "speccard.ai.fallback.automatic"
-        case .manual:    key = "speccard.ai.fallback.manual"
-        case .quartz:    key = "speccard.ai.fallback.quartz"
-        case .solar:     key = "speccard.ai.fallback.solar"
+        case .automatic:  key = "speccard.ai.fallback.automatic"
+        case .manual:     key = "speccard.ai.fallback.manual"
+        case .quartz:     key = "speccard.ai.fallback.quartz"
+        case .solar:      key = "speccard.ai.fallback.solar"
+        case .smartwatch: key = "speccard.ai.fallback.smartwatch"
         }
         let concept = NSLocalizedString(key, comment: "")
         let specs = specSummary.trimmingCharacters(in: .whitespaces)

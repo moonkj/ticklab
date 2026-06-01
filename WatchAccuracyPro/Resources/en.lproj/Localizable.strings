@@ -338,6 +338,7 @@
 "speccard.ai.fallback.manual" = "A hand-wound mechanical watch: wind it about once a day. Its simpler movement often allows a thinner case.";
 "speccard.ai.fallback.quartz" = "A battery-powered quartz watch: far more accurate than mechanical, with little upkeep; the seconds hand usually ticks once per second.";
 "speccard.ai.fallback.solar" = "A light-charged quartz watch: runs without battery changes, with quartz-level accuracy.";
+"speccard.ai.fallback.smartwatch" = "A smartwatch is a digital timepiece, not measured for mechanical accuracy.";
 "collection.sharecard.stats" = "%1$d watches · %2$d brands · %3$d yrs";
 "journal.people.label" = "People";
 "journal.people.placeholder" = "Comma-separated (e.g. Dad, friend)";
@@ -1318,6 +1319,7 @@
 
 /* Sprint 1 — solar movement + purchase info + data backup */
 "movementtype.solar" = "Solar";
+"movementtype.smartwatch" = "Smartwatch";
 "addwatch.section.purchase" = "Purchase Info";
 "addwatch.purchase.location" = "Purchase Location (Boutique/Store)";
 "addwatch.purchase.salesperson" = "Salesperson";

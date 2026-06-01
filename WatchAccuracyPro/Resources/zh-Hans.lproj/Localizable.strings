@@ -331,6 +331,7 @@
 "speccard.ai.fallback.manual" = "手动上链机械表：每天上链一次。机芯结构较简单，表壳往往更薄。";
 "speccard.ai.fallback.quartz" = "电池驱动的石英表：比机械表精准得多且维护少；秒针通常每秒跳动一次。";
 "speccard.ai.fallback.solar" = "光能充电的石英表：无需更换电池，具备石英级精度。";
+"speccard.ai.fallback.smartwatch" = "智能手表是数字手表，不进行机械精度测量。";
 "collection.sharecard.stats" = "%1$d 只 · %2$d 个品牌 · 第 %3$d 年";
 "journal.people.label" = "同行的人";
 "journal.people.placeholder" = "用逗号分隔（如 父亲、朋友）";
@@ -1322,6 +1323,7 @@
 
 /* Sprint 1 — 太阳能 + 购买信息 + 数据备份 */
 "movementtype.solar" = "太阳能";
+"movementtype.smartwatch" = "智能手表";
 "addwatch.section.purchase" = "购买信息";
 "addwatch.purchase.location" = "购买地点 (精品店/商场)";
 "addwatch.purchase.salesperson" = "销售员";

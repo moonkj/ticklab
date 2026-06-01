@@ -331,6 +331,7 @@
 "speccard.ai.fallback.manual" = "Montre mécanique à remontage manuel : à remonter une fois par jour. Son mouvement plus simple permet souvent un boîtier plus fin.";
 "speccard.ai.fallback.quartz" = "Montre à quartz sur pile : bien plus précise que le mécanique, peu d'entretien ; la trotteuse avance généralement par à-coups d'une seconde.";
 "speccard.ai.fallback.solar" = "Quartz à charge solaire : fonctionne sans changer de pile, avec une précision de quartz.";
+"speccard.ai.fallback.smartwatch" = "Une montre connectée est numérique et n'est pas mesurée pour la précision mécanique.";
 "collection.sharecard.stats" = "%1$d montres · %2$d marques · %3$d ans";
 "journal.people.label" = "Personnes";
 "journal.people.placeholder" = "Séparés par des virgules (ex. papa, ami)";
@@ -1322,6 +1323,7 @@
 
 /* Sprint 1 — solaire + infos d'achat + sauvegarde */
 "movementtype.solar" = "Solaire";
+"movementtype.smartwatch" = "Montre connectée";
 "addwatch.section.purchase" = "Informations d'achat";
 "addwatch.purchase.location" = "Lieu d'achat (Boutique/Magasin)";
 "addwatch.purchase.salesperson" = "Vendeur";
