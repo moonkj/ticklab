@@ -62,6 +62,30 @@ enum Community {
         var totalPosts: Int = 0
     }
 
+    /// 공지 (운영자 발송 — 노출 기간 동안 하단 시트로 표시).
+    struct Announcement: Codable, Identifiable {
+        let id: String
+        let body: String
+        let startsAt: Date?
+        let endsAt: Date?
+        let active: Bool
+        let createdAt: Date
+        enum CodingKeys: String, CodingKey {
+            case id, body, active
+            case startsAt = "starts_at"
+            case endsAt = "ends_at"
+            case createdAt = "created_at"
+        }
+    }
+
+    /// 경고 (운영자 → 특정 사용자).
+    struct Warning: Codable, Identifiable {
+        let id: String
+        let message: String
+        let createdAt: Date
+        enum CodingKeys: String, CodingKey { case id; case message; case createdAt = "created_at" }
+    }
+
     /// 신고 사유 — UGC 의무(Guideline 1.2).
     enum ReportReason: String, Codable, CaseIterable {
         case inappropriate   // 부적절/선정적

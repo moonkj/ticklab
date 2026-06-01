@@ -478,6 +478,80 @@ final class CommunityService: ObservableObject {
         await countRows(table: "community_reports", selectCol: "id", filter: "")
     }
 
+    // MARK: - 공지 / 경고 (관리자)
+
+    /// 공지 발송 (admin insert RLS 필요). 노출 기간 starts~ends.
+    @discardableResult
+    func postAnnouncement(body: String, startsAt: Date, endsAt: Date) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements") else { return false }
+        var req = authedRequest(url, method: "POST")
+        let iso = ISO8601DateFormatter()
+        req.httpBody = try? JSONSerialization.data(withJSONObject: [
+            "body": body, "starts_at": iso.string(from: startsAt), "ends_at": iso.string(from: endsAt), "active": true
+        ])
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 공지 수정 (기간·내용·활성). admin update RLS.
+    @discardableResult
+    func updateAnnouncement(id: String, body: String, startsAt: Date, endsAt: Date, active: Bool) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?id=eq.\(id)") else { return false }
+        var req = authedRequest(url, method: "PATCH")
+        let iso = ISO8601DateFormatter()
+        req.httpBody = try? JSONSerialization.data(withJSONObject: [
+            "body": body, "starts_at": iso.string(from: startsAt), "ends_at": iso.string(from: endsAt), "active": active
+        ])
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 공지 전체 목록 (admin — 편집용).
+    func fetchAnnouncements() async -> [Community.Announcement] {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?select=*&order=created_at.desc&limit=50") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Announcement].self, from: data) else { return [] }
+        return arr
+    }
+
+    /// 현재 노출할 활성 공지 1건 (active + 기간 내). 모든 사용자.
+    func fetchActiveAnnouncement() async -> Community.Announcement? {
+        let nowISO = ISO8601DateFormatter().string(from: Date())
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?select=*&active=eq.true&starts_at=lte.\(nowISO)&ends_at=gte.\(nowISO)&order=created_at.desc&limit=1") else { return nil }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Announcement].self, from: data) else { return nil }
+        return arr.first
+    }
+
+    /// 특정 사용자에게 경고 발송 (admin insert RLS 필요).
+    @discardableResult
+    func sendWarning(toUID uid: String, message: String) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_warnings") else { return false }
+        var req = authedRequest(url, method: "POST")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["target_uid": uid, "message": message])
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 내 미확인 경고 (본인 select RLS).
+    func fetchMyWarnings() async -> [Community.Warning] {
+        guard let uid = myUID,
+              let url = URL(string: "\(baseURL)/rest/v1/community_warnings?select=*&target_uid=eq.\(uid)&seen=eq.false&order=created_at.desc") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Warning].self, from: data) else { return [] }
+        return arr
+    }
+
+    /// 경고 확인 처리(seen=true).
+    func markWarningsSeen(_ ids: [String]) async {
+        for id in ids {
+            guard let url = URL(string: "\(baseURL)/rest/v1/community_warnings?id=eq.\(id)") else { continue }
+            var req = authedRequest(url, method: "PATCH")
+            req.httpBody = try? JSONSerialization.data(withJSONObject: ["seen": true])
+            _ = try? await URLSession.shared.data(for: req)
+        }
+    }
+
     /// 게시물 숨김 (admin UPDATE RLS 필요).
     @discardableResult
     func adminHidePost(_ postID: String) async -> Bool {

@@ -47,5 +47,45 @@ drop policy if exists posts_admin_delete on public.community_posts;
 create policy posts_admin_delete on public.community_posts
     for delete using (public.is_admin(auth.uid()));
 
+-- 5) 공지 — 노출 기간 동안 하단 시트로 표시. admin 작성/수정.
+create table if not exists public.community_announcements (
+    id         uuid primary key default gen_random_uuid(),
+    body       text not null,
+    starts_at  timestamptz not null default now(),
+    ends_at    timestamptz not null default (now() + interval '7 days'),
+    active     boolean not null default true,
+    created_at timestamptz not null default now()
+);
+alter table public.community_announcements enable row level security;
+-- 모든 사용자: 활성 + 기간 내 공지 읽기 / admin: 전체
+drop policy if exists announcements_select on public.community_announcements;
+create policy announcements_select on public.community_announcements for select
+    using ((active = true and now() between starts_at and ends_at) or public.is_admin(auth.uid()));
+drop policy if exists announcements_admin_insert on public.community_announcements;
+create policy announcements_admin_insert on public.community_announcements
+    for insert with check (public.is_admin(auth.uid()));
+drop policy if exists announcements_admin_update on public.community_announcements;
+create policy announcements_admin_update on public.community_announcements
+    for update using (public.is_admin(auth.uid())) with check (public.is_admin(auth.uid()));
+
+-- 6) 경고 — admin → 특정 사용자. 본인만 읽기.
+create table if not exists public.community_warnings (
+    id         uuid primary key default gen_random_uuid(),
+    target_uid uuid not null,
+    message    text not null,
+    seen       boolean not null default false,
+    created_at timestamptz not null default now()
+);
+alter table public.community_warnings enable row level security;
+drop policy if exists warnings_select_own on public.community_warnings;
+create policy warnings_select_own on public.community_warnings for select
+    using (target_uid = auth.uid() or public.is_admin(auth.uid()));
+drop policy if exists warnings_admin_insert on public.community_warnings;
+create policy warnings_admin_insert on public.community_warnings
+    for insert with check (public.is_admin(auth.uid()));
+drop policy if exists warnings_update_own on public.community_warnings;
+create policy warnings_update_own on public.community_warnings
+    for update using (target_uid = auth.uid()) with check (target_uid = auth.uid());
+
 -- (선택) 오래된 presence 정리 — 5분 지난 행 삭제하는 스케줄 잡을 두면 테이블 가벼움.
 -- delete from public.community_presence where last_seen < now() - interval '10 minutes';

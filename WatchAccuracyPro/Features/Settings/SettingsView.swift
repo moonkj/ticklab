@@ -967,6 +967,8 @@ private struct AdminOpsView: View {
     @State private var reports: [Community.AdminReport] = []
     @State private var reportedPosts: [String: Community.Post] = [:]
     @State private var loaded = false
+    @State private var composingAnnouncement = false
+    @State private var announcements: [Community.Announcement] = []
 
     private struct ReportGroup: Identifiable {
         let postID: String
@@ -989,13 +991,37 @@ private struct AdminOpsView: View {
 
     var body: some View {
         List {
-            Section("통계") {
-                LabeledContent("현재 활동 사용자", value: "\(stats.activeUsers)")
-                LabeledContent("오늘 게시물", value: "\(stats.todayPosts)")
-                LabeledContent("전체 게시물", value: "\(stats.totalPosts)")
-                Text("‘현재 활동 사용자’는 최근 2분 내 커뮤니티 사용(presence) 근사치입니다. 진짜 실시간 동시접속은 Realtime 연동 시 정확해집니다.")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+            Section {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                    AdminStatTile(icon: "person.2.fill", value: stats.activeUsers, label: "현재 활동", tone: AppColors.accent)
+                    AdminStatTile(icon: "calendar", value: stats.todayPosts, label: "오늘 게시물", tone: AppColors.info)
+                    AdminStatTile(icon: "square.grid.2x2", value: stats.totalPosts, label: "전체 게시물", tone: AppColors.ink2)
+                    AdminStatTile(icon: "flag.fill", value: grouped.count, label: "신고", tone: AppColors.danger)
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                .listRowBackground(Color.clear)
+            } header: {
+                Text("통계")
+            } footer: {
+                Text("‘현재 활동’은 최근 2분 내 사용(presence) 근사치 · 진짜 동시접속은 Realtime 필요")
+            }
+            Section("공지") {
+                Button {
+                    composingAnnouncement = true
+                } label: {
+                    Label("새 공지 작성", systemImage: "megaphone")
+                }
+                ForEach(announcements) { a in
+                    NavigationLink {
+                        AdminAnnouncementSheet(existing: a) { await reloadAnnouncements() }
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(a.body).font(.system(size: 13)).lineLimit(1)
+                            Text(announcementPeriod(a) + (a.active ? "" : " · 비활성"))
+                                .font(.caption2).foregroundStyle(.secondary)
+                        }
+                    }
+                }
             }
             Section("신고된 게시물") {
                 if grouped.isEmpty {
@@ -1005,14 +1031,27 @@ private struct AdminOpsView: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {
-                    ForEach(grouped) { g in reportRow(g) }
+                    ForEach(grouped) { g in
+                        if let post = reportedPosts[g.postID] {
+                            NavigationLink {
+                                AdminPostDetailView(post: post, reportCount: g.count, reasons: g.reasons) { await reload() }
+                            } label: { reportRow(g) }
+                        } else {
+                            reportRow(g)
+                        }
+                    }
                 }
             }
         }
         .navigationTitle("운영 대시보드")
         .navigationBarTitleDisplayMode(.inline)
-        .task { await reload() }
+        .onAppear { Task { await reload() } }
         .refreshable { await reload() }
+        .sheet(isPresented: $composingAnnouncement) {
+            NavigationStack {
+                AdminAnnouncementSheet(existing: nil) { await reloadAnnouncements() }
+            }
+        }
     }
 
     @ViewBuilder
@@ -1042,33 +1081,168 @@ private struct AdminOpsView: View {
                 }
                 Text("신고 \(g.count)건 · \(g.reasons.joined(separator: ", "))")
                     .font(.system(size: 11)).foregroundStyle(.red)
-                HStack(spacing: 8) {
-                    Button { Task { if await service.adminHidePost(g.postID) { await reload() } } } label: {
-                        Label("숨김", systemImage: "eye.slash")
-                    }.font(.caption).buttonStyle(.bordered)
-                    if let post {
-                        Button(role: .destructive) {
-                            Task { if await service.adminDeletePost(post) { await reload() } }
-                        } label: { Label("삭제", systemImage: "trash") }
-                            .font(.caption).buttonStyle(.bordered)
-                    }
-                }
-                .padding(.top, 2)
             }
+            Spacer(minLength: 0)
+            Image(systemName: "chevron.right")
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(AppColors.ink3)
         }
         .padding(.vertical, 4)
+        .contentShape(Rectangle())
     }
 
     private func reload() async {
         async let s = service.fetchOpsStats()
         async let r = service.fetchReports()
+        async let a = service.fetchAnnouncements()
         stats = await s
         let rep = await r
         reports = rep
+        announcements = await a
         let ids = Array(Set(rep.map { $0.postID }))
         let posts = await service.fetchReportedPosts(ids: ids)
-        reportedPosts = Dictionary(posts.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
+        reportedPosts = Dictionary(posts.map { ($0.id, $0) }, uniquingKeysWith: { x, _ in x })
         loaded = true
+    }
+
+    private func reloadAnnouncements() async {
+        announcements = await service.fetchAnnouncements()
+    }
+
+    private func announcementPeriod(_ a: Community.Announcement) -> String {
+        let f = DateFormatter(); f.dateFormat = "M/d"
+        let s = a.startsAt.map { f.string(from: $0) } ?? "—"
+        let e = a.endsAt.map { f.string(from: $0) } ?? "—"
+        return "\(s) ~ \(e)"
+    }
+}
+
+/// 운영 통계 타일 — 아이콘 + 큰 숫자 + 라벨.
+private struct AdminStatTile: View {
+    let icon: String
+    let value: Int
+    let label: String
+    let tone: Color
+    var body: some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon).font(.system(size: 17, weight: .semibold)).foregroundStyle(tone)
+            Text("\(value)").font(.system(size: 26, weight: .semibold, design: .rounded)).foregroundStyle(AppColors.ink0)
+            Text(label).font(.system(size: 11)).foregroundStyle(AppColors.ink2)
+        }
+        .frame(maxWidth: .infinity, minHeight: 92)
+        .padding(8)
+        .background(tone.opacity(0.10))
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+}
+
+/// 신고 게시물 상세 — 본문 + 숨김/삭제 + 작성자 경고.
+private struct AdminPostDetailView: View {
+    let post: Community.Post
+    let reportCount: Int
+    let reasons: [String]
+    let onChanged: () async -> Void
+    private let service = CommunityService.shared
+    @Environment(\.dismiss) private var dismiss
+    @State private var warning = ""
+    @State private var sending = false
+    @State private var toast: String?
+
+    var body: some View {
+        List {
+            Section {
+                if let url = service.imageURL(for: post.imagePath) {
+                    AsyncImage(url: url) { img in img.resizable().scaledToFit() } placeholder: { AppColors.paper2.frame(height: 220) }
+                        .frame(maxWidth: .infinity)
+                        .listRowInsets(EdgeInsets())
+                }
+            }
+            Section("게시물") {
+                LabeledContent("작성자", value: post.authorName ?? "—")
+                if let cap = post.caption, !cap.isEmpty { Text(cap) }
+                LabeledContent("상태", value: post.status.rawValue)
+                Text("신고 \(reportCount)건 · \(reasons.joined(separator: ", "))").font(.caption).foregroundStyle(.red)
+            }
+            Section("조치") {
+                Button { Task { _ = await service.adminHidePost(post.id); await onChanged(); dismiss() } } label: {
+                    Label("숨김 처리", systemImage: "eye.slash")
+                }
+                Button(role: .destructive) { Task { _ = await service.adminDeletePost(post); await onChanged(); dismiss() } } label: {
+                    Label("게시물 삭제", systemImage: "trash")
+                }
+            }
+            Section("작성자에게 경고") {
+                TextField("경고 메시지", text: $warning, axis: .vertical).lineLimit(2...5)
+                Button {
+                    sending = true
+                    Task {
+                        let ok = await service.sendWarning(toUID: post.authorUID, message: warning)
+                        toast = ok ? "⚠️ 경고 발송됨" : "발송 실패 (admin RLS 확인)"
+                        warning = ""
+                        sending = false
+                    }
+                } label: { Label("경고 보내기", systemImage: "exclamationmark.bubble") }
+                .disabled(warning.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || sending)
+                if let toast { Text(toast).font(.caption).foregroundStyle(AppColors.success) }
+            }
+        }
+        .navigationTitle("신고 게시물")
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+/// 공지 작성·수정 — 내용 + 노출 기간(시작/종료) + 활성.
+private struct AdminAnnouncementSheet: View {
+    let existing: Community.Announcement?
+    let onSaved: () async -> Void
+    private let service = CommunityService.shared
+    @Environment(\.dismiss) private var dismiss
+    @State private var bodyText = ""
+    @State private var startsAt = Date()
+    @State private var endsAt = Date().addingTimeInterval(7 * 86400)
+    @State private var active = true
+    @State private var saving = false
+    @State private var error: String?
+
+    var body: some View {
+        Form {
+            Section("내용") {
+                TextField("공지 내용", text: $bodyText, axis: .vertical).lineLimit(3...8)
+            }
+            Section("노출 기간") {
+                DatePicker("시작", selection: $startsAt)
+                DatePicker("종료", selection: $endsAt)
+                Toggle("활성", isOn: $active)
+            }
+            Section {
+                Button(existing == nil ? "발송" : "수정 저장") {
+                    saving = true
+                    Task {
+                        let ok: Bool
+                        if let e = existing {
+                            ok = await service.updateAnnouncement(id: e.id, body: bodyText, startsAt: startsAt, endsAt: endsAt, active: active)
+                        } else {
+                            ok = await service.postAnnouncement(body: bodyText, startsAt: startsAt, endsAt: endsAt)
+                        }
+                        saving = false
+                        if ok { await onSaved(); dismiss() } else { error = "저장 실패 (admin RLS 확인)" }
+                    }
+                }
+                .disabled(bodyText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || saving)
+                if let error { Text(error).font(.caption).foregroundStyle(.red) }
+            }
+        }
+        .navigationTitle(existing == nil ? "공지 작성" : "공지 수정")
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } } }
+        .onAppear {
+            if let e = existing {
+                bodyText = e.body
+                startsAt = e.startsAt ?? Date()
+                endsAt = e.endsAt ?? Date().addingTimeInterval(7 * 86400)
+                active = e.active
+            }
+        }
     }
 }
 

@@ -27,6 +27,9 @@ struct CommunityFeedView: View {
     @State private var adminDeleteTarget: Community.Post?
     /// 피드 범위 — false=전체, true=팔로잉한 계정만.
     @State private var followingOnly = false
+    /// 운영자 경고 — 내 미확인 경고.
+    @State private var myWarnings: [Community.Warning] = []
+    @State private var showWarning = false
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -58,6 +61,8 @@ struct CommunityFeedView: View {
                 if service.hasAcceptedViewerTerms {
                     await service.loadFeed()
                     didInitialLoad = true
+                    myWarnings = await service.fetchMyWarnings()
+                    if !myWarnings.isEmpty { showWarning = true }
                 } else {
                     showViewerGate = true
                 }
@@ -91,6 +96,14 @@ struct CommunityFeedView: View {
             .alert(String(localized: "community.daily_limit.title"), isPresented: $showDailyLimit) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
             } message: { Text(String(localized: "community.daily_limit.body")) }
+            .alert("운영자 경고", isPresented: $showWarning) {
+                Button("확인") {
+                    let ids = myWarnings.map { $0.id }
+                    Task { await service.markWarningsSeen(ids) }
+                }
+            } message: {
+                Text(myWarnings.map { $0.message }.joined(separator: "\n\n"))
+            }
             .confirmationDialog(
                 String(localized: "community.report.title"),
                 isPresented: Binding(get: { reportTarget != nil }, set: { if !$0 { reportTarget = nil } }),

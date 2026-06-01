@@ -19,6 +19,9 @@ struct RootTabView: View {
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
     /// 관리자 배지 — 신고 건수(종 아이콘) 표시용.
     @State private var reportCount = 0
+    /// 공지 — 활성 공지 하단 시트.
+    @State private var activeAnnouncement: Community.Announcement?
+    @State private var showAnnouncement = false
 
     // Round 176: 각 탭의 NavigationStack path — Binding 으로 child view 에 주입.
     @State private var collectionPath = NavigationPath()
@@ -163,6 +166,18 @@ struct RootTabView: View {
             }
         }
         .environment(\.purchaseRouter, purchaseRouter)
+        // 공지 — 활성 공지가 있고 오늘 안 본 경우 하단 시트로.
+        .task { await checkAnnouncement() }
+        .sheet(isPresented: $showAnnouncement) {
+            if let a = activeAnnouncement {
+                AnnouncementBottomSheet(announcement: a) { dontShowToday in
+                    if dontShowToday { AnnouncementDismiss.dismissToday(a.id) }
+                    showAnnouncement = false
+                }
+                .presentationDetents([.fraction(0.5), .large])
+                .presentationDragIndicator(.visible)
+            }
+        }
         // shell-level paywall — 한 번에 하나만 띄움. 4 분산 sheet 대체.
         .sheet(isPresented: $purchaseRouter.isPresenting) {
             PurchaseView()
@@ -198,5 +213,73 @@ struct RootTabView: View {
             selected = .collection
             collectionPath.append(watch)
         }
+    }
+
+    private func checkAnnouncement() async {
+        guard let a = await CommunityService.shared.fetchActiveAnnouncement() else { return }
+        if !AnnouncementDismiss.isDismissedToday(a.id) {
+            activeAnnouncement = a
+            showAnnouncement = true
+        }
+    }
+}
+
+/// 공지 "오늘 하루 보지 않기" — 공지 id별 dismiss 날짜 저장(UserDefaults).
+enum AnnouncementDismiss {
+    private static let key = "ticklab.ann.dismissed"
+    private static func today() -> String {
+        let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"; return f.string(from: Date())
+    }
+    static func dismissToday(_ id: String) {
+        var d = UserDefaults.standard.dictionary(forKey: key) as? [String: String] ?? [:]
+        d[id] = today()
+        UserDefaults.standard.set(d, forKey: key)
+    }
+    static func isDismissedToday(_ id: String) -> Bool {
+        let d = UserDefaults.standard.dictionary(forKey: key) as? [String: String] ?? [:]
+        return d[id] == today()
+    }
+}
+
+/// 공지 하단 시트 — 내용 + "오늘 하루 보지 않기" 체크 + 닫기.
+private struct AnnouncementBottomSheet: View {
+    let announcement: Community.Announcement
+    let onClose: (Bool) -> Void
+    @State private var dontShowToday = false
+
+    var body: some View {
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack(spacing: 14) {
+                    Image(systemName: "megaphone.fill")
+                        .font(.system(size: 28)).foregroundStyle(AppColors.accent)
+                        .padding(.top, 28)
+                    Text("공지").font(.system(size: 12, weight: .bold)).tracking(3).foregroundStyle(AppColors.ink3)
+                    Text(announcement.body)
+                        .font(.system(size: 16)).foregroundStyle(AppColors.ink0)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 24)
+            }
+            Divider()
+            HStack {
+                Button { dontShowToday.toggle() } label: {
+                    HStack(spacing: 8) {
+                        Image(systemName: dontShowToday ? "checkmark.square.fill" : "square")
+                            .foregroundStyle(dontShowToday ? AppColors.accent : AppColors.ink3)
+                        Text("오늘 하루 보지 않기").font(.system(size: 14)).foregroundStyle(AppColors.ink2)
+                    }
+                }
+                .buttonStyle(.plain)
+                Spacer()
+                Button("닫기") { onClose(dontShowToday) }
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+            }
+            .padding(.horizontal, 20).padding(.vertical, 14)
+        }
+        .background(AppColors.paper0)
     }
 }
