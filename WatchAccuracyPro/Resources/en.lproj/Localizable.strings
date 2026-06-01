@@ -366,6 +366,7 @@
 "community.comment.view_all" = "View all %d comments";
 "community.likers.title" = "Likes";
 "community.likers.empty" = "No likes yet";
+"community.user.empty" = "No posts yet";
 "community.comment.empty" = "No comments yet. Be the first to comment.";
 "community.comment.placeholder" = "Add a comment…";
 "community.comment.post" = "Post";

@@ -497,36 +497,14 @@ private struct CommunityPostCard: View {
                 .frame(maxWidth: .infinity)
                 .clipped()
                 .overlay { if blurred { blurOverlay } }
-            actions
-            if post.likeCount > 0 {
-                // 인스타식 — 좋아요 수 탭하면 누가 눌렀는지(라이커) 목록.
-                Button(action: onLikers) {
-                    Text(String(format: String(localized: "community.likes_count"), post.likeCount))
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(AppColors.ink0)
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 14)
-                .padding(.top, 6)
-            }
+            actions   // 좋아요·댓글 수는 아이콘 옆 인라인(actions 내부).
             if let caption = post.caption, !caption.isEmpty, !blurred {
                 (Text(handle).font(.system(size: 13, weight: .semibold)).foregroundColor(AppColors.ink0)
                     + Text("  ")
                     + Text(caption).font(.system(size: 13)).foregroundColor(AppColors.ink1))
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 14)
-                    .padding(.top, 3)
-            }
-            // 인스타식 — "댓글 N개 모두 보기" → 댓글창.
-            if let c = post.commentCount, c > 0 {
-                Button(action: onComment) {
-                    Text(String(format: String(localized: "community.comment.view_all"), c))
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.ink3)
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal, 14)
-                .padding(.top, 3)
+                    .padding(.top, 6)
             }
         }
         .padding(.bottom, 10)
@@ -612,20 +590,36 @@ private struct CommunityPostCard: View {
         }
     }
 
-    /// 액션 줄 — 좋아요(인스타처럼 큰 하트).
+    /// 액션 줄 — 아이콘 옆 숫자(인스타식). 좋아요 수 탭 → 라이커, 댓글 아이콘/수 탭 → 댓글창.
     private var actions: some View {
         HStack(spacing: 18) {
-            Button(action: onLike) {
-                Image(systemName: liked ? "heart.fill" : "heart")
-                    .font(.system(size: 23))
-                    .foregroundStyle(liked ? AppColors.danger : AppColors.ink0)
+            // 좋아요 — 하트 토글 + (탭 시 라이커) 숫자.
+            HStack(spacing: 6) {
+                Button(action: onLike) {
+                    Image(systemName: liked ? "heart.fill" : "heart")
+                        .font(.system(size: 23))
+                        .foregroundStyle(liked ? AppColors.danger : AppColors.ink0)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(String(localized: "community.like"))
+                if post.likeCount > 0 {
+                    Button(action: onLikers) {
+                        Text("\(post.likeCount)")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundStyle(AppColors.ink0)
+                    }
+                    .buttonStyle(.plain)
+                }
             }
-            .buttonStyle(.plain)
-            .accessibilityLabel(String(localized: "community.like"))
+            // 댓글 — 아이콘 + 숫자, 탭 시 댓글창.
             Button(action: onComment) {
-                Image(systemName: "bubble.right")
-                    .font(.system(size: 21))
-                    .foregroundStyle(AppColors.ink0)
+                HStack(spacing: 6) {
+                    Image(systemName: "bubble.right").font(.system(size: 21))
+                    if let c = post.commentCount, c > 0 {
+                        Text("\(c)").font(.system(size: 15, weight: .semibold))
+                    }
+                }
+                .foregroundStyle(AppColors.ink0)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: "community.comment.title"))
@@ -993,7 +987,7 @@ private struct CommentsView: View {
     }
 }
 
-/// 좋아요 라이커 목록(인스타 "누가 좋아요") — 표시명 + 팔로우 토글. 차단 작성자는 service가 제외.
+/// 좋아요 라이커 목록(인스타 "누가 좋아요") — 이름 탭하면 그 사람 게시물, 옆에 팔로우 토글.
 private struct LikersView: View {
     let post: Community.Post
     @Environment(\.dismiss) private var dismiss
@@ -1011,11 +1005,15 @@ private struct LikersView: View {
                         message: String(localized: "community.likers.empty")
                     )
                 } else {
-                    List(likers) { liker in
-                        row(liker)
-                            .listRowBackground(AppColors.paper0)
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(likers) { liker in
+                                row(liker)
+                                Divider().padding(.leading, 62)
+                            }
+                        }
+                        .padding(.vertical, 4)
                     }
-                    .listStyle(.plain)
                 }
             }
             .background(AppColors.paper0.ignoresSafeArea())
@@ -1034,19 +1032,18 @@ private struct LikersView: View {
         let isMe = liker.uid == service.myUID
         let following = service.isFollowing(liker.uid)
         return HStack(spacing: 12) {
-            ZStack {
-                if liker.authorName == "TickLab", let icon = AppIconProvider.image {
-                    Image(uiImage: icon).resizable().scaledToFill().clipShape(Circle())
-                } else {
-                    Circle().fill(AppColors.paper2)
-                    Text(String((liker.authorName ?? "C").first.map(String.init) ?? "C").uppercased())
-                        .font(.system(size: 13, weight: .bold)).foregroundStyle(AppColors.ink2)
+            // 이름·아바타 탭 → 그 사람 게시물.
+            NavigationLink {
+                UserPostsView(uid: liker.uid, displayName: liker.authorName)
+            } label: {
+                HStack(spacing: 12) {
+                    LikerAvatar(name: liker.authorName).frame(width: 34, height: 34)
+                    Text(liker.authorName ?? String(localized: "community.anon_handle"))
+                        .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
                 }
             }
-            .frame(width: 34, height: 34)
-            Text(liker.authorName ?? String(localized: "community.anon_handle"))
-                .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
-            Spacer()
+            .buttonStyle(.plain)
+            Spacer(minLength: 8)
             if !isMe {
                 Button { Task { await service.toggleFollow(liker.uid) } } label: {
                     Text(String(localized: following ? "community.following" : "community.follow"))
@@ -1060,5 +1057,83 @@ private struct LikersView: View {
                 .buttonStyle(.borderless)
             }
         }
+        .padding(.horizontal, 16).padding(.vertical, 8)
+    }
+}
+
+/// 라이커/작성자 아바타 — TickLab은 앱 아이콘, 그 외 이니셜.
+private struct LikerAvatar: View {
+    let name: String?
+    var body: some View {
+        ZStack {
+            if name == "TickLab", let icon = AppIconProvider.image {
+                Image(uiImage: icon).resizable().scaledToFill().clipShape(Circle())
+            } else {
+                Circle().fill(AppColors.paper2)
+                Text(String((name ?? "C").first.map(String.init) ?? "C").uppercased())
+                    .font(.system(size: 13, weight: .bold)).foregroundStyle(AppColors.ink2)
+            }
+        }
+    }
+}
+
+/// 특정 사용자의 게시물 그리드(인스타 프로필 격자) + 팔로우. 익명 닉네임 표시.
+private struct UserPostsView: View {
+    let uid: String
+    let displayName: String?
+    @ObservedObject private var service = CommunityService.shared
+    @State private var posts: [Community.Post] = []
+    @State private var loaded = false
+
+    private let cols = [GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2)]
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 14) {
+                HStack(spacing: 12) {
+                    LikerAvatar(name: displayName).frame(width: 56, height: 56)
+                    Text(displayName ?? String(localized: "community.anon_handle"))
+                        .font(.system(size: 18, weight: .bold)).foregroundStyle(AppColors.ink0)
+                    Spacer()
+                    if uid != service.myUID {
+                        let following = service.isFollowing(uid)
+                        Button { Task { await service.toggleFollow(uid) } } label: {
+                            Text(String(localized: following ? "community.following" : "community.follow"))
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
+                                .padding(.horizontal, 16).padding(.vertical, 7)
+                                .background(following ? Color.clear : AppColors.ink0)
+                                .overlay(Capsule().stroke(following ? AppColors.rule : Color.clear, lineWidth: 1))
+                                .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 16).padding(.top, 8)
+
+                if loaded && posts.isEmpty {
+                    Text(String(localized: "community.user.empty"))
+                        .font(.system(size: 14)).foregroundStyle(AppColors.ink3)
+                        .padding(.top, 40)
+                } else {
+                    LazyVGrid(columns: cols, spacing: 2) {
+                        ForEach(posts) { p in
+                            AsyncImage(url: service.imageURL(for: p.imagePath)) { phase in
+                                switch phase {
+                                case .success(let img): img.resizable().scaledToFill()
+                                default: Color(AppColors.paper2)
+                                }
+                            }
+                            .aspectRatio(1, contentMode: .fill)
+                            .clipped()
+                        }
+                    }
+                }
+            }
+        }
+        .background(AppColors.paper0.ignoresSafeArea())
+        .navigationTitle(displayName ?? String(localized: "community.anon_handle"))
+        .navigationBarTitleDisplayMode(.inline)
+        .task { posts = await service.fetchPostsByAuthor(uid: uid); loaded = true }
     }
 }

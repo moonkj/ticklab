@@ -359,6 +359,7 @@
 "community.comment.view_all" = "Ver los %d comentarios";
 "community.likers.title" = "Me gusta";
 "community.likers.empty" = "Aún no hay me gusta";
+"community.user.empty" = "No hay publicaciones todavía";
 "community.comment.empty" = "No hay comentarios todavía. Sé el primero.";
 "community.comment.placeholder" = "Añade un comentario…";
 "community.comment.post" = "Publicar";

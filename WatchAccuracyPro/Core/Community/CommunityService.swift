@@ -283,6 +283,15 @@ final class CommunityService: ObservableObject {
         }
     }
 
+    /// 특정 작성자의 공개 게시물(프로필 그리드용) — 최신순.
+    func fetchPostsByAuthor(uid: String) async -> [Community.Post] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=*&author_uid=eq.\(uid)&status=eq.approved&order=created_at.desc&limit=60") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Post].self, from: data) else { return [] }
+        return arr
+    }
+
     /// 게시물 라이커 목록(인스타 "누가 좋아요") — 차단 작성자 제외. likes 전체 읽기 RLS 필요.
     func fetchLikers(postID: String) async -> [Community.Liker] {
         await ensureSignedIn()

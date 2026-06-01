@@ -359,6 +359,7 @@
 "community.comment.view_all" = "सभी %d टिप्पणियाँ देखें";
 "community.likers.title" = "पसंद";
 "community.likers.empty" = "अभी कोई पसंद नहीं";
+"community.user.empty" = "अभी कोई पोस्ट नहीं";
 "community.comment.empty" = "अभी कोई टिप्पणी नहीं। पहली टिप्पणी करें।";
 "community.comment.placeholder" = "टिप्पणी जोड़ें…";
 "community.comment.post" = "पोस्ट";

@@ -359,6 +359,7 @@
 "community.comment.view_all" = "查看全部 %d 則留言";
 "community.likers.title" = "讚";
 "community.likers.empty" = "還沒有讚";
+"community.user.empty" = "還沒有貼文";
 "community.comment.empty" = "還沒有留言。來發表第一則留言吧。";
 "community.comment.placeholder" = "新增留言…";
 "community.comment.post" = "發佈";

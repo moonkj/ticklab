@@ -359,6 +359,7 @@
 "community.comment.view_all" = "%d件のコメントをすべて見る";
 "community.likers.title" = "いいね";
 "community.likers.empty" = "まだいいねがありません";
+"community.user.empty" = "まだ投稿がありません";
 "community.comment.empty" = "まだコメントがありません。最初のコメントを残しましょう。";
 "community.comment.placeholder" = "コメントを追加…";
 "community.comment.post" = "投稿";
