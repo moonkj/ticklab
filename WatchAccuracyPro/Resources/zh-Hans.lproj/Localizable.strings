@@ -345,8 +345,8 @@
 "timeline.journal" = "记录";
 "timeline.service" = "保养";
 "community.compose" = "发布照片";
-"community.compose.hint" = "匿名分享今天的腕表。每天一张。";
-"community.compose.anonymous_note" = "匿名发布 · 每天一张";
+"community.compose.hint" = "分享今天的腕表。每天一张。";
+"community.compose.anonymous_note" = "以你的资料发布 · 每天一张";
 "community.empty.title" = "还没有帖子";
 "community.empty.body" = "成为第一个分享今天腕表的人。";
 "community.like" = "赞";
@@ -361,7 +361,7 @@
 "community.review.post" = "发布";
 "community.moderation.text.blocked.title" = "无法发布的文字";
 "community.moderation.text.blocked.body" = "检测到不当用语，请修改文字。";
-"community.anon_handle" = "匿名藏家";
+"community.anon_handle" = "藏家";
 "community.likes_count" = "%d 个赞";
 "share.post_to_community" = "发布到社区";
 "text.filter.blocked.title" = "无法使用的文字";
@@ -1324,6 +1324,11 @@
 /* Sprint 1 — 太阳能 + 购买信息 + 数据备份 */
 "movementtype.solar" = "太阳能";
 "movementtype.smartwatch" = "智能手表";
+"addwatch.condition.label" = "成色";
+"condition.new" = "全新";
+"condition.unworn" = "未佩戴";
+"condition.used" = "二手";
+"addwatch.production_year" = "出厂年份";
 "addwatch.section.purchase" = "购买信息";
 "addwatch.purchase.location" = "购买地点 (精品店/商场)";
 "addwatch.purchase.salesperson" = "销售员";

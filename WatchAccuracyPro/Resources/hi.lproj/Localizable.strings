@@ -345,8 +345,8 @@
 "timeline.journal" = "जर्नल";
 "timeline.service" = "सर्विस";
 "community.compose" = "फ़ोटो पोस्ट करें";
-"community.compose.hint" = "आज की घड़ी गुमनाम रूप से साझा करें। दिन में एक फ़ोटो।";
-"community.compose.anonymous_note" = "गुमनाम रूप से पोस्ट · दिन में एक बार";
+"community.compose.hint" = "आज की घड़ी साझा करें। दिन में एक फ़ोटो।";
+"community.compose.anonymous_note" = "आपकी प्रोफ़ाइल से पोस्ट · दिन में एक बार";
 "community.empty.title" = "अभी कोई पोस्ट नहीं";
 "community.empty.body" = "आज की घड़ी साझा करने वाले पहले बनें।";
 "community.like" = "पसंद";
@@ -361,7 +361,7 @@
 "community.review.post" = "पोस्ट करें";
 "community.moderation.text.blocked.title" = "कैप्शन अनुमत नहीं";
 "community.moderation.text.blocked.body" = "अनुचित भाषा पाई गई। कृपया अपना कैप्शन संपादित करें।";
-"community.anon_handle" = "गुमनाम";
+"community.anon_handle" = "कलेक्टर";
 "community.likes_count" = "%d लाइक";
 "share.post_to_community" = "कम्युनिटी में पोस्ट करें";
 "text.filter.blocked.title" = "टेक्स्ट अनुमत नहीं";
@@ -1324,6 +1324,11 @@
 /* Sprint 1 — सोलर + खरीद जानकारी + डेटा बैकअप */
 "movementtype.solar" = "सोलर";
 "movementtype.smartwatch" = "स्मार्टवॉच";
+"addwatch.condition.label" = "कंडीशन";
+"condition.new" = "नया";
+"condition.unworn" = "बिना पहना";
+"condition.used" = "इस्तेमाल किया";
+"addwatch.production_year" = "वर्ष";
 "addwatch.section.purchase" = "खरीद जानकारी";
 "addwatch.purchase.location" = "खरीद स्थान (बुटीक/स्टोर)";
 "addwatch.purchase.salesperson" = "विक्रेता";

@@ -352,8 +352,8 @@
 "timeline.journal" = "Journal";
 "timeline.service" = "Service";
 "community.compose" = "Post a photo";
-"community.compose.hint" = "Share today's watch anonymously. One photo a day.";
-"community.compose.anonymous_note" = "Posted anonymously · once a day";
+"community.compose.hint" = "Share today's watch. One photo a day.";
+"community.compose.anonymous_note" = "Posted with your profile · once a day";
 "community.empty.title" = "No posts yet";
 "community.empty.body" = "Be the first to share today's watch.";
 "community.like" = "Like";
@@ -368,7 +368,7 @@
 "community.review.post" = "Post";
 "community.moderation.text.blocked.title" = "Caption Not Allowed";
 "community.moderation.text.blocked.body" = "Inappropriate language was detected. Please edit your caption.";
-"community.anon_handle" = "Anonymous";
+"community.anon_handle" = "Collector";
 "community.likes_count" = "%d likes";
 "share.post_to_community" = "Post to Community";
 "text.filter.blocked.title" = "Text Not Allowed";
@@ -1320,6 +1320,11 @@
 /* Sprint 1 — solar movement + purchase info + data backup */
 "movementtype.solar" = "Solar";
 "movementtype.smartwatch" = "Smartwatch";
+"addwatch.condition.label" = "Condition";
+"condition.new" = "New";
+"condition.unworn" = "Unworn";
+"condition.used" = "Used";
+"addwatch.production_year" = "Production year";
 "addwatch.section.purchase" = "Purchase Info";
 "addwatch.purchase.location" = "Purchase Location (Boutique/Store)";
 "addwatch.purchase.salesperson" = "Salesperson";

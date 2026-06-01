@@ -24,6 +24,9 @@ struct AddWatchView: View {
     /// Sprint 1 (P3-4): 구매가 + 통화. 빈 문자열 = nil.
     @State private var purchasePriceText: String = ""
     @State private var purchaseCurrency: String = Locale.current.currency?.identifier ?? "USD"
+    /// 구매 컨디션(새상품/미착용/중고) + 연식.
+    @State private var purchaseCondition: PurchaseCondition? = nil
+    @State private var productionYearText: String = ""
     /// Sprint 2 (P2-9): 보증 기간 (개월). 0 = 미설정.
     @State private var warrantyMonths: Int = 0
     @State private var warrantyReminderEnabled: Bool = true
@@ -76,19 +79,19 @@ struct AddWatchView: View {
     /// 알파벳 순. 입문 / 빈티지 / 하이엔드 / haute horlogerie / 패션 브랜드까지 포괄.
     /// 사용자가 못 찾으면 "addwatch.brand.custom" 자유 입력 가능.
     private let popularBrands = [
-        "A. Lange & Söhne", "Anonimo", "Aquastar", "Audemars Piguet", "Ball",
+        "A. Lange & Söhne", "Amazfit", "Anonimo", "Apple", "Aquastar", "Audemars Piguet", "Ball",
         "Bell & Ross", "Blancpain", "Breguet", "Breitling", "Bremont", "Bulgari", "Bulova",
         "Carl F. Bucherer", "Cartier", "Casio", "Chanel", "Chopard", "Christopher Ward",
-        "Citizen", "Czapek", "De Bethune", "Dior", "Doxa", "Eterna", "F.P. Journe",
-        "Fortis", "Franck Muller", "Frederique Constant", "Girard-Perregaux",
-        "Glashütte Original", "Grand Seiko", "Greubel Forsey", "H. Moser & Cie",
-        "Hamilton", "Hermès", "Hublot", "IWC", "Jacob & Co", "Jaeger-LeCoultre",
+        "Citizen", "Czapek", "De Bethune", "Dior", "Doxa", "Eterna", "Fitbit", "Fortis",
+        "F.P. Journe", "Franck Muller", "Frederique Constant", "Garmin", "Girard-Perregaux",
+        "Glashütte Original", "Google", "Grand Seiko", "Greubel Forsey", "H. Moser & Cie",
+        "Hamilton", "Hermès", "Huawei", "Hublot", "IWC", "Jacob & Co", "Jaeger-LeCoultre",
         "Junghans", "Laurent Ferrier", "Longines", "Louis Vuitton", "MB&F",
         "Maurice Lacroix", "Mido", "Montblanc", "Movado", "Nomos", "Omega", "Oris",
-        "Panerai", "Parmigiani Fleurier", "Patek Philippe", "Piaget", "Rado", "Ressence",
-        "Richard Mille", "Roger Dubuis", "Rolex", "Seiko", "Sinn", "Swatch", "TAG Heuer",
-        "Tissot", "Tudor", "Tutima", "Ulysse Nardin", "Universal Genève", "Urwerk",
-        "Vacheron Constantin", "Van Cleef & Arpels", "Zenith"
+        "Panerai", "Parmigiani Fleurier", "Patek Philippe", "Piaget", "Polar", "Rado", "Ressence",
+        "Richard Mille", "Roger Dubuis", "Rolex", "Samsung", "Seiko", "Sinn", "Suunto", "Swatch",
+        "TAG Heuer", "Tissot", "Tudor", "Tutima", "Ulysse Nardin", "Universal Genève", "Urwerk",
+        "Vacheron Constantin", "Van Cleef & Arpels", "Withings", "Xiaomi", "Zenith"
     ]
 
     var body: some View {
@@ -102,63 +105,29 @@ struct AddWatchView: View {
                     // 브랜드: 직접 타이핑(자동완성) + Menu 인기목록 선택을 한 행에서.
                     //   TextField 로 자유 입력 → 무브먼트 DB brandFamilies 매칭 dropdown 표시 (T-07).
                     //   Menu(chevron) 는 기존 인기 브랜드 / 직접 입력 시트 흐름 유지.
-                    VStack(alignment: .leading, spacing: 0) {
-                        HStack {
-                            Text(String(localized: "addwatch.brand"))
-                            TextField(String(localized: "common.unspecified"), text: $brand)
-                                .multilineTextAlignment(.trailing)
-                                .textInputAutocapitalization(.words)
-                                .autocorrectionDisabled()
-                                .onChange(of: brand) { _, _ in
-                                    scheduleBrandSearch()
+                    // 브랜드 — Menu 선택(드림위시리스트와 동일 방식). 인기목록 + 직접 입력.
+                    HStack {
+                        Text(String(localized: "addwatch.brand"))
+                        Spacer()
+                        Menu {
+                            ForEach(popularBrands, id: \.self) { b in
+                                Button { brand = b } label: {
+                                    if brand == b { Label(b, systemImage: "checkmark") } else { Text(b) }
                                 }
-                            Menu {
-                                ForEach(popularBrands, id: \.self) { b in
-                                    Button {
-                                        selectBrand(b)
-                                    } label: {
-                                        if brand == b {
-                                            Label(b, systemImage: "checkmark")
-                                        } else {
-                                            Text(b)
-                                        }
-                                    }
-                                }
-                                Divider()
-                                Button {
-                                    showingBrandInputSheet = true
-                                } label: {
-                                    Label(String(localized: "addwatch.brand.custom"), systemImage: "square.and.pencil")
-                                }
-                            } label: {
+                            }
+                            Divider()
+                            Button { showingBrandInputSheet = true } label: {
+                                Label(String(localized: "addwatch.brand.custom"), systemImage: "square.and.pencil")
+                            }
+                        } label: {
+                            HStack(spacing: 4) {
+                                Text(brand.isEmpty ? String(localized: "common.unspecified") : brand)
+                                    .foregroundStyle(brand.isEmpty ? AppColors.ink3 : AppColors.ink0)
                                 Image(systemName: "chevron.up.chevron.down")
-                                    .font(.system(size: 11))
-                                    .foregroundStyle(AppColors.ink3)
-                                    .frame(minHeight: 44)
-                                    .contentShape(Rectangle())
+                                    .font(.system(size: 11)).foregroundStyle(AppColors.ink3)
                             }
-                        }
-                        // T-07: 매칭 브랜드 dropdown — 입력 중 + 결과 있을 때만.
-                        if showBrandSuggestions, !brandSuggestions.isEmpty {
-                            Divider().padding(.top, 4)
-                            ForEach(brandSuggestions, id: \.self) { suggestion in
-                                Button {
-                                    selectBrand(suggestion)
-                                } label: {
-                                    HStack(spacing: 8) {
-                                        Image(systemName: "magnifyingglass")
-                                            .font(.system(size: 12))
-                                            .foregroundStyle(AppColors.ink3)
-                                        Text(suggestion)
-                                            .font(.system(size: 14))
-                                            .foregroundStyle(AppColors.ink0)
-                                        Spacer()
-                                    }
-                                    .frame(minHeight: 36)
-                                    .contentShape(Rectangle())
-                                }
-                                .buttonStyle(.plain)
-                            }
+                            .frame(minHeight: 44)
+                            .contentShape(Rectangle())
                         }
                     }
 
@@ -395,6 +364,35 @@ struct AddWatchView: View {
                     Text(String(localized: "addwatch.purchase.price.hint"))
                         .font(.system(size: 11))
                         .foregroundStyle(AppColors.ink3)
+                    // 구매 컨디션(새상품/미착용/중고) — 가격 집계·유추 입력. TODO(phase2): 서버 집계 그래프.
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(String(localized: "addwatch.condition.label"))
+                            .font(.system(size: 13, weight: .medium)).foregroundStyle(AppColors.ink2)
+                        HStack(spacing: 8) {
+                            ForEach(PurchaseCondition.allCases, id: \.self) { c in
+                                Button { purchaseCondition = (purchaseCondition == c) ? nil : c } label: {
+                                    Text(c.displayName)
+                                        .font(.system(size: 13, weight: purchaseCondition == c ? .semibold : .regular))
+                                        .lineLimit(1).minimumScaleFactor(0.85)
+                                        .foregroundStyle(purchaseCondition == c ? AppColors.paper0 : AppColors.ink1)
+                                        .frame(maxWidth: .infinity).padding(.vertical, 8)
+                                        .background(purchaseCondition == c ? AppColors.accent : AppColors.paper1)
+                                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                                        .overlay(RoundedRectangle(cornerRadius: 8)
+                                            .stroke(purchaseCondition == c ? Color.clear : AppColors.rule, lineWidth: 1))
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                    }
+                    HStack {
+                        Text(String(localized: "addwatch.production_year"))
+                        Spacer()
+                        TextField("2020", text: $productionYearText)
+                            .keyboardType(.numberPad)
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 80)
+                    }
                     // Sprint 2 (P2-9): 보증 기간 + 알림.
                     Picker(String(localized: "addwatch.warranty.months"), selection: $warrantyMonths) {
                         Text(String(localized: "addwatch.warranty.none")).tag(0)
@@ -505,6 +503,8 @@ struct AddWatchView: View {
         purchaseSalesperson = existing.purchaseSalesperson ?? ""
         purchasePriceText = existing.purchasePrice.map { NSDecimalNumber(decimal: $0).stringValue } ?? ""
         purchaseCurrency = existing.purchaseCurrency ?? purchaseCurrency
+        purchaseCondition = existing.purchaseCondition
+        productionYearText = existing.productionYear.map(String.init) ?? ""
         warrantyMonths = existing.warrantyMonths ?? 0
         warrantyReminderEnabled = existing.warrantyReminderEnabled
         if let bph = existing.customBph { manualBphText = String(bph) }
@@ -839,6 +839,9 @@ struct AddWatchView: View {
             // Round (3-1): 신규 시계도 prefetch.
             PhotoCache.prefetch(for: watch.id, data: photoData)
         }
+        // 구매 컨디션 + 연식 (신규/편집 공통).
+        watch.purchaseCondition = purchaseCondition
+        watch.productionYear = Int(productionYearText.trimmingCharacters(in: .whitespaces))
         if movementType == .manual {
             watch.windReminderEnabled = windReminderEnabled
             let comps = Calendar.current.dateComponents([.hour, .minute], from: windReminderTime)

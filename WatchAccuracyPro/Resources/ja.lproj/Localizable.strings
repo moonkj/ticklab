@@ -345,8 +345,8 @@
 "timeline.journal" = "記録";
 "timeline.service" = "整備";
 "community.compose" = "写真を投稿";
-"community.compose.hint" = "今日の時計を匿名でシェア。1日1枚。";
-"community.compose.anonymous_note" = "匿名で投稿 · 1日1枚";
+"community.compose.hint" = "今日の時計をシェア。1日1枚。";
+"community.compose.anonymous_note" = "プロフィールで投稿 · 1日1枚";
 "community.empty.title" = "まだ投稿がありません";
 "community.empty.body" = "最初に今日の時計をシェアしましょう。";
 "community.like" = "いいね";
@@ -361,7 +361,7 @@
 "community.review.post" = "投稿";
 "community.moderation.text.blocked.title" = "投稿できない文章";
 "community.moderation.text.blocked.body" = "不適切な表現が検出されました。コメントを修正してください。";
-"community.anon_handle" = "匿名コレクター";
+"community.anon_handle" = "コレクター";
 "community.likes_count" = "いいね %d件";
 "share.post_to_community" = "コミュニティに投稿";
 "text.filter.blocked.title" = "使用できない表現";
@@ -1324,6 +1324,11 @@
 /* Sprint 1 — ソーラー + 購入情報 + データバックアップ */
 "movementtype.solar" = "ソーラー";
 "movementtype.smartwatch" = "スマートウォッチ";
+"addwatch.condition.label" = "コンディション";
+"condition.new" = "新品";
+"condition.unworn" = "未使用";
+"condition.used" = "中古";
+"addwatch.production_year" = "製造年";
 "addwatch.section.purchase" = "購入情報";
 "addwatch.purchase.location" = "購入場所 (ブティック/百貨店など)";
 "addwatch.purchase.salesperson" = "担当者";

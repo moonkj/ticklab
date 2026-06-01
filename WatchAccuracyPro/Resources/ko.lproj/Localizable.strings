@@ -276,8 +276,8 @@
 "timeline.journal" = "기록";
 "timeline.service" = "정비";
 "community.compose" = "사진 올리기";
-"community.compose.hint" = "오늘의 시계를 익명으로 공유하세요. 하루 한 장.";
-"community.compose.anonymous_note" = "익명으로 게시됩니다 · 하루 1장";
+"community.compose.hint" = "오늘의 시계를 공유하세요. 하루 한 장.";
+"community.compose.anonymous_note" = "프로필로 게시됩니다 · 하루 1장";
 "community.empty.title" = "아직 게시물이 없어요";
 "community.empty.body" = "첫 번째로 오늘의 시계를 공유해보세요.";
 "community.like" = "좋아요";
@@ -292,7 +292,7 @@
 "community.review.post" = "게시";
 "community.moderation.text.blocked.title" = "게시할 수 없는 문구";
 "community.moderation.text.blocked.body" = "부적절한 표현이 감지되었어요. 멘트를 수정해주세요.";
-"community.anon_handle" = "익명 컬렉터";
+"community.anon_handle" = "컬렉터";
 "community.likes_count" = "좋아요 %d개";
 "share.post_to_community" = "커뮤니티에 올리기";
 "text.filter.blocked.title" = "사용할 수 없는 표현";
@@ -1319,6 +1319,11 @@
 /* Sprint 1 — solar 무브먼트 + 구매처/담당자 + 데이터 백업 */
 "movementtype.solar" = "솔라";
 "movementtype.smartwatch" = "스마트워치";
+"addwatch.condition.label" = "구매 컨디션";
+"condition.new" = "새상품";
+"condition.unworn" = "미착용";
+"condition.used" = "중고";
+"addwatch.production_year" = "연식";
 "addwatch.section.purchase" = "구매처 정보";
 "addwatch.purchase.location" = "구매처 (부티크/백화점 등)";
 "addwatch.purchase.salesperson" = "담당자/세일즈";

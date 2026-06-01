@@ -345,8 +345,8 @@
 "timeline.journal" = "記錄";
 "timeline.service" = "保養";
 "community.compose" = "發布照片";
-"community.compose.hint" = "匿名分享今天的腕錶。每天一張。";
-"community.compose.anonymous_note" = "匿名發布 · 每天一張";
+"community.compose.hint" = "分享今天的腕錶。每天一張。";
+"community.compose.anonymous_note" = "以你的個人檔案發佈 · 每天一張";
 "community.empty.title" = "還沒有貼文";
 "community.empty.body" = "成為第一個分享今天腕錶的人。";
 "community.like" = "讚";
@@ -361,7 +361,7 @@
 "community.review.post" = "發佈";
 "community.moderation.text.blocked.title" = "無法發佈的文字";
 "community.moderation.text.blocked.body" = "偵測到不當用語，請修改文字。";
-"community.anon_handle" = "匿名藏家";
+"community.anon_handle" = "藏家";
 "community.likes_count" = "%d 個讚";
 "share.post_to_community" = "發佈到社群";
 "text.filter.blocked.title" = "無法使用的文字";
@@ -1324,6 +1324,11 @@
 /* Sprint 1 — 太陽能 + 購買資訊 + 資料備份 */
 "movementtype.solar" = "太陽能";
 "movementtype.smartwatch" = "智慧手錶";
+"addwatch.condition.label" = "成色";
+"condition.new" = "全新";
+"condition.unworn" = "未配戴";
+"condition.used" = "二手";
+"addwatch.production_year" = "出廠年份";
 "addwatch.section.purchase" = "購買資訊";
 "addwatch.purchase.location" = "購買地點 (精品店/商場)";
 "addwatch.purchase.salesperson" = "銷售員";

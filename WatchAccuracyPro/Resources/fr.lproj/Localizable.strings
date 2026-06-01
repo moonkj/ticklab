@@ -345,8 +345,8 @@
 "timeline.journal" = "Journal";
 "timeline.service" = "Entretien";
 "community.compose" = "Publier une photo";
-"community.compose.hint" = "Partagez la montre du jour de façon anonyme. Une photo par jour.";
-"community.compose.anonymous_note" = "Publié anonymement · une fois par jour";
+"community.compose.hint" = "Partagez la montre du jour. Une photo par jour.";
+"community.compose.anonymous_note" = "Publié avec votre profil · une fois par jour";
 "community.empty.title" = "Aucune publication";
 "community.empty.body" = "Soyez le premier à partager la montre du jour.";
 "community.like" = "J'aime";
@@ -361,7 +361,7 @@
 "community.review.post" = "Publier";
 "community.moderation.text.blocked.title" = "Légende non autorisée";
 "community.moderation.text.blocked.body" = "Un langage inapproprié a été détecté. Modifiez votre légende.";
-"community.anon_handle" = "Anonyme";
+"community.anon_handle" = "Collectionneur";
 "community.likes_count" = "%d j'aime";
 "share.post_to_community" = "Publier dans la communauté";
 "text.filter.blocked.title" = "Texte non autorisé";
@@ -1324,6 +1324,11 @@
 /* Sprint 1 — solaire + infos d'achat + sauvegarde */
 "movementtype.solar" = "Solaire";
 "movementtype.smartwatch" = "Montre connectée";
+"addwatch.condition.label" = "État";
+"condition.new" = "Neuf";
+"condition.unworn" = "Non porté";
+"condition.used" = "Occasion";
+"addwatch.production_year" = "Année";
 "addwatch.section.purchase" = "Informations d'achat";
 "addwatch.purchase.location" = "Lieu d'achat (Boutique/Magasin)";
 "addwatch.purchase.salesperson" = "Vendeur";

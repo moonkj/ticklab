@@ -22,6 +22,21 @@ enum WatchMovementType: String, CaseIterable, Codable, Sendable {
     var isMeasurable: Bool { self != .smartwatch }
 }
 
+/// 구매 컨디션 — 새상품/미착용/중고. (가격 유추 그래프 입력 — TODO(phase2): 서버 집계)
+enum PurchaseCondition: String, CaseIterable, Codable, Sendable {
+    case new        // 새상품(정식 구매, 미사용)
+    case unworn     // 미착용(NOS/풀세트, 거래는 중고지만 미착용)
+    case used       // 중고
+
+    var displayName: String {
+        switch self {
+        case .new:    return String(localized: "condition.new")
+        case .unworn: return String(localized: "condition.unworn")
+        case .used:   return String(localized: "condition.used")
+        }
+    }
+}
+
 @Model
 final class Watch {
     @Attribute(.unique) var id: UUID
@@ -57,6 +72,10 @@ final class Watch {
     var purchasePrice: Decimal? = nil
     /// 통화 코드 — ISO 4217 (예: "KRW", "USD", "JPY"). 기본은 Locale.current.currency.identifier.
     var purchaseCurrency: String? = nil
+    /// 구매 컨디션 — 새상품/미착용/중고. 가격 데이터 집계·유추용. (lightweight migration: optional)
+    var purchaseConditionRaw: String? = nil
+    /// 연식(생산/출시 연도, 예: 2018). 가격 유추 입력 데이터.
+    var productionYear: Int? = nil
     /// Sprint 2 (P2-9): 보증 기간 (개월). nil = 미설정. 일반적으로 신품 2년, 일부 5년.
     var warrantyMonths: Int? = nil
     /// 보증 만료 알림 활성화. true 시 만료 3개월 전 + 1개월 전 알림.
@@ -162,6 +181,12 @@ final class Watch {
         self.warrantyReminderEnabled = warrantyReminderEnabled
         self.receivedFrom = receivedFrom
         self.createdAt = createdAt
+    }
+
+    /// 구매 컨디션 enum 접근자 (raw String ↔ enum).
+    var purchaseCondition: PurchaseCondition? {
+        get { purchaseConditionRaw.flatMap(PurchaseCondition.init(rawValue:)) }
+        set { purchaseConditionRaw = newValue?.rawValue }
     }
 
     var movementType: WatchMovementType {
