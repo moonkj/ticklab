@@ -455,12 +455,9 @@ struct CollectionView: View {
                     showingAdd = true
                 }
             } label: {
-                Image(systemName: "plus")
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundStyle(AppColors.paper0)
-                    .frame(width: 30, height: 30)
-                    .background(AppColors.ink0)
-                    .clipShape(Circle())
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 22))
+                    .foregroundStyle(AppColors.ink0)
                     .frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "collection.add_watch"))
