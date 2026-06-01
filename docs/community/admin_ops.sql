@@ -67,6 +67,9 @@ create policy announcements_admin_insert on public.community_announcements
 drop policy if exists announcements_admin_update on public.community_announcements;
 create policy announcements_admin_update on public.community_announcements
     for update using (public.is_admin(auth.uid())) with check (public.is_admin(auth.uid()));
+drop policy if exists announcements_admin_delete on public.community_announcements;
+create policy announcements_admin_delete on public.community_announcements
+    for delete using (public.is_admin(auth.uid()));
 
 -- 6) 경고 — admin → 특정 사용자. 본인만 읽기.
 create table if not exists public.community_warnings (

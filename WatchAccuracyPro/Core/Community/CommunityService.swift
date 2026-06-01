@@ -513,6 +513,16 @@ final class CommunityService: ObservableObject {
         return (200...299).contains(http.statusCode)
     }
 
+    /// 공지 삭제 (admin DELETE RLS 필요).
+    @discardableResult
+    func deleteAnnouncement(id: String) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?id=eq.\(id)") else { return false }
+        guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
     /// 공지 전체 목록 (admin — 편집용).
     func fetchAnnouncements() async -> [Community.Announcement] {
         await ensureSignedIn()

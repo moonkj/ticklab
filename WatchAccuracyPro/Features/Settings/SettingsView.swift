@@ -1021,6 +1021,17 @@ private struct AdminOpsView: View {
                                 .font(.caption2).foregroundStyle(.secondary)
                         }
                     }
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            Task { await deleteAnnouncement(a) }
+                        } label: { Label("삭제", systemImage: "trash") }
+                    }
+                }
+                .onDelete { offsets in
+                    Task { await deleteAnnouncements(at: offsets) }
+                }
+                if announcements.isEmpty {
+                    Text("작성한 공지 없음").font(.caption).foregroundStyle(.secondary)
                 }
             }
             Section("신고된 게시물") {
@@ -1107,6 +1118,23 @@ private struct AdminOpsView: View {
 
     private func reloadAnnouncements() async {
         announcements = await service.fetchAnnouncements()
+    }
+
+    /// swipe(전체삭제 버튼) — 단건 삭제. 낙관적 제거 후 서버 삭제, 실패 시 reload 로 복구.
+    private func deleteAnnouncement(_ a: Community.Announcement) async {
+        announcements.removeAll { $0.id == a.id }
+        if !(await service.deleteAnnouncement(id: a.id)) {
+            await reloadAnnouncements()
+        }
+    }
+
+    /// onDelete(IndexSet) — 다건 삭제.
+    private func deleteAnnouncements(at offsets: IndexSet) async {
+        let targets = offsets.map { announcements[$0] }
+        announcements.remove(atOffsets: offsets)
+        var failed = false
+        for t in targets where !(await service.deleteAnnouncement(id: t.id)) { failed = true }
+        if failed { await reloadAnnouncements() }
     }
 
     private func announcementPeriod(_ a: Community.Announcement) -> String {

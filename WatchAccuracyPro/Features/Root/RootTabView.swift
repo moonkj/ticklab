@@ -13,15 +13,15 @@ import SwiftUI
 struct RootTabView: View {
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.scenePhase) private var scenePhase
     @ObservedObject private var flags = FeatureFlags.shared
     @State private var selected: Tab = .collection
     /// 운영 ID(관리자) 활성 — 앱 상단에 "관리자 모드" 배너 표시.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
     /// 관리자 배지 — 신고 건수(종 아이콘) 표시용.
     @State private var reportCount = 0
-    /// 공지 — 활성 공지 하단 시트.
+    /// 공지 — 활성 공지 하단 시트. item-기반 시트(nil=숨김)라 빈 시트 race 없음.
     @State private var activeAnnouncement: Community.Announcement?
-    @State private var showAnnouncement = false
 
     // Round 176: 각 탭의 NavigationStack path — Binding 으로 child view 에 주입.
     @State private var collectionPath = NavigationPath()
@@ -167,16 +167,19 @@ struct RootTabView: View {
         }
         .environment(\.purchaseRouter, purchaseRouter)
         // 공지 — 활성 공지가 있고 오늘 안 본 경우 하단 시트로.
-        .task { await checkAnnouncement() }
-        .sheet(isPresented: $showAnnouncement) {
-            if let a = activeAnnouncement {
-                AnnouncementBottomSheet(announcement: a) { dontShowToday in
-                    if dontShowToday { AnnouncementDismiss.dismissToday(a.id) }
-                    showAnnouncement = false
-                }
-                .presentationDetents([.fraction(0.5), .large])
-                .presentationDragIndicator(.visible)
+        // id: actingAsTickLab → 관리자↔사용자 전환 시 즉시 재확인(관리자가 만든 공지를 사용자 모드에서 바로 보게).
+        .task(id: actingAsTickLab) { await checkAnnouncement() }
+        // 포그라운드 복귀 시 재확인 — 실사용자는 앱 재실행 없이도 새 공지를 받아야 함.
+        .onChange(of: scenePhase) { _, phase in
+            if phase == .active { Task { await checkAnnouncement() } }
+        }
+        .sheet(item: $activeAnnouncement) { a in
+            AnnouncementBottomSheet(announcement: a) { dontShowToday in
+                if dontShowToday { AnnouncementDismiss.dismissToday(a.id) }
+                activeAnnouncement = nil
             }
+            .presentationDetents([.fraction(0.5), .large])
+            .presentationDragIndicator(.visible)
         }
         // shell-level paywall — 한 번에 하나만 띄움. 4 분산 sheet 대체.
         .sheet(isPresented: $purchaseRouter.isPresenting) {
@@ -216,10 +219,13 @@ struct RootTabView: View {
     }
 
     private func checkAnnouncement() async {
+        // 관리자 모드에선 본인이 만든 공지로 방해받지 않음 — 사용자 모드에서만 표시.
+        guard !actingAsTickLab else { return }
+        // 이미 시트 표시 중이면 재요청·재표시 안 함(포그라운드 재진입 중복 방지).
+        guard activeAnnouncement == nil else { return }
         guard let a = await CommunityService.shared.fetchActiveAnnouncement() else { return }
         if !AnnouncementDismiss.isDismissedToday(a.id) {
             activeAnnouncement = a
-            showAnnouncement = true
         }
     }
 }
