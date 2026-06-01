@@ -197,13 +197,17 @@ struct CommunityFeedView: View {
         followingOnly ? service.feed.filter { service.isFollowing($0.authorUID) } : service.feed
     }
 
-    /// 전체 / 팔로잉 세그먼트.
+    /// All / Following 세그먼트 — 컴팩트하게 우측 정렬.
     private var feedScopePicker: some View {
-        Picker("피드 범위", selection: $followingOnly) {
-            Text("전체").tag(false)
-            Text("팔로잉").tag(true)
+        HStack {
+            Spacer()
+            Picker("피드 범위", selection: $followingOnly) {
+                Text("All").tag(false)
+                Text("Following").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .frame(width: 180)
         }
-        .pickerStyle(.segmented)
         .padding(.horizontal, 20)
         .padding(.bottom, 6)
     }
