@@ -5,8 +5,8 @@ import SwiftUI
 struct VideoFeedView: View {
     @StateObject private var service = YouTubeFeedService.shared
     @Environment(\.openURL) private var openURL
-    /// nil = 전체, 값 = 해당 채널만.
-    @State private var selectedChannel: String?
+    /// 비어있으면 전체, 값이 있으면 그 채널들만(복수 선택).
+    @State private var selectedChannels: Set<String> = []
     @State private var showSuggest = false
 
     /// 피드에 등장하는 채널(중복 제거, 가나다/알파벳 정렬).
@@ -14,10 +14,20 @@ struct VideoFeedView: View {
         Array(Set(service.videos.map(\.channelTitle))).sorted()
     }
 
-    /// 선택 채널 필터(선택이 현재 목록에 없으면 전체).
+    /// 현재 목록에 실제로 있는 선택 채널만(새로고침으로 사라진 선택 무시).
+    private var activeChannels: Set<String> {
+        selectedChannels.intersection(Set(distinctChannels))
+    }
+
+    /// 선택 채널 필터(선택 없으면 전체).
     private var displayedVideos: [YouTubeFeedService.YouTubeVideo] {
-        guard let sel = selectedChannel, distinctChannels.contains(sel) else { return service.videos }
-        return service.videos.filter { $0.channelTitle == sel }
+        let active = activeChannels
+        guard !active.isEmpty else { return service.videos }
+        return service.videos.filter { active.contains($0.channelTitle) }
+    }
+
+    private func toggleChannel(_ ch: String) {
+        if selectedChannels.contains(ch) { selectedChannels.remove(ch) } else { selectedChannels.insert(ch) }
     }
 
     var body: some View {
@@ -48,16 +58,16 @@ struct VideoFeedView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    // 채널이 2개 이상일 때만 — 전체 / 채널 선택.
+                    // 채널이 2개 이상일 때만 — 전체 / 채널 복수 선택.
                     if distinctChannels.count >= 2 {
-                        Button { selectedChannel = nil } label: {
-                            if selectedChannel == nil {
+                        Button { selectedChannels.removeAll() } label: {
+                            if activeChannels.isEmpty {
                                 Label(String(localized: "video.filter.all"), systemImage: "checkmark")
                             } else { Text(String(localized: "video.filter.all")) }
                         }
                         ForEach(distinctChannels, id: \.self) { ch in
-                            Button { selectedChannel = ch } label: {
-                                if selectedChannel == ch { Label(ch, systemImage: "checkmark") } else { Text(ch) }
+                            Button { toggleChannel(ch) } label: {
+                                if selectedChannels.contains(ch) { Label(ch, systemImage: "checkmark") } else { Text(ch) }
                             }
                         }
                         Divider()
@@ -70,13 +80,20 @@ struct VideoFeedView: View {
                     if distinctChannels.count >= 2 {
                         HStack(spacing: 4) {
                             Image(systemName: "line.3.horizontal.decrease.circle")
-                            Text(selectedChannel ?? String(localized: "video.filter.all")).lineLimit(1)
+                            if activeChannels.isEmpty {
+                                Text(String(localized: "video.filter.all"))
+                            } else if activeChannels.count == 1, let only = activeChannels.first {
+                                Text(only).lineLimit(1)
+                            } else {
+                                Text("\(activeChannels.count)")
+                            }
                         }
                         .font(.system(size: 14, weight: .semibold))
                     } else {
                         Image(systemName: "ellipsis.circle").font(.system(size: 17))
                     }
                 }
+                .menuActionDismissBehavior(.disabled)   // 복수 선택 — 토글해도 메뉴 유지.
             }
         }
         .sheet(isPresented: $showSuggest) { ChannelSuggestSheet() }
