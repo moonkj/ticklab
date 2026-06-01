@@ -114,6 +114,7 @@ struct WatchDetailView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
                 statusStripSection
+                if watch.isSmartwatch { smartwatchBatterySection }
                 storyCard
                 careSection
                 detailTabBar
@@ -635,8 +636,8 @@ struct WatchDetailView: View {
     @ViewBuilder
     private var overviewTab: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // 측정 요약 (마지막 rate + COSCBar + grade chip)
-            latestSection
+            // 측정 요약 (마지막 rate + COSCBar + grade chip) — 스마트워치는 측정 비대상이라 숨김.
+            if !watch.isSmartwatch { latestSection }
             // 스펙 섹션 재사용
             if let movement { specsSection(movement: movement) }
             // 구매 정보
@@ -827,6 +828,9 @@ struct WatchDetailView: View {
     private var measureTab: some View {
         if watch.movementType == .quartz {
             QuartzBatteryCard(watch: watch)
+        } else if watch.isSmartwatch {
+            // 스마트워치 — 측정 비대상. 배터리는 개요 상단 카드에 표시.
+            EmptyView()
         } else {
             latestSection
             trendSection
@@ -1169,6 +1173,70 @@ struct WatchDetailView: View {
 
     /// 대표 시계 / 오늘 착용 토글을 시계 상세 본문에 명시. 기존엔 toolbar 의 작은 아이콘만 있어 사용자가 못 찾음.
     /// 두 카드를 가로 배치, 활성 상태는 색상으로 즉시 구분.
+    /// 스마트워치 배터리 카드 — 완충 N일 기준 % + 게이지 + "완충" 리셋.
+    @ViewBuilder
+    private var smartwatchBatterySection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack {
+                Image(systemName: "battery.100").foregroundStyle(AppColors.success)
+                Text(String(localized: "detail.battery.title"))
+                    .font(.system(size: 12, weight: .semibold)).tracking(1.2)
+                    .foregroundStyle(AppColors.ink2)
+                Spacer()
+                Button {
+                    UISelectionFeedbackGenerator().selectionChanged()
+                    watch.batteryChargedAt = Date()
+                    try? modelContext.save()
+                    WatchMoodService.invalidate(for: watch)
+                } label: {
+                    Label(String(localized: "detail.battery.recharge"), systemImage: "bolt.fill")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(AppColors.accent)
+                }
+                .buttonStyle(.plain)
+            }
+            if let pct = watch.batteryPercent {
+                HStack(alignment: .firstTextBaseline, spacing: 4) {
+                    Text("\(pct)").font(.system(size: 34, weight: .bold, design: .rounded))
+                        .foregroundStyle(batteryTone(pct))
+                    Text("%").font(.system(size: 16)).foregroundStyle(AppColors.ink2)
+                    Spacer()
+                    if let days = watch.batteryFullChargeDays {
+                        Text(String(format: String(localized: "detail.battery.full_days"), Int(days)))
+                            .font(.system(size: 12)).foregroundStyle(AppColors.ink3)
+                    }
+                }
+                GeometryReader { geo in
+                    ZStack(alignment: .leading) {
+                        Capsule().fill(AppColors.paper2)
+                        Capsule().fill(batteryTone(pct))
+                            .frame(width: max(6, geo.size.width * CGFloat(pct) / 100))
+                    }
+                }
+                .frame(height: 10)
+                let remDays = Int(((watch.batteryFraction ?? 0) * (watch.batteryFullChargeDays ?? 0)).rounded())
+                Text(String(format: String(localized: "detail.battery.remaining"), remDays))
+                    .font(.system(size: 11)).foregroundStyle(AppColors.ink3)
+            } else {
+                Text(String(localized: "detail.battery.unset"))
+                    .font(.system(size: 13)).foregroundStyle(AppColors.ink3)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.paper1)
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        .padding(.horizontal, 20)
+        .padding(.top, 12)
+    }
+
+    private func batteryTone(_ pct: Int) -> Color {
+        if pct <= 15 { return AppColors.danger }
+        if pct <= 35 { return AppColors.warning }
+        return AppColors.success
+    }
+
     private var statusStripSection: some View {
         let worn = cachedWornToday  // Round 20 (Sora): body 안 fetch 제거 — onAppear 에서 set.
         return HStack(spacing: 10) {

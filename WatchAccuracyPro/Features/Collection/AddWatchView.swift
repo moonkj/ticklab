@@ -70,6 +70,8 @@ struct AddWatchView: View {
     /// Quartz: 마지막 배터리 교체일 + 알림.
     @State private var batteryLastReplaced: Date = Date()
     @State private var batteryReminderEnabled: Bool = true
+    /// 스마트워치: 완충 시 배터리 지속일(일). 경과시간으로 % 표시.
+    @State private var batteryFullChargeDays: Int = 2
     @Environment(UserPreferences.self) private var preferences
 
     private var isEditing: Bool { existing != nil }
@@ -236,6 +238,24 @@ struct AddWatchView: View {
                     }
                 }
 
+                // 스마트워치: 무브먼트(캘리버) 항목 숨김 + 배터리 지속일 입력.
+                if movementType == .smartwatch {
+                    Section(String(localized: "addwatch.battery.section")) {
+                        Stepper(value: $batteryFullChargeDays, in: 1...30) {
+                            HStack {
+                                Image(systemName: "battery.100").foregroundStyle(AppColors.success)
+                                Text(String(localized: "addwatch.battery.life_days"))
+                                Spacer()
+                                Text(String(format: String(localized: "addwatch.battery.days_value"), batteryFullChargeDays))
+                                    .foregroundStyle(AppColors.ink2)
+                            }
+                        }
+                        Text(String(localized: "addwatch.battery.hint"))
+                            .font(.system(size: 12))
+                            .foregroundStyle(AppColors.textSecondary)
+                    }
+                }
+                if movementType != .smartwatch {
                 Section(String(localized: "addwatch.section.movement")) {
                     if let suggestion, caliber == nil {
                         suggestionCard(suggestion)
@@ -326,6 +346,7 @@ struct AddWatchView: View {
                         }
                     }
                 }
+                }   // if movementType != .smartwatch
 
                 // Round 83 (정수민/이재현): personalisation 섹션 — 별명/스토리/ref no.
                 Section(String(localized: "addwatch.section.personal")) {
@@ -486,6 +507,7 @@ struct AddWatchView: View {
         photoData = existing.photoData
         liftAngleOverride = existing.liftAngleOverride.map { String(format: "%.0f", $0) } ?? ""
         movementType = existing.movementType
+        batteryFullChargeDays = Int(existing.batteryFullChargeDays ?? 2)
         windReminderEnabled = existing.windReminderEnabled
         // 0:00 (자정) 도 유효한 시각 — guard 제거.
         windReminderTime = Calendar.current.date(
@@ -858,6 +880,15 @@ struct AddWatchView: View {
         } else {
             watch.batteryReminderEnabled = false
             NotificationService.cancelBatteryReminder(for: watch)
+        }
+        // 스마트워치: 완충 지속일 저장. 신규/완충일 없으면 지금 완충 가정. 캘리버는 의미 없으니 제거.
+        if movementType == .smartwatch {
+            watch.batteryFullChargeDays = Double(batteryFullChargeDays)
+            if watch.batteryChargedAt == nil { watch.batteryChargedAt = Date() }
+            watch.caliber = nil
+        } else {
+            watch.batteryFullChargeDays = nil
+            watch.batteryChargedAt = nil
         }
         try? modelContext.save()
 

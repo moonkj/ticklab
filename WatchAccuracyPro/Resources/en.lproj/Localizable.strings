@@ -1338,6 +1338,15 @@
 /* Sprint 1 — solar movement + purchase info + data backup */
 "movementtype.solar" = "Solar";
 "movementtype.smartwatch" = "Smartwatch";
+"addwatch.battery.section" = "Battery";
+"addwatch.battery.life_days" = "Battery life when full";
+"addwatch.battery.days_value" = "%d days";
+"addwatch.battery.hint" = "Enter how many days a full charge lasts; we'll estimate the level from elapsed time.";
+"detail.battery.title" = "Battery";
+"detail.battery.recharge" = "Recharge";
+"detail.battery.full_days" = "%d days on full charge";
+"detail.battery.remaining" = "About %d days left";
+"detail.battery.unset" = "Battery life isn't set. Set it in Edit.";
 "addwatch.condition.label" = "Condition";
 "condition.new" = "New";
 "condition.unworn" = "Unworn";

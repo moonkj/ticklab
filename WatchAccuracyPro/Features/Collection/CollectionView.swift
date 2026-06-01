@@ -892,8 +892,11 @@ struct HeroWatchCard: View {
                             WearTagPickerView(wearLog: log)
                         }
                     }
-                    // Sprint 12 (UX1): 측정 단축 — 기계식만, 콜백 있을 때.
-                    if let onMeasure, watch.movementType != .quartz {
+                    // 스마트워치: 측정 대신 배터리 잔량 배지(완충 N일 기준).
+                    if watch.isSmartwatch {
+                        SmartwatchBatteryBadge(percent: watch.batteryPercent)
+                    } else if let onMeasure, watch.movementType != .quartz {
+                        // Sprint 12 (UX1): 측정 단축 — 기계식만, 콜백 있을 때.
                         Button {
                             UISelectionFeedbackGenerator().selectionChanged()
                             onMeasure()
@@ -1074,7 +1077,9 @@ struct WatchListRow: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                 HStack(spacing: 8) {
-                    if let last = lastMeasurement {
+                    if watch.isSmartwatch {
+                        SmartwatchBatteryBadge(percent: watch.batteryPercent, compact: true)
+                    } else if let last = lastMeasurement {
                         Text("\(formatRate(last.rateSecondsPerDay)) s/d")
                             .font(.system(size: 15, weight: .semibold, design: .monospaced))
                             .monospacedDigit()
@@ -1085,12 +1090,14 @@ struct WatchListRow: View {
                     }
                 }
                 .padding(.top, 2)
-                // 3-1: 마지막 측정 N일 전 (측정 없으면 측정 권유 문구).
-                Text(lastMeasuredText)
-                    .font(.system(size: 11))
-                    .foregroundStyle(lastMeasurement == nil ? AppColors.accent : AppColors.ink3)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.8)
+                // 3-1: 마지막 측정 N일 전 (측정 없으면 측정 권유 문구). 스마트워치는 측정 비대상이라 숨김.
+                if !watch.isSmartwatch {
+                    Text(lastMeasuredText)
+                        .font(.system(size: 11))
+                        .foregroundStyle(lastMeasurement == nil ? AppColors.accent : AppColors.ink3)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.8)
+                }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             // Round 152: 다마고치 mood emoji (small list).

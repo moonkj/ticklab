@@ -128,6 +128,10 @@ final class Watch {
     var batteryExpectedLifeMonths: Int = 30
     /// 배터리 교체 알림 활성화 — quartz 전용.
     var batteryReminderEnabled: Bool = false
+    /// 스마트워치 — 완충 시 배터리 지속일(일). 측정 대신 배터리 % 표시용. lightweight migration(optional).
+    var batteryFullChargeDays: Double? = nil
+    /// 스마트워치 — 마지막 완충 시각. batteryFullChargeDays 와 함께 경과시간으로 % 산출.
+    var batteryChargedAt: Date? = nil
     /// SwiftData iOS 17 버그 회피: `inverse:` 를 명시하면 명시적 `save()` 후 cascade 가 발동되지 않는다.
     /// 인버스는 SwiftData가 `WatchMeasurement.watch` 로부터 자동 추론하도록 두고, 기본값은 선언부에서 부여한다.
     @Relationship(deleteRule: .cascade)
@@ -208,6 +212,19 @@ final class Watch {
         get { WatchMovementType(rawValue: movementTypeRaw) ?? .automatic }
         set { movementTypeRaw = newValue.rawValue }
     }
+
+    var isSmartwatch: Bool { movementType == .smartwatch }
+
+    /// 완충 N일 기준, 마지막 완충 이후 경과시간으로 산출한 배터리 잔량(0~1). 데이터 없으면 nil.
+    var batteryFraction: Double? {
+        guard isSmartwatch, let days = batteryFullChargeDays, days > 0, let charged = batteryChargedAt else { return nil }
+        let total = days * 86_400
+        let remaining = total - Date().timeIntervalSince(charged)
+        return min(1, max(0, remaining / total))
+    }
+
+    /// 표시용 배터리 퍼센트(0~100). 데이터 없으면 nil.
+    var batteryPercent: Int? { batteryFraction.map { Int(($0 * 100).rounded()) } }
 
     /// 다음 배터리 교체 예상일 — batteryLastReplaced 가 nil 이면 nil.
     var batteryNextDue: Date? {

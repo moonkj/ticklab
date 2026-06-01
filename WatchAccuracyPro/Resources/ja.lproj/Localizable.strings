@@ -1342,6 +1342,15 @@
 /* Sprint 1 — ソーラー + 購入情報 + データバックアップ */
 "movementtype.solar" = "ソーラー";
 "movementtype.smartwatch" = "スマートウォッチ";
+"addwatch.battery.section" = "バッテリー";
+"addwatch.battery.life_days" = "フル充電時の持続日数";
+"addwatch.battery.days_value" = "%d日";
+"addwatch.battery.hint" = "フル充電で何日もつかを入力すると、経過時間から残量を推定します。";
+"detail.battery.title" = "バッテリー";
+"detail.battery.recharge" = "満充電";
+"detail.battery.full_days" = "フル充電で%d日";
+"detail.battery.remaining" = "残り約%d日";
+"detail.battery.unset" = "持続日数が未設定です。編集で設定してください。";
 "addwatch.condition.label" = "コンディション";
 "condition.new" = "新品";
 "condition.unworn" = "未使用";

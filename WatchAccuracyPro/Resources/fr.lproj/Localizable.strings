@@ -1342,6 +1342,15 @@
 /* Sprint 1 — solaire + infos d'achat + sauvegarde */
 "movementtype.solar" = "Solaire";
 "movementtype.smartwatch" = "Montre connectée";
+"addwatch.battery.section" = "Batterie";
+"addwatch.battery.life_days" = "Autonomie à pleine charge";
+"addwatch.battery.days_value" = "%d jours";
+"addwatch.battery.hint" = "Indiquez combien de jours dure une charge complète ; nous estimerons le niveau selon le temps écoulé.";
+"detail.battery.title" = "Batterie";
+"detail.battery.recharge" = "Pleine charge";
+"detail.battery.full_days" = "%d jours à pleine charge";
+"detail.battery.remaining" = "Environ %d jours restants";
+"detail.battery.unset" = "L'autonomie n'est pas définie. Définissez-la dans Modifier.";
 "addwatch.condition.label" = "État";
 "condition.new" = "Neuf";
 "condition.unworn" = "Non porté";

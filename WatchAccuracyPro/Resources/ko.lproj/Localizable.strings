@@ -1337,6 +1337,15 @@
 /* Sprint 1 — solar 무브먼트 + 구매처/담당자 + 데이터 백업 */
 "movementtype.solar" = "솔라";
 "movementtype.smartwatch" = "스마트워치";
+"addwatch.battery.section" = "배터리";
+"addwatch.battery.life_days" = "완충 시 지속일";
+"addwatch.battery.days_value" = "%d일";
+"addwatch.battery.hint" = "완충 후 며칠 가는지 입력하면, 경과 시간으로 배터리 잔량을 표시해요.";
+"detail.battery.title" = "배터리";
+"detail.battery.recharge" = "완충";
+"detail.battery.full_days" = "완충 시 %d일";
+"detail.battery.remaining" = "약 %d일 남음";
+"detail.battery.unset" = "완충 지속일이 설정되지 않았어요. 편집에서 설정하세요.";
 "addwatch.condition.label" = "구매 컨디션";
 "condition.new" = "새상품";
 "condition.unworn" = "미착용";

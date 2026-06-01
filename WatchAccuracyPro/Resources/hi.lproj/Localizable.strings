@@ -1342,6 +1342,15 @@
 /* Sprint 1 — सोलर + खरीद जानकारी + डेटा बैकअप */
 "movementtype.solar" = "सोलर";
 "movementtype.smartwatch" = "स्मार्टवॉच";
+"addwatch.battery.section" = "बैटरी";
+"addwatch.battery.life_days" = "फुल चार्ज पर अवधि";
+"addwatch.battery.days_value" = "%d दिन";
+"addwatch.battery.hint" = "बताएं कि फुल चार्ज कितने दिन चलता है; हम बीते समय से स्तर का अनुमान लगाएंगे।";
+"detail.battery.title" = "बैटरी";
+"detail.battery.recharge" = "चार्ज";
+"detail.battery.full_days" = "फुल चार्ज पर %d दिन";
+"detail.battery.remaining" = "लगभग %d दिन शेष";
+"detail.battery.unset" = "बैटरी अवधि सेट नहीं है। संपादन में सेट करें।";
 "addwatch.condition.label" = "कंडीशन";
 "condition.new" = "नया";
 "condition.unworn" = "बिना पहना";

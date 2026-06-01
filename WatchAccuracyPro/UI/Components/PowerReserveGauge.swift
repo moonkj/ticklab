@@ -68,3 +68,55 @@ private extension Font {
     func weight(_ weight: Font.Weight, design: Font.Design = .default) -> Font { self.weight(weight) }
     func weight(_ weight: Font.Weight) -> Font { self }
 }
+
+/// 스마트워치 배터리 배지 — 완충 N일 기준 경과 시간으로 산출한 잔량(%)을 배터리 아이콘+숫자로.
+/// percent == nil(완충일 미설정) 이면 "—". compact = 리스트 행용(배경 없는 인라인).
+struct SmartwatchBatteryBadge: View {
+    let percent: Int?
+    var compact: Bool = false
+
+    private var pct: Int { max(0, min(100, percent ?? 0)) }
+    private var icon: String {
+        switch pct {
+        case 0..<13:  return "battery.0"
+        case 13..<38: return "battery.25"
+        case 38..<63: return "battery.50"
+        case 63..<88: return "battery.75"
+        default:      return "battery.100"
+        }
+    }
+    private var tone: Color {
+        if pct <= 15 { return AppColors.danger }
+        if pct <= 35 { return AppColors.warning }
+        return AppColors.success
+    }
+
+    var body: some View {
+        HStack(spacing: compact ? 4 : 5) {
+            Image(systemName: icon).font(.system(size: compact ? 13 : 14))
+                .accessibilityHidden(true)
+            Text(percent == nil ? "—" : "\(pct)%")
+                .font(.system(size: compact ? 12 : 11, weight: .semibold))
+                .monospacedDigit()
+        }
+        .foregroundStyle(tone)
+        .modifier(BatteryBadgeChrome(compact: compact, tone: tone))
+        .accessibilityLabel(percent == nil ? "배터리 미설정" : "배터리 \(pct)퍼센트")
+    }
+}
+
+private struct BatteryBadgeChrome: ViewModifier {
+    let compact: Bool
+    let tone: Color
+    func body(content: Content) -> some View {
+        if compact {
+            content
+        } else {
+            content
+                .padding(.horizontal, 12).padding(.vertical, 10)
+                .background(tone.opacity(0.12))
+                .overlay(Capsule().stroke(tone.opacity(0.35), lineWidth: 1))
+                .clipShape(Capsule())
+        }
+    }
+}

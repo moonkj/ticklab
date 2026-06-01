@@ -1342,6 +1342,15 @@
 /* Sprint 1 — 太陽能 + 購買資訊 + 資料備份 */
 "movementtype.solar" = "太陽能";
 "movementtype.smartwatch" = "智慧手錶";
+"addwatch.battery.section" = "電池";
+"addwatch.battery.life_days" = "滿電續航天數";
+"addwatch.battery.days_value" = "%d天";
+"addwatch.battery.hint" = "輸入滿電可用天數，我們會根據經過的時間估算電量。";
+"detail.battery.title" = "電池";
+"detail.battery.recharge" = "充滿";
+"detail.battery.full_days" = "滿電%d天";
+"detail.battery.remaining" = "約剩%d天";
+"detail.battery.unset" = "尚未設定續航天數，請在編輯中設定。";
 "addwatch.condition.label" = "成色";
 "condition.new" = "全新";
 "condition.unworn" = "未配戴";
