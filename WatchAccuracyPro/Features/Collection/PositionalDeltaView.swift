@@ -43,6 +43,7 @@ struct PositionalDeltaView: View {
                     emptyState
                 } else {
                     deltaCard
+                    positionHeatmap
                     positionTable
                     methodologyCard
                 }
@@ -88,6 +89,43 @@ struct PositionalDeltaView: View {
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+
+    /// rate 정확도 색상(앱 공통 톤).
+    private func tone(_ rate: Double) -> Color {
+        let a = abs(rate)
+        if a <= 6 { return AppColors.success }
+        if a <= 20 { return AppColors.warning }
+        return AppColors.danger
+    }
+
+    /// 6자세 색상 히트맵 — 자세별 평균 rate 를 한눈에. 데이터 없는 자세는 회색.
+    private var positionHeatmap: some View {
+        let lookup = Dictionary(stats.map { ($0.position, $0) }, uniquingKeysWith: { a, _ in a })
+        let order: [Position] = [.dialUp, .dialDown, .crownUp, .crownDown, .crownLeft, .crownRight]
+        return LazyVGrid(
+            columns: Array(repeating: GridItem(.flexible(), spacing: 8), count: 3),
+            spacing: 8
+        ) {
+            ForEach(order, id: \.self) { pos in
+                let stat = lookup[pos]
+                VStack(spacing: 3) {
+                    Text(pos.rawValue)
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundStyle(stat.map { tone($0.avgRate) } ?? AppColors.ink3)
+                    Text(stat.map { String(format: "%+.1f", $0.avgRate) } ?? "—")
+                        .font(.system(size: 15, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(stat == nil ? AppColors.ink3 : AppColors.ink0)
+                }
+                .frame(maxWidth: .infinity, minHeight: 56)
+                .background(stat.map { tone($0.avgRate).opacity(0.14) } ?? AppColors.paper2)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .accessibilityElement(children: .combine)
+                .accessibilityLabel(stat == nil
+                    ? "\(pos.localizedName) 데이터 없음"
+                    : String(format: "%@ %+.1f초/일", pos.localizedName, stat!.avgRate))
+            }
+        }
     }
 
     private var positionTable: some View {
