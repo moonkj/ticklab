@@ -197,19 +197,34 @@ struct CommunityFeedView: View {
         followingOnly ? service.feed.filter { service.isFollowing($0.authorUID) } : service.feed
     }
 
-    /// All / Following 세그먼트 — 컴팩트하게 우측 정렬.
+    /// All / Following 밑줄 텍스트 탭 — 우측 정렬, 에디토리얼 톤(세그먼트보다 가볍게).
     private var feedScopePicker: some View {
-        HStack {
+        HStack(spacing: 20) {
             Spacer()
-            Picker("피드 범위", selection: $followingOnly) {
-                Text("All").tag(false)
-                Text("Following").tag(true)
+            scopeTab("All", selected: !followingOnly) {
+                withAnimation(.easeOut(duration: 0.15)) { followingOnly = false }
             }
-            .pickerStyle(.segmented)
-            .frame(width: 180)
+            scopeTab("Following", selected: followingOnly) {
+                withAnimation(.easeOut(duration: 0.15)) { followingOnly = true }
+            }
         }
         .padding(.horizontal, 20)
-        .padding(.bottom, 6)
+        .padding(.bottom, 8)
+    }
+
+    private func scopeTab(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundStyle(selected ? AppColors.ink0 : AppColors.ink3)
+                .padding(.bottom, 5)
+                .overlay(alignment: .bottom) {
+                    Rectangle()
+                        .fill(selected ? AppColors.ink0 : .clear)
+                        .frame(height: 2)
+                }
+        }
+        .buttonStyle(.plain)
     }
 
     private var feedList: some View {
