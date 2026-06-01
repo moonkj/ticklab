@@ -199,9 +199,13 @@ final class CommunityService: ObservableObject {
 
     /// 크롭·검열 통과한 JPEG 를 업로드. 성공 시 피드 갱신.
     func uploadPost(imageData: Data, brand: String?, caption: String? = nil) async throws {
+        lastError = nil
         guard canPostToday else { throw UploadError.dailyLimit }
         await ensureSignedIn()
-        guard let uid = myUID else { throw UploadError.notSignedIn }
+        guard let uid = myUID else {
+            lastError = "익명 로그인 실패 — Supabase Anonymous Sign-in 확인 필요"
+            throw UploadError.notSignedIn
+        }
 
         let path = "\(uid)/\(UUID().uuidString).jpg"
         // 1) Storage 업로드.
@@ -214,8 +218,9 @@ final class CommunityService: ObservableObject {
         up.setValue(anonKey, forHTTPHeaderField: "apikey")
         up.setValue("Bearer \(accessToken ?? anonKey)", forHTTPHeaderField: "Authorization")
         // upload(for:from:) 가 body 를 from: 으로 보냄 — httpBody 중복 설정 제거.
-        let (_, resp) = try await URLSession.shared.upload(for: up, from: imageData)
+        let (upData, resp) = try await URLSession.shared.upload(for: up, from: imageData)
         if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+            lastError = "storage \(http.statusCode): \(String(data: upData, encoding: .utf8) ?? "")"
             throw UploadError.storageFailed
         }
         // 2) posts insert (author_uid 는 서버 default auth.uid()).

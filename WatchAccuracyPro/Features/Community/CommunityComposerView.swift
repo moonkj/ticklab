@@ -148,7 +148,8 @@ struct CommunityComposerView: View {
                 uploadError = String(localized: "community.daily_limit.body")
             } catch {
                 isUploading = false
-                uploadError = error.localizedDescription
+                // 서버가 준 구체적 사유(insert 400/RLS/스토리지 status 등)를 그대로 노출 → 진단.
+                uploadError = service.lastError ?? error.localizedDescription
             }
         }
     }
