@@ -976,6 +976,8 @@ private struct AdminPanelView: View {
     /// 운영 ID — ON 이면 커뮤니티 게시 시 닉네임 'TickLab' + 앱 아이콘 아바타로 표시.
     /// ⚠️ 클라 편의용. 위조 방지는 Supabase RLS 필요(docs/community/admin_rls.sql).
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
+    /// admin_users 등록용 — 내 커뮤니티 uid 표시/복사.
+    @ObservedObject private var community = CommunityService.shared
 
     var body: some View {
         @Bindable var prefs = preferences
@@ -988,10 +990,29 @@ private struct AdminPanelView: View {
                     }
                     .pickerStyle(.segmented)
                     Text(actingAsTickLab
-                         ? "커뮤니티 게시 시 닉네임 'TickLab' + 앱 아이콘 아바타로 표시됩니다."
+                         ? "커뮤니티 게시 시 닉네임 'TickLab' + 앱 아이콘 아바타로 표시됩니다. (서버 RLS 적용 시 admin 등록 필수)"
                          : "일반 사용자 프로필 이름으로 게시됩니다.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    // Supabase admin_users 등록용 — 내 uid 복사.
+                    if let uid = community.myUID, !uid.isEmpty {
+                        Button {
+                            UIPasteboard.general.string = uid
+                            seedToast = "📋 내 UID 복사됨 — Supabase admin_users 에 등록하세요"
+                        } label: {
+                            Label("내 커뮤니티 UID 복사", systemImage: "doc.on.doc")
+                        }
+                        Text(uid)
+                            .font(.system(size: 10, design: .monospaced))
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+                            .lineLimit(1)
+                            .truncationMode(.middle)
+                    } else {
+                        Text("커뮤니티 탭에 한 번 들어가 로그인하면 UID가 표시됩니다.")
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
                 }
                 Section("라이선스 모드") {
                     Toggle("Pro 잠금 해제", isOn: Binding(
