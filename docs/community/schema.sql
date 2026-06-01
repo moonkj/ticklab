@@ -203,6 +203,9 @@ drop policy if exists profiles_insert_own on public.community_profiles;
 create policy profiles_insert_own on public.community_profiles for insert with check (uid = auth.uid());
 drop policy if exists profiles_update_own on public.community_profiles;
 create policy profiles_update_own on public.community_profiles for update using (uid = auth.uid());
+-- 닉네임 중복 방지(대소문자 무시) — 동시 선점 race 까지 차단. 클라 사전검사와 이중 방어.
+create unique index if not exists community_profiles_display_name_key
+    on public.community_profiles (lower(display_name));
 
 -- 7.2 게시물 작성자 표시명 비정규화(피드 1쿼리 렌더). 이름 변경은 신규 글부터 반영.
 alter table public.community_posts add column if not exists author_name text;

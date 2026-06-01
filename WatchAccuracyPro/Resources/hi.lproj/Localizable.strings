@@ -1586,6 +1586,11 @@
 "profile.nav.title" = "My Profile";
 "profile.name" = "Display Name";
 "profile.name.hint" = "Name shown to others";
+"profile.name.taken.title" = "उपनाम उपलब्ध नहीं";
+"profile.name.taken.body" = "यह उपनाम पहले से किसी अन्य उपयोगकर्ता द्वारा लिया गया है। कृपया दूसरा नाम चुनें।";
+"profile.name.cooldown.title" = "अभी बदल नहीं सकते";
+"profile.name.cooldown.body" = "उपनाम सेट करने के बाद 30 दिनों तक नहीं बदला जा सकता। आप इसे %d दिन में बदल सकते हैं।";
+"profile.name.rules" = "उपनाम अद्वितीय होने चाहिए और सेट करने के बाद 30 दिनों तक नहीं बदले जा सकते।";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "%@ से";

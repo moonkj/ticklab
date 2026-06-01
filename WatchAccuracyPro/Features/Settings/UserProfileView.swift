@@ -15,13 +15,22 @@ struct UserProfileView: View {
     @State private var referralCode: String = ReferralService.referralCode
     /// 욕설 필터 차단 alert (커뮤니티 캡션 필터와 동일 정책).
     @State private var showTextFilterAlert: Bool = false
+    /// 닉네임 규칙 — 중복 선점/30일 변경 제한.
+    @State private var originalName: String = ""
+    @State private var showNameTakenAlert: Bool = false
+    @State private var showCooldownAlert: Bool = false
+    @State private var cooldownDaysRemaining: Int = 0
+    @State private var isSaving: Bool = false
 
     private let nameKey = "ticklab.profile.name"
+    private let nameChangedKey = "ticklab.profile.nameChangedAt"
     private let yearKey = "ticklab.profile.startYear"
     private let brandsKey = "ticklab.profile.brands"
     private let dealerKey = "ticklab.profile.isDealer"
     private let bioKey = "ticklab.profile.bio"
     private let photoKey = "ticklab.profile.photoData"
+    /// 닉네임 변경 제한 기간(30일).
+    private let nameCooldown: TimeInterval = 30 * 24 * 3600
 
     var body: some View {
         NavigationStack {
@@ -65,6 +74,10 @@ struct UserProfileView: View {
                         }
                     }
                     .padding(.vertical, 8)
+                } footer: {
+                    Text(String(localized: "profile.name.rules"))
+                        .font(.caption2)
+                        .foregroundStyle(AppColors.ink3)
                 }
 
                 Section(String(localized: "profile.section.collector")) {
@@ -152,10 +165,11 @@ struct UserProfileView: View {
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(String(localized: "common.save")) {
-                        // 욕설 필터 통과 시에만 저장·dismiss. 차단되면 editor 유지.
-                        if save() { dismiss() }
+                        // 욕설·중복·변경제한 통과 시에만 저장·dismiss. 차단되면 editor 유지.
+                        Task { if await save() { dismiss() } }
                     }
                     .fontWeight(.semibold)
+                    .disabled(isSaving)
                 }
             }
             .onAppear { load() }
@@ -163,6 +177,16 @@ struct UserProfileView: View {
                 Button(String(localized: "common.ok"), role: .cancel) {}
             } message: {
                 Text(String(localized: "text.filter.blocked.body"))
+            }
+            .alert(String(localized: "profile.name.taken.title"), isPresented: $showNameTakenAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: {
+                Text(String(localized: "profile.name.taken.body"))
+            }
+            .alert(String(localized: "profile.name.cooldown.title"), isPresented: $showCooldownAlert) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: {
+                Text(String(format: String(localized: "profile.name.cooldown.body"), cooldownDaysRemaining))
             }
             .onChange(of: photoItem) { _, new in
                 guard let new else { return }
@@ -202,6 +226,7 @@ struct UserProfileView: View {
     private func load() {
         let d = UserDefaults.standard
         displayName = d.string(forKey: nameKey) ?? ""
+        originalName = displayName
         collectionStartYear = d.string(forKey: yearKey) ?? ""
         favoriteBrands = d.string(forKey: brandsKey) ?? ""
         isDealerBadge = d.bool(forKey: dealerKey)
@@ -209,22 +234,53 @@ struct UserProfileView: View {
         profilePhotoData = d.data(forKey: photoKey)
     }
 
-    /// 저장 성공 여부 반환. 욕설 필터 차단 시 false (저장 안 함, alert 표시).
-    /// 자유 입력 텍스트(이름/좋아하는 브랜드/소개글)만 검사. 연도·딜러 토글·사진은 제외.
-    @discardableResult
-    private func save() -> Bool {
+    /// 저장 성공 여부 반환. 차단 시 false (저장 안 함, alert 표시).
+    /// 닉네임은 ⓐ욕설 ⓑ30일 변경제한 ⓒ타인 선점 중복을 통과해야 변경 가능.
+    /// 자유 입력 텍스트(이름/좋아하는 브랜드/소개글)만 욕설 검사. 연도·딜러 토글·사진은 제외.
+    private func save() async -> Bool {
         let userTexts = [displayName, favoriteBrands, bio]
         if userTexts.contains(where: { CommunityTextModerator.containsProfanity($0) }) {
             showTextFilterAlert = true
             return false
         }
         let d = UserDefaults.standard
+        let newName = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let nameChanged = newName != originalName.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if nameChanged {
+            // ⓑ 30일 변경 제한 — 마지막 변경 후 30일 경과해야 변경 가능.
+            if let changedAt = d.object(forKey: nameChangedKey) as? Date {
+                let elapsed = Date().timeIntervalSince(changedAt)
+                if elapsed < nameCooldown {
+                    cooldownDaysRemaining = max(1, Int(ceil((nameCooldown - elapsed) / 86_400)))
+                    showCooldownAlert = true
+                    return false
+                }
+            }
+            // ⓒ 타인 선점 중복 — 비어있지 않을 때만(빈 닉네임은 로컬 컬렉터 폴백).
+            if !newName.isEmpty {
+                isSaving = true
+                let taken = await CommunityService.shared.isNicknameTaken(newName)
+                isSaving = false
+                if taken {
+                    showNameTakenAlert = true
+                    return false
+                }
+            }
+        }
+
         d.set(displayName, forKey: nameKey)
         d.set(collectionStartYear, forKey: yearKey)
         d.set(favoriteBrands, forKey: brandsKey)
         d.set(isDealerBadge, forKey: dealerKey)
         d.set(bio, forKey: bioKey)
         d.set(profilePhotoData, forKey: photoKey)
+
+        if nameChanged {
+            d.set(Date(), forKey: nameChangedKey)        // 변경 시각 갱신 → 다음 변경까지 30일
+            originalName = newName
+            if !newName.isEmpty { await CommunityService.shared.registerNickname(newName) }
+        }
         return true
     }
 }

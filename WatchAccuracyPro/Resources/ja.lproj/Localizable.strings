@@ -1586,6 +1586,11 @@
 "profile.nav.title" = "My Profile";
 "profile.name" = "Display Name";
 "profile.name.hint" = "Name shown to others";
+"profile.name.taken.title" = "使用できないニックネーム";
+"profile.name.taken.body" = "このニックネームは既に他のユーザーが使用しています。別の名前を選んでください。";
+"profile.name.cooldown.title" = "まだ変更できません";
+"profile.name.cooldown.body" = "ニックネームは設定後30日間変更できません。あと%d日で変更できます。";
+"profile.name.rules" = "ニックネームは他のユーザーと重複できず、設定後30日間は変更できません。";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "%@年から";

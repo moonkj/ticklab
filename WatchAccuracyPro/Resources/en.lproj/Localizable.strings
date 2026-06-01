@@ -1629,6 +1629,11 @@
 "profile.nav.title" = "My Profile";
 "profile.name" = "Display Name";
 "profile.name.hint" = "Name shown to other collectors";
+"profile.name.taken.title" = "Nickname unavailable";
+"profile.name.taken.body" = "This nickname is already taken by another user. Please choose a different name.";
+"profile.name.cooldown.title" = "Can't change yet";
+"profile.name.cooldown.body" = "A nickname can't be changed for 30 days after it's set. You can change it in %d day(s).";
+"profile.name.rules" = "Nicknames must be unique and can't be changed for 30 days after being set.";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "Since %@";

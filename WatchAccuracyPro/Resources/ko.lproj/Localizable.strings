@@ -1628,6 +1628,11 @@
 "profile.nav.title" = "내 프로필";
 "profile.name" = "이름";
 "profile.name.hint" = "다른 컬렉터들에게 표시될 이름";
+"profile.name.taken.title" = "사용할 수 없는 닉네임";
+"profile.name.taken.body" = "이미 다른 사용자가 사용 중인 닉네임이에요. 다른 이름을 선택해 주세요.";
+"profile.name.cooldown.title" = "아직 변경할 수 없어요";
+"profile.name.cooldown.body" = "닉네임은 설정 후 30일간 변경할 수 없어요. %d일 후에 변경할 수 있어요.";
+"profile.name.rules" = "닉네임은 다른 사용자와 중복될 수 없고, 설정 후 30일간 변경할 수 없어요.";
 "profile.section.collector" = "컬렉터 정보";
 "profile.start_year" = "컬렉션 시작 연도";
 "profile.since" = "%@년부터";

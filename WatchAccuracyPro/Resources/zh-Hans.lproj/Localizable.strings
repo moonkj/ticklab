@@ -1586,6 +1586,11 @@
 "profile.nav.title" = "My Profile";
 "profile.name" = "Display Name";
 "profile.name.hint" = "Name shown to others";
+"profile.name.taken.title" = "昵称不可用";
+"profile.name.taken.body" = "该昵称已被其他用户使用，请选择其他名称。";
+"profile.name.cooldown.title" = "暂时无法更改";
+"profile.name.cooldown.body" = "昵称设置后30天内不可更改。%d天后可更改。";
+"profile.name.rules" = "昵称不能与其他用户重复，且设置后30天内不可更改。";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "%@年起";

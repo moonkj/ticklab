@@ -1586,6 +1586,11 @@
 "profile.nav.title" = "My Profile";
 "profile.name" = "Display Name";
 "profile.name.hint" = "Name shown to others";
+"profile.name.taken.title" = "Apodo no disponible";
+"profile.name.taken.body" = "Este apodo ya está en uso por otro usuario. Elige otro nombre.";
+"profile.name.cooldown.title" = "Aún no puedes cambiarlo";
+"profile.name.cooldown.body" = "Un apodo no se puede cambiar durante 30 días tras configurarlo. Podrás cambiarlo en %d día(s).";
+"profile.name.rules" = "Los apodos deben ser únicos y no se pueden cambiar durante 30 días tras configurarlos.";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "Desde %@";

@@ -318,6 +318,41 @@ final class CommunityService: ObservableObject {
         await loadFeed()
     }
 
+    // MARK: - Profile / Nickname (서버 등록 + 중복 검사)
+
+    /// 닉네임이 **다른 사용자**에게 선점됐는지(대소문자 무시). 본인 것은 제외. 비어있으면 false.
+    /// 레지스트리(community_profiles) + 기존 글 author_name(레지스트리 도입 전 사용분) 양쪽 조회.
+    func isNicknameTaken(_ name: String) async -> Bool {
+        await ensureSignedIn()
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, let uid = myUID,
+              let enc = trimmed.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return false }
+        func anyRow(_ urlString: String) async -> Bool {
+            guard let url = URL(string: urlString),
+                  let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+                  let arr = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return false }
+            return !arr.isEmpty
+        }
+        if await anyRow("\(baseURL)/rest/v1/community_profiles?select=uid&display_name=ilike.\(enc)&uid=neq.\(uid)&limit=1") { return true }
+        if await anyRow("\(baseURL)/rest/v1/community_posts?select=author_uid&author_name=ilike.\(enc)&author_uid=neq.\(uid)&limit=1") { return true }
+        return false
+    }
+
+    /// 닉네임을 서버 프로필에 등록(uid PK upsert) — 레지스트리화. 실패해도 로컬 저장은 유지.
+    @discardableResult
+    func registerNickname(_ name: String) async -> Bool {
+        await ensureSignedIn()
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty, myUID != nil,
+              let url = URL(string: "\(baseURL)/rest/v1/community_profiles?on_conflict=uid") else { return false }
+        var req = authedRequest(url, method: "POST")
+        req.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["display_name": trimmed])
+        guard let (_, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
     // MARK: - Activity Notifications (인앱 — 내 글 좋아요 · 새 팔로워)
 
     /// 마지막으로 알림을 확인한 시각. 미확인 판정 기준.

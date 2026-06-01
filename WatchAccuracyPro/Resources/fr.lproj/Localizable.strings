@@ -1586,6 +1586,11 @@
 "profile.nav.title" = "My Profile";
 "profile.name" = "Display Name";
 "profile.name.hint" = "Name shown to others";
+"profile.name.taken.title" = "Pseudo indisponible";
+"profile.name.taken.body" = "Ce pseudo est déjà utilisé par un autre utilisateur. Veuillez en choisir un autre.";
+"profile.name.cooldown.title" = "Changement impossible pour l'instant";
+"profile.name.cooldown.body" = "Un pseudo ne peut pas être modifié pendant 30 jours après sa définition. Vous pourrez le changer dans %d jour(s).";
+"profile.name.rules" = "Les pseudos doivent être uniques et ne peuvent pas être modifiés pendant 30 jours après leur définition.";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "Depuis %@";
