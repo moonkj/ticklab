@@ -231,7 +231,14 @@ final class CommunityService: ObservableObject {
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
         }
         ins.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        _ = try await URLSession.shared.data(for: ins)
+        let (insData, insResp) = try await URLSession.shared.data(for: ins)
+        // 서버 거절(하루1장 트리거·RLS·미존재 컬럼 등)을 더 이상 조용히 삼키지 않는다.
+        if let http = insResp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+            let msg = String(data: insData, encoding: .utf8) ?? ""
+            lastError = "insert \(http.statusCode): \(msg)"
+            if msg.contains("daily_post_limit") { throw UploadError.dailyLimit }
+            throw UploadError.storageFailed
+        }
         markPostedToday()
         await loadFeed()
     }
