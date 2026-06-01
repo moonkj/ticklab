@@ -17,49 +17,33 @@ struct CommunityFeedView: View {
     @State private var showLogin = false
     /// 최초 피드 로드 완료 여부 — 로딩 중에 "게시물 없음"이 깜빡이는 것 방지.
     @State private var didInitialLoad = false
-    /// 공유시트 + 저장(스크랩) 탭.
+    /// 공유시트 + 저장(스크랩) 탭 + 계정/프로필.
     @State private var shareItem: ShareCardItem?
     @State private var showSaved = false
+    @State private var showProfile = false
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
 
     var body: some View {
         NavigationStack {
-            Group {
-                if !service.hasAcceptedViewerTerms {
-                    viewerGate
-                } else if service.feed.isEmpty {
-                    // 최초 로드 끝나기 전엔 로딩 표시 — "게시물 없음" 깜빡임 방지.
-                    if didInitialLoad { emptyState } else { loadingState }
-                } else {
-                    feedList
+            VStack(spacing: 0) {
+                editorialHeader
+                Group {
+                    if !service.hasAcceptedViewerTerms {
+                        viewerGate
+                    } else if service.feed.isEmpty {
+                        // 최초 로드 끝나기 전엔 로딩 표시 — "게시물 없음" 깜빡임 방지.
+                        if didInitialLoad { emptyState } else { loadingState }
+                    } else {
+                        feedList
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
             .background(AppColors.paper0)
-            // 하이브리드 C: 다른 탭과 동일 — 투명 inline 내비바, 제목은 에디토리얼 헤더로.
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.paper0, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { showSavedTab() } label: {
-                        Image(systemName: "bookmark")
-                            .font(.system(size: 18))
-                            .foregroundStyle(AppColors.ink0)
-                    }
-                    .accessibilityLabel(String(localized: "community.saved.title"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { startCompose() } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 22))
-                            .foregroundStyle(AppColors.ink0)
-                    }
-                    .accessibilityLabel(String(localized: "community.compose"))
-                }
-            }
+            // 제목·버튼을 같은 최상단 영역으로 — 내비바 숨기고 에디토리얼 헤더에 버튼 오버레이.
+            .toolbar(.hidden, for: .navigationBar)
             .task {
                 // App Store 1.2: 뷰어도 약관 동의 후에만 UGC 노출 + 익명가입(Round 3 컴플라이언스).
                 if service.hasAcceptedViewerTerms {
@@ -81,6 +65,9 @@ struct CommunityFeedView: View {
             }
             .sheet(isPresented: $showSaved) {
                 CommunitySavedView()
+            }
+            .sheet(isPresented: $showProfile) {
+                UserProfileView()
             }
             .sheet(isPresented: $showEULA) {
                 CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
@@ -113,7 +100,7 @@ struct CommunityFeedView: View {
         }
     }
 
-    /// 다른 탭과 동일한 에디토리얼 헤더 — 상단이 비어 보이지 않도록.
+    /// 에디토리얼 헤더 — 제목 + (우상단) 버튼들을 같은 최상단 영역에.
     private var editorialHeader: some View {
         EditorialPageHeader(
             eyebrow: "THE LOUNGE",
@@ -123,12 +110,48 @@ struct CommunityFeedView: View {
         .padding(.horizontal, 20)
         .padding(.top, 8)
         .padding(.bottom, 6)
+        .overlay(alignment: .topTrailing) {
+            headerButtons.padding(.trailing, 12).padding(.top, 2)
+        }
+    }
+
+    /// 우상단 버튼 — 저장됨 · 계정 · 작성. (제목과 같은 줄/영역)
+    private var headerButtons: some View {
+        HStack(spacing: 0) {
+            Button { showSavedTab() } label: {
+                Image(systemName: "bookmark").font(.system(size: 18))
+                    .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
+            }
+            .accessibilityLabel(String(localized: "community.saved.title"))
+            Menu {
+                Button { showProfile = true } label: {
+                    Label(String(localized: "community.menu.profile"), systemImage: "person.crop.circle")
+                }
+                if service.isSignedIn {
+                    Button(role: .destructive) { service.signOut() } label: {
+                        Label(String(localized: "community.menu.logout"), systemImage: "rectangle.portrait.and.arrow.right")
+                    }
+                } else {
+                    Button { showLogin = true } label: {
+                        Label(String(localized: "community.login.title"), systemImage: "person.crop.circle.badge.plus")
+                    }
+                }
+            } label: {
+                Image(systemName: "gearshape").font(.system(size: 18))
+                    .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
+            }
+            .accessibilityLabel(String(localized: "community.account"))
+            Button { startCompose() } label: {
+                Image(systemName: "plus.circle.fill").font(.system(size: 22))
+                    .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
+            }
+            .accessibilityLabel(String(localized: "community.compose"))
+        }
     }
 
     private var feedList: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                editorialHeader
                 ForEach(Array(service.feed.enumerated()), id: \.element.id) { index, post in
                     CommunityPostCard(
                         post: post,
@@ -191,11 +214,17 @@ struct CommunityFeedView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    /// 최초 로딩 — 빈 화면 대신 스피너(게시물 없음 깜빡임 방지).
+    /// 최초 로딩 — 빈 화면/깜빡임 대신 크고 분명한 로딩 스피너.
     private var loadingState: some View {
-        ProgressView()
-            .tint(AppColors.ink2)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+        VStack(spacing: 12) {
+            ProgressView()
+                .controlSize(.large)
+                .tint(AppColors.ink1)
+            Text(String(localized: "community.loading"))
+                .font(AppTypography.caption)
+                .foregroundStyle(AppColors.ink3)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     private var emptyState: some View {

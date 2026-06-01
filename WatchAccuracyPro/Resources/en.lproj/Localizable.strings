@@ -296,7 +296,7 @@
 "collection.more_menu" = "More";
 "photo.crop.hint" = "Drag and pinch to frame the watch";
 "community.tab.title" = "Community";
-"community.subtitle" = "Anonymous wrist shots, shared daily";
+"community.subtitle" = "Where collectors share what's on the wrist";
 "compare.title" = "Compare";
 "compare.entry" = "Compare with another watch";
 "compare.select" = "Select a watch to compare";
@@ -316,6 +316,10 @@
 "community.bookmark" = "Save";
 "community.saved.title" = "Saved";
 "community.saved.empty" = "No saved posts yet";
+"community.account" = "Account";
+"community.loading" = "Loading…";
+"community.menu.profile" = "Edit profile";
+"community.menu.logout" = "Log out";
 "timeline.title" = "Watch Story";
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";

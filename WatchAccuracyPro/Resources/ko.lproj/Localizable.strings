@@ -220,7 +220,7 @@
 "collection.more_menu" = "더 보기";
 "photo.crop.hint" = "드래그·확대해서 시계를 맞추세요";
 "community.tab.title" = "커뮤니티";
-"community.subtitle" = "익명으로 나누는 오늘의 손목";
+"community.subtitle" = "수집가들이 손목 위 오늘을 나누는 곳";
 "compare.title" = "시계 비교";
 "compare.entry" = "다른 시계와 비교";
 "compare.select" = "비교할 시계 선택";
@@ -240,6 +240,10 @@
 "community.bookmark" = "저장";
 "community.saved.title" = "저장됨";
 "community.saved.empty" = "저장한 게시물이 없어요";
+"community.account" = "계정";
+"community.loading" = "불러오는 중…";
+"community.menu.profile" = "프로필 편집";
+"community.menu.logout" = "로그아웃";
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";

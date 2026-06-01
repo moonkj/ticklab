@@ -289,7 +289,7 @@
 "collection.more_menu" = "その他";
 "photo.crop.hint" = "ドラッグ・ピンチで時計を合わせてください";
 "community.tab.title" = "コミュニティ";
-"community.subtitle" = "匿名で分かち合う、今日の手首";
+"community.subtitle" = "コレクターが手首の今日を分かち合う場所";
 "compare.title" = "時計を比較";
 "compare.entry" = "別の時計と比較";
 "compare.select" = "比較する時計を選択";
@@ -309,6 +309,10 @@
 "community.bookmark" = "保存";
 "community.saved.title" = "保存済み";
 "community.saved.empty" = "保存した投稿はありません";
+"community.account" = "アカウント";
+"community.loading" = "読み込み中…";
+"community.menu.profile" = "プロフィール編集";
+"community.menu.logout" = "ログアウト";
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";

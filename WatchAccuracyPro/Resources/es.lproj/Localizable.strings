@@ -289,7 +289,7 @@
 "collection.more_menu" = "Más";
 "photo.crop.hint" = "Arrastra y pellizca para encuadrar el reloj";
 "community.tab.title" = "Comunidad";
-"community.subtitle" = "Fotos de muñeca anónimas, cada día";
+"community.subtitle" = "Donde los coleccionistas comparten su muñeca";
 "compare.title" = "Comparar relojes";
 "compare.entry" = "Comparar con otro reloj";
 "compare.select" = "Selecciona un reloj para comparar";
@@ -309,6 +309,10 @@
 "community.bookmark" = "Guardar";
 "community.saved.title" = "Guardados";
 "community.saved.empty" = "Aún no hay publicaciones guardadas";
+"community.account" = "Cuenta";
+"community.loading" = "Cargando…";
+"community.menu.profile" = "Editar perfil";
+"community.menu.logout" = "Cerrar sesión";
 "timeline.title" = "Historia del reloj";
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";

@@ -289,7 +289,7 @@
 "collection.more_menu" = "更多";
 "photo.crop.hint" = "拖动·捏合调整手表位置";
 "community.tab.title" = "社区";
-"community.subtitle" = "匿名分享的今日腕表";
+"community.subtitle" = "藏家分享腕上时光的地方";
 "compare.title" = "比较手表";
 "compare.entry" = "与其他手表比较";
 "compare.select" = "选择要比较的手表";
@@ -309,6 +309,10 @@
 "community.bookmark" = "收藏";
 "community.saved.title" = "已收藏";
 "community.saved.empty" = "暂无收藏";
+"community.account" = "账户";
+"community.loading" = "加载中…";
+"community.menu.profile" = "编辑资料";
+"community.menu.logout" = "退出登录";
 "timeline.title" = "腕表生平";
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";
