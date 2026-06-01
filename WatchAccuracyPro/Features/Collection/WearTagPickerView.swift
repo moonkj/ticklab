@@ -69,11 +69,6 @@ struct WearTagPickerView: View {
 
                 Spacer()
 
-                PrimaryButton(String(localized: "weartag.save"), style: .accent, isEnabled: true) {
-                    save()
-                }
-                .padding(.horizontal, 20)
-
                 // 하이라이트 토글
         Toggle(isOn: $isHighlight) {
             HStack(spacing: 8) {
