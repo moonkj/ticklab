@@ -85,4 +85,92 @@ final class MovementDatabase {
         self._movements = newMovements
         self.byID = newByID
     }
+
+    // MARK: - Brand search (T-07: AddWatchView 브랜드 자동완성)
+
+    /// 알려진 브랜드 표시명. `brandFamilies` 엔트리("Rolex Submariner (vintage)" 등)에서
+    /// 선두 브랜드를 식별하기 위한 사전. 멀티워드 브랜드("Grand Seiko", "TAG Heuer")는
+    /// 단일 토큰 브랜드("Seiko")보다 먼저 매칭되도록 긴 것부터 시도한다.
+    /// 데이터 전용(현지화 대상 아님) — `brandFamilies` 에 등장하는 실제 브랜드를 포괄.
+    static let knownBrands: [String] = [
+        "A. Lange & Söhne", "Audemars Piguet", "Bell & Ross", "Blancpain", "Breguet",
+        "Breitling", "Bulova", "Cartier", "Christopher Ward", "Citizen", "F.P. Journe",
+        "Frederique Constant", "Girard-Perregaux", "Glashütte Original", "Grand Seiko",
+        "Hamilton", "Hublot", "IWC", "Jaeger-LeCoultre", "Longines", "Maurice Lacroix",
+        "Mido", "Miyota", "Montblanc", "Nomos", "Omega", "Oris", "Panerai",
+        "Patek Philippe", "Piaget", "Rolex", "Sellita", "Seiko", "Sinn", "TAG Heuer",
+        "Tissot", "Tudor", "Ulysse Nardin", "Vacheron Constantin", "Zenith", "ETA"
+    ]
+
+    /// `brandFamilies` 엔트리에서 브랜드 표시명만 추출한다.
+    /// ① `knownBrands` 중 prefix 로 일치하는 가장 긴 항목을 표준 브랜드로 채택
+    ///   (예: "Rolex Submariner (vintage)" → "Rolex", "Grand Seiko Sport" → "Grand Seiko").
+    /// ② 일치하는 known brand 가 없으면 괄호 한정자만 제거한 원문을 후보로 둔다
+    ///   (단 "microbrand" 같은 일반 분류 토큰은 제외).
+    static func normalizedBrandName(_ raw: String) -> String? {
+        var name = raw
+        if let parenIndex = name.firstIndex(of: "(") {
+            name = String(name[name.startIndex..<parenIndex])
+        }
+        name = name.trimmingCharacters(in: .whitespaces)
+        guard !name.isEmpty else { return nil }
+        let lower = name.lowercased()
+        // 긴 브랜드명부터 매칭 (멀티워드 우선).
+        for brand in knownBrands.sorted(by: { $0.count > $1.count }) {
+            let b = brand.lowercased()
+            if lower == b || lower.hasPrefix(b + " ") {
+                return brand
+            }
+        }
+        // 자동완성에 의미 없는 일반 분류 토큰 제외.
+        let generic: Set<String> = ["microbrand", "various", "generic"]
+        if generic.contains(lower) { return nil }
+        return name
+    }
+
+    /// DB 의 모든 brandFamilies 에서 정규화·중복 제거한 브랜드 표시명 목록 (알파벳 순).
+    func brandNames() -> [String] {
+        let all = movements  // lock 보호된 snapshot.
+        var seen = Set<String>()      // 소문자 기준 중복 제거.
+        var result: [String] = []
+        for movement in all {
+            for family in movement.brandFamilies {
+                guard let name = Self.normalizedBrandName(family) else { continue }
+                let key = name.lowercased()
+                if seen.insert(key).inserted {
+                    result.append(name)
+                }
+            }
+        }
+        return result.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+    }
+
+    /// brand 자동완성 검색.
+    /// 정렬: ① 대소문자 무시 정확 일치 ② prefix 일치 ③ contains 일치. 중복 제거 후 `limit` 개로 cap.
+    /// 빈/공백 query → 빈 배열.
+    func searchBrands(_ query: String, limit: Int = 6) -> [String] {
+        let q = query.trimmingCharacters(in: .whitespaces).lowercased()
+        guard !q.isEmpty else { return [] }
+        let brands = brandNames()
+        var exact: [String] = []
+        var prefix: [String] = []
+        var contains: [String] = []
+        for brand in brands {
+            let lower = brand.lowercased()
+            if lower == q {
+                exact.append(brand)
+            } else if lower.hasPrefix(q) {
+                prefix.append(brand)
+            } else if lower.contains(q) {
+                contains.append(brand)
+            }
+        }
+        let ordered = exact + prefix + contains
+        return Array(ordered.prefix(limit))
+    }
+
+    /// `shared` 인스턴스 기준 정적 진입점 — view 에서 간편 호출용.
+    static func searchBrands(_ query: String, limit: Int = 6) -> [String] {
+        shared.searchBrands(query, limit: limit)
+    }
 }

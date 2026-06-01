@@ -49,4 +49,71 @@ final class MovementDatabaseTests: XCTestCase {
         XCTAssertNil(db.liftAngle(forCaliber: nil))
         XCTAssertNil(db.liftAngle(forCaliber: "InventedCaliber_9999"))
     }
+
+    // MARK: - Brand search (T-07: AddWatchView 브랜드 자동완성)
+
+    /// 고정 fixture — brandFamilies 의 brand + model-line 혼합을 표준 브랜드로 collapse 하는지 검증.
+    private func makeSearchDB() -> MovementDatabase {
+        let movements: [Movement] = [
+            Movement(id: "Rolex_3135",
+                     brandFamilies: ["Rolex Submariner", "Rolex Datejust (vintage 1970s-80s)"],
+                     bph: 28800, liftAngleDegrees: 52.0, escapement: .swissLever,
+                     typicalAmplitudeMin: nil, typicalAmplitudeMax: nil,
+                     coscToleranceMin: nil, coscToleranceMax: nil, confidenceLabel: .high),
+            Movement(id: "ETA_2824-2",
+                     brandFamilies: ["Hamilton", "Tissot", "Tudor (vintage)", "Mido"],
+                     bph: 28800, liftAngleDegrees: 52.0, escapement: .swissLever,
+                     typicalAmplitudeMin: nil, typicalAmplitudeMax: nil,
+                     coscToleranceMin: nil, coscToleranceMax: nil, confidenceLabel: .high),
+            Movement(id: "Seiko_NH35",
+                     brandFamilies: ["Seiko 5 Sports", "microbrand"],
+                     bph: 21600, liftAngleDegrees: 53.0, escapement: .swissLever,
+                     typicalAmplitudeMin: nil, typicalAmplitudeMax: nil,
+                     coscToleranceMin: nil, coscToleranceMax: nil, confidenceLabel: .high),
+            Movement(id: "GS_9S65",
+                     brandFamilies: ["Grand Seiko Heritage"],
+                     bph: 28800, liftAngleDegrees: 52.0, escapement: .swissLever,
+                     typicalAmplitudeMin: nil, typicalAmplitudeMax: nil,
+                     coscToleranceMin: nil, coscToleranceMax: nil, confidenceLabel: .high),
+        ]
+        return MovementDatabase(movements: movements)
+    }
+
+    func test_searchBrands_exactMatch_returnsBrandFirst() {
+        let db = makeSearchDB()
+        let results = db.searchBrands("Tissot")
+        // 정확 일치는 결과의 맨 앞에 위치.
+        XCTAssertEqual(results.first, "Tissot")
+    }
+
+    func test_searchBrands_caseInsensitive() {
+        let db = makeSearchDB()
+        // 소문자 query 도 "Hamilton" 매칭.
+        XCTAssertTrue(db.searchBrands("hamilton").contains("Hamilton"))
+        // 대문자 query 도 동일 결과.
+        XCTAssertTrue(db.searchBrands("HAMILTON").contains("Hamilton"))
+    }
+
+    func test_searchBrands_partialContains_collapsesToCanonicalBrand() {
+        let db = makeSearchDB()
+        // "rol" → "Rolex Submariner"/"Rolex Datejust ..." 가 모두 "Rolex" 로 collapse + dedupe.
+        let results = db.searchBrands("rol")
+        XCTAssertEqual(results, ["Rolex"])
+        // 멀티워드 브랜드: "grand" → "Grand Seiko" (단일 "Seiko" 로 잘리지 않음).
+        XCTAssertEqual(db.searchBrands("grand"), ["Grand Seiko"])
+    }
+
+    func test_searchBrands_emptyQuery_returnsEmpty() {
+        let db = makeSearchDB()
+        XCTAssertTrue(db.searchBrands("").isEmpty)
+        XCTAssertTrue(db.searchBrands("   ").isEmpty)
+    }
+
+    func test_searchBrands_noMatch_returnsEmpty() {
+        let db = makeSearchDB()
+        // 어떤 브랜드에도 없는 query.
+        XCTAssertTrue(db.searchBrands("ZzNonexistentBrandZz").isEmpty)
+        // 일반 분류 토큰 "microbrand" 는 브랜드 후보에서 제외 → 매칭 안 됨.
+        XCTAssertTrue(db.searchBrands("microbrand").isEmpty)
+    }
 }

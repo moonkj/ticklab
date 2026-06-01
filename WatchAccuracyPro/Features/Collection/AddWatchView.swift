@@ -32,6 +32,11 @@ struct AddWatchView: View {
     /// Sprint 5 (P2-2): 모델 자동완성.
     @State private var modelSuggestions: [String] = []
     @State private var showModelSuggestions: Bool = false
+    /// T-07: 브랜드 자동완성 (무브먼트 DB brandFamilies 기반).
+    ///   2글자 이상 입력 시 ~300ms 디바운스 후 검색. 탭 시 채움.
+    @State private var brandSuggestions: [String] = []
+    @State private var showBrandSuggestions: Bool = false
+    @State private var brandSearchTask: Task<Void, Never>? = nil
     @State private var photoItem: PhotosPickerItem?
     @State private var photoData: Data?
     @State private var cropPayload: CropImagePayload?
@@ -94,39 +99,66 @@ struct AddWatchView: View {
                 }
                 // Sprint 4 (P1-5): 필수 항목 레이블
                 Section(header: Text(String(localized: "addwatch.section.required"))) {
-                    // Picker + 직접 입력 통합 — Menu 로 인기 브랜드 선택 + 직접 입력 시트.
-                    HStack {
-                        Text(String(localized: "addwatch.brand"))
-                        Spacer()
-                        Menu {
-                            ForEach(popularBrands, id: \.self) { b in
-                                Button {
-                                    brand = b
-                                    updateSuggestion()
-                                } label: {
-                                    if brand == b {
-                                        Label(b, systemImage: "checkmark")
-                                    } else {
-                                        Text(b)
+                    // 브랜드: 직접 타이핑(자동완성) + Menu 인기목록 선택을 한 행에서.
+                    //   TextField 로 자유 입력 → 무브먼트 DB brandFamilies 매칭 dropdown 표시 (T-07).
+                    //   Menu(chevron) 는 기존 인기 브랜드 / 직접 입력 시트 흐름 유지.
+                    VStack(alignment: .leading, spacing: 0) {
+                        HStack {
+                            Text(String(localized: "addwatch.brand"))
+                            TextField(String(localized: "common.unspecified"), text: $brand)
+                                .multilineTextAlignment(.trailing)
+                                .textInputAutocapitalization(.words)
+                                .autocorrectionDisabled()
+                                .onChange(of: brand) { _, _ in
+                                    scheduleBrandSearch()
+                                }
+                            Menu {
+                                ForEach(popularBrands, id: \.self) { b in
+                                    Button {
+                                        selectBrand(b)
+                                    } label: {
+                                        if brand == b {
+                                            Label(b, systemImage: "checkmark")
+                                        } else {
+                                            Text(b)
+                                        }
                                     }
                                 }
-                            }
-                            Divider()
-                            Button {
-                                showingBrandInputSheet = true
+                                Divider()
+                                Button {
+                                    showingBrandInputSheet = true
+                                } label: {
+                                    Label(String(localized: "addwatch.brand.custom"), systemImage: "square.and.pencil")
+                                }
                             } label: {
-                                Label(String(localized: "addwatch.brand.custom"), systemImage: "square.and.pencil")
-                            }
-                        } label: {
-                            HStack(spacing: 4) {
-                                Text(brand.isEmpty ? String(localized: "common.unspecified") : brand)
-                                    .foregroundStyle(brand.isEmpty ? AppColors.ink3 : AppColors.ink0)
                                 Image(systemName: "chevron.up.chevron.down")
                                     .font(.system(size: 11))
                                     .foregroundStyle(AppColors.ink3)
+                                    .frame(minHeight: 44)
+                                    .contentShape(Rectangle())
                             }
-                            .frame(minHeight: 44, alignment: .trailing)
-                            .contentShape(Rectangle())
+                        }
+                        // T-07: 매칭 브랜드 dropdown — 입력 중 + 결과 있을 때만.
+                        if showBrandSuggestions, !brandSuggestions.isEmpty {
+                            Divider().padding(.top, 4)
+                            ForEach(brandSuggestions, id: \.self) { suggestion in
+                                Button {
+                                    selectBrand(suggestion)
+                                } label: {
+                                    HStack(spacing: 8) {
+                                        Image(systemName: "magnifyingglass")
+                                            .font(.system(size: 12))
+                                            .foregroundStyle(AppColors.ink3)
+                                        Text(suggestion)
+                                            .font(.system(size: 14))
+                                            .foregroundStyle(AppColors.ink0)
+                                        Spacer()
+                                    }
+                                    .frame(minHeight: 36)
+                                    .contentShape(Rectangle())
+                                }
+                                .buttonStyle(.plain)
+                            }
                         }
                     }
 
@@ -683,6 +715,42 @@ struct AddWatchView: View {
 
     private func updateSuggestion() {
         suggestion = matcher.suggest(brand: brand, model: model)
+    }
+
+    /// T-07: 브랜드 입력 디바운스 검색.
+    ///   2글자 미만이면 dropdown 숨김. 이상이면 ~300ms 후 무브먼트 DB brandFamilies 매칭.
+    private func scheduleBrandSearch() {
+        brandSearchTask?.cancel()
+        let query = brand.trimmingCharacters(in: .whitespaces)
+        guard query.count >= 2 else {
+            brandSuggestions = []
+            showBrandSuggestions = false
+            return
+        }
+        brandSearchTask = Task {
+            try? await Task.sleep(nanoseconds: 300_000_000)  // 300ms 디바운스.
+            if Task.isCancelled { return }
+            let results = MovementDatabase.searchBrands(query)
+            await MainActor.run {
+                // 입력값과 정확히 같은 단일 결과면 dropdown 불필요 (이미 채워진 상태).
+                if results.count == 1, results[0].lowercased() == query.lowercased() {
+                    brandSuggestions = []
+                    showBrandSuggestions = false
+                } else {
+                    brandSuggestions = results
+                    showBrandSuggestions = !results.isEmpty
+                }
+            }
+        }
+    }
+
+    /// T-07: dropdown / Menu 에서 브랜드 확정 — 필드 채우고 dropdown 닫음.
+    private func selectBrand(_ value: String) {
+        brandSearchTask?.cancel()
+        brand = value
+        brandSuggestions = []
+        showBrandSuggestions = false
+        updateSuggestion()
     }
 
     private func save() {

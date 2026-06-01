@@ -79,7 +79,7 @@ xcodebuild test -scheme WatchAccuracyPro -destination 'platform=iOS Simulator,na
 5. **CocoaPods/Carthage 사용 금지** — SPM only
 6. **외부 API 호출 추가 시 사전 합의** — Phase 1은 100% on-device. 첫 외부 호출은 atomic time NTP 한 군데뿐
 7. **`@Model` 스키마 변경 시 마이그레이션 명시** — SwiftData lightweight migration 가능 범위 확인하고 진행
-8. **사진/측정 데이터 외부 전송 금지** — 기본은 on-device. CloudKit는 Phase 3. **(2026-05-31 개정·개발자 승인)** 예외: 사용자가 **명시적으로 게시 버튼을 눌러 공유한 커뮤니티 사진 1장**에 한해 외부 전송 허용. 단 ⓐ EXIF strip 강제 ⓑ 측정 데이터(rate/amplitude/beat error)·시리얼·구매가는 여전히 전송 절대 금지 ⓒ per-photo 명시 동의. 자동/일괄 업로드 금지. 자세한 범위는 `docs/community/PLAN.md`.
+8. **사진/측정 데이터 외부 전송 금지** — 기본은 on-device. CloudKit는 Phase 3. **(2026-05-31 개정·개발자 승인)** 예외: 사용자가 **명시적으로 게시 버튼을 눌러 공유한 커뮤니티 사진 1장**에 한해 외부 전송 허용. 단 ⓐ EXIF strip 강제 ⓑ 측정 데이터(rate/amplitude/beat error)·시리얼·구매가는 여전히 전송 절대 금지 ⓒ per-photo 명시 동의. 자동/일괄 업로드 금지. 자세한 범위는 `docs/community/PLAN.md`. **(2026-06-01 개발자 승인)** 별도 예외: 사용자가 직접 '공유' 버튼으로 만드는 **결과 공유카드 이미지**(`ShareCardComposerView`, `show metrics` 토글)에는 rate/confidence 등 측정값 표시 허용 — 본인 기기 산출물의 사용자 주도 공유(스크린샷급)이며 위 **커뮤니티(Supabase 업로드) 경로와 별개**다. 커뮤니티 업로드에는 측정 데이터 전송 금지 원칙 유지.
 9. **신뢰도 라벨 무시 금지** — 무브먼트 DB의 `confidenceLabel` 이 `medium`/`low` 인 캘리버는 amplitude 노출 X, 안내 카드 표시 O
 10. **테스트 없는 PR 머지 금지** (DSP·Model·ViewModel은 필수)
 
