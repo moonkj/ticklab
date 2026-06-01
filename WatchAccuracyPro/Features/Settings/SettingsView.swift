@@ -1411,7 +1411,8 @@ private struct AdminChannelSheet: View {
                             ok = await service.addCuratedChannel(channelID: cid, title: title, thumbnailURL: thumbnailURL, locale: locale, category: category, sortOrder: sortOrder)
                         }
                         saving = false
-                        if ok { await onSaved(); dismiss() } else { error = "저장 실패 (admin RLS 확인)" }
+                        if ok { await onSaved(); dismiss() }
+                        else { error = service.lastError ?? "저장 실패 (admin RLS·channel_id 확인)" }
                     }
                 }
                 .disabled(!canSave)

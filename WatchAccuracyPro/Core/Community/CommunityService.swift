@@ -383,8 +383,13 @@ final class CommunityService: ObservableObject {
         if let t = thumbnailURL, !t.isEmpty { body["thumbnail_url"] = t }
         if let c = category, !c.isEmpty { body["category"] = c }
         req.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
-        return (200...299).contains(http.statusCode)
+        guard let (data, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse else { lastError = "네트워크 오류"; return false }
+        if (200...299).contains(http.statusCode) { lastError = nil; return true }
+        // 404=테이블 없음(SQL 미배포), 401/403=admin RLS, 409=중복(channel_id+locale).
+        let msg = String(data: data, encoding: .utf8) ?? ""
+        lastError = "실패 \(http.statusCode) · \(msg.prefix(160))"
+        return false
     }
 
     @discardableResult
