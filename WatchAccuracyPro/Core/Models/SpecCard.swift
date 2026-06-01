@@ -25,6 +25,8 @@ final class SpecCard {
     var audioPath: String?
     /// 부가 코멘트.
     var note: String
+    /// AI 생성 모델 설명 + 착장 의견 캐시 — 1회 생성 후 재사용(매번 LLM 호출 방지). lightweight migration.
+    var aiDescription: String? = nil
 
     init(
         id: UUID = UUID(),

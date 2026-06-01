@@ -295,6 +295,12 @@
 "watch.gift.ribbon" = "来自%@的礼物";
 "collection.sharecard.entry" = "收藏卡片";
 "collection.sharecard.tagline" = "我的腕表收藏";
+"speccard.ai.title" = "规格解读";
+"speccard.ai.loading" = "生成中…";
+"speccard.ai.fallback.automatic" = "自动机械表：摆陀借助手腕摆动自动上链。每秒振动数次(常见28800次/时)使秒针顺滑扫动，上满链通常约可运行40小时。";
+"speccard.ai.fallback.manual" = "手动上链机械表：每天上链一次。机芯结构较简单，表壳往往更薄。";
+"speccard.ai.fallback.quartz" = "电池驱动的石英表：比机械表精准得多(约每月±15秒)且维护少；秒针通常每秒跳动一次。";
+"speccard.ai.fallback.solar" = "光能充电的石英表：无需更换电池，具备石英级精度。";
 "collection.sharecard.stats" = "%1$d 只 · %2$d 个品牌 · 第 %3$d 年";
 "journal.people.label" = "同行的人";
 "journal.people.placeholder" = "用逗号分隔（如 父亲、朋友）";

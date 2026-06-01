@@ -302,6 +302,12 @@
 "watch.gift.ribbon" = "A gift from %@";
 "collection.sharecard.entry" = "Collection card";
 "collection.sharecard.tagline" = "My Watch Collection";
+"speccard.ai.title" = "Spec notes";
+"speccard.ai.loading" = "Writing notes…";
+"speccard.ai.fallback.automatic" = "An automatic mechanical watch: a rotor self-winds the mainspring from wrist motion. It beats several times per second (often 28,800 BPH) for a smooth seconds hand, and typically runs about 40h on a full wind.";
+"speccard.ai.fallback.manual" = "A hand-wound mechanical watch: wind it about once a day. Its simpler movement often allows a thinner case.";
+"speccard.ai.fallback.quartz" = "A battery-powered quartz watch: far more accurate than mechanical (around ±15s/month) with little upkeep; the seconds hand usually ticks once per second.";
+"speccard.ai.fallback.solar" = "A light-charged quartz watch: runs without battery changes, with quartz-level accuracy.";
 "collection.sharecard.stats" = "%1$d watches · %2$d brands · %3$d yrs";
 "journal.people.label" = "People";
 "journal.people.placeholder" = "Comma-separated (e.g. Dad, friend)";

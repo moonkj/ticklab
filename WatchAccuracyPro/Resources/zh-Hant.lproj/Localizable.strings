@@ -295,6 +295,12 @@
 "watch.gift.ribbon" = "來自%@的禮物";
 "collection.sharecard.entry" = "收藏卡片";
 "collection.sharecard.tagline" = "我的腕錶收藏";
+"speccard.ai.title" = "規格解讀";
+"speccard.ai.loading" = "生成中…";
+"speccard.ai.fallback.automatic" = "自動機械錶：擺陀藉手腕擺動自動上鍊。每秒振動數次(常見28800次/時)使秒針順滑掃動，上滿鍊通常約可運行40小時。";
+"speccard.ai.fallback.manual" = "手動上鍊機械錶：每天上鍊一次。機芯結構較簡單，錶殼往往更薄。";
+"speccard.ai.fallback.quartz" = "電池驅動的石英錶：比機械錶精準得多(約每月±15秒)且維護少；秒針通常每秒跳動一次。";
+"speccard.ai.fallback.solar" = "光能充電的石英錶：無需更換電池，具備石英級精度。";
 "collection.sharecard.stats" = "%1$d 只 · %2$d 個品牌 · 第 %3$d 年";
 "journal.people.label" = "同行的人";
 "journal.people.placeholder" = "用逗號分隔（如 父親、朋友）";

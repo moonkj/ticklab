@@ -295,6 +295,12 @@
 "watch.gift.ribbon" = "Un regalo de %@";
 "collection.sharecard.entry" = "Tarjeta de colección";
 "collection.sharecard.tagline" = "Mi colección de relojes";
+"speccard.ai.title" = "Notas de especificaciones";
+"speccard.ai.loading" = "Generando…";
+"speccard.ai.fallback.automatic" = "Reloj mecánico automático: un rotor da cuerda con el movimiento de la muñeca. Late varias veces por segundo (a menudo 28.800 alt/h) para un segundero suave y suele funcionar unas 40 h con cuerda completa.";
+"speccard.ai.fallback.manual" = "Reloj mecánico de cuerda manual: dale cuerda una vez al día. Su movimiento más simple permite cajas más finas.";
+"speccard.ai.fallback.quartz" = "Reloj de cuarzo a pilas: mucho más preciso que el mecánico (±15 s/mes aprox.) y con poco mantenimiento; el segundero avanza cada segundo.";
+"speccard.ai.fallback.solar" = "Cuarzo cargado por luz: funciona sin cambiar pilas, con precisión de cuarzo.";
 "collection.sharecard.stats" = "%1$d relojes · %2$d marcas · %3$d años";
 "journal.people.label" = "Personas";
 "journal.people.placeholder" = "Separar con comas (p. ej. papá, amigo)";

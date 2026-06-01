@@ -157,6 +157,7 @@
 		9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0232F86DA8616E432AC56384 /* FeatureFlags.swift */; };
 		9E0E4450370961C2C775563A /* TickLabUI in Frameworks */ = {isa = PBXBuildFile; productRef = C9DEA758E5191171E1AF9C2E /* TickLabUI */; };
 		9EEECB4CE005DE5EC6D51AFB /* CommunityFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C519EDA16F6829E95DF1BB /* CommunityFeedView.swift */; };
+		A08456FB8D239387C3B67CCC /* WatchDescriptionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B01B4CE43601D5B5F87E4C /* WatchDescriptionService.swift */; };
 		A29D3FD2A90EA36F5AEF6725 /* QuartzBatteryCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 500C4856761ABB8DFF406C89 /* QuartzBatteryCard.swift */; };
 		A40BC6BA8177158F6189B90F /* LiveWaveformView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A67361F10B027A48A16DD7F /* LiveWaveformView.swift */; };
 		A6EEA2EF99E6036846FEDB66 /* PreEmphasisFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */; };
@@ -434,6 +435,7 @@
 		9FF677B2D361B068A1718069 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
 		A07FAA2F3650DB74A03B4940 /* WatchCover.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchCover.swift; sourceTree = "<group>"; };
 		A257E0E10995A8BAF36082D9 /* WearLogService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLogService.swift; sourceTree = "<group>"; };
+		A2B01B4CE43601D5B5F87E4C /* WatchDescriptionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDescriptionService.swift; sourceTree = "<group>"; };
 		A2BE7B72D8D7DCFF1E62F319 /* hi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = hi; path = hi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A58F1B88C47C2355AC51ABE0 /* AIDiagnosisCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIDiagnosisCard.swift; sourceTree = "<group>"; };
 		A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearToggleIntent.swift; sourceTree = "<group>"; };
@@ -745,6 +747,7 @@
 			children = (
 				1686561FE30C447D3AA4707A /* AppleIntelligenceVerdictService.swift */,
 				F0E1602A5A1672200C550B86 /* TrendDiagnosisService.swift */,
+				A2B01B4CE43601D5B5F87E4C /* WatchDescriptionService.swift */,
 				4F3D35C570A97B6BFD596270 /* WatchRecommendationService.swift */,
 			);
 			path = AI;
@@ -1590,6 +1593,7 @@
 				2B4BAA5D1BD153C47D0FD778 /* WatchBoxView.swift in Sources */,
 				B6FD47F74F219314C019BB1D /* WatchCover.swift in Sources */,
 				74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */,
+				A08456FB8D239387C3B67CCC /* WatchDescriptionService.swift in Sources */,
 				A9EAB110F1CC595BD08AD4F9 /* WatchDetailRowComponents.swift in Sources */,
 				00A4FCF735B3327F8DE4D210 /* WatchDetailView.swift in Sources */,
 				05979F95D2BE525926304A83 /* WatchMeasurement.swift in Sources */,

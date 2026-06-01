@@ -73,6 +73,8 @@ extension Watch {
         NotificationCenter.default.post(name: .ticklabWatchWillDelete, object: nil, userInfo: ["watchId": self.id])
         // Round 147 (Min C1): PhotoCache eviction — 동일 UUID 재사용 시 stale 방지.
         PhotoCache.invalidate(id: self.id)
+        // Spotlight 색인 제거 — 삭제한 시계가 iOS 검색에 잔존하지 않도록.
+        WatchSpotlightIndexer.deindex(id: self.id)
         // 1) 측정들 삭제 — Round 14 (Hyemi): faulted SwiftData relationship 을 iteration 중 mutate 하는
         //    undefined behavior 회피를 위해 Array snapshot 후 delete.
         for measurement in Array(measurements) {

@@ -295,6 +295,12 @@
 "watch.gift.ribbon" = "Un cadeau de %@";
 "collection.sharecard.entry" = "Carte de collection";
 "collection.sharecard.tagline" = "Ma collection de montres";
+"speccard.ai.title" = "Notes techniques";
+"speccard.ai.loading" = "Génération…";
+"speccard.ai.fallback.automatic" = "Montre mécanique automatique : un rotor remonte le ressort grâce au mouvement du poignet. Elle bat plusieurs fois par seconde (souvent 28 800 alt/h) pour une trotteuse fluide et tient environ 40 h remontée à fond.";
+"speccard.ai.fallback.manual" = "Montre mécanique à remontage manuel : à remonter une fois par jour. Son mouvement plus simple permet souvent un boîtier plus fin.";
+"speccard.ai.fallback.quartz" = "Montre à quartz sur pile : bien plus précise que le mécanique (±15 s/mois environ), peu d'entretien ; la trotteuse avance chaque seconde.";
+"speccard.ai.fallback.solar" = "Quartz à charge solaire : fonctionne sans changer de pile, avec une précision de quartz.";
 "collection.sharecard.stats" = "%1$d montres · %2$d marques · %3$d ans";
 "journal.people.label" = "Personnes";
 "journal.people.placeholder" = "Séparés par des virgules (ex. papa, ami)";

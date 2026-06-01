@@ -226,6 +226,12 @@
 "watch.gift.ribbon" = "%@님께 받은 시계";
 "collection.sharecard.entry" = "컬렉션 자랑 카드";
 "collection.sharecard.tagline" = "나의 시계 컬렉션";
+"speccard.ai.title" = "스펙 해설";
+"speccard.ai.loading" = "해설 작성 중…";
+"speccard.ai.fallback.automatic" = "로터가 손목 움직임으로 태엽을 자동으로 감는 기계식입니다. 초당 여러 번 진동(보통 28,800 BPH)해 초침이 부드럽게 흐르고, 풀 와인딩 시 보통 40시간 안팎 작동합니다.";
+"speccard.ai.fallback.manual" = "직접 태엽을 감는 수동 기계식입니다. 보통 하루 한 번 감아 주어야 하며, 무브먼트 구조가 단순해 얇은 케이스가 많습니다.";
+"speccard.ai.fallback.quartz" = "배터리로 구동되는 쿼츠입니다. 기계식보다 훨씬 정확(월 ±15초 수준)하고 유지보수가 적으며, 초침이 1초 단위로 또각입니다.";
+"speccard.ai.fallback.solar" = "빛으로 충전하는 쿼츠 계열입니다. 배터리 교체 없이 작동하고 쿼츠 수준의 정확도를 가집니다.";
 "collection.sharecard.stats" = "%1$d개 시계 · %2$d개 브랜드 · %3$d년차";
 "journal.people.label" = "함께한 사람";
 "journal.people.placeholder" = "쉼표로 구분 (예: 아버지, 친구)";
