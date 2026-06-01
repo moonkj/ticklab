@@ -24,6 +24,9 @@ struct HistoryRow: View {
         return !n.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 
+    /// 3-3: 측정 자세 — 행에 조건 병기(자세 다른 측정 혼동 방지). unknown 이면 숨김.
+    private var position: Position { measurement.metadata.position }
+
     var body: some View {
         Button {
             onTap?()
@@ -58,6 +61,17 @@ struct HistoryRow: View {
                     Text(formatTimestamp(measurement.timestamp))
                         .font(.system(size: 10.5, design: .monospaced))
                         .foregroundStyle(AppColors.ink3)
+                    if position != .unknown {
+                        Text(position.rawValue)
+                            .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                            .tracking(0.5)
+                            .foregroundStyle(AppColors.ink2)
+                            .padding(.horizontal, 5)
+                            .padding(.vertical, 1)
+                            .background(AppColors.paper2)
+                            .clipShape(Capsule())
+                            .accessibilityLabel(position.localizedName)
+                    }
                     if hasNote {
                         Image(systemName: "text.bubble")
                             .font(.system(size: 10))
