@@ -127,6 +127,9 @@
 /* Collection (new design) */
 "collection.eyebrow" = "工作檯";
 "collection.subtitle" = "機械精度的每日日誌";
+"collection.card.measured_today" = "今天測量";
+"collection.card.measured_days_ago" = "%d天前測量";
+"collection.card.measure_prompt" = "點擊測量";
 "collection.empty.subtitle" = "新增腕錶 → 30 秒測量 → 查看精度。每一次讀數,都是腕錶故事的新篇章。";
 "collection.search.placeholder" = "搜尋收藏";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */

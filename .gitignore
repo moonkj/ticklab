@@ -52,3 +52,7 @@ TestResults/
 # Round 138 — 관리자 모드 비번 (commit 제외)
 WatchAccuracyPro/Core/Security/AdminAccess.swift
 WatchAccuracyPro/Features/Settings/AdminPanelView.swift
+
+# Claude Code local artifacts
+.claude/scheduled_tasks.lock
+.claude/settings.local.json

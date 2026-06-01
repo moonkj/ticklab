@@ -229,8 +229,6 @@ struct AIDiagnosisCard: View {
         .clipShape(Capsule())
     }
 
-    private var filledBars: Int { Int(round(Double(confidence) / 20.0)) }
-
     private var causes: [String] {
         switch tier {
         case .ok:

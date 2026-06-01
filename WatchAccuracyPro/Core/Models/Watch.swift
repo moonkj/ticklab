@@ -68,8 +68,6 @@ final class Watch {
     // 대안: 100개 이상 등록 케이스에 진입 시 별도 schema migration plan 으로 처리 (Phase 2).
     var photoData: Data?
     var serviceHistory: [Date]
-    /// 즐겨찾기 — 페르소나 (이재현/박지영) 피드백: UI 떡밥만 있고 동작 X 였던 버그 수정.
-    var isFavorite: Bool
     /// 대표 시계 — Collection Hero 슬롯에 표시될 시계. 컬렉션 내 1개만 true.
     var isPrimary: Bool = false
     /// Round 170: 사용자 정의 정렬 순서 (drag-to-reorder). 낮을수록 위에 표시.
@@ -144,7 +142,6 @@ final class Watch {
         purchaseDate: Date? = nil,
         photoData: Data? = nil,
         serviceHistory: [Date] = [],
-        isFavorite: Bool = false,
         isPrimary: Bool = false,
         liftAngleOverride: Double? = nil,
         movementType: WatchMovementType = .automatic,
@@ -177,7 +174,6 @@ final class Watch {
         self.purchaseDate = purchaseDate
         self.photoData = photoData
         self.serviceHistory = serviceHistory
-        self.isFavorite = isFavorite
         self.isPrimary = isPrimary
         self.liftAngleOverride = liftAngleOverride
         self.movementTypeRaw = movementType.rawValue

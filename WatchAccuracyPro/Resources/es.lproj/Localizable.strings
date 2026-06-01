@@ -127,6 +127,9 @@
 /* Collection (new design) */
 "collection.eyebrow" = "El Taller";
 "collection.subtitle" = "un diario de precisión mecánica";
+"collection.card.measured_today" = "Medido hoy";
+"collection.card.measured_days_ago" = "Medido hace %dd";
+"collection.card.measure_prompt" = "Toca para medir";
 "collection.empty.subtitle" = "Añade un reloj → mide 30 s → consulta su precisión. Cada lectura escribe un nuevo capítulo en la historia de tu reloj.";
 "collection.search.placeholder" = "Buscar en la colección";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */

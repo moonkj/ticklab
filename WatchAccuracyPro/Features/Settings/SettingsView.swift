@@ -1115,7 +1115,6 @@ private struct AdminPanelView: View {
                 model: s.model,
                 caliber: s.caliber,
                 purchaseDate: now.addingTimeInterval(-86400 * Double((idx + 1) * 120)),
-                isFavorite: idx % 3 == 0,
                 isPrimary: idx == 0,
                 movementType: s.type,
                 createdAt: now.addingTimeInterval(-86400 * Double(60 - idx * 4))

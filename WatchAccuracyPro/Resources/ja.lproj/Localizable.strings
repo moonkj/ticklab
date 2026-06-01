@@ -127,6 +127,9 @@
 /* Collection (new design) */
 "collection.eyebrow" = "The Bench";
 "collection.subtitle" = "機械式時計の精度を綴る、日々のジャーナル";
+"collection.card.measured_today" = "今日測定";
+"collection.card.measured_days_ago" = "%d日前に測定";
+"collection.card.measure_prompt" = "タップして測定";
 "collection.empty.subtitle" = "時計を追加 → 30秒の計測 → 精度を確認。一回ごとの計測が、あなたの時計の物語に新しい章を刻みます。";
 "collection.search.placeholder" = "コレクションを検索";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */

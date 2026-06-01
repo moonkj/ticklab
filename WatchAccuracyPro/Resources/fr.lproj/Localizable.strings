@@ -127,6 +127,9 @@
 /* Collection (new design) */
 "collection.eyebrow" = "L'établi";
 "collection.subtitle" = "un journal quotidien de précision mécanique";
+"collection.card.measured_today" = "Mesuré aujourd'hui";
+"collection.card.measured_days_ago" = "Mesuré il y a %dj";
+"collection.card.measure_prompt" = "Toucher pour mesurer";
 "collection.empty.subtitle" = "Ajoutez une montre → 30 s de mesure → consultez la précision. Chaque lecture écrit un nouveau chapitre de l'histoire de votre garde-temps.";
 "collection.search.placeholder" = "Rechercher dans la collection";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */

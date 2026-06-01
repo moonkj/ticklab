@@ -79,14 +79,6 @@ enum DataExportService {
 
     // MARK: - CSV
 
-    private static func makeCSV(watch: Watch, measurements: [WatchMeasurement]) -> Data {
-        var lines = [csvHeader()]
-        for m in measurements {
-            lines.append(csvRow(watch: watch, measurement: m))
-        }
-        return Data(lines.joined(separator: "\r\n").utf8)
-    }
-
     private static func csvHeader() -> String {
         // Round 115 (데이터 무결성 Med-3): Round 83 신규 필드 추가.
         // Sprint 13 (F4): 라벨-값 불일치 수정 — 기존 snr_db가 실제로 ambient_noise였음.
@@ -150,7 +142,6 @@ enum DataExportService {
         let movementTypeRaw: String
         let purchaseDate: Date?
         let serviceHistory: [Date]
-        let isFavorite: Bool
         let isPrimary: Bool
         let sortOrder: Double?
         let nickname: String?
@@ -179,7 +170,7 @@ enum DataExportService {
             id = w.id; brand = w.brand; model = w.model; caliber = w.caliber
             movementTypeRaw = w.movementTypeRaw
             purchaseDate = w.purchaseDate; serviceHistory = w.serviceHistory
-            isFavorite = w.isFavorite; isPrimary = w.isPrimary; sortOrder = w.sortOrder
+            isPrimary = w.isPrimary; sortOrder = w.sortOrder
             nickname = w.nickname; story = w.story; referenceNumber = w.referenceNumber
             purchaseLocation = w.purchaseLocation; purchaseSalesperson = w.purchaseSalesperson
             purchasePrice = w.purchasePrice; purchaseCurrency = w.purchaseCurrency
@@ -199,7 +190,7 @@ enum DataExportService {
                 id: id, brand: brand, model: model, caliber: caliber,
                 purchaseDate: purchaseDate,
                 photoData: photoBase64.flatMap { Data(base64Encoded: $0) },
-                serviceHistory: serviceHistory, isFavorite: isFavorite, isPrimary: isPrimary,
+                serviceHistory: serviceHistory, isPrimary: isPrimary,
                 liftAngleOverride: liftAngleOverride,
                 movementType: WatchMovementType(rawValue: movementTypeRaw) ?? .automatic,
                 nickname: nickname, story: story, referenceNumber: referenceNumber,
@@ -278,8 +269,4 @@ enum DataExportService {
         return formatter.string(from: Date())
     }
 
-    private static func sanitize(filename: String) -> String {
-        let allowed = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "._-"))
-        return String(filename.unicodeScalars.map { allowed.contains($0) ? Character($0) : "_" })
-    }
 }

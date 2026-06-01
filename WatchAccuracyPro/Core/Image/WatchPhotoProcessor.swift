@@ -66,14 +66,6 @@ enum WatchPhotoProcessor {
         return f.outputImage ?? ci
     }
 
-    private static func reduceHighlights(_ ci: CIImage, amount: Float) -> CIImage {
-        let f = CIFilter.highlightShadowAdjust()
-        f.inputImage = ci
-        f.highlightAmount = 1.0 - amount
-        f.shadowAmount = 0.1   // 그림자 살짝 밝혀 디테일 보존
-        return f.outputImage ?? ci
-    }
-
     private static func sharpen(_ ci: CIImage, radius: Float, intensity: Float) -> CIImage {
         let f = CIFilter.unsharpMask()
         f.inputImage = ci; f.radius = radius; f.intensity = intensity

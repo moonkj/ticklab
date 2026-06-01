@@ -42,10 +42,12 @@ struct StatsView: View {
 
     var body: some View {
         NavigationStack(path: pathBinding) {
-            ScrollView {
+            VStack(spacing: 0) {
+                // 고정 헤더 — 스크롤되지 않는 최상단 제목 영역(4탭 통일).
+                editorialHeader
+                ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
                     // 사용자가 의도적으로 funEntryCards (업적/브랜드 리그) 를 상단에 배치한 기존 순서 유지.
-                    editorialHeader
                     funEntryCards
                     summaryCards
                     averageRateSection
@@ -54,6 +56,7 @@ struct StatsView: View {
                     moodDonut
                 }
                 .padding(20)
+                }
             }
             .background(AppColors.paper0.ignoresSafeArea())
             // 제목을 제일 상단으로 — 내비바 숨김(에디토리얼 헤더가 최상단). 4탭 통일.
@@ -81,6 +84,7 @@ struct StatsView: View {
             title: String(localized: "stats.title"),
             subtitle: String(localized: "stats.subtitle")
         )
+        .padding(.horizontal, 20)
         .padding(.top, 8)
     }
 

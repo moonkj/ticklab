@@ -17,7 +17,7 @@ struct CollectionView: View {
     @Environment(\.purchaseRouter) private var purchaseRouter
     /// 사용자 보고 fix: collectionSummary 가 body 마다 watches.measurements.max 호출 → 20시계×200측정=4k scan.
     ///   @State 캐시 + watches/measurement-change 시점에만 재계산.
-    @State private var cachedSummary: (total: Int, healthy: Int, caution: Int, service: Int, fav: Int) = (0, 0, 0, 0, 0)
+    @State private var cachedSummary: (total: Int, healthy: Int, caution: Int, service: Int) = (0, 0, 0, 0)
     /// Round 173: 컬렉션 카드에서 삭제 확인 alert.
     @State private var deletingWatch: Watch?
     /// Round 170: reorder sheet 표시.
@@ -37,8 +37,6 @@ struct CollectionView: View {
 
     /// 검색 query (power user 20+ 시계 대응).
     @State private var searchQuery: String = ""
-    /// 즐겨찾기 필터.
-    @State private var favoritesOnly: Bool = false
     /// Sprint 4 (P3-10): 고급 필터 — 시계 5개 이상 보유 시 표시.
     @State private var filterMovementType: WatchMovementType? = nil
     @State private var showAdvancedFilter: Bool = false
@@ -121,10 +119,9 @@ struct CollectionView: View {
                 return watches.sorted { absRate($0) < absRate($1) }
             }
         }()
-        // 검색·즐겨찾기 필터
+        // 검색 필터
         let q = searchQuery.trimmingCharacters(in: .whitespaces).lowercased()
         let searched: [Watch] = sorted.filter { w in
-            if favoritesOnly && !w.isFavorite { return false }
             // Sprint 4 (P3-10): 무브먼트 타입 필터
             if let mt = filterMovementType, w.movementType != mt { return false }
             guard !q.isEmpty else { return true }
@@ -331,20 +328,10 @@ struct CollectionView: View {
                     bulkActionBar
                 }
             } // end ZStack
-            // 액션 버튼(더보기·추가·설정·필터·정렬)은 에디토리얼 헤더 영역으로 이동 — 제목과 같은 최상단.
-            // 내비바는 .searchable(시계 다수 시 검색) 호스트로만 유지.
-            .toolbarBackground(AppColors.paper0, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .navigationBarTitleDisplayMode(.inline)
+            // 제목을 제일 상단으로 — 내비바 숨김. 검색은 헤더 영역 인라인 필드로 이동(4탭 통일).
+            .toolbar(.hidden, for: .navigationBar)
             // 발견성(R6): 컬렉션 진입 시 Spotlight 색인 갱신 — iOS 검색에서 시계 찾기.
             .onAppear { WatchSpotlightIndexer.index(watches) }
-            // Sprint 11 (사용자 요청): 검색칸은 시계 다수 보유 시에만 표시 — 소수 보유 사용자에겐 불필요.
-            .modifier(ConditionalSearchable(
-                isActive: watches.count >= 5,
-                text: $searchQuery,
-                prompt: String(localized: "collection.search.placeholder")
-            ))
             .sheet(isPresented: $showingWatchBox) {
                 WatchBoxView()
             }
@@ -441,8 +428,9 @@ struct CollectionView: View {
     }
 
     /// 제목 영역 우상단 — 더보기 · 추가 · 설정(우측 끝). 기존 내비바 toolbar 에서 이전.
+    /// 아이콘 크기·프레임을 커뮤니티 헤더와 동일하게 통일(40x40, symbol 18).
     private var headerActionButtons: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 0) {
             Menu {
                 Button { showingWatchBox = true } label: {
                     Label(String(localized: "menu.watchbox"), systemImage: "shippingbox")
@@ -457,7 +445,7 @@ struct CollectionView: View {
                 Image(systemName: "ellipsis.circle")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundStyle(AppColors.ink1)
-                    .frame(width: 36, height: 36)
+                    .frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "collection.more_menu"))
             Button {
@@ -468,29 +456,53 @@ struct CollectionView: View {
                 }
             } label: {
                 Image(systemName: "plus")
-                    .font(.system(size: 14, weight: .bold))
+                    .font(.system(size: 16, weight: .bold))
                     .foregroundStyle(AppColors.paper0)
-                    .frame(width: 32, height: 32)
+                    .frame(width: 30, height: 30)
                     .background(AppColors.ink0)
                     .clipShape(Circle())
+                    .frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "collection.add_watch"))
             Button { showingSettings = true } label: {
                 Image(systemName: "gearshape")
                     .font(.system(size: 18, weight: .regular))
                     .foregroundStyle(AppColors.ink1)
-                    .frame(width: 36, height: 36)
+                    .frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "tab.settings"))
             .accessibilityIdentifier("nav.settings")
         }
     }
 
-    /// 필터·정렬 — 5개 이상 보유 시 헤더 아래 줄(기존 내비바 leading toolbar 에서 이전).
+    /// 검색·필터·정렬 — 5개 이상 보유 시 헤더 아래 줄.
+    /// 검색은 내비바 .searchable 대체(제목을 최상단으로 올리기 위해 인라인으로 이동).
     @ViewBuilder
     private var filterSortRow: some View {
         if watches.count >= 5 {
-            HStack(spacing: 12) {
+            HStack(spacing: 10) {
+                HStack(spacing: 6) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.ink3)
+                    TextField(String(localized: "collection.search.placeholder"), text: $searchQuery)
+                        .font(.system(size: 14))
+                        .textFieldStyle(.plain)
+                        .autocorrectionDisabled()
+                    if !searchQuery.isEmpty {
+                        Button { searchQuery = "" } label: {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 14))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(AppColors.paper1)
+                .clipShape(Capsule())
+                .overlay(Capsule().stroke(AppColors.rule, lineWidth: 1))
                 Button {
                     withAnimation { showAdvancedFilter.toggle() }
                 } label: {
@@ -515,7 +527,6 @@ struct CollectionView: View {
                         .foregroundStyle(sortOption == .custom ? AppColors.ink2 : AppColors.accent)
                 }
                 .accessibilityLabel(String(localized: sortOption.label))
-                Spacer()
             }
             .padding(.horizontal, 20)
             .padding(.bottom, 6)
@@ -544,33 +555,6 @@ struct CollectionView: View {
                     summaryItem(value: "\(counts.caution)", label: NSLocalizedString("collection.status.caution", comment: ""), tone: .warning)
                     Rectangle().fill(AppColors.rule).frame(width: 1, height: 18).accessibilityHidden(true)
                     summaryItem(value: "\(counts.service)", label: NSLocalizedString("collection.status.service", comment: ""), tone: .danger)
-                    if counts.fav > 0 {
-                        Rectangle().fill(AppColors.rule).frame(width: 1, height: 18).accessibilityHidden(true)
-                        Button {
-                            UISelectionFeedbackGenerator().selectionChanged()
-                            withAnimation(.easeOut(duration: 0.18)) { favoritesOnly.toggle() }
-                        } label: {
-                            HStack(spacing: 4) {
-                                Image(systemName: favoritesOnly ? "star.fill" : "star")
-                                    .font(.system(size: 11))
-                                    .foregroundStyle(favoritesOnly ? AppColors.accent : AppColors.ink1)
-                                Text("\(counts.fav)")
-                                    .font(.system(size: 16, weight: .medium, design: .monospaced))
-                                    .foregroundStyle(favoritesOnly ? AppColors.accent : AppColors.ink1)
-                                Text("FAV")
-                                    .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                                    .tracking(1.2)
-                                    .foregroundStyle(AppColors.ink2)
-                            }
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(favoritesOnly ? AppColors.accent50 : Color.clear)
-                            .clipShape(Capsule())
-                            .contentShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(String(localized: "collection.filter.favorites_only"))
-                    }
                     Spacer(minLength: 0)
                     Text("\(counts.total) WATCHES")
                         .font(.system(size: 9, weight: .semibold, design: .monospaced))
@@ -608,22 +592,21 @@ struct CollectionView: View {
         }
     }
 
-    private var collectionSummary: (total: Int, healthy: Int, caution: Int, service: Int, fav: Int) {
+    private var collectionSummary: (total: Int, healthy: Int, caution: Int, service: Int) {
         cachedSummary
     }
 
     /// watches.count 또는 측정 종료 시점에만 재계산.
     private func refreshCollectionSummary() {
-        var h = 0, c = 0, s = 0, f = 0
+        var h = 0, c = 0, s = 0
         for w in watches {
-            if w.isFavorite { f += 1 }
             guard let last = w.measurements.max(by: { $0.timestamp < $1.timestamp }) else { continue }
             let absRate = abs(last.rateSecondsPerDay)
             if absRate <= 10 { h += 1 }
             else if absRate <= 20 { c += 1 }
             else { s += 1 }
         }
-        cachedSummary = (watches.count, h, c, s, f)
+        cachedSummary = (watches.count, h, c, s)
     }
 
     // MARK: - Empty / Footer
@@ -644,17 +627,6 @@ struct CollectionView: View {
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)
                 Spacer()
-                // 일괄 즐겨찾기
-                Button {
-                    bulkFavorite()
-                } label: {
-                    Image(systemName: "star").font(.system(size: 18)).foregroundStyle(AppColors.accent)
-                        // 접근성: 아이콘 전용 버튼 최소 44pt 터치 영역 (아이콘 크기 유지)
-                        .frame(minWidth: 44, minHeight: 44)
-                        .contentShape(Rectangle())
-                }
-                .disabled(selectedIDs.isEmpty)
-                .accessibilityLabel(String(localized: "a11y.favorite.add"))
                 // 일괄 삭제
                 Button {
                     showingBulkDeleteAlert = true
@@ -678,13 +650,6 @@ struct CollectionView: View {
         } message: {
             Text(String(format: NSLocalizedString("collection.bulk_delete.message", comment: ""), selectedIDs.count))
         }
-    }
-
-    private func bulkFavorite() {
-        for w in watches where selectedIDs.contains(w.id) { w.isFavorite = true }
-        try? modelContext.save()
-        UINotificationFeedbackGenerator().notificationOccurred(.success)
-        withAnimation { selectMode = false; selectedIDs.removeAll() }
     }
 
     private func bulkDelete() {
@@ -900,15 +865,6 @@ struct HeroWatchCard: View {
                             .contentShape(Capsule())
                         }
                         .buttonStyle(.plain)
-                    }
-                    if watch.isFavorite {
-                        // 접근성: 즐겨찾기 상태는 하단 FAV 카운트·상세화면에서도 노출되는 중복 표시 →
-                        //   장식 처리로 raw 심볼명("star fill") 음성 안내 방지.
-                        // TODO(a11y): needs label — "즐겨찾기됨" 상태 noun 키 없음(기존은 동작/필터 키뿐). .strings 미편집.
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 14))
-                            .foregroundStyle(AppColors.accent)
-                            .accessibilityHidden(true)
                     }
                 }
 

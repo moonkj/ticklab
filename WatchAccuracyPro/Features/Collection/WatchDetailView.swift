@@ -276,8 +276,6 @@ struct WatchDetailView: View {
         .navigationTitle(watch.model)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // 사용자 보고 fix: iPhone SE 에서 3 toolbar slot + 긴 모델명 → title 잘림. favorite 을 menu 안으로 이동.
-            //   (favorite 은 컬렉션 카드 contextMenu 에서도 접근 가능해서 toolbar 중복 제거 안전.)
             // Round 121: "오늘 착용" toggle (디자인 Journey axis).
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
@@ -294,13 +292,6 @@ struct WatchDetailView: View {
             }
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
-                    Button {
-                        UIImpactFeedbackGenerator(style: .light).impactOccurred()
-                        watch.isFavorite.toggle()
-                    } label: {
-                        Label(String(localized: watch.isFavorite ? "watch.menu.favorite.remove" : "watch.menu.favorite.add"),
-                              systemImage: watch.isFavorite ? "star.fill" : "star")
-                    }
                     // Round 173: 시계 정보 편집 / 삭제.
                     Button {
                         editing = true

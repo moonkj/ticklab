@@ -65,8 +65,6 @@ struct PowerReserveGauge: View {
 }
 
 private extension Font {
-    static func caption(design: Font.Design = .default) -> Font { .caption }
-    static func caption2(design: Font.Design = .default) -> Font { .caption2 }
     func weight(_ weight: Font.Weight, design: Font.Design = .default) -> Font { self.weight(weight) }
     func weight(_ weight: Font.Weight) -> Font { self }
 }

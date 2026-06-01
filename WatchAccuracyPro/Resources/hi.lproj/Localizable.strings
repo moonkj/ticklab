@@ -127,6 +127,9 @@
 /* Collection (new design) */
 "collection.eyebrow" = "द बेंच";
 "collection.subtitle" = "यांत्रिक परिशुद्धता की दैनिक डायरी";
+"collection.card.measured_today" = "आज मापा गया";
+"collection.card.measured_days_ago" = "%d दिन पहले मापा गया";
+"collection.card.measure_prompt" = "मापने के लिए टैप करें";
 "collection.empty.subtitle" = "घड़ी जोड़ें → 30-सेकंड का माप → एक्यूरेसी देखें। हर रीडिंग आपकी घड़ी की कहानी में एक नया अध्याय लिखती है।";
 "collection.search.placeholder" = "संग्रह में खोजें";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
