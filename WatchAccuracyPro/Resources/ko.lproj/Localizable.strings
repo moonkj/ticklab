@@ -231,6 +231,9 @@
 "compare.confidence" = "신뢰도";
 "compare.last_measured" = "최근 측정";
 "compare.no_data" = "측정 데이터 없음";
+"community.login.title" = "커뮤니티 로그인";
+"community.login.body" = "Apple로 로그인하면 게시·팔로우·스크랩을 쓸 수 있어요.";
+"community.login.failed" = "로그인 실패";
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";

@@ -300,6 +300,9 @@
 "compare.confidence" = "置信度";
 "compare.last_measured" = "最近测量";
 "compare.no_data" = "暂无测量";
+"community.login.title" = "登录社区";
+"community.login.body" = "使用 Apple 登录即可发布、关注和收藏。";
+"community.login.failed" = "登录失败";
 "timeline.title" = "腕表生平";
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";

@@ -300,6 +300,9 @@
 "compare.confidence" = "Confiance";
 "compare.last_measured" = "Dernière mesure";
 "compare.no_data" = "Aucune mesure";
+"community.login.title" = "Se connecter à la communauté";
+"community.login.body" = "Connectez-vous avec Apple pour publier, suivre et enregistrer.";
+"community.login.failed" = "Échec de la connexion";
 "timeline.title" = "Histoire de la montre";
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";

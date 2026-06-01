@@ -168,3 +168,59 @@ create policy blocks_rw on public.community_blocks for all
 --    현재 anon 키로 임의 device_hash write 가능 → 랭킹 조작 구멍.
 --    write 시 count 상한·brand 화이트리스트 검증, 직접 SELECT 차단(RPC만).
 -- ────────────────────────────────────────────────────────────
+
+-- ════════════════════════════════════════════════════════════
+-- 7. 신원 전환 — 공개 프로필 + Apple 로그인 + 팔로우/스크랩 (V2)
+--    Apple provider 는 콘솔 Authentication > Providers > Apple 에서 활성화.
+--    아래 전체를 SQL Editor 에서 한 번 실행.
+-- ════════════════════════════════════════════════════════════
+
+-- 7.0 (이미 배포된 버킷) 공개 읽기 — 사진/아바타가 public URL 로 표시되게.
+update storage.buckets set public = true where id = 'community';
+
+-- 7.1 프로필 (auth.uid() 1:1, 공개)
+create table if not exists public.community_profiles (
+    uid          uuid primary key default auth.uid(),
+    display_name text not null default 'Collector',
+    avatar_path  text,
+    bio          text,
+    created_at   timestamptz not null default now()
+);
+alter table public.community_profiles enable row level security;
+drop policy if exists profiles_select on public.community_profiles;
+create policy profiles_select on public.community_profiles for select using (true);
+drop policy if exists profiles_insert_own on public.community_profiles;
+create policy profiles_insert_own on public.community_profiles for insert with check (uid = auth.uid());
+drop policy if exists profiles_update_own on public.community_profiles;
+create policy profiles_update_own on public.community_profiles for update using (uid = auth.uid());
+
+-- 7.2 게시물 작성자 표시명 비정규화(피드 1쿼리 렌더). 이름 변경은 신규 글부터 반영.
+alter table public.community_posts add column if not exists author_name text;
+alter table public.community_posts add column if not exists author_avatar_path text;
+
+-- 7.3 팔로우
+create table if not exists public.community_follows (
+    follower_uid uuid not null default auth.uid(),
+    followed_uid uuid not null,
+    created_at   timestamptz not null default now(),
+    primary key (follower_uid, followed_uid),
+    check (follower_uid <> followed_uid)
+);
+alter table public.community_follows enable row level security;
+drop policy if exists follows_select on public.community_follows;
+create policy follows_select on public.community_follows for select using (true);
+drop policy if exists follows_rw on public.community_follows;
+create policy follows_rw on public.community_follows for all
+    using (follower_uid = auth.uid()) with check (follower_uid = auth.uid());
+
+-- 7.4 스크랩/저장(북마크)
+create table if not exists public.community_bookmarks (
+    uid        uuid not null default auth.uid(),
+    post_id    uuid not null references public.community_posts(id) on delete cascade,
+    created_at timestamptz not null default now(),
+    primary key (uid, post_id)
+);
+alter table public.community_bookmarks enable row level security;
+drop policy if exists bookmarks_rw on public.community_bookmarks;
+create policy bookmarks_rw on public.community_bookmarks for all
+    using (uid = auth.uid()) with check (uid = auth.uid());

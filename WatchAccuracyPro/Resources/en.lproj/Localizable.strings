@@ -307,6 +307,9 @@
 "compare.confidence" = "Confidence";
 "compare.last_measured" = "Last measured";
 "compare.no_data" = "No measurements";
+"community.login.title" = "Sign in to the community";
+"community.login.body" = "Sign in with Apple to post, follow, and save.";
+"community.login.failed" = "Sign-in failed";
 "timeline.title" = "Watch Story";
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";

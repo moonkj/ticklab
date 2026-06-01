@@ -143,6 +143,46 @@ final class CommunityService: ObservableObject {
         return Date().timeIntervalSince1970 >= (exp - 60)
     }
 
+    // MARK: - Sign in with Apple (신원 전환: 익명 → 공개 프로필)
+
+    /// Apple 로그인 세션 보유 여부. 게시·팔로우·스크랩 등 액션 게이트.
+    var isSignedIn: Bool { accessToken != nil && myUID != nil }
+
+    /// 네이티브 Sign in with Apple 의 identity token 을 Supabase 와 교환(영구 계정·같은 uid 유지).
+    /// 콘솔에서 Apple provider 활성화 필요. 성공 시 true.
+    func signInWithApple(idToken: String, rawNonce: String) async -> Bool {
+        lastError = nil
+        guard let url = URL(string: "\(baseURL)/auth/v1/token?grant_type=id_token") else { return false }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue(anonKey, forHTTPHeaderField: "apikey")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: [
+            "provider": "apple", "id_token": idToken, "nonce": rawNonce
+        ])
+        do {
+            let (data, resp) = try await URLSession.shared.data(for: req)
+            if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+                lastError = "apple signin \(http.statusCode): \(String(data: data, encoding: .utf8) ?? "")"
+                return false
+            }
+            return applyAuth(data)
+        } catch {
+            lastError = error.localizedDescription
+            return false
+        }
+    }
+
+    /// 로그아웃 — 세션 토큰 폐기. (게시물 소유권은 서버 uid 기준이라 재로그인 시 복원.)
+    func signOut() {
+        accessToken = nil
+        refreshToken = nil
+        myUID = nil
+        defaults.removeObject(forKey: Keys.token)
+        defaults.removeObject(forKey: Keys.refresh)
+        defaults.removeObject(forKey: Keys.uid)
+    }
+
     /// 인증 헤더 부착 (세션 토큰 우선, 없으면 anon 키).
     private func authedRequest(_ url: URL, method: String) -> URLRequest {
         var req = URLRequest(url: url)

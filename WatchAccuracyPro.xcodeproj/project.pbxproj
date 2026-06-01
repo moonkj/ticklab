@@ -175,6 +175,7 @@
 		B0866BE9EAEBECCB7FDE6D8D /* ProEntitlementTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8592EF7BED1AC8A8DCF27A /* ProEntitlementTests.swift */; };
 		B0B4B8ECF8E547FF9B134B60 /* ReliabilityNoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE2539AD0268040B19EC189 /* ReliabilityNoteTests.swift */; };
 		B1DAFF98053B03D2F2F56983 /* MeasurementView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B82869C79CF19830D780904 /* MeasurementView.swift */; };
+		B299DF7CAF8D506AC831F91D /* CommunityLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C557B23F61030A19B42B4C10 /* CommunityLoginView.swift */; };
 		B4CEB0425189CF259812D3E2 /* ReviewRequestServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD7065F8B689973A358CF83F /* ReviewRequestServiceTests.swift */; };
 		B6FD47F74F219314C019BB1D /* WatchCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07FAA2F3650DB74A03B4940 /* WatchCover.swift */; };
 		BAC8E110CABC5A3A5BE9401F /* WearLogServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */; };
@@ -465,6 +466,7 @@
 		C09D7C9D6BA476268354A860 /* PINSetupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINSetupView.swift; sourceTree = "<group>"; };
 		C1FF870CF2C7781C49AFBBF3 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainService.swift; sourceTree = "<group>"; };
 		C47ABF66B3DE34B94929919A /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		C557B23F61030A19B42B4C10 /* CommunityLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityLoginView.swift; sourceTree = "<group>"; };
 		C98F10C1030D21A5C8B24B99 /* ServiceCenterFavoritesService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceCenterFavoritesService.swift; sourceTree = "<group>"; };
 		C9C0B1191FD9B5AC52121059 /* EmptyState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyState.swift; sourceTree = "<group>"; };
 		CAB6C7E11831324D6C5BB937 /* CollectionValueCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionValueCard.swift; sourceTree = "<group>"; };
@@ -1047,6 +1049,7 @@
 				BE3199A00E2F396AD697AB82 /* CommunityComposerView.swift */,
 				B7D055CFF6CD7B879E160435 /* CommunityEULAView.swift */,
 				F8C519EDA16F6829E95DF1BB /* CommunityFeedView.swift */,
+				C557B23F61030A19B42B4C10 /* CommunityLoginView.swift */,
 			);
 			path = Community;
 			sourceTree = "<group>";
@@ -1479,6 +1482,7 @@
 				16CFFBC3C35A9154AEA1AD0A /* CommunityComposerView.swift in Sources */,
 				D515CDB9F4B7FDD774B7F335 /* CommunityEULAView.swift in Sources */,
 				9EEECB4CE005DE5EC6D51AFB /* CommunityFeedView.swift in Sources */,
+				B299DF7CAF8D506AC831F91D /* CommunityLoginView.swift in Sources */,
 				D0B74620AED445C437F6F215 /* CommunityModels.swift in Sources */,
 				4DB49DD408989AB230B45B4E /* CommunityModerationService.swift in Sources */,
 				C37CD00EDAB1AA21779B58E7 /* CommunityService.swift in Sources */,

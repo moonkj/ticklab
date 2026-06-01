@@ -300,6 +300,9 @@
 "compare.confidence" = "信頼度";
 "compare.last_measured" = "最終測定";
 "compare.no_data" = "測定なし";
+"community.login.title" = "コミュニティにログイン";
+"community.login.body" = "Appleでログインすると投稿・フォロー・保存ができます。";
+"community.login.failed" = "ログイン失敗";
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";

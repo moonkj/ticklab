@@ -300,6 +300,9 @@
 "compare.confidence" = "信心度";
 "compare.last_measured" = "最近測量";
 "compare.no_data" = "暫無測量";
+"community.login.title" = "登入社群";
+"community.login.body" = "使用 Apple 登入即可發佈、追蹤與收藏。";
+"community.login.failed" = "登入失敗";
 "timeline.title" = "腕錶生平";
 "timeline.entry" = "生平時間線";
 "timeline.first_meeting" = "初次相遇";
