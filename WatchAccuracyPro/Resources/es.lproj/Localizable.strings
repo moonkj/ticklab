@@ -503,6 +503,9 @@
 "addwatch.battery.reminder.toggle" = "Recordatorio de cambio";
 
 "speccard.spec.movement" = "Movimiento";
+"speccard.spec.bph" = "Alternancias (BPH)";
+"speccard.spec.lift_angle" = "Ángulo de elevación";
+"speccard.spec.measured_rate" = "Mi medición media";
 "speccard.spec.case" = "Caja";
 "speccard.spec.registered" = "Registrado";
 "speccard.nav.title" = "Tarjeta de ficha";

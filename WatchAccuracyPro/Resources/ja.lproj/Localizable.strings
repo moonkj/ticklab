@@ -503,6 +503,9 @@
 "addwatch.battery.reminder.toggle" = "交換リマインダー";
 
 "speccard.spec.movement" = "ムーブメント";
+"speccard.spec.bph" = "振動数 (BPH)";
+"speccard.spec.lift_angle" = "リフト角";
+"speccard.spec.measured_rate" = "自分の測定平均";
 "speccard.spec.case" = "ケース";
 "speccard.spec.registered" = "登録日";
 "speccard.nav.title" = "スペックカード";

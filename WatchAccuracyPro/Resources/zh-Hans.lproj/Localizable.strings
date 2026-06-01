@@ -503,6 +503,9 @@
 "addwatch.battery.reminder.toggle" = "更换提醒";
 
 "speccard.spec.movement" = "机芯";
+"speccard.spec.bph" = "振频 (BPH)";
+"speccard.spec.lift_angle" = "抬轮角";
+"speccard.spec.measured_rate" = "我的实测均值";
 "speccard.spec.case" = "表壳";
 "speccard.spec.registered" = "登记日期";
 "speccard.nav.title" = "规格卡";

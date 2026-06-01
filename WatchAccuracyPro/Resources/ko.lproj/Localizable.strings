@@ -435,6 +435,9 @@
 "addwatch.battery.reminder.toggle" = "교체 시기 알림";
 
 "speccard.spec.movement" = "무브먼트";
+"speccard.spec.bph" = "진동수 (BPH)";
+"speccard.spec.lift_angle" = "리프트 앵글";
+"speccard.spec.measured_rate" = "내 측정 평균";
 "speccard.spec.case" = "케이스";
 "speccard.spec.registered" = "등록일";
 "speccard.nav.title" = "스펙 카드";

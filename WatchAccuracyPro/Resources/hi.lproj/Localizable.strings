@@ -503,6 +503,9 @@
 "addwatch.battery.reminder.toggle" = "बदलाव रिमाइंडर";
 
 "speccard.spec.movement" = "मूवमेंट";
+"speccard.spec.bph" = "बीट दर (BPH)";
+"speccard.spec.lift_angle" = "लिफ्ट एंगल";
+"speccard.spec.measured_rate" = "मेरा मापन औसत";
 "speccard.spec.case" = "केस";
 "speccard.spec.registered" = "पंजीकृत";
 "speccard.nav.title" = "स्पेक कार्ड";

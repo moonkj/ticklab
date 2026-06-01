@@ -117,16 +117,45 @@ struct SpecCardView: View {
         .padding(20)
     }
 
+    /// 팀 토론 기획: 빈 행 숨김 + 캘리버→무브먼트 DB 자동채움(BPH·lift) + 내 측정 평균(참고).
     private var specTable: some View {
-        VStack(spacing: 0) {
-            specRow(String(localized: "speccard.spec.movement"), card.movement)
-            specRow(String(localized: "speccard.spec.case"), card.caseSize.map { String(format: "%.1f mm", $0) })
-            specRow(String(localized: "speccard.spec.power_reserve"), card.powerReserveHours.map { String(format: "%.0f h", $0) })
+        let dbMovement = card.watch?.caliber.flatMap {
+            $0 == Watch.manualCaliberTag ? nil : MovementDatabase.shared.movement(id: $0)
+        }
+        return VStack(spacing: 0) {
+            // 사용자 입력 (있는 것만).
+            if !card.movement.isEmpty {
+                specRow(String(localized: "speccard.spec.movement"), card.movement)
+            }
+            if let cs = card.caseSize {
+                specRow(String(localized: "speccard.spec.case"), String(format: "%.1f mm", cs))
+            }
+            if let pr = card.powerReserveHours {
+                specRow(String(localized: "speccard.spec.power_reserve"), String(format: "%.0f h", pr))
+            }
+            // 자동채움 — 무브먼트 DB(캘리버 기준). 사용자 입력 없이 정확.
+            if let m = dbMovement {
+                specRow(String(localized: "speccard.spec.bph"), "\(m.bph)")
+                specRow(String(localized: "speccard.spec.lift_angle"), "\(Int(m.liftAngleDegrees.rounded()))°")
+            }
+            // 내 개체 실측 평균(참고) — 측정 데이터 있을 때.
+            if let avg = avgMeasuredRate {
+                specRow(String(localized: "speccard.spec.measured_rate"),
+                        String(format: "%@%.1f s/d", avg >= 0 ? "+" : "", avg))
+            }
             specRow(String(localized: "speccard.spec.registered"), AppDateFormat.fullDate(card.createdAt))
         }
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+    }
+
+    /// 내 개체 실측 평균 rate — 신뢰도 25+ 측정만. 없으면 nil.
+    private var avgMeasuredRate: Double? {
+        guard let ms = card.watch?.measurements else { return nil }
+        let valid = ms.filter { $0.confidenceScore >= 25 }
+        guard !valid.isEmpty else { return nil }
+        return valid.map(\.rateSecondsPerDay).reduce(0, +) / Double(valid.count)
     }
 
     private func specRow(_ label: String, _ value: String?) -> some View {

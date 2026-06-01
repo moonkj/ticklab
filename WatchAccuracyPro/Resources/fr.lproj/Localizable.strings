@@ -503,6 +503,9 @@
 "addwatch.battery.reminder.toggle" = "Rappel de remplacement";
 
 "speccard.spec.movement" = "Mouvement";
+"speccard.spec.bph" = "Alternances (BPH)";
+"speccard.spec.lift_angle" = "Angle de levée";
+"speccard.spec.measured_rate" = "Ma mesure moyenne";
 "speccard.spec.case" = "Boîtier";
 "speccard.spec.registered" = "Enregistrée";
 "speccard.nav.title" = "Carte technique";

@@ -511,6 +511,9 @@
 "addwatch.battery.reminder.toggle" = "Replacement reminder";
 
 "speccard.spec.movement" = "Movement";
+"speccard.spec.bph" = "Beat rate (BPH)";
+"speccard.spec.lift_angle" = "Lift angle";
+"speccard.spec.measured_rate" = "My measured avg";
 "speccard.spec.case" = "Case";
 "speccard.spec.registered" = "Registered";
 "speccard.nav.title" = "Spec card";
