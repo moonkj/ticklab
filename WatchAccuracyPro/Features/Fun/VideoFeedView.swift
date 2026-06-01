@@ -40,17 +40,23 @@ struct VideoFeedView: View {
             if let url = video.watchURL { openURL(url) }
         } label: {
             VStack(alignment: .leading, spacing: 8) {
-                // 16:9 썸네일 + YouTube 어포던스.
+                // 16:9 썸네일(maxres→실패 시 mq, 둘 다 16:9라 잘림 없음) + YouTube 어포던스.
                 ZStack(alignment: .bottomTrailing) {
-                    AsyncImage(url: video.thumbnailURL) { phase in
-                        switch phase {
-                        case .success(let img): img.resizable().scaledToFill()
-                        default: Color(AppColors.paper2)
+                    Color(AppColors.paper2)
+                        .aspectRatio(16.0 / 9.0, contentMode: .fit)
+                        .overlay {
+                            AsyncImage(url: video.thumbnailHigh) { phase in
+                                switch phase {
+                                case .success(let img): img.resizable().scaledToFill()
+                                case .failure:
+                                    AsyncImage(url: video.thumbnailMid) { img in
+                                        img.resizable().scaledToFill()
+                                    } placeholder: { Color.clear }
+                                default: Color.clear
+                                }
+                            }
                         }
-                    }
-                    .aspectRatio(16.0 / 9.0, contentMode: .fill)
-                    .frame(maxWidth: .infinity)
-                    .clipped()
+                        .clipped()
                     HStack(spacing: 4) {
                         Image(systemName: "play.rectangle.fill")
                         Text(String(localized: "video.watch_on_youtube"))

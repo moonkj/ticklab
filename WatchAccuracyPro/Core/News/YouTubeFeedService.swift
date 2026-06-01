@@ -18,8 +18,12 @@ final class YouTubeFeedService: ObservableObject {
         let title: String
         let channelTitle: String
         let publishedAt: Date
-        let thumbnailURL: URL?
+        let thumbnailURL: URL?      // RSS 기본(hqdefault, 4:3) — 폴백용
         var watchURL: URL? { URL(string: "https://www.youtube.com/watch?v=\(id)") }
+        /// 16:9 고화질(없을 수 있음 → mid 폴백). 4:3 잘림 방지.
+        var thumbnailHigh: URL? { URL(string: "https://i.ytimg.com/vi/\(id)/maxresdefault.jpg") }
+        /// 16:9 항상 존재(320x180).
+        var thumbnailMid: URL? { URL(string: "https://i.ytimg.com/vi/\(id)/mqdefault.jpg") }
     }
 
     /// 사용자 언어 채널을 불러와 RSS 병합. 비면 en 폴백.
