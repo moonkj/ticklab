@@ -99,6 +99,11 @@ final class UserPreferences {
         didSet { defaults.set(keepScreenOnDuringMeasurement, forKey: Keys.keepScreenOn) }
     }
 
+    /// T-17: 햅틱 피드백 전역 on/off. 기본 ON. (HapticManager 가 매 trigger 시 참조.)
+    var hapticsEnabled: Bool {
+        didSet { defaults.set(hapticsEnabled, forKey: Keys.haptics) }
+    }
+
     /// 자기장 측정 기능 활성화 — Apple Intelligence 코멘트 연동.
     var magneticFieldMeasurementEnabled: Bool {
         didSet { defaults.set(magneticFieldMeasurementEnabled, forKey: Keys.magneticField) }
@@ -165,7 +170,8 @@ final class UserPreferences {
             Keys.overhaulReminderYears: 4,
             Keys.brandLeagueOptIn: true,
             Keys.rotationNudge: true,
-            Keys.rotationNudgeDays: 7
+            Keys.rotationNudgeDays: 7,
+            Keys.haptics: true
         ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
         // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
@@ -193,6 +199,7 @@ final class UserPreferences {
         self.randomPickMinute = (defaults.object(forKey: Keys.randomPickMinute) as? Int) ?? 0
         // 기본 ON — 사용자 요청 (측정 중 잠금 화면 진입 방지).
         self.keepScreenOnDuringMeasurement = (defaults.object(forKey: Keys.keepScreenOn) as? Bool) ?? true
+        self.hapticsEnabled = (defaults.object(forKey: Keys.haptics) as? Bool) ?? true
         self.magneticFieldMeasurementEnabled = defaults.bool(forKey: Keys.magneticField)
         self.pinEnabled = defaults.bool(forKey: Keys.pinEnabled)
         // Round 170: simplified DSP — 기본 ON. 사용자가 명시 OFF 해야 legacy 경로 사용.
@@ -245,6 +252,7 @@ final class UserPreferences {
         static let brandLeagueOptIn = "ticklab.brandLeagueOptIn"
         static let rotationNudge = "ticklab.rotationNudgeEnabled"
         static let rotationNudgeDays = "ticklab.rotationNudgeDays"
+        static let haptics = "ticklab.hapticsEnabled"
         static let whatsNewVersion = "ticklab.lastSeenWhatsNewVersion"
         /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
         /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.

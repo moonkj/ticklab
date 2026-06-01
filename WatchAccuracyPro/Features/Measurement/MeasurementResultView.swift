@@ -159,11 +159,14 @@ struct MeasurementResultView: View {
             // Round 23 (Doyoon): 최초 1회만 haptic. share sheet 닫고 reentry 시 재발화 차단.
             guard !didFireHaptic else { return }
             didFireHaptic = true
-            let gen = UINotificationFeedbackGenerator()
-            switch result.reliabilityGrade {
-            case .a, .b:    gen.notificationOccurred(.success)
-            case .c:        gen.notificationOccurred(.warning)
-            case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
+            // T-17: 햅틱 설정 토글 존중.
+            if HapticManager.isEnabled {
+                let gen = UINotificationFeedbackGenerator()
+                switch result.reliabilityGrade {
+                case .a, .b:    gen.notificationOccurred(.success)
+                case .c:        gen.notificationOccurred(.warning)
+                case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
+                }
             }
             // Sprint 1 (P1-6): 골든 모멘트 — 신뢰도 A/B + confidence ≥80 일 때만 카운트.
             // 누적 3회 도달 + 60일 cooldown 통과 시 시스템 리뷰 prompt.

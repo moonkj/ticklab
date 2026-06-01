@@ -1137,6 +1137,7 @@
 
 /* Round 133: keep-screen-on + reminders */
 "settings.keep_screen_on" = "माप के दौरान स्क्रीन चालू रखें";
+"settings.haptics" = "हैप्टिक फीडबैक";
 "settings.section.reminders" = "रिमाइंडर";
 "settings.section.reminders.footer" = "जर्नल अलर्ट और रैंडम घड़ी चुनाव के लिए समय निर्धारित करें।";
 "settings.journal_reminder.time" = "जर्नल रिमाइंडर समय";

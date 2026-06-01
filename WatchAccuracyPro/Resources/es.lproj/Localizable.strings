@@ -1137,6 +1137,7 @@
 
 /* Round 133: keep-screen-on + reminders */
 "settings.keep_screen_on" = "Mantener la pantalla encendida durante la medición";
+"settings.haptics" = "Respuesta háptica";
 "settings.section.reminders" = "Recordatorios";
 "settings.section.reminders.footer" = "Define horas para los avisos del diario y los relojes aleatorios.";
 "settings.journal_reminder.time" = "Hora del recordatorio del diario";

@@ -64,6 +64,7 @@
 		2FDD200AA16D58A0DC46249E /* WeeklyCheckService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 609C7EC38E3391098342AB7E /* WeeklyCheckService.swift */; };
 		30814EB7EDDD89A9A26CC9DF /* PurchaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6984089EAA0E94FD1B3326F /* PurchaseView.swift */; };
 		30A1D7E3B9E8A3EC4FF2A3F3 /* SharedSnapshotStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C4817C4FF6E9CD72A586997 /* SharedSnapshotStore.swift */; };
+		31676C796EC3558889FAC1BB /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B9F24910DF8F590870E7801 /* HapticManager.swift */; };
 		367EB49536969E9791A23BCD /* BeatDetectorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4995C3A82B5E708792DD27DE /* BeatDetectorProtocol.swift */; };
 		36C2B82C6131CB8239301BFE /* MeasurementViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1D1006CC82C071853A73BD9 /* MeasurementViewModel.swift */; };
 		38C6BFE9E2D1BAAC26984D8C /* WatchAccuracyProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89247D88262C5FB0FD2CD371 /* WatchAccuracyProApp.swift */; };
@@ -383,6 +384,7 @@
 		69D2295B7834A646CE946315 /* SpecCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCardView.swift; sourceTree = "<group>"; };
 		6A42707A0286E4620D0F3829 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6B485902B5A99021F8400A14 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6B9F24910DF8F590870E7801 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		6BF0D144ADA7FE0ECF71C36F /* WishlistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WishlistView.swift; sourceTree = "<group>"; };
 		6CE37C38FFCCB336CA05EBCD /* JournalComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalComposerView.swift; sourceTree = "<group>"; };
 		6DFBAEC31E6B361C8F2480E2 /* AmplitudeEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmplitudeEstimator.swift; sourceTree = "<group>"; };
@@ -919,6 +921,7 @@
 				7909924A1367F8260BED015F /* EditorialPageHeader.swift */,
 				C9C0B1191FD9B5AC52121059 /* EmptyState.swift */,
 				9BDB539F26B6E6FA7F0DF2DF /* FullscreenPhotoViewer.swift */,
+				6B9F24910DF8F590870E7801 /* HapticManager.swift */,
 				5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */,
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
@@ -1497,6 +1500,7 @@
 				9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */,
 				66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */,
 				6DA528D1EFE9C6EABDF65B4D /* GlobalAnalyticsView.swift in Sources */,
+				31676C796EC3558889FAC1BB /* HapticManager.swift in Sources */,
 				1A70927B74F7E4EAF1B2E33D /* HelpCard.swift in Sources */,
 				1043FF13ADB635BA20AB14BE /* HighlightTimelineView.swift in Sources */,
 				63B613E8C23829F5477EA4BF /* InAppFeedbackView.swift in Sources */,

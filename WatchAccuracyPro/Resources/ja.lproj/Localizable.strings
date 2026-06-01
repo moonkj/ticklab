@@ -1137,6 +1137,7 @@
 
 /* Round 133: keep-screen-on + reminders */
 "settings.keep_screen_on" = "計測中は画面を常時オン";
+"settings.haptics" = "触覚フィードバック";
 "settings.section.reminders" = "リマインダー";
 "settings.section.reminders.footer" = "ジャーナル通知と今日の一本の通知時刻を設定します。";
 "settings.journal_reminder.time" = "ジャーナル通知の時刻";

@@ -1137,6 +1137,7 @@
 
 /* Round 133: keep-screen-on + reminders */
 "settings.keep_screen_on" = "测量时保持屏幕常亮";
+"settings.haptics" = "触感反馈";
 "settings.section.reminders" = "提醒";
 "settings.section.reminders.footer" = "设定日志提醒与每日随机挑选的时间。";
 "settings.journal_reminder.time" = "日志提醒时间";

@@ -1157,6 +1157,7 @@
 
 /* Round 133: keep-screen-on + reminders */
 "settings.keep_screen_on" = "Keep screen on during measurement";
+"settings.haptics" = "Haptic feedback";
 "settings.section.reminders" = "Reminders";
 "settings.section.reminders.footer" = "Set times for journal alerts and random watch picks.";
 "settings.journal_reminder.time" = "Journal reminder time";

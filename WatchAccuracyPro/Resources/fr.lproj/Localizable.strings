@@ -1137,6 +1137,7 @@
 
 /* Round 133: keep-screen-on + reminders */
 "settings.keep_screen_on" = "Garder l'écran allumé pendant la mesure";
+"settings.haptics" = "Retour haptique";
 "settings.section.reminders" = "Rappels";
 "settings.section.reminders.footer" = "Définissez les heures des rappels de journal et des tirages aléatoires.";
 "settings.journal_reminder.time" = "Heure du rappel de journal";

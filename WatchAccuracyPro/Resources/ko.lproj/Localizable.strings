@@ -1156,6 +1156,7 @@
 
 /* Round 133: 측정 중 화면 켜기 + 리마인드 통합 섹션 */
 "settings.keep_screen_on" = "측정 중 화면 항상 켜기";
+"settings.haptics" = "햅틱 피드백";
 "settings.section.reminders" = "리마인드";
 "settings.section.reminders.footer" = "기록 알림과 랜덤 시계 추천 시간을 설정하세요.";
 "settings.journal_reminder.time" = "기록 알림 시간";
