@@ -145,6 +145,9 @@
 "collection.title" = "컬렉션";
 "collection.eyebrow" = "The Bench";
 "collection.subtitle" = "손목 위의 작은 시간들";
+"collection.card.measured_today" = "오늘 측정";
+"collection.card.measured_days_ago" = "%d일 전 측정";
+"collection.card.measure_prompt" = "측정해 보세요";
 "collection.empty.title" = "첫 시계를 등록해 보세요.";
 "collection.empty.subtitle" = "시계 추가 → 30초 측정 → 정확도 결과 확인. 매번의 측정이 시계의 시간을 기록하는 한 챕터가 됩니다.";
 "collection.empty.cta" = "시계 추가";

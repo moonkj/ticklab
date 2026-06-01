@@ -123,6 +123,11 @@ struct CommunityFeedView: View {
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "community.saved.title"))
+            Button { startCompose() } label: {
+                Image(systemName: "plus.circle.fill").font(.system(size: 22))
+                    .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
+            }
+            .accessibilityLabel(String(localized: "community.compose"))
             Menu {
                 Button { showProfile = true } label: {
                     Label(String(localized: "community.menu.profile"), systemImage: "person.crop.circle")
@@ -141,11 +146,6 @@ struct CommunityFeedView: View {
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "community.account"))
-            Button { startCompose() } label: {
-                Image(systemName: "plus.circle.fill").font(.system(size: 22))
-                    .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
-            }
-            .accessibilityLabel(String(localized: "community.compose"))
         }
     }
 

@@ -160,6 +160,9 @@ struct CollectionView: View {
             ZStack {
                 AppColors.paper0.ignoresSafeArea()
                 VStack(spacing: 0) {
+                    // 제목·버튼을 같은 최상단 영역으로 — 헤더 고정 + 우상단 액션 오버레이.
+                    header
+                    filterSortRow
                     // Sprint 4 (P3-10): 고급 필터 패널
                     if showAdvancedFilter && watches.count >= 5 {
                         ScrollView(.horizontal, showsIndicators: false) {
@@ -188,7 +191,6 @@ struct CollectionView: View {
                     VStack(alignment: .leading, spacing: 0) {
                         // Sprint 5 (P3-12): 시즌 이벤트 배너
                         SeasonalEventBanner()
-                        header
                         if filtered.isEmpty {
                             emptyState
                         } else {
@@ -329,96 +331,8 @@ struct CollectionView: View {
                     bulkActionBar
                 }
             } // end ZStack
-            .toolbar {
-                // Round 163: 설정 버튼을 우측 끝으로 이동.
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button {
-                            showingWatchBox = true
-                        } label: {
-                            Label(String(localized: "menu.watchbox"), systemImage: "shippingbox")
-                        }
-                        NavigationLink {
-                            SpecCardListView()
-                        } label: {
-                            Label(String(localized: "menu.speccard"), systemImage: "rectangle.stack")
-                        }
-                        // Sprint 9 (P2-19): 드림 위시리스트
-                        NavigationLink {
-                            WishlistView()
-                        } label: {
-                            Label(String(localized: "menu.wishlist"), systemImage: "heart")
-                        }
-                        // Round 138 사용자 요청: 배터리 모니터 메뉴 제거 — 쿼츠 시계 detail 측정 탭에 통합되어 있음.
-                    } label: {
-                        // UX 진단(R1): square.grid.2x2 는 "그리드 뷰"로 오인 → 메뉴임이 안 보임.
-                        //   ellipsis.circle 로 교체해 "더 보기" 어포던스 명시.
-                        Image(systemName: "ellipsis.circle")
-                            .font(.system(size: 18, weight: .regular))
-                            .foregroundStyle(AppColors.ink1)
-                    }
-                    .accessibilityLabel(String(localized: "collection.more_menu"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        if !preferences.isPro && watches.count >= ProEntitlement.freeWatchLimit {
-                            showingProLimit = true
-                        } else {
-                            showingAdd = true
-                        }
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(AppColors.paper0)
-                            .frame(width: 32, height: 32)
-                            .background(AppColors.ink0)
-                            .clipShape(Circle())
-                    }
-                    .accessibilityLabel(String(localized: "collection.add_watch"))
-                }
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { showingSettings = true } label: {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 18, weight: .regular))
-                            .foregroundStyle(AppColors.ink1)
-                    }
-                    .accessibilityLabel(String(localized: "tab.settings"))
-                    .accessibilityIdentifier("nav.settings")
-                }
-                // Sprint 4 (P3-10) + Sprint 8 (UX): 고급 필터 + 정렬 — 5개 이상 시만 표시
-                if watches.count >= 5 {
-                    ToolbarItem(placement: .topBarLeading) {
-                        HStack(spacing: 8) {
-                            Button {
-                                withAnimation { showAdvancedFilter.toggle() }
-                            } label: {
-                                Image(systemName: filterMovementType != nil ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(filterMovementType != nil ? AppColors.accent : AppColors.ink2)
-                            }
-                            .accessibilityLabel(String(localized: "collection.filter.label"))
-                            Menu {
-                                ForEach(SortOption.allCases, id: \.self) { opt in
-                                    Button {
-                                        withAnimation(.easeOut(duration: 0.2)) { sortOption = opt }
-                                        UISelectionFeedbackGenerator().selectionChanged()
-                                    } label: {
-                                        Label(String(localized: opt.label),
-                                              systemImage: sortOption == opt ? "checkmark" : "")
-                                    }
-                                }
-                            } label: {
-                                Image(systemName: sortOption == .custom ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundStyle(sortOption == .custom ? AppColors.ink2 : AppColors.accent)
-                            }
-                            // 접근성: 현재 정렬 기준 이름을 음성 안내 (silent 방지). 기존 sort.* 키 재사용.
-                            // TODO(a11y): needs label — "정렬" 라벨용 일반 키 없음(sort.* 는 옵션값뿐). .strings 미편집 제약.
-                            .accessibilityLabel(String(localized: sortOption.label))
-                        }
-                    }
-                }
-            }
+            // 액션 버튼(더보기·추가·설정·필터·정렬)은 에디토리얼 헤더 영역으로 이동 — 제목과 같은 최상단.
+            // 내비바는 .searchable(시계 다수 시 검색) 호스트로만 유지.
             .toolbarBackground(AppColors.paper0, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .toolbarColorScheme(.light, for: .navigationBar)
@@ -509,6 +423,7 @@ struct CollectionView: View {
     // MARK: - Header
 
     /// 하이브리드 C: 공용 EditorialPageHeader 로 4탭 헤더 톤 통일(수제 복제 제거).
+    /// 제목·버튼을 같은 최상단 영역으로 — 우상단에 더보기·추가·설정 오버레이.
     private var header: some View {
         EditorialPageHeader(
             eyebrow: String(localized: "collection.eyebrow"),
@@ -516,7 +431,95 @@ struct CollectionView: View {
             subtitle: String(localized: "collection.subtitle")
         )
         .padding(.horizontal, 20)
-        .padding(.top, 4)
+        .padding(.top, 8)
+        .padding(.bottom, 4)
+        .overlay(alignment: .topTrailing) {
+            headerActionButtons
+                .padding(.trailing, 14)
+                .padding(.top, 2)
+        }
+    }
+
+    /// 제목 영역 우상단 — 더보기 · 추가 · 설정(우측 끝). 기존 내비바 toolbar 에서 이전.
+    private var headerActionButtons: some View {
+        HStack(spacing: 4) {
+            Menu {
+                Button { showingWatchBox = true } label: {
+                    Label(String(localized: "menu.watchbox"), systemImage: "shippingbox")
+                }
+                NavigationLink { SpecCardListView() } label: {
+                    Label(String(localized: "menu.speccard"), systemImage: "rectangle.stack")
+                }
+                NavigationLink { WishlistView() } label: {
+                    Label(String(localized: "menu.wishlist"), systemImage: "heart")
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(AppColors.ink1)
+                    .frame(width: 36, height: 36)
+            }
+            .accessibilityLabel(String(localized: "collection.more_menu"))
+            Button {
+                if !preferences.isPro && watches.count >= ProEntitlement.freeWatchLimit {
+                    showingProLimit = true
+                } else {
+                    showingAdd = true
+                }
+            } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(AppColors.paper0)
+                    .frame(width: 32, height: 32)
+                    .background(AppColors.ink0)
+                    .clipShape(Circle())
+            }
+            .accessibilityLabel(String(localized: "collection.add_watch"))
+            Button { showingSettings = true } label: {
+                Image(systemName: "gearshape")
+                    .font(.system(size: 18, weight: .regular))
+                    .foregroundStyle(AppColors.ink1)
+                    .frame(width: 36, height: 36)
+            }
+            .accessibilityLabel(String(localized: "tab.settings"))
+            .accessibilityIdentifier("nav.settings")
+        }
+    }
+
+    /// 필터·정렬 — 5개 이상 보유 시 헤더 아래 줄(기존 내비바 leading toolbar 에서 이전).
+    @ViewBuilder
+    private var filterSortRow: some View {
+        if watches.count >= 5 {
+            HStack(spacing: 12) {
+                Button {
+                    withAnimation { showAdvancedFilter.toggle() }
+                } label: {
+                    Image(systemName: filterMovementType != nil ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle")
+                        .font(.system(size: 18))
+                        .foregroundStyle(filterMovementType != nil ? AppColors.accent : AppColors.ink2)
+                }
+                .accessibilityLabel(String(localized: "collection.filter.label"))
+                Menu {
+                    ForEach(SortOption.allCases, id: \.self) { opt in
+                        Button {
+                            withAnimation(.easeOut(duration: 0.2)) { sortOption = opt }
+                            UISelectionFeedbackGenerator().selectionChanged()
+                        } label: {
+                            Label(String(localized: opt.label),
+                                  systemImage: sortOption == opt ? "checkmark" : "")
+                        }
+                    }
+                } label: {
+                    Image(systemName: sortOption == .custom ? "arrow.up.arrow.down" : "arrow.up.arrow.down.circle.fill")
+                        .font(.system(size: 18))
+                        .foregroundStyle(sortOption == .custom ? AppColors.ink2 : AppColors.accent)
+                }
+                .accessibilityLabel(String(localized: sortOption.label))
+                Spacer()
+            }
+            .padding(.horizontal, 20)
+            .padding(.bottom, 6)
+        }
     }
 
     // Round 170: 정렬 picker UI 제거 — 사용자 요청. 대신 카드 꾹 눌러 드래그로 순서 변경.
@@ -1002,6 +1005,19 @@ struct WatchListRow: View {
             .suffix(7).map { $0.rateSecondsPerDay }
     }
 
+    /// 3-1 (R21): "마지막 측정 N일 전" — 측정 recency 가시화 + 측정 권유. 이력 없으면 측정 유도 문구.
+    private var lastMeasuredText: String {
+        guard let last = lastMeasurement else {
+            return String(localized: "collection.card.measure_prompt")
+        }
+        let cal = Calendar.current
+        let days = cal.dateComponents([.day],
+                                      from: cal.startOfDay(for: last.timestamp),
+                                      to: cal.startOfDay(for: Date())).day ?? 0
+        if days <= 0 { return String(localized: "collection.card.measured_today") }
+        return String(format: NSLocalizedString("collection.card.measured_days_ago", comment: ""), days)
+    }
+
     /// 디자인 SSOT components.jsx WatchRow classic — photo placeholder + brand caption + model title-3 + rate mono + ConfidenceBadge + forward chevron.
     /// Round 71/131: WatchSilhouette 통일 + Watch.photoData 있으면 사진 / "오늘 착용" wear toggle 추가.
     @Environment(\.modelContext) private var modelContext
@@ -1067,6 +1083,12 @@ struct WatchListRow: View {
                     }
                 }
                 .padding(.top, 2)
+                // 3-1: 마지막 측정 N일 전 (측정 없으면 측정 권유 문구).
+                Text(lastMeasuredText)
+                    .font(.system(size: 11))
+                    .foregroundStyle(lastMeasurement == nil ? AppColors.accent : AppColors.ink3)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             // Round 152: 다마고치 mood emoji (small list).

@@ -44,41 +44,27 @@ struct JournalFeedView: View {
 
     var body: some View {
         NavigationStack(path: pathBinding) {
-            ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    editorialHeader
-                    storiesRail
-                    calendarStrip
-                    modePicker
-                    Group {
-                        switch viewMode {
-                        case .grid:     gridSection
-                        case .feed:     feedSection
-                        case .calendar: calendarSection
+            VStack(spacing: 0) {
+                editorialHeader
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 18) {
+                        storiesRail
+                        calendarStrip
+                        modePicker
+                        Group {
+                            switch viewMode {
+                            case .grid:     gridSection
+                            case .feed:     feedSection
+                            case .calendar: calendarSection
+                            }
                         }
                     }
+                    .padding(.vertical, 12)
                 }
-                .padding(.vertical, 12)
             }
             .background(AppColors.paper0.ignoresSafeArea())
-            // 하이브리드 C: 내비바 숨김 제거 → 투명 inline 내비바, + 버튼은 toolbar 로(컬렉션과 동일).
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.paper0, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button { composing = true } label: {
-                        Image(systemName: "plus")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundStyle(AppColors.paper0)
-                            .frame(width: 32, height: 32)
-                            .background(AppColors.ink0)
-                            .clipShape(Circle())
-                    }
-                    .accessibilityLabel(String(localized: "journal.compose.title"))
-                }
-            }
+            // 제목·버튼을 같은 최상단 영역으로 — 내비바 숨기고 에디토리얼 헤더에 버튼 오버레이(커뮤니티와 동일).
+            .toolbar(.hidden, for: .navigationBar)
             .sheet(isPresented: $composing) {
                 JournalComposerView()
                     .presentationDetents([.large])
@@ -130,6 +116,20 @@ struct JournalFeedView: View {
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)
+        .padding(.bottom, 6)
+        .overlay(alignment: .topTrailing) {
+            Button { composing = true } label: {
+                Image(systemName: "plus")
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(AppColors.paper0)
+                    .frame(width: 32, height: 32)
+                    .background(AppColors.ink0)
+                    .clipShape(Circle())
+            }
+            .accessibilityLabel(String(localized: "journal.compose.title"))
+            .padding(.trailing, 16)
+            .padding(.top, 4)
+        }
     }
 
     /// Round 93: 시계 없을 때 hint message.

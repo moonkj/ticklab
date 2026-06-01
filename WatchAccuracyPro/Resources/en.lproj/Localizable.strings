@@ -127,6 +127,9 @@
 /* Collection (new design) */
 "collection.eyebrow" = "The Bench";
 "collection.subtitle" = "a daily journal of mechanical accuracy";
+"collection.card.measured_today" = "Measured today";
+"collection.card.measured_days_ago" = "Measured %dd ago";
+"collection.card.measure_prompt" = "Tap to measure";
 "collection.empty.subtitle" = "Add a watch → 30-sec measurement → see accuracy. Each reading writes a new chapter in your watch's story.";
 "collection.search.placeholder" = "Search collection";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */

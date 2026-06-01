@@ -69,11 +69,8 @@ struct TodayView: View {
                 .padding(.bottom, 80)
             }
             .background(AppColors.paper0.ignoresSafeArea())
-            // 하이브리드 C: inline "오늘" 제목 제거 → 4탭 내비바 통일(본문 headerSection 환영 카드 유지).
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbarBackground(AppColors.paper0, for: .navigationBar)
-            .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
+            // 제목을 제일 상단으로 — 내비바 숨김(에디토리얼 헤더가 최상단). 4탭 통일.
+            .toolbar(.hidden, for: .navigationBar)
             // Round 176: primary card / family card 모두 Watch.self 로 navigate.
             // 기존엔 watchFamilySection 안에만 있어 watches.count==1 일 때 destination 미존재.
             .navigationDestination(for: Watch.self) { w in
