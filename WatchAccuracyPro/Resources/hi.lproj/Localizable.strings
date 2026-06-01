@@ -1569,6 +1569,7 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "वीडियो";
+"video.filter.all" = "सभी";
 "video.empty.title" = "अभी कोई वीडियो नहीं";
 "video.empty.body" = "जल्द ही नए घड़ी वीडियो जोड़े जाएंगे।";
 "video.watch_on_youtube" = "YouTube पर देखें";

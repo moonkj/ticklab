@@ -5,6 +5,19 @@ import SwiftUI
 struct VideoFeedView: View {
     @StateObject private var service = YouTubeFeedService.shared
     @Environment(\.openURL) private var openURL
+    /// nil = 전체, 값 = 해당 채널만.
+    @State private var selectedChannel: String?
+
+    /// 피드에 등장하는 채널(중복 제거, 가나다/알파벳 정렬).
+    private var distinctChannels: [String] {
+        Array(Set(service.videos.map(\.channelTitle))).sorted()
+    }
+
+    /// 선택 채널 필터(선택이 현재 목록에 없으면 전체).
+    private var displayedVideos: [YouTubeFeedService.YouTubeVideo] {
+        guard let sel = selectedChannel, distinctChannels.contains(sel) else { return service.videos }
+        return service.videos.filter { $0.channelTitle == sel }
+    }
 
     var body: some View {
         Group {
@@ -19,7 +32,7 @@ struct VideoFeedView: View {
             } else {
                 ScrollView {
                     LazyVStack(spacing: 16) {
-                        ForEach(service.videos) { video in
+                        ForEach(displayedVideos) { video in
                             videoCard(video)
                         }
                     }
@@ -31,6 +44,32 @@ struct VideoFeedView: View {
         .navigationTitle(String(localized: "video.feed.title"))
         .navigationBarTitleDisplayMode(.inline)
         .background(AppColors.paper0.ignoresSafeArea())
+        .toolbar {
+            // 채널이 2개 이상일 때만 — 전체 / 채널 선택.
+            if distinctChannels.count >= 2 {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button { selectedChannel = nil } label: {
+                            if selectedChannel == nil {
+                                Label(String(localized: "video.filter.all"), systemImage: "checkmark")
+                            } else { Text(String(localized: "video.filter.all")) }
+                        }
+                        ForEach(distinctChannels, id: \.self) { ch in
+                            Button { selectedChannel = ch } label: {
+                                if selectedChannel == ch { Label(ch, systemImage: "checkmark") } else { Text(ch) }
+                            }
+                        }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "line.3.horizontal.decrease.circle")
+                            Text(selectedChannel ?? String(localized: "video.filter.all"))
+                                .lineLimit(1)
+                        }
+                        .font(.system(size: 14, weight: .semibold))
+                    }
+                }
+            }
+        }
         .task { await service.load() }
         .refreshable { await service.load(force: true) }
     }

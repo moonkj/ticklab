@@ -1569,6 +1569,7 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "Vídeos";
+"video.filter.all" = "Todos";
 "video.empty.title" = "No hay vídeos todavía";
 "video.empty.body" = "Pronto añadiremos nuevos vídeos de relojes.";
 "video.watch_on_youtube" = "Ver en YouTube";

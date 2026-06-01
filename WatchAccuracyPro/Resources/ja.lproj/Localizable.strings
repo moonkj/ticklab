@@ -1569,6 +1569,7 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "動画";
+"video.filter.all" = "すべて";
 "video.empty.title" = "まだ動画がありません";
 "video.empty.body" = "まもなく新しい時計動画が追加されます。";
 "video.watch_on_youtube" = "YouTubeで見る";

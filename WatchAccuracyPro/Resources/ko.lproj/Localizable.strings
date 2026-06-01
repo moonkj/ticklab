@@ -1603,6 +1603,7 @@
 "news.read_more" = "더 보기 →";
 "stats.entry.news" = "브랜드 뉴스";
 "video.feed.title" = "영상";
+"video.filter.all" = "전체";
 "video.empty.title" = "아직 영상이 없어요";
 "video.empty.body" = "곧 새로운 시계 영상이 추가됩니다.";
 "video.watch_on_youtube" = "YouTube에서 보기";

@@ -1569,6 +1569,7 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "影片";
+"video.filter.all" = "全部";
 "video.empty.title" = "暫無影片";
 "video.empty.body" = "即將新增新的腕錶影片。";
 "video.watch_on_youtube" = "在 YouTube 觀看";

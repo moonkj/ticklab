@@ -1604,6 +1604,7 @@
 "news.read_more" = "Read more →";
 "stats.entry.news" = "Brand News";
 "video.feed.title" = "Videos";
+"video.filter.all" = "All";
 "video.empty.title" = "No videos yet";
 "video.empty.body" = "New watch videos coming soon.";
 "video.watch_on_youtube" = "Watch on YouTube";
