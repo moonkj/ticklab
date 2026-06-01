@@ -295,7 +295,8 @@ final class CommunityService: ObservableObject {
     /// 게시물 라이커 목록(인스타 "누가 좋아요") — 차단 작성자 제외. likes 전체 읽기 RLS 필요.
     func fetchLikers(postID: String) async -> [Community.Liker] {
         await ensureSignedIn()
-        guard let url = URL(string: "\(baseURL)/rest/v1/community_likes?select=uid,author_name&post_id=eq.\(postID)&order=created_at.desc&limit=200") else { return [] }
+        // select=* — author_name 컬럼 미배포(community_likers.sql 전)여도 400 안 나고 목록은 채워짐.
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_likes?select=*&post_id=eq.\(postID)&order=created_at.desc&limit=200") else { return [] }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
               let arr = try? Self.decoder.decode([Community.Liker].self, from: data) else { return [] }
         return arr.filter { !blockedUIDs.contains($0.uid) }
@@ -304,6 +305,12 @@ final class CommunityService: ObservableObject {
     private func adjustLocalLike(_ id: String, delta: Int) {
         guard let idx = feed.firstIndex(where: { $0.id == id }) else { return }
         feed[idx].likeCount = max(0, feed[idx].likeCount + delta)
+    }
+
+    /// 댓글 추가/삭제 시 피드 카드의 댓글 수 즉시 보정(트리거 결과를 기다리지 않음).
+    func adjustLocalCommentCount(_ id: String, delta: Int) {
+        guard let idx = feed.firstIndex(where: { $0.id == id }) else { return }
+        feed[idx].commentCount = max(0, (feed[idx].commentCount ?? 0) + delta)
     }
     private func persistLiked() { defaults.set(Array(likedPostIDs), forKey: Keys.liked) }
 

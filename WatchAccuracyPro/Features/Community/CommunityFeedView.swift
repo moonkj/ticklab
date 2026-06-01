@@ -977,13 +977,17 @@ private struct CommentsView: View {
         Task {
             let ok = await service.addComment(to: post, body: text)
             sending = false
-            if ok { input = ""; focused = false; await reload() }
+            if ok { input = ""; focused = false; service.adjustLocalCommentCount(post.id, delta: +1); await reload() }
         }
     }
 
     private func delete(_ c: Community.Comment) async {
         comments.removeAll { $0.id == c.id }
-        if !(await service.deleteComment(c.id)) { await reload() }
+        if await service.deleteComment(c.id) {
+            service.adjustLocalCommentCount(post.id, delta: -1)
+        } else {
+            await reload()
+        }
     }
 }
 
@@ -994,6 +998,7 @@ private struct LikersView: View {
     @ObservedObject private var service = CommunityService.shared
     @State private var likers: [Community.Liker] = []
     @State private var loaded = false
+    @State private var profileTarget: Community.Liker?
 
     var body: some View {
         NavigationStack {
@@ -1024,6 +1029,9 @@ private struct LikersView: View {
                     Button(String(localized: "common.done")) { dismiss() }
                 }
             }
+            .navigationDestination(item: $profileTarget) { liker in
+                UserPostsView(uid: liker.uid, displayName: liker.authorName)
+            }
             .task { likers = await service.fetchLikers(postID: post.id); loaded = true }
         }
     }
@@ -1032,15 +1040,11 @@ private struct LikersView: View {
         let isMe = liker.uid == service.myUID
         let following = service.isFollowing(liker.uid)
         return HStack(spacing: 12) {
-            // 이름·아바타 탭 → 그 사람 게시물.
-            NavigationLink {
-                UserPostsView(uid: liker.uid, displayName: liker.authorName)
-            } label: {
-                HStack(spacing: 12) {
-                    LikerAvatar(name: liker.authorName).frame(width: 34, height: 34)
-                    Text(liker.authorName ?? String(localized: "community.anon_handle"))
-                        .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
-                }
+            // 이름·아바타 탭 → 그 사람 게시물(NavigationLink 미사용 — 버튼이 가로 확장돼 팔로우를 밀어내는 문제 회피).
+            Button { profileTarget = liker } label: {
+                LikerAvatar(name: liker.authorName).frame(width: 34, height: 34)
+                Text(liker.authorName ?? String(localized: "community.anon_handle"))
+                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
             }
             .buttonStyle(.plain)
             Spacer(minLength: 8)
@@ -1118,14 +1122,23 @@ private struct UserPostsView: View {
                 } else {
                     LazyVGrid(columns: cols, spacing: 2) {
                         ForEach(posts) { p in
-                            AsyncImage(url: service.imageURL(for: p.imagePath)) { phase in
-                                switch phase {
-                                case .success(let img): img.resizable().scaledToFill()
-                                default: Color(AppColors.paper2)
-                                }
+                            // 사진 탭 → 그 게시물 상세로 이동.
+                            NavigationLink {
+                                PostDetailView(post: p)
+                            } label: {
+                                Color(AppColors.paper2)
+                                    .aspectRatio(1, contentMode: .fit)
+                                    .overlay {
+                                        AsyncImage(url: service.imageURL(for: p.imagePath)) { phase in
+                                            switch phase {
+                                            case .success(let img): img.resizable().scaledToFill()
+                                            default: Color.clear
+                                            }
+                                        }
+                                    }
+                                    .clipped()
                             }
-                            .aspectRatio(1, contentMode: .fill)
-                            .clipped()
+                            .buttonStyle(.plain)
                         }
                     }
                 }
@@ -1135,5 +1148,47 @@ private struct UserPostsView: View {
         .navigationTitle(displayName ?? String(localized: "community.anon_handle"))
         .navigationBarTitleDisplayMode(.inline)
         .task { posts = await service.fetchPostsByAuthor(uid: uid); loaded = true }
+    }
+}
+
+/// 단일 게시물 상세 — 프로필 그리드/딥링크에서 진입. 피드 카드(좋아요·댓글·라이커·공유)를 그대로 재사용.
+private struct PostDetailView: View {
+    let post: Community.Post
+    @ObservedObject private var service = CommunityService.shared
+    @State private var commentTarget: Community.Post?
+    @State private var likersTarget: Community.Post?
+    @State private var shareItem: ShareCardItem?
+    @State private var reportDone = false
+
+    var body: some View {
+        ScrollView {
+            CommunityPostCard(
+                post: post,
+                liked: service.isLiked(post),
+                blurred: false,
+                following: service.isFollowing(post.authorUID),
+                bookmarked: service.isBookmarked(post),
+                isMine: post.isMine(currentUID: service.myUID),
+                onLike: { Task { await service.toggleLike(post) } },
+                onUnlock: {},
+                onReport: { reason in Task { await service.report(post, reason: reason); reportDone = true } },
+                onBlock: { Task { await service.block(authorOf: post) } },
+                onFollow: { Task { await service.toggleFollow(post.authorUID) } },
+                onBookmark: { Task { await service.toggleBookmark(post) } },
+                onShare: { if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) } },
+                onComment: { commentTarget = post },
+                onLikers: { likersTarget = post },
+                onDelete: nil
+            )
+        }
+        .background(AppColors.paper0.ignoresSafeArea())
+        .navigationTitle(post.authorName ?? String(localized: "community.anon_handle"))
+        .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $commentTarget) { CommentsView(post: $0) }
+        .sheet(item: $likersTarget) { LikersView(post: $0) }
+        .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
+        .alert(String(localized: "community.report.done"), isPresented: $reportDone) {
+            Button(String(localized: "common.done"), role: .cancel) {}
+        }
     }
 }
