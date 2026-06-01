@@ -143,6 +143,16 @@ create policy posts_delete_own on public.community_posts for delete
 drop policy if exists likes_rw on public.community_likes;
 create policy likes_rw on public.community_likes for all
     using (uid = auth.uid()) with check (uid = auth.uid());
+-- 활동 알림(종): 글 작성자는 본인 게시물에 달린 좋아요를 읽을 수 있음(OR로 likes_rw에 SELECT 추가).
+drop policy if exists likes_select_post_author on public.community_likes;
+create policy likes_select_post_author on public.community_likes for select
+    using (
+        uid = auth.uid()
+        or exists (
+            select 1 from public.community_posts p
+            where p.id = post_id and p.author_uid = auth.uid()
+        )
+    );
 
 -- reports: 본인 신고만 insert
 drop policy if exists reports_insert on public.community_reports;
