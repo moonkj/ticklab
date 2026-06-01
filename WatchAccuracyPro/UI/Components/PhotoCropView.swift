@@ -27,30 +27,24 @@ struct PhotoCropView: View {
 
     var body: some View {
         GeometryReader { geo in
-            let cropW = geo.size.width - 40
+            // 인스타 스타일: 크롭 프레임을 화면 풀폭 4:3 엣지투엣지로(중앙), 컨트롤은 오버레이.
+            let cropW = geo.size.width
             let cropH = cropW / aspect
             let img = upright ?? image
             ZStack {
-                Color.black.ignoresSafeArea()
+                Color.black
 
-                VStack(spacing: 24) {
-                    Text(String(localized: "photo.crop.hint"))
-                        .font(.system(size: 13, weight: .medium))
-                        .foregroundStyle(.white.opacity(0.8))
+                // 중앙 4:3 크롭 — 드래그·핀치로 위치/확대. 바깥은 검정 밴드(인스타식).
+                cropContent(img: img, cropW: cropW, cropH: cropH)
+                    .frame(width: cropW, height: cropH)
+                    .clipped()
+                    .overlay(Rectangle().stroke(.white.opacity(0.85), lineWidth: 1))
+                    .contentShape(Rectangle())
+                    .gesture(dragGesture(img: img, cropW: cropW, cropH: cropH))
+                    .simultaneousGesture(magnifyGesture(img: img, cropW: cropW, cropH: cropH))
 
-                    cropContent(img: img, cropW: cropW, cropH: cropH)
-                        .frame(width: cropW, height: cropH)
-                        .clipShape(RoundedRectangle(cornerRadius: 6))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6)
-                                .stroke(.white, lineWidth: 2)
-                        )
-                        .contentShape(Rectangle())
-                        .gesture(dragGesture(img: img, cropW: cropW, cropH: cropH))
-                        .simultaneousGesture(magnifyGesture(img: img, cropW: cropW, cropH: cropH))
-                }
-
-                VStack {
+                // 상단 바(취소/완료) — 세이프에어리어 아래로(상태바·노치 회피) + 가독성 그라데이션.
+                VStack(spacing: 0) {
                     HStack {
                         Button(action: onCancel) {
                             Text(String(localized: "common.cancel"))
@@ -69,10 +63,22 @@ struct PhotoCropView: View {
                         }
                     }
                     .padding(.horizontal, 20)
-                    .padding(.top, 12)
+                    .padding(.top, geo.safeAreaInsets.top + 8)
+                    .padding(.bottom, 16)
+                    .background(
+                        LinearGradient(colors: [.black.opacity(0.55), .clear],
+                                       startPoint: .top, endPoint: .bottom)
+                    )
                     Spacer()
+                    Text(String(localized: "photo.crop.hint"))
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.85))
+                        .padding(.horizontal, 16).padding(.vertical, 8)
+                        .background(Capsule().fill(.black.opacity(0.4)))
+                        .padding(.bottom, geo.safeAreaInsets.bottom + 28)
                 }
             }
+            .ignoresSafeArea()
             .onAppear {
                 if upright == nil { upright = image.uprightCopy() }
             }
