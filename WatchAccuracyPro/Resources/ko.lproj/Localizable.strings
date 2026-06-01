@@ -1608,7 +1608,7 @@
 "video.empty.body" = "곧 새로운 시계 영상이 추가됩니다.";
 "video.watch_on_youtube" = "YouTube에서 보기";
 "stats.entry.videos" = "추천 영상";
-"stats.entry.videos.subtitle" = "전문가가 고른 시계 영상";
+"stats.entry.videos.subtitle" = "YouTube 시계 영상";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 
 /* Sprint 8 — 정렬 옵션 */

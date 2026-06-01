@@ -1574,7 +1574,7 @@
 "video.empty.body" = "De nouvelles vidéos de montres arrivent bientôt.";
 "video.watch_on_youtube" = "Voir sur YouTube";
 "stats.entry.videos" = "Vidéos sélectionnées";
-"stats.entry.videos.subtitle" = "Vidéos de montres sélectionnées";
+"stats.entry.videos.subtitle" = "Vidéos de montres sur YouTube";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 "sort.custom" = "Custom Order";
 "sort.brand" = "Brand";

@@ -1609,7 +1609,7 @@
 "video.empty.body" = "New watch videos coming soon.";
 "video.watch_on_youtube" = "Watch on YouTube";
 "stats.entry.videos" = "Featured Videos";
-"stats.entry.videos.subtitle" = "Hand-picked watch videos";
+"stats.entry.videos.subtitle" = "Watch videos on YouTube";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 
 /* Sprint 8 — Sort options */

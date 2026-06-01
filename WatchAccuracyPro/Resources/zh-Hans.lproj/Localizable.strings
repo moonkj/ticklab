@@ -1574,7 +1574,7 @@
 "video.empty.body" = "即将添加新的腕表视频。";
 "video.watch_on_youtube" = "在 YouTube 观看";
 "stats.entry.videos" = "精选视频";
-"stats.entry.videos.subtitle" = "专家精选腕表视频";
+"stats.entry.videos.subtitle" = "YouTube 腕表视频";
 "stats.entry.news.subtitle" = "Hodinkee · WatchTime · aBlogtoWatch";
 "sort.custom" = "Custom Order";
 "sort.brand" = "Brand";

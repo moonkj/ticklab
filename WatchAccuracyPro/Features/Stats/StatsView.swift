@@ -102,13 +102,13 @@ struct StatsView: View {
                         funEntryCard(emoji: "🏆",
                                      title: String(localized: "stats.entry.badges"),
                                      subtitle: String(localized: "stats.entry.badges.subtitle"),
-                                     tint: AppColors.accent.opacity(0.18))
+                                     tint: AppColors.accent.opacity(0.18), fillHeight: true)
                     }.buttonStyle(.plain)
                     NavigationLink { HighlightTimelineView() } label: {
                         funEntryCard(emoji: "⭐",
                                      title: String(localized: "stats.entry.highlights"),
                                      subtitle: String(localized: "stats.entry.highlights.subtitle"),
-                                     tint: AppColors.warning.opacity(0.15))
+                                     tint: AppColors.warning.opacity(0.15), fillHeight: true)
                     }.buttonStyle(.plain)
                 }
                 NavigationLink { WrappedView() } label: {
@@ -128,16 +128,16 @@ struct StatsView: View {
                 HStack(spacing: 10) {
                     // 브랜드리그 진입 → 내부에 글로벌분석 세그먼트 포함 (통합).
                     NavigationLink { BrandLeagueView() } label: {
-                        funEntryCard(emoji: "📣",
+                        funEntryCard(emoji: "🏅",
                                      title: String(localized: "stats.entry.league"),
                                      subtitle: String(localized: "stats.entry.community.subtitle"),
-                                     tint: AppColors.info.opacity(0.18))
+                                     tint: AppColors.info.opacity(0.18), fillHeight: true)
                     }.buttonStyle(.plain)
                     NavigationLink { BrandNewsView() } label: {
                         funEntryCard(emoji: "📰",
                                      title: String(localized: "stats.entry.news"),
                                      subtitle: String(localized: "stats.entry.news.subtitle"),
-                                     tint: Color.orange.opacity(0.15))
+                                     tint: Color.orange.opacity(0.15), fillHeight: true)
                     }.buttonStyle(.plain)
                     // 큐레이션 YouTube 영상 — 백엔드(curated_channels) 준비 후 플래그 ON.
                     if FeatureFlags.shared.videoFeedEnabled {
@@ -145,7 +145,8 @@ struct StatsView: View {
                             funEntryCard(emoji: "▶️",
                                          title: String(localized: "stats.entry.videos"),
                                          subtitle: String(localized: "stats.entry.videos.subtitle"),
-                                         tint: Color.red.opacity(0.14))
+                                         tint: Color.red.opacity(0.14), fillHeight: true,
+                                         symbol: "play.rectangle.fill", symbolColor: .red)
                         }.buttonStyle(.plain)
                     }
                 }
@@ -153,15 +154,21 @@ struct StatsView: View {
         }
     }
 
-    private func funEntryCard(emoji: String, title: String, subtitle: String, tint: Color) -> some View {
+    private func funEntryCard(emoji: String, title: String, subtitle: String, tint: Color, fillHeight: Bool = false, symbol: String? = nil, symbolColor: Color = AppColors.ink0) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(emoji).font(.system(size: 26))
+            if let symbol {
+                Image(systemName: symbol).font(.system(size: 24)).foregroundStyle(symbolColor)
+                    .frame(height: 32, alignment: .leading)
+            } else {
+                Text(emoji).font(.system(size: 26)).frame(height: 32, alignment: .leading)
+            }
             Text(title)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(AppColors.ink0)
             Text(subtitle)
                 .font(.system(size: 11))
                 .foregroundStyle(AppColors.ink2)
+            Spacer(minLength: 6)   // chevron 을 하단으로 — 높이 균일화 시 자연스럽게.
             HStack {
                 Spacer()
                 Image(systemName: "arrow.right.circle.fill")
@@ -171,7 +178,8 @@ struct StatsView: View {
         }
         .padding(14)
         // Round 169: minHeight 120→132 (chevron 과 subtitle 간 spacing 확보).
-        .frame(maxWidth: .infinity, minHeight: 132, alignment: .topLeading)
+        // fillHeight: HStack 행에서 형제 카드 중 가장 큰 높이로 늘려 박스 크기 통일(배경까지 채움).
+        .frame(maxWidth: .infinity, minHeight: 132, maxHeight: fillHeight ? .infinity : nil, alignment: .topLeading)
         .background(LinearGradient(colors: [tint, AppColors.paper1],
                                    startPoint: .topLeading, endPoint: .bottomTrailing))
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
