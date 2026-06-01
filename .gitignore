@@ -16,7 +16,9 @@ xcuserdata/
 # Swift Package Manager
 .build/
 .swiftpm/
-Packages/
+# NOTE: Packages/ 는 로컬 소스 패키지(TickLabCore/TickLabUI)라 커밋해야 CI(xcodegen)가 찾음.
+#       표준 SPM gitignore 의 'Packages/' 제외 제거 — 이전 CI "Invalid local package" 실패 원인.
+Packages/.build/
 Package.resolved
 *.xcworkspace/xcshareddata/swiftpm/
 
