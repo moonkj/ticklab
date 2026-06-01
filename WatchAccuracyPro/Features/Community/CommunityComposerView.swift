@@ -54,10 +54,16 @@ struct CommunityComposerView: View {
             }
             .photosPicker(isPresented: $showingLibrary, selection: $photoItem, matching: .images)
             .onChange(of: photoItem) { _, item in
+                guard let item else { return }
                 Task {
-                    guard let raw = try? await item?.loadTransferable(type: Data.self),
-                          let ui = UIImage(data: raw) else { return }
-                    await MainActor.run { cropPayload = CropImagePayload(image: ui) }
+                    let raw = try? await item.loadTransferable(type: Data.self)
+                    await MainActor.run {
+                        // 같은 사진을 다시 골라도 onChange가 재발화되도록 선택값 초기화.
+                        photoItem = nil
+                        if let raw, let ui = UIImage(data: raw) {
+                            cropPayload = CropImagePayload(image: ui)
+                        }
+                    }
                 }
             }
             .sheet(isPresented: $showingCamera) {

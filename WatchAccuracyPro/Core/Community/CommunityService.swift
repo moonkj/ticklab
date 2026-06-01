@@ -10,6 +10,7 @@ final class CommunityService: ObservableObject {
     static let shared = CommunityService()
     private init() {
         accessToken = defaults.string(forKey: Keys.token)
+        refreshToken = defaults.string(forKey: Keys.refresh)
         myUID = defaults.string(forKey: Keys.uid)
         if let arr = defaults.array(forKey: Keys.liked) as? [String] { likedPostIDs = Set(arr) }
         if let arr = defaults.array(forKey: Keys.blocked) as? [String] { blockedUIDs = Set(arr) }
@@ -28,9 +29,11 @@ final class CommunityService: ObservableObject {
 
     private(set) var myUID: String?
     private var accessToken: String?
+    private var refreshToken: String?
 
     private enum Keys {
         static let token = "ticklab.community.token"
+        static let refresh = "ticklab.community.refresh"
         static let uid = "ticklab.community.uid"
         static let eula = "ticklab.community.eulaAccepted"
         static let viewerTerms = "ticklab.community.viewerTermsAccepted"
@@ -61,10 +64,16 @@ final class CommunityService: ObservableObject {
 
     // MARK: - Anonymous auth
 
-    /// 익명 세션 보장. 캐시 토큰 있으면 재사용, 없으면 익명 가입.
+    /// 익명 세션 보장. 토큰 없으면 가입, **만료(또는 임박)면 refresh 로 같은 uid 세션 갱신**,
+    /// refresh 실패 시에만 신규 가입. (이전 버그: 만료 토큰을 그대로 재사용 → 403 "exp claim".)
     func ensureSignedIn() async {
-        if accessToken != nil, myUID != nil { return }
-        await signInAnonymously()
+        guard let token = accessToken, myUID != nil else {
+            await signInAnonymously()
+            return
+        }
+        if Self.isJWTExpired(token) {
+            if !(await refreshSession()) { await signInAnonymously() }
+        }
     }
 
     private func signInAnonymously() async {
@@ -78,21 +87,60 @@ final class CommunityService: ObservableObject {
         req.httpBody = "{}".data(using: .utf8)
         do {
             let (data, _) = try await URLSession.shared.data(for: req)
-            struct AuthResp: Decodable {
-                let access_token: String?
-                struct User: Decodable { let id: String }
-                let user: User?
-            }
-            let resp = try JSONDecoder().decode(AuthResp.self, from: data)
-            if let token = resp.access_token, let uid = resp.user?.id {
-                accessToken = token
-                myUID = uid
-                defaults.set(token, forKey: Keys.token)
-                defaults.set(uid, forKey: Keys.uid)
-            }
+            if !applyAuth(data) { lastError = "익명 가입 응답 파싱 실패" }
         } catch {
             lastError = error.localizedDescription
         }
+    }
+
+    /// refresh_token 으로 access_token 갱신(같은 익명 uid 유지). 성공 시 true.
+    private func refreshSession() async -> Bool {
+        guard let rt = refreshToken,
+              let url = URL(string: "\(baseURL)/auth/v1/token?grant_type=refresh_token") else { return false }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue(anonKey, forHTTPHeaderField: "apikey")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["refresh_token": rt])
+        do {
+            let (data, resp) = try await URLSession.shared.data(for: req)
+            if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) { return false }
+            return applyAuth(data)
+        } catch { return false }
+    }
+
+    /// gotrue 응답(access/refresh/user) 캐시 적용. 성공 시 true.
+    @discardableResult
+    private func applyAuth(_ data: Data) -> Bool {
+        struct AuthResp: Decodable {
+            let access_token: String?
+            let refresh_token: String?
+            struct User: Decodable { let id: String }
+            let user: User?
+        }
+        guard let resp = try? JSONDecoder().decode(AuthResp.self, from: data),
+              let token = resp.access_token, let uid = resp.user?.id else { return false }
+        accessToken = token
+        refreshToken = resp.refresh_token
+        myUID = uid
+        defaults.set(token, forKey: Keys.token)
+        defaults.set(uid, forKey: Keys.uid)
+        if let rt = resp.refresh_token { defaults.set(rt, forKey: Keys.refresh) }
+        return true
+    }
+
+    /// JWT `exp` 가 지났는지(60s 버퍼). 디코드 실패 시 만료로 간주(안전 측).
+    static func isJWTExpired(_ jwt: String) -> Bool {
+        let parts = jwt.split(separator: ".")
+        guard parts.count == 3 else { return true }
+        var b64 = String(parts[1])
+            .replacingOccurrences(of: "-", with: "+")
+            .replacingOccurrences(of: "_", with: "/")
+        while b64.count % 4 != 0 { b64 += "=" }
+        guard let data = Data(base64Encoded: b64),
+              let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+              let exp = obj["exp"] as? Double else { return true }
+        return Date().timeIntervalSince1970 >= (exp - 60)
     }
 
     /// 인증 헤더 부착 (세션 토큰 우선, 없으면 anon 키).
