@@ -269,10 +269,13 @@ struct CollectionView: View {
                                                         .font(.system(size: 22))
                                                         .foregroundStyle(selectedIDs.contains(watch.id) ? AppColors.accent : AppColors.ink3)
                                                         .padding(10)
+                                                        // 접근성: 선택 상태는 버튼 .isSelected trait 로 음성 안내 — 아이콘은 시각 전용
+                                                        .accessibilityHidden(true)
                                                 }
                                                 .opacity(selectedIDs.contains(watch.id) ? 1 : 0.7)
                                         }
                                         .buttonStyle(.plain)
+                                        .accessibilityAddTraits(selectedIDs.contains(watch.id) ? .isSelected : [])
                                     } else {
                                         PressableCard {
                                             pathBinding.wrappedValue.append(watch)
@@ -403,6 +406,9 @@ struct CollectionView: View {
                                     .font(.system(size: 18))
                                     .foregroundStyle(sortOption == .custom ? AppColors.ink2 : AppColors.accent)
                             }
+                            // 접근성: 현재 정렬 기준 이름을 음성 안내 (silent 방지). 기존 sort.* 키 재사용.
+                            // TODO(a11y): needs label — "정렬" 라벨용 일반 키 없음(sort.* 는 옵션값뿐). .strings 미편집 제약.
+                            .accessibilityLabel(String(localized: sortOption.label))
                         }
                     }
                 }
@@ -634,15 +640,23 @@ struct CollectionView: View {
                     bulkFavorite()
                 } label: {
                     Image(systemName: "star").font(.system(size: 18)).foregroundStyle(AppColors.accent)
+                        // 접근성: 아이콘 전용 버튼 최소 44pt 터치 영역 (아이콘 크기 유지)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(selectedIDs.isEmpty)
+                .accessibilityLabel(String(localized: "a11y.favorite.add"))
                 // 일괄 삭제
                 Button {
                     showingBulkDeleteAlert = true
                 } label: {
                     Image(systemName: "trash").font(.system(size: 18)).foregroundStyle(AppColors.danger)
+                        // 접근성: 아이콘 전용 버튼 최소 44pt 터치 영역 (아이콘 크기 유지)
+                        .frame(minWidth: 44, minHeight: 44)
+                        .contentShape(Rectangle())
                 }
                 .disabled(selectedIDs.isEmpty)
+                .accessibilityLabel(String(localized: "common.delete"))
             }
             .padding(.horizontal, 20).padding(.vertical, 14)
             .background(.ultraThinMaterial)
@@ -719,6 +733,7 @@ struct CollectionView: View {
             Image(systemName: "sparkles")
                 .font(.system(size: 22))
                 .foregroundStyle(AppColors.accentDark)
+                .accessibilityHidden(true)  // 접근성: 장식용 — 옆 챌린지 텍스트가 의미 전달
             VStack(alignment: .leading, spacing: 2) {
                 Text(String(localized: "collection.challenge.title"))
                     .font(.system(size: 15, weight: .semibold))
@@ -794,6 +809,7 @@ struct HeroWatchCard: View {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
                             .font(.system(size: 9))
+                            .accessibilityHidden(true)  // 접근성: 옆 "대표" 텍스트가 의미 전달 — 장식용
                         Text(String(localized: "watch.primary.badge"))
                             .font(.system(size: 9, weight: .semibold))
                             .tracking(1.5)
@@ -864,6 +880,7 @@ struct HeroWatchCard: View {
                         } label: {
                             HStack(spacing: 5) {
                                 Image(systemName: "mic.fill").font(.system(size: 14))
+                                    .accessibilityHidden(true)  // 접근성: 옆 "측정" 텍스트가 의미 전달 — 장식용
                                 Text(String(localized: "measurement.button.start_short"))
                                     .font(.system(size: 11, weight: .semibold))
                             }
@@ -876,9 +893,13 @@ struct HeroWatchCard: View {
                         .buttonStyle(.plain)
                     }
                     if watch.isFavorite {
+                        // 접근성: 즐겨찾기 상태는 하단 FAV 카운트·상세화면에서도 노출되는 중복 표시 →
+                        //   장식 처리로 raw 심볼명("star fill") 음성 안내 방지.
+                        // TODO(a11y): needs label — "즐겨찾기됨" 상태 noun 키 없음(기존은 동작/필터 키뿐). .strings 미편집.
                         Image(systemName: "star.fill")
                             .font(.system(size: 14))
                             .foregroundStyle(AppColors.accent)
+                            .accessibilityHidden(true)
                     }
                 }
 

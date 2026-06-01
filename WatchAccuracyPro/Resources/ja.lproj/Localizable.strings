@@ -290,6 +290,16 @@
 "photo.crop.hint" = "ドラッグ・ピンチで時計を合わせてください";
 "community.tab.title" = "コミュニティ";
 "community.subtitle" = "匿名で分かち合う、今日の手首";
+"compare.title" = "時計を比較";
+"compare.entry" = "別の時計と比較";
+"compare.select" = "比較する時計を選択";
+"compare.more_accurate" = "より正確";
+"compare.rate" = "平均rate";
+"compare.beat_error" = "ビートエラー";
+"compare.amplitude" = "振り角";
+"compare.confidence" = "信頼度";
+"compare.last_measured" = "最終測定";
+"compare.no_data" = "測定なし";
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
 "timeline.first_meeting" = "出会い";

@@ -37,6 +37,8 @@ struct WatchDetailView: View {
     private static let serviceLogPageSize = 5
     /// Round 170: 단일 측정 삭제 확인.
     @State private var measurementToDelete: WatchMeasurement?
+    /// T-25: 다른 시계와 비교 — 선택 시트.
+    @State private var comparePicker = false
     /// Round 173: 시계 정보 편집 sheet + 삭제 확인 alert.
     @State private var editing: Bool = false
     @State private var deleteAlert: Bool = false
@@ -245,6 +247,32 @@ struct WatchDetailView: View {
             }()
             SpecCardComposerView(watch: watch, existing: existingCard)
         }
+        // T-25: 비교할 시계 선택 → 푸시로 CompareView.
+        .sheet(isPresented: $comparePicker) {
+            NavigationStack {
+                List(allWatches.filter { $0.id != watch.id }, id: \.id) { other in
+                    NavigationLink {
+                        CompareView(left: watch, right: other)
+                    } label: {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(other.brand)
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundStyle(AppColors.ink0)
+                            Text(other.model)
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink2)
+                        }
+                    }
+                }
+                .navigationTitle(String(localized: "compare.select"))
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .topBarLeading) {
+                        Button(String(localized: "common.cancel")) { comparePicker = false }
+                    }
+                }
+            }
+        }
         .navigationTitle(watch.model)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -284,6 +312,14 @@ struct WatchDetailView: View {
                         composingSpecCard = true
                     } label: {
                         Label(String(localized: "menu.speccard.create"), systemImage: "rectangle.stack.badge.plus")
+                    }
+                    // T-25: 다른 시계와 비교 (시계 2개 이상일 때).
+                    if allWatches.count >= 2 {
+                        Button {
+                            comparePicker = true
+                        } label: {
+                            Label(String(localized: "compare.entry"), systemImage: "square.split.2x1")
+                        }
                     }
                     if !watch.measurements.isEmpty {
                         let payload = DataExportService.export(watch: watch, format: .csv)

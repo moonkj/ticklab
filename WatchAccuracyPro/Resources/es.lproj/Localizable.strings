@@ -290,6 +290,16 @@
 "photo.crop.hint" = "Arrastra y pellizca para encuadrar el reloj";
 "community.tab.title" = "Comunidad";
 "community.subtitle" = "Fotos de muñeca anónimas, cada día";
+"compare.title" = "Comparar relojes";
+"compare.entry" = "Comparar con otro reloj";
+"compare.select" = "Selecciona un reloj para comparar";
+"compare.more_accurate" = "Más preciso";
+"compare.rate" = "Rate medio";
+"compare.beat_error" = "Beat error";
+"compare.amplitude" = "Amplitud";
+"compare.confidence" = "Confianza";
+"compare.last_measured" = "Última medición";
+"compare.no_data" = "Sin mediciones";
 "timeline.title" = "Historia del reloj";
 "timeline.entry" = "Línea de vida";
 "timeline.first_meeting" = "Primer encuentro";

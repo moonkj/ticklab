@@ -221,6 +221,16 @@
 "photo.crop.hint" = "드래그·확대해서 시계를 맞추세요";
 "community.tab.title" = "커뮤니티";
 "community.subtitle" = "익명으로 나누는 오늘의 손목";
+"compare.title" = "시계 비교";
+"compare.entry" = "다른 시계와 비교";
+"compare.select" = "비교할 시계 선택";
+"compare.more_accurate" = "더 정확";
+"compare.rate" = "평균 rate";
+"compare.beat_error" = "비트 에러";
+"compare.amplitude" = "진폭";
+"compare.confidence" = "신뢰도";
+"compare.last_measured" = "최근 측정";
+"compare.no_data" = "측정 데이터 없음";
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
 "timeline.first_meeting" = "첫 만남";

@@ -239,6 +239,8 @@ struct MeasurementView: View {
             .frame(width: 44, height: 44)
             .background(AppColors.paper2)
             .clipShape(RoundedRectangle(cornerRadius: 10))
+            // 접근성: 옆 브랜드·모델 텍스트가 시계를 식별 — 썸네일은 장식용
+            .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(viewModel.watch.brand.uppercased())
                     .font(.system(size: 9, weight: .semibold))
@@ -400,6 +402,7 @@ struct MeasurementView: View {
         if case .measuring = viewModel.state { isRunning = true } else { isRunning = false }
         return VStack(alignment: .leading, spacing: 10) {
             EyebrowLabel(text: String(localized: "measurement.eyebrow.live_signal"), number: "02")
+            // 접근성: Canvas 파형은 시각 전용 — VoiceOver 예외 (수치는 03 metrics/diagnostic 에서 음성 안내)
             LiveWaveformCanvas(
                 running: isRunning,
                 samples: isRunning ? viewModel.waveformSamples : nil,
@@ -703,6 +706,7 @@ struct MeasurementView: View {
                 HStack(spacing: 8) {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(.white)
+                        .accessibilityHidden(true)  // 접근성: 옆 "결과 보기" 텍스트가 의미 전달 — 장식용
                     Text(String(localized: "measurement.button.see_result"))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(.white)

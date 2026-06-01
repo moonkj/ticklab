@@ -96,6 +96,7 @@ struct MeasurementResultView: View {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(AppColors.success)
                         .font(.system(size: 14))
+                        .accessibilityHidden(true)  // 접근성: 옆 텍스트가 의미 전달 — 장식용 아이콘
                     Text(String(localized: "result.saved.hint"))
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(AppColors.success)
@@ -231,6 +232,8 @@ struct MeasurementResultView: View {
             Spacer()
         }
         .padding(.vertical, 4)
+        // 접근성: 등급 타일(글자)·eyebrow·claim·gloss 를 하나의 요소로 묶어 "신뢰도, A, ..." 로 읽힘.
+        .accessibilityElement(children: .combine)
     }
 
     private var editorialVerdict: some View {
@@ -346,6 +349,8 @@ struct MeasurementResultView: View {
                 .opacity(dialOpacity)
                 .padding(.top, 4)
                 .transition(.scale.combined(with: .opacity))
+                // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
+                .accessibilityHidden(true)
             HStack(spacing: 8) {
                 let inCosc = result.rateSecondsPerDay >= -4 && result.rateSecondsPerDay <= 6
                 Chip(
@@ -494,6 +499,7 @@ struct MeasurementResultView: View {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundStyle(AppColors.warning)
                     .font(.system(size: 16))
+                    .accessibilityHidden(true)  // 접근성: 옆 제목 텍스트가 의미 전달 — 장식용 아이콘
                 Text(String(localized: "result.suspicious.title"))
                     .font(.system(size: 14, weight: .bold))
                     .foregroundStyle(AppColors.ink0)

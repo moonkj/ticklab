@@ -297,6 +297,16 @@
 "photo.crop.hint" = "Drag and pinch to frame the watch";
 "community.tab.title" = "Community";
 "community.subtitle" = "Anonymous wrist shots, shared daily";
+"compare.title" = "Compare";
+"compare.entry" = "Compare with another watch";
+"compare.select" = "Select a watch to compare";
+"compare.more_accurate" = "More accurate";
+"compare.rate" = "Avg rate";
+"compare.beat_error" = "Beat error";
+"compare.amplitude" = "Amplitude";
+"compare.confidence" = "Confidence";
+"compare.last_measured" = "Last measured";
+"compare.no_data" = "No measurements";
 "timeline.title" = "Watch Story";
 "timeline.entry" = "Life Timeline";
 "timeline.first_meeting" = "First meeting";

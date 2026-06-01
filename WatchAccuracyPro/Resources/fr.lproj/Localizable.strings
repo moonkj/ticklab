@@ -290,6 +290,16 @@
 "photo.crop.hint" = "Faites glisser et pincez pour cadrer la montre";
 "community.tab.title" = "Communauté";
 "community.subtitle" = "Photos au poignet, partagées en anonyme";
+"compare.title" = "Comparer les montres";
+"compare.entry" = "Comparer à une autre montre";
+"compare.select" = "Choisir une montre à comparer";
+"compare.more_accurate" = "Plus précis";
+"compare.rate" = "Rate moyen";
+"compare.beat_error" = "Beat error";
+"compare.amplitude" = "Amplitude";
+"compare.confidence" = "Confiance";
+"compare.last_measured" = "Dernière mesure";
+"compare.no_data" = "Aucune mesure";
 "timeline.title" = "Histoire de la montre";
 "timeline.entry" = "Chronologie";
 "timeline.first_meeting" = "Première rencontre";

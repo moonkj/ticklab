@@ -290,6 +290,16 @@
 "photo.crop.hint" = "拖动·捏合调整手表位置";
 "community.tab.title" = "社区";
 "community.subtitle" = "匿名分享的今日腕表";
+"compare.title" = "比较手表";
+"compare.entry" = "与其他手表比较";
+"compare.select" = "选择要比较的手表";
+"compare.more_accurate" = "更准确";
+"compare.rate" = "平均rate";
+"compare.beat_error" = "平衡误差";
+"compare.amplitude" = "振幅";
+"compare.confidence" = "置信度";
+"compare.last_measured" = "最近测量";
+"compare.no_data" = "暂无测量";
 "timeline.title" = "腕表生平";
 "timeline.entry" = "生平时间线";
 "timeline.first_meeting" = "初次相遇";

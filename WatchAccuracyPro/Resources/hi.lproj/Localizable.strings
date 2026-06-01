@@ -290,6 +290,16 @@
 "photo.crop.hint" = "घड़ी को फ्रेम करने के लिए खींचें और पिंच करें";
 "community.tab.title" = "समुदाय";
 "community.subtitle" = "गुमनाम रिस्ट शॉट्स, रोज़ साझा";
+"compare.title" = "घड़ी तुलना";
+"compare.entry" = "दूसरी घड़ी से तुलना करें";
+"compare.select" = "तुलना के लिए घड़ी चुनें";
+"compare.more_accurate" = "ज़्यादा सटीक";
+"compare.rate" = "औसत रेट";
+"compare.beat_error" = "बीट एरर";
+"compare.amplitude" = "आयाम";
+"compare.confidence" = "विश्वास";
+"compare.last_measured" = "आख़िरी माप";
+"compare.no_data" = "कोई माप नहीं";
 "timeline.title" = "घड़ी की कहानी";
 "timeline.entry" = "जीवन समयरेखा";
 "timeline.first_meeting" = "पहली मुलाकात";
