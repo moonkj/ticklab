@@ -377,8 +377,10 @@ final class CommunityService: ObservableObject {
     func addCuratedChannel(channelID: String, title: String, thumbnailURL: String?,
                            locale: String, category: String?, sortOrder: Int) async -> Bool {
         await ensureSignedIn()
-        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels") else { return false }
+        // on_conflict=channel_id,locale + merge-duplicates → 이미 있으면 갱신(중복 409 방지).
+        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels?on_conflict=channel_id,locale") else { return false }
         var req = authedRequest(url, method: "POST")
+        req.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
         var body: [String: Any] = ["channel_id": channelID, "title": title, "locale": locale, "sort_order": sortOrder, "active": true]
         if let t = thumbnailURL, !t.isEmpty { body["thumbnail_url"] = t }
         if let c = category, !c.isEmpty { body["category"] = c }
