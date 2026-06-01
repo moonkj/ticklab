@@ -150,12 +150,12 @@ struct MeasurementView: View {
         .navigationDestination(item: completedResultBinding) { result in
             MeasurementResultView(result: result, watch: viewModel.watch, onRetry: {
                 viewModel.cancel()
-            })
+            }, debugFastShadow: viewModel.fastShadowText)
         }
         .navigationDestination(for: MeasurementResult.self) { result in
             MeasurementResultView(result: result, watch: viewModel.watch, onRetry: {
                 viewModel.cancel()
-            })
+            }, debugFastShadow: viewModel.fastShadowText)
         }
         // Round 161 (사용자 보고: "30초 측정인데 35초까지 측정함"):
         // 기존 liveMetrics.elapsedSeconds 는 analyzer cycle(~1s)에 묶여 wall-clock 보다 늦음.

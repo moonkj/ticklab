@@ -6,6 +6,8 @@ struct MeasurementResultView: View {
     /// Round 133: 부모(MeasurementView) 가 state 를 .idle 로 reset 후 dismiss 하도록 콜백 주입.
     /// 없으면 단순 dismiss (sheet/standalone 으로 쓰는 경우).
     var onRetry: (() -> Void)? = nil
+    /// (DEBUG 진단) 빠른측정 섀도우 한 줄. 릴리스/일반 경로에선 nil → 미표시.
+    var debugFastShadow: String? = nil
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
     @ScaledMetric(relativeTo: .largeTitle) private var gradeTileSize: CGFloat = 64
@@ -91,6 +93,16 @@ struct MeasurementResultView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
+                // (DEBUG 진단) 빠른측정 섀도우 — 측정은 30초 그대로, 조기종료라면 어땠을지 비교.
+                if let shadow = debugFastShadow {
+                    Text(shadow)
+                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                        .foregroundStyle(AppColors.accentDark)
+                        .padding(.horizontal, 10).padding(.vertical, 8)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(AppColors.accent.opacity(0.12))
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                }
                 // Round 129 (실기기 피드백): 저장 완료 확인 배너 — AI 스피너와 혼동 방지.
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
