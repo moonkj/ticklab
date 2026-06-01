@@ -1531,6 +1531,7 @@
 "profile.name.hint" = "Name shown to others";
 "profile.section.collector" = "Collector Info";
 "profile.start_year" = "Collection Start Year";
+"profile.since" = "%@ से";
 "profile.fav_brands" = "Favorite Brands";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";

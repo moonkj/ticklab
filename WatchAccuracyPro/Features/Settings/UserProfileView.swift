@@ -184,4 +184,10 @@ struct UserProfile {
     static var startYear: String {
         UserDefaults.standard.string(forKey: "ticklab.profile.startYear") ?? ""
     }
+    static var favoriteBrands: String {
+        UserDefaults.standard.string(forKey: "ticklab.profile.brands") ?? ""
+    }
+    static var bio: String {
+        UserDefaults.standard.string(forKey: "ticklab.profile.bio") ?? ""
+    }
 }

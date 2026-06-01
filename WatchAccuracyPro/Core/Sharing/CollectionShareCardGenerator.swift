@@ -54,18 +54,40 @@ private struct CollectionShareCard: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            VStack(spacing: 6) {
-                Text(ownerName.isEmpty ? String(localized: "collection.sharecard.tagline") : ownerName)
-                    .font(.system(size: 22, weight: .bold, design: .serif))
-                    .foregroundStyle(AppColors.ink0)
-                    .lineLimit(1)
+            VStack(spacing: 7) {
+                // 프로필 아바타 — 컬렉터 정체성(있을 때만).
+                if let data = UserProfile.photoData, let ui = UIImage(data: data) {
+                    Image(uiImage: ui).resizable().scaledToFill()
+                        .frame(width: 56, height: 56)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(AppColors.paper0, lineWidth: 2))
+                }
+                HStack(spacing: 6) {
+                    Text(ownerName.isEmpty ? String(localized: "collection.sharecard.tagline") : ownerName)
+                        .font(.system(size: 22, weight: .bold, design: .serif))
+                        .foregroundStyle(AppColors.ink0)
+                        .lineLimit(1)
+                    if UserProfile.isDealer {
+                        Text("DEALER")
+                            .font(.system(size: 9, weight: .bold))
+                            .foregroundStyle(AppColors.primaryDeep)
+                            .padding(.horizontal, 5).padding(.vertical, 2)
+                            .background(AppColors.accent).clipShape(Capsule())
+                    }
+                }
                 Text(String(format: NSLocalizedString("collection.sharecard.stats", comment: ""),
                             watches.count, brands, years))
                     .font(.system(size: 12, weight: .medium))
                     .foregroundStyle(AppColors.ink2)
+                // 보유 시작 연도(프로필) — 컬렉터 연차 강조.
+                if !UserProfile.startYear.isEmpty {
+                    Text(String(format: String(localized: "profile.since"), UserProfile.startYear))
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(AppColors.ink3)
+                }
             }
-            .padding(.top, 30)
-            .padding(.bottom, 18)
+            .padding(.top, 26)
+            .padding(.bottom, 16)
 
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
                 ForEach(gridWatches, id: \.id) { w in

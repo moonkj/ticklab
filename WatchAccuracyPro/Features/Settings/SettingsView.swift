@@ -56,6 +56,17 @@ struct SettingsView: View {
         AppleIntelligenceVerdictService.shared.isAppleIntelligenceAvailable
     }
 
+    /// 프로필 요약 한 줄 — "2018년부터 · Rolex, Omega". 채워진 항목만 결합, 없으면 nil(기본 힌트 표시).
+    private var profileSummaryLine: String? {
+        var parts: [String] = []
+        if !UserProfile.startYear.isEmpty {
+            parts.append(String(format: String(localized: "profile.since"), UserProfile.startYear))
+        }
+        let brands = UserProfile.favoriteBrands.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !brands.isEmpty { parts.append(brands) }
+        return parts.isEmpty ? nil : parts.joined(separator: " · ")
+    }
+
     var body: some View {
         @Bindable var preferences = preferences
 
@@ -89,10 +100,17 @@ struct SettingsView: View {
                                             .background(AppColors.accent).clipShape(Capsule())
                                     }
                                 }
-                                Text(String(localized: UserProfile.displayName.isEmpty
-                                             ? "settings.profile.setup_hint" : "settings.profile.edit_hint"))
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(AppColors.ink2)
+                                if let summary = profileSummaryLine {
+                                    Text(summary)
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(AppColors.ink2)
+                                        .lineLimit(1)
+                                } else {
+                                    Text(String(localized: UserProfile.displayName.isEmpty
+                                                 ? "settings.profile.setup_hint" : "settings.profile.edit_hint"))
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(AppColors.ink2)
+                                }
                             }
                             Spacer()
                             Image(systemName: "chevron.right")

@@ -1573,6 +1573,7 @@
 "profile.name.hint" = "다른 컬렉터들에게 표시될 이름";
 "profile.section.collector" = "컬렉터 정보";
 "profile.start_year" = "컬렉션 시작 연도";
+"profile.since" = "%@년부터";
 "profile.fav_brands" = "좋아하는 브랜드";
 "profile.bio" = "소개";
 "profile.dealer_badge" = "딜러 배지";
