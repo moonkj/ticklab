@@ -34,7 +34,7 @@ final class FastRateABSweepTests: XCTestCase {
                 continue
             }
             guard let outcome = pipeline.measureEarlyExit(
-                candidateWindows: windows, toleranceSecondsPerDay: 10.0, stableCount: 3
+                candidateWindows: windows, totalSeconds: 12, toleranceSecondsPerDay: 10.0, stableCount: 3
             ) else {
                 print("\(c.label): early-exit 결과 없음 — 스킵")
                 continue

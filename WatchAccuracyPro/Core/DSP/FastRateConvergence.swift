@@ -48,8 +48,13 @@ extension DSPPipeline {
     /// 누적 버퍼 위에서 증가하는 윈도우로 analyze 하며 rate 수렴 시점을 찾는다.
     /// 수렴하면 그 윈도우 결과 + 시점, 미수렴이면 최종(최대) 윈도우 결과를 반환.
     /// ⚠️ 기존 측정 경로(stop/analyze)는 변경하지 않는 **부가 메서드**. 플래그 게이트로만 사용.
+    /// - Parameter totalSeconds: 완료된 버퍼에서 "앞 w초"(prefix)로 조기종료를 시뮬레이션할 때
+    ///   전체 버퍼 길이(초). 지정 시 각 윈도우는 tailTrim=total−w 로 **앞 w초**를 분석한다.
+    ///   nil(라이브)이면 analyze(windowSeconds:)=현재 누적의 끝 w초 = 그 시점 전체.
+    ///   ⚠️ analyze(windowSeconds:)는 tail(마지막 w초) 기준이므로, 완료 버퍼에서 prefix 시뮬엔 필수.
     func measureEarlyExit(
         candidateWindows: [Double],
+        totalSeconds: Double? = nil,
         toleranceSecondsPerDay: Double = 2.0,
         stableCount: Int = 3
     ) -> EarlyExitOutcome? {
@@ -57,7 +62,13 @@ extension DSPPipeline {
         var resultsByWindow: [Double: MeasurementResult] = [:]
 
         for w in candidateWindows.sorted() {
-            guard let r = analyze(windowSeconds: w) else { continue }
+            let analysis: MeasurementResult?
+            if let total = totalSeconds, total > w {
+                analysis = analyze(windowSeconds: w, tailTrimSeconds: total - w)   // 앞 w초(prefix)
+            } else {
+                analysis = analyze(windowSeconds: w)
+            }
+            guard let r = analysis else { continue }
             resultsByWindow[w] = r
             rates.append((w, r.rateSecondsPerDay))
 

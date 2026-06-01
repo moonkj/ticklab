@@ -63,7 +63,7 @@ final class FastRateConvergenceTests: XCTestCase {
 
         // 조기종료 — 윈도우 [4,6,8,10,12] 스윕.
         let outcome = try XCTUnwrap(
-            pipeline.measureEarlyExit(candidateWindows: [4, 6, 8, 10, 12],
+            pipeline.measureEarlyExit(candidateWindows: [4, 6, 8, 10, 12], totalSeconds: 12,
                                       toleranceSecondsPerDay: 10.0, stableCount: 3),
             "조기종료 결과 없음"
         )
