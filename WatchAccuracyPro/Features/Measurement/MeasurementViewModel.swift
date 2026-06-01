@@ -230,7 +230,7 @@ final class MeasurementViewModel {
             var shadow: MeasurementViewModel.FastShadowInfo? = nil
             #if DEBUG
             if let p = pipelineRef, let full = result,
-               let oc = p.measureEarlyExit(candidateWindows: [6, 8, 10, 12, 15, 18, 22, 26, 30],
+               let oc = p.measureEarlyExit(candidateWindows: [3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 26, 30],
                                            toleranceSecondsPerDay: 3.0, stableCount: 3) {
                 shadow = .init(convergedSeconds: oc.convergedSeconds,
                                earlyRate: oc.result.rateSecondsPerDay,
