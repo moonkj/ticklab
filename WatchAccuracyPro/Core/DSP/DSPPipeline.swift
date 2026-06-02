@@ -912,6 +912,16 @@ final class DSPPipeline {
     /// Round 173: confidence 보정(순수·테스트 가능 — Hard Rule #1).
     /// - tgLocked: TG(robust 추정기)가 락했는지. 실패(fallback)면 robust 신호 없음 → −30.
     /// - cleanedBeats/onsetCount: IOI 필터 통과 비율. 낮으면 onset 거부 많음(약신호) → 감점.
+    /// Round 174: IOI 가 nominal 주기의 정수배(1...maxMultiple, ±tolerance)인지 — sub-pulse/누락 보정
+    /// 필터의 핵심 술어(순수·테스트 가능, Hard Rule #1).
+    static func ioiIsIntegerMultiple(_ ioi: Double, nominalPeriod: Double,
+                                     tolerance: Double, maxMultiple: Int) -> Bool {
+        guard nominalPeriod > 0 else { return false }
+        let normalized = ioi / nominalPeriod
+        let nearest = normalized.rounded()
+        return nearest >= 1 && nearest <= Double(maxMultiple) && abs(normalized - nearest) <= tolerance
+    }
+
     static func adjustConfidence(base: Double, tgLocked: Bool, cleanedBeats: Int, onsetCount: Int) -> Double {
         var score = base
         if !tgLocked { score -= 30 }
@@ -1088,7 +1098,7 @@ final class DSPPipeline {
         // sub-pulse 혼동 (tic 의 main + secondary ring 번갈아 잡힘) beat 제거.
         // surrounding IOI 가 nominal period 의 정수배 (±5%) 가 아닌 beat 는 OLS + beat error 둘 다에서 제외.
         // 누락된 beat 인접 (IOI = 2× nominal) 도 통과 → leverage 보존.
-        let nominalPeriodForFilter = 3600.0 / Double(bphEstimate.bph)
+        let nominalPeriodForFilter = 3600.0 / Double(nominalBph)   // Round 174: 등록 nominal 기준(감사 P0)
         let cleanedBeats: [BeatEvent] = {
             let warmBeats = beats.filter { $0.timestampSeconds >= 2.0 }
             let candidate = warmBeats.count >= 30 ? warmBeats : beats
@@ -1105,9 +1115,8 @@ final class DSPPipeline {
                     ? candidate[i+1].timestampSeconds - candidate[i].timestampSeconds
                     : nominalPeriodForFilter
                 func ioiOK(_ ioi: Double) -> Bool {
-                    let normalized = ioi / nominalPeriodForFilter
-                    let nearest = round(normalized)
-                    return nearest >= 1 && nearest <= 5 && abs(normalized - nearest) <= tolerance
+                    Self.ioiIsIntegerMultiple(ioi, nominalPeriod: nominalPeriodForFilter,
+                                              tolerance: tolerance, maxMultiple: 5)
                 }
                 return (ioiOK(inIOI) && ioiOK(outIOI)) ? candidate[i] : nil
             }
@@ -1295,7 +1304,9 @@ final class DSPPipeline {
     }
 
     private func preciseRate(beats: [BeatEvent], bphEstimate: BPHEstimate) -> PreciseRate {
-        let nominalPeriodForFilter = 3600.0 / Double(bphEstimate.bph)
+        // Round 174 (감사 P0): 필터 기준을 BPHEstimator lock(bphEstimate.bph)이 아닌 **등록 nominalBph** 로.
+        //   Round 41 철학과 일관 — 알고리즘 mislock 시 잘못된 주기로 정상 beat 를 거부하던 오염 차단.
+        let nominalPeriodForFilter = 3600.0 / Double(nominalBph)
         // sub-pulse/누락 보정: surrounding IOI 가 nominal 의 정수배(±1%)인 beat 만 채택.
         let cleanedBeats: [BeatEvent] = {
             let warmBeats = beats.filter { $0.timestampSeconds >= 2.0 }
@@ -1310,9 +1321,8 @@ final class DSPPipeline {
                     ? candidate[i+1].timestampSeconds - candidate[i].timestampSeconds
                     : nominalPeriodForFilter
                 func ioiOK(_ ioi: Double) -> Bool {
-                    let normalized = ioi / nominalPeriodForFilter
-                    let nearest = round(normalized)
-                    return nearest >= 1 && nearest <= 5 && abs(normalized - nearest) <= tolerance
+                    Self.ioiIsIntegerMultiple(ioi, nominalPeriod: nominalPeriodForFilter,
+                                              tolerance: tolerance, maxMultiple: 5)
                 }
                 return (ioiOK(inIOI) && ioiOK(outIOI)) ? candidate[i] : nil
             }

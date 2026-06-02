@@ -172,4 +172,33 @@ final class ReliabilityGradeTests: XCTestCase {
     func test_adjustConfidence_clean_noPenalty() {
         XCTAssertEqual(DSPPipeline.adjustConfidence(base: 95, tgLocked: true, cleanedBeats: 230, onsetCount: 240), 95, accuracy: 0.001)
     }
+
+    // MARK: - Round 174: IOI 정수배 필터 술어 (DSPPipeline.ioiIsIntegerMultiple)
+
+    private let p0 = 0.125   // 28800 BPH nominal 주기
+
+    func test_ioi_exact_multiples_pass() {
+        for k in [1.0, 2.0, 3.0, 5.0] {
+            XCTAssertTrue(DSPPipeline.ioiIsIntegerMultiple(p0 * k, nominalPeriod: p0, tolerance: 0.01, maxMultiple: 5),
+                          "\(k)× 는 통과해야")
+        }
+    }
+
+    func test_ioi_beyond_max_multiple_fails() {
+        XCTAssertFalse(DSPPipeline.ioiIsIntegerMultiple(p0 * 6, nominalPeriod: p0, tolerance: 0.01, maxMultiple: 5))
+    }
+
+    func test_ioi_sub_period_fails() {
+        // 0.5× → 정수배 아님 → 거부.
+        XCTAssertFalse(DSPPipeline.ioiIsIntegerMultiple(p0 * 0.5, nominalPeriod: p0, tolerance: 0.01, maxMultiple: 5))
+    }
+
+    func test_ioi_within_tolerance_passes_outside_fails() {
+        XCTAssertTrue(DSPPipeline.ioiIsIntegerMultiple(p0 * 1.005, nominalPeriod: p0, tolerance: 0.01, maxMultiple: 5))
+        XCTAssertFalse(DSPPipeline.ioiIsIntegerMultiple(p0 * 1.02, nominalPeriod: p0, tolerance: 0.01, maxMultiple: 5))
+    }
+
+    func test_ioi_invalid_nominal_fails() {
+        XCTAssertFalse(DSPPipeline.ioiIsIntegerMultiple(0.125, nominalPeriod: 0, tolerance: 0.01, maxMultiple: 5))
+    }
 }
