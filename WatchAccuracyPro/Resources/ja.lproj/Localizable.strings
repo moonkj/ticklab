@@ -676,7 +676,6 @@
 "league.news.suffix" = "ニュース";
 "league.news.headline" = "%@ は今 %@、%@ より %@ 倍多く着用!";
 "league.myteam" = "MY TEAM";
-"league.myteam.body" = "%@ の着用: %d · グローバル %@";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "今日";
 "league.period.week" = "週";
@@ -685,7 +684,7 @@
 "league.nav.title" = "ブランドリーグ";
 "league.empty.title" = "まだ着用記録がありません";
 "league.empty.body" = "時計の着用を記録するとブランドランキングが表示されます";
-"league.news.solo" = "%@ は今 %@、%d 回の着用でリード中!";
+"league.news.solo" = "%1$@ は今 %2$@、%3$d 回の着用でリード中!";
 "badges.nav.title" = "バッジ";
 "badges.level.max" = "最大レベル!";
 "badges.level.next" = "次のレベルまで %d";

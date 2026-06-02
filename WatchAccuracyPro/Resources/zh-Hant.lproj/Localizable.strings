@@ -676,7 +676,6 @@
 "league.news.suffix" = "快訊";
 "league.news.headline" = "%1$@ 在本 %2$@ 佩戴次數是 %3$@ 的 %4$@ 倍!";
 "league.myteam" = "我的隊伍";
-"league.myteam.body" = "%@ 你的佩戴:%d · 全球 %@";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "今日";
 "league.period.week" = "週";
@@ -685,7 +684,7 @@
 "league.nav.title" = "品牌聯盟";
 "league.empty.title" = "尚無佩戴紀錄";
 "league.empty.body" = "記錄你的腕錶以查看品牌排名";
-"league.news.solo" = "本 %3$@ %1$@ 以 %2$d 次佩戴領先!";
+"league.news.solo" = "本 %2$@ %1$@ 以 %3$d 次佩戴領先!";
 "badges.nav.title" = "徽章";
 "badges.level.max" = "已達最高等級!";
 "badges.level.next" = "再 %d 即可升級";

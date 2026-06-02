@@ -676,7 +676,6 @@
 "league.news.suffix" = "noticias";
 "league.news.headline" = "¡%1$@ se llevó %4$@ veces más que %3$@ este %2$@!";
 "league.myteam" = "MI EQUIPO";
-"league.myteam.body" = "%@ tus usos: %d · global %@";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "Hoy";
 "league.period.week" = "Semana";
@@ -685,7 +684,7 @@
 "league.nav.title" = "Liga de marcas";
 "league.empty.title" = "Aún no hay registros de uso";
 "league.empty.body" = "Registra tus relojes para ver los rankings por marca";
-"league.news.solo" = "¡%@ va en cabeza con %d usos este %@!";
+"league.news.solo" = "¡%1$@ va en cabeza con %3$d usos este %2$@!";
 "badges.nav.title" = "Insignias";
 "badges.level.max" = "¡Nivel máximo!";
 "badges.level.next" = "%d para el siguiente nivel";

@@ -676,7 +676,6 @@
 "league.news.suffix" = "动态";
 "league.news.headline" = "%1$@ 本 %2$@ 的佩戴次数比 %3$@ 多出 %4$@ 倍!";
 "league.myteam" = "我的阵营";
-"league.myteam.body" = "%@ 你的佩戴:%d · 全球 %@";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "今日";
 "league.period.week" = "本周";
@@ -685,7 +684,7 @@
 "league.nav.title" = "品牌联赛";
 "league.empty.title" = "尚无佩戴记录";
 "league.empty.body" = "记录佩戴,即可查看品牌榜单";
-"league.news.solo" = "%@ 在本 %3$@ 以 %2$d 次佩戴领跑!";
+"league.news.solo" = "%1$@ 在本 %2$@ 以 %3$d 次佩戴领跑!";
 "badges.nav.title" = "徽章";
 "badges.level.max" = "已达最高等级!";
 "badges.level.next" = "再 %d 即可升级";

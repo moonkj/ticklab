@@ -676,7 +676,6 @@
 "league.news.suffix" = "समाचार";
 "league.news.headline" = "%@ ने इस %@ में %@ से %@x अधिक पहना!";
 "league.myteam" = "मेरी टीम";
-"league.myteam.body" = "%@ आपके वियर: %d · वैश्विक %@";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "आज";
 "league.period.week" = "सप्ताह";
@@ -685,7 +684,7 @@
 "league.nav.title" = "ब्रांड लीग";
 "league.empty.title" = "अभी कोई वियर लॉग नहीं";
 "league.empty.body" = "ब्रांड रैंकिंग देखने के लिए अपनी घड़ियाँ लॉग करें";
-"league.news.solo" = "%@ इस %@ में %d वियर के साथ अग्रणी है!";
+"league.news.solo" = "%1$@ इस %2$@ में %3$d वियर के साथ अग्रणी है!";
 "badges.nav.title" = "बैज";
 "badges.level.max" = "अधिकतम स्तर!";
 "badges.level.next" = "अगले स्तर तक %d";

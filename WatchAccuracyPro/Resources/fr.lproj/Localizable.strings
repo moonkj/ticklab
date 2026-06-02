@@ -676,7 +676,6 @@
 "league.news.suffix" = "actualités";
 "league.news.headline" = "%1$@ a porté %4$@ × plus que %3$@ ce %2$@ !";
 "league.myteam" = "MON ÉQUIPE";
-"league.myteam.body" = "%@ vos ports : %d · global %@";
 "league.trend_increase" = "+%d %%";
 "league.period.day" = "Aujourd'hui";
 "league.period.week" = "Semaine";
@@ -685,7 +684,7 @@
 "league.nav.title" = "Ligue des marques";
 "league.empty.title" = "Aucun port enregistré";
 "league.empty.body" = "Enregistrez le port de vos montres pour voir le classement par marque";
-"league.news.solo" = "%@ mène avec %d ports ce %@ !";
+"league.news.solo" = "%1$@ mène avec %3$d ports ce %2$@ !";
 "badges.nav.title" = "Badges";
 "badges.level.max" = "Niveau max !";
 "badges.level.next" = "%d avant le niveau suivant";

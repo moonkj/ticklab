@@ -684,7 +684,6 @@
 "league.news.suffix" = "news";
 "league.news.headline" = "%1$@ wore %4$@x more than %3$@ this %2$@!";
 "league.myteam" = "MY TEAM";
-"league.myteam.body" = "%@ your wear: %d · global %@";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "Today";
 "league.period.week" = "Week";
@@ -693,7 +692,7 @@
 "league.nav.title" = "Brand League";
 "league.empty.title" = "No wear logs yet";
 "league.empty.body" = "Log your watches to see brand rankings";
-"league.news.solo" = "%@ is leading with %d wears this %@!";
+"league.news.solo" = "%1$@ is leading with %3$d wears this %2$@!";
 "badges.nav.title" = "Badges";
 "badges.level.max" = "Max level!";
 "badges.level.next" = "%d to next level";

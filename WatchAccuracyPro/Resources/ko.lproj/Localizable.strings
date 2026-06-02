@@ -614,7 +614,6 @@
 "league.news.suffix" = "소식";
 "league.news.headline" = "%@ 팀이 %@ 동안 %@ 팀보다 %@배 더 많이 착용했어요!";
 "league.myteam" = "MY TEAM";
-"league.myteam.body" = "%@ 동안 %d회 착용";
 "league.trend_increase" = "+%d%%";
 "league.period.day" = "오늘";
 "league.period.week" = "주간";
@@ -624,7 +623,7 @@
 "league.empty.title" = "착용 기록이 없어요";
 "league.empty.body" = "시계를 착용하고 기록하면
 브랜드별 순위를 확인할 수 있어요";
-"league.news.solo" = "%@ 이 %@ 동안 %d회 착용으로 1위를 달리고 있어요!";
+"league.news.solo" = "%1$@ 이 %2$@ 동안 %3$d회 착용으로 1위를 달리고 있어요!";
 "badges.nav.title" = "업적";
 "badges.level.max" = "최고 레벨!";
 "badges.level.next" = "다음 레벨까지 %d개";
