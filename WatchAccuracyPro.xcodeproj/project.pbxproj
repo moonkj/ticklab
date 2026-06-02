@@ -158,6 +158,7 @@
 		7447BD1465D3E483AD3B210A /* PhotoCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3F867375C95643C502D0FB /* PhotoCropView.swift */; };
 		74BEA8A8ABA4477195771546 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8EC3DB6EA239EFE56FB9287 /* UserProfileView.swift */; };
 		74FF28A76C887D9672AFF4AD /* WatchDeletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93ED85F5FC72FFB6185D76FB /* WatchDeletion.swift */; };
+		75234CB7B3275F1FCCA9FBD2 /* GlossaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEFE6432CBA120ACD92495B /* GlossaryView.swift */; };
 		757978029C1BA9D26D547F18 /* RateAggregate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218602B8BE09350EE7663F13 /* RateAggregate.swift */; };
 		768BF43C1B87FE8C2ED801CE /* TrendDiagnosisServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B7B53D5426F40471DE06F /* TrendDiagnosisServiceTests.swift */; };
 		76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA49473933488382E08C687D /* MovementDBOTAService.swift */; };
@@ -280,6 +281,7 @@
 		EA98349EB1E12FC48DF3C00D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7B73CA7D38E14891EFF33C /* Assets.xcassets */; };
 		EB031AD3F6B6C3029CEFBB60 /* WindingHintToast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F3B8F980C953CE9B08EA6 /* WindingHintToast.swift */; };
 		EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47ABF66B3DE34B94929919A /* RootTabView.swift */; };
+		EC95084D4287B94F221841B5 /* AdminOpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DB8B9D022C43D8B4729A /* AdminOpsView.swift */; };
 		ECD94829EBE2AB0201C514F7 /* CollectionGalleryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85CB710BDB6E5CCE4BEEFE /* CollectionGalleryGenerator.swift */; };
 		F1031887A0BB52293D926A92 /* WearToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */; };
 		F1311624612DE197ED27B713 /* MeasurementResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */; };
@@ -482,6 +484,7 @@
 		6F2A14F04A20422E0697A398 /* SupabaseBrandLeagueService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SupabaseBrandLeagueService.swift; sourceTree = "<group>"; };
 		6F467E8C9AB00051FE1FC084 /* MeasurementViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasurementViewModelTests.swift; sourceTree = "<group>"; };
 		6F6AF6DA667E214ECD8C46DA /* CommunityModerationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityModerationTests.swift; sourceTree = "<group>"; };
+		6FB0DB8B9D022C43D8B4729A /* AdminOpsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdminOpsView.swift; sourceTree = "<group>"; };
 		715BC647776CCFC522EA86BC /* WatchModelSuggestionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchModelSuggestionService.swift; sourceTree = "<group>"; };
 		7213C8CD99CB49E77B212DDC /* DSPDownsampleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPDownsampleTests.swift; sourceTree = "<group>"; };
 		73689BE4713DC1443CB49523 /* ClockCalibrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockCalibrationService.swift; sourceTree = "<group>"; };
@@ -552,6 +555,7 @@
 		AB7A8BBC217A99FA65A04B05 /* RateDial.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateDial.swift; sourceTree = "<group>"; };
 		AB7EC5F0BCD470FC9AC0AB0E /* LinearRegressionRateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearRegressionRateTests.swift; sourceTree = "<group>"; };
 		ADD275AC0B4EDAD570033559 /* WatchDescriptionServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchDescriptionServiceTests.swift; sourceTree = "<group>"; };
+		AEEFE6432CBA120ACD92495B /* GlossaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlossaryView.swift; sourceTree = "<group>"; };
 		B179281822F0A79F6C7494A1 /* WearLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLog.swift; sourceTree = "<group>"; };
 		B19CBACE246EE2CB5E082721 /* DSPPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPPipeline.swift; sourceTree = "<group>"; };
 		B29687D9A25F32071B52DE06 /* TrendChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendChartView.swift; sourceTree = "<group>"; };
@@ -1081,6 +1085,8 @@
 		8C6BADC0CE27AE7B6600DC2E /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				6FB0DB8B9D022C43D8B4729A /* AdminOpsView.swift */,
+				AEEFE6432CBA120ACD92495B /* GlossaryView.swift */,
 				BAD78D2E9F5A2A3F1F18B3B2 /* InAppFeedbackView.swift */,
 				D6984089EAA0E94FD1B3326F /* PurchaseView.swift */,
 				47337BB60F08B5060EE99A57 /* ReferralView.swift */,
@@ -1684,6 +1690,7 @@
 				D3DF5D931B18B0B3F3AA7648 /* AIDiagnosisCard.swift in Sources */,
 				0F8643A3846C68202C26CD92 /* AccuracyGradeChip.swift in Sources */,
 				6D120686D7D100A75E3FEDBF /* AddWatchView.swift in Sources */,
+				EC95084D4287B94F221841B5 /* AdminOpsView.swift in Sources */,
 				2521BE79E2DE837FACC7DAF4 /* AmplitudeEstimator.swift in Sources */,
 				9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */,
 				8629EB70487A13566F4103C7 /* AppleIntelligenceVerdictService.swift in Sources */,
@@ -1740,6 +1747,7 @@
 				9D87C6D2109460EA773D529B /* FeatureFlags.swift in Sources */,
 				66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */,
 				6DA528D1EFE9C6EABDF65B4D /* GlobalAnalyticsView.swift in Sources */,
+				75234CB7B3275F1FCCA9FBD2 /* GlossaryView.swift in Sources */,
 				31676C796EC3558889FAC1BB /* HapticManager.swift in Sources */,
 				1A70927B74F7E4EAF1B2E33D /* HelpCard.swift in Sources */,
 				1043FF13ADB635BA20AB14BE /* HighlightTimelineView.swift in Sources */,
