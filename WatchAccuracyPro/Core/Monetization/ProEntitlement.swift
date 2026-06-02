@@ -15,8 +15,7 @@ final class ProEntitlement: ObservableObject {
 
     static let monthlyProductId  = "com.ticklab.watchaccuracypro.pro.monthly"
     static let yearlyProductId   = "com.ticklab.app.pro.yearly"
-    static let lifetimeProductId = "com.ticklab.app.pro.lifetime"
-    static let allProductIds: Set<String> = [monthlyProductId, yearlyProductId, lifetimeProductId]
+    static let allProductIds: Set<String> = [monthlyProductId, yearlyProductId]
     static let freeWatchLimit = 1
     static let freeDailyMeasurementLimit = 3
     static let freeJournalMonthLimit = 5

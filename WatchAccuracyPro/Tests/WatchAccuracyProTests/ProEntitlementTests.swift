@@ -27,13 +27,9 @@ final class ProEntitlementTests: XCTestCase {
         XCTAssertTrue(ProEntitlement.allProductIds.contains(ProEntitlement.yearlyProductId))
     }
 
-    func test_allProductIds_contains_lifetime() {
-        XCTAssertTrue(ProEntitlement.allProductIds.contains(ProEntitlement.lifetimeProductId))
-    }
-
-    func test_allProductIds_count_is_three() {
-        XCTAssertEqual(ProEntitlement.allProductIds.count, 3,
-                       "monthly + yearly + lifetime = 3. 신규 상품 추가 시 이 테스트 업데이트 필요.")
+    func test_allProductIds_count_is_two() {
+        XCTAssertEqual(ProEntitlement.allProductIds.count, 2,
+                       "monthly + yearly = 2 (평생 제거). 신규 상품 추가 시 이 테스트 업데이트 필요.")
     }
 
     // MARK: - UserDefaults 초기화
@@ -53,10 +49,6 @@ final class ProEntitlementTests: XCTestCase {
             XCTAssertTrue(id.hasPrefix("com.ticklab."),
                           "\(id) should start with com.ticklab.")
         }
-    }
-
-    func test_lifetime_product_id_is_correct() {
-        XCTAssertEqual(ProEntitlement.lifetimeProductId, "com.ticklab.app.pro.lifetime")
     }
 
     func test_monthly_product_id_is_correct() {

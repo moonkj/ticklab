@@ -2,10 +2,10 @@ import StoreKit
 import SwiftData
 import SwiftUI
 
-/// TickLab Pro 페이월 — 월 $1.99 / 연 $9.99 / 평생 ₩25,000.
+/// TickLab Pro 페이월 — 월간 / 연간(구독).
 /// Free → Pro 업그레이드 진입점. Settings.accountHero 에서 시트로 진입.
 struct PurchaseView: View {
-    enum Plan { case monthly, yearly, lifetime }
+    enum Plan { case monthly, yearly }
 
     @Environment(\.dismiss) private var dismiss
     @Environment(UserPreferences.self) private var preferences
@@ -20,7 +20,6 @@ struct PurchaseView: View {
 
     @State private var monthlyProduct: Product?
     @State private var yearlyProduct: Product?
-    @State private var lifetimeProduct: Product?
     @State private var selectedPlan: Plan = .yearly
     @State private var isLoadingProduct = true
     @State private var isPurchasing = false
@@ -34,7 +33,6 @@ struct PurchaseView: View {
         switch selectedPlan {
         case .monthly:  return monthlyProduct
         case .yearly:   return yearlyProduct
-        case .lifetime: return lifetimeProduct
         }
     }
 
@@ -205,10 +203,6 @@ struct PurchaseView: View {
             planToggleButton(.yearly,
                              label: String(localized: "purchase.plan.toggle.yearly"),
                              price: yearlyProduct?.displayPrice ?? "$9.99")
-            planToggleButton(.lifetime,
-                             label: String(localized: "purchase.plan.toggle.lifetime"),
-                             price: lifetimeProduct?.displayPrice,
-                             badge: String(localized: "purchase.plan.lifetime.badge"))
         }
         .frame(maxWidth: .infinity)
         .background(AppColors.paper1)
@@ -263,7 +257,6 @@ struct PurchaseView: View {
                 switch selectedPlan {
                 case .monthly:  return "purchase.plan.monthly"
                 case .yearly:   return "purchase.plan.yearly"
-                case .lifetime: return "purchase.plan.lifetime"
                 }
             }()
             Text(String(localized: String.LocalizationValue(planKey)))
@@ -291,7 +284,6 @@ struct PurchaseView: View {
                     switch selectedPlan {
                     case .monthly:  return "purchase.plan.monthly.per_month"
                     case .yearly:   return "purchase.plan.yearly.per_year"
-                    case .lifetime: return "purchase.plan.lifetime.one_time"
                     }
                 }()
                 Text(String(localized: String.LocalizationValue(perKey)))
@@ -301,7 +293,6 @@ struct PurchaseView: View {
                     switch selectedPlan {
                     case .monthly:  return "purchase.legal.auto_renew.monthly"
                     case .yearly:   return "purchase.legal.auto_renew"
-                    case .lifetime: return "purchase.legal.one_time"
                     }
                 }()
                 Text(String(localized: String.LocalizationValue(legalKey)))
@@ -329,12 +320,7 @@ struct PurchaseView: View {
 
     private var actionButtons: some View {
         VStack(spacing: 10) {
-            let ctaKey: String = {
-                if isPurchasing { return "purchase.cta.processing" }
-                return selectedPlan == .lifetime
-                    ? "purchase.cta.buy_lifetime"
-                    : "purchase.cta.subscribe"
-            }()
+            let ctaKey = isPurchasing ? "purchase.cta.processing" : "purchase.cta.subscribe"
             PrimaryButton(
                 String(localized: String.LocalizationValue(ctaKey)),
                 style: .accent,
@@ -359,9 +345,7 @@ struct PurchaseView: View {
 
     private var legalLinks: some View {
         VStack(spacing: 6) {
-            let legalKey = selectedPlan == .lifetime
-                ? "purchase.legal.one_time"
-                : "purchase.legal.auto_renew"
+            let legalKey = "purchase.legal.auto_renew"
             Text(String(localized: String.LocalizationValue(legalKey)))
                 .font(.system(size: 11))
                 .foregroundStyle(AppColors.ink3)
@@ -392,12 +376,10 @@ struct PurchaseView: View {
             for p in loaded {
                 if p.id == ProEntitlement.monthlyProductId  { monthlyProduct  = p }
                 if p.id == ProEntitlement.yearlyProductId   { yearlyProduct   = p }
-                if p.id == ProEntitlement.lifetimeProductId { lifetimeProduct = p }
             }
         } catch {
             monthlyProduct  = nil
             yearlyProduct   = nil
-            lifetimeProduct = nil
         }
     }
 
