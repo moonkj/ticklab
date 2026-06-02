@@ -3,19 +3,13 @@ import Foundation
 import XCTest
 @testable import WatchAccuracyPro
 
-/// 커버리지 보강 — DSPPipeline 의 legacy(`useSimplified:false`) 경로, 다양한 BPH,
-/// 입력 가드(빈/짧은/무음), 정적 유틸(normalized/estimateSNR) 및
-/// SimplifiedBeatDetector 의 3개 순수 함수(hilbertEnvelope/detectOnsets/rateFromOnsets) 를 검증한다.
-///
-/// 기존 DSPPipelineTests/DSPPipelineLiveStreamTests/BeatDetectorTests/BPHEstimatorTests 의
-/// 단언을 중복하지 않고, 미검증 분기를 추가로 덮는다.
-///
-/// DSPPipeline / SimplifiedBeatDetector 둘 다 `@MainActor` 가 아니므로 클래스 어노테이션 불필요.
+/// 커버리지 보강 — DSPPipeline 의 다양한 BPH·입력 가드(빈/짧은/무음)·정적 유틸(normalized/estimateSNR) 검증.
+/// 기존 DSPPipelineTests/BeatDetectorTests/BPHEstimatorTests 의 단언을 중복하지 않고 미검증 분기를 덮는다.
 final class DSPCoverageTests: XCTestCase {
 
     // MARK: - 합성 신호 헬퍼 (BeatDetectorTests 의 makeEnvelope 패턴 재사용)
 
-    /// 실측 production filter chain 으로 envelope 생성. SimplifiedBeatDetector / estimateSNR 입력용.
+    /// 실측 production filter chain 으로 envelope 생성. estimateSNR 입력용.
     private func makeEnvelope(_ raw: [Float]) -> [Float] {
         let pre = PreEmphasisFilter()
         let bp = BandPassFilter()
@@ -214,137 +208,6 @@ final class DSPCoverageTests: XCTestCase {
         let silentEnv = [Float](repeating: 0.001, count: env.count)
         let silentSNR = DSPPipeline.estimateSNR(envelope: silentEnv, raw: silentEnv)
         XCTAssertGreaterThan(signalSNR, silentSNR)
-    }
-
-    // MARK: - SimplifiedBeatDetector.hilbertEnvelope
-
-    func test_hilbert_envelope_too_short_returns_empty() {
-        // n <= 4 가드.
-        XCTAssertTrue(SimplifiedBeatDetector.hilbertEnvelope(samples: [1, 2, 3], sampleRate: 48_000).isEmpty)
-        XCTAssertTrue(SimplifiedBeatDetector.hilbertEnvelope(samples: [], sampleRate: 48_000).isEmpty)
-    }
-
-    func test_hilbert_envelope_length_matches_input() {
-        // 출력 길이는 입력 길이 n 과 동일해야 한다 (FFT 패딩은 내부에서만).
-        let raw = SyntheticSignal.ticTocImpulseTrain(bph: 28_800, duration: 1)
-        let env = SimplifiedBeatDetector.hilbertEnvelope(samples: raw, sampleRate: 48_000)
-        XCTAssertEqual(env.count, raw.count)
-        // envelope magnitude 는 비음수.
-        XCTAssertTrue(env.allSatisfy { $0 >= 0 })
-    }
-
-    func test_hilbert_envelope_pure_tone_is_nearly_constant() {
-        // 단일 정현파의 analytic magnitude 는 거의 일정한 진폭(=1)에 LPF 후 수렴해야 한다.
-        let sampleRate = 48_000.0
-        let freq = 1_000.0
-        let n = 8_192
-        let tone = (0..<n).map { Float(sin(2.0 * .pi * freq * Double($0) / sampleRate)) }
-        let env = SimplifiedBeatDetector.hilbertEnvelope(samples: tone, sampleRate: sampleRate, lpfCutoffHz: 200)
-        XCTAssertEqual(env.count, n)
-        // edge transient 제외 중간 구간의 평균이 1 부근.
-        let mid = Array(env[(n / 4)..<(3 * n / 4)])
-        let mean = mid.reduce(Float(0), +) / Float(mid.count)
-        XCTAssertEqual(mean, 1.0, accuracy: 0.25)
-    }
-
-    func test_hilbert_envelope_peaks_at_impulse_locations() {
-        // 임펄스 신호 → envelope 가 임펄스 부근에서 peak 를 가진다.
-        var raw = [Float](repeating: 0, count: 8_192)
-        raw[2_000] = 1.0
-        raw[5_000] = 1.0
-        let env = SimplifiedBeatDetector.hilbertEnvelope(samples: raw, sampleRate: 48_000, lpfCutoffHz: 1_000)
-        XCTAssertEqual(env.count, raw.count)
-        // 임펄스 근처 값이 신호 없는 구간(인덱스 7000)보다 크다.
-        let near = max(env[1_990...2_050].max() ?? 0, env[4_990...5_050].max() ?? 0)
-        XCTAssertGreaterThan(near, env[7_000])
-    }
-
-    // MARK: - SimplifiedBeatDetector.detectOnsets
-
-    func test_simplified_detectOnsets_short_envelope_returns_empty() {
-        // envelope.count <= 4 가드.
-        XCTAssertTrue(SimplifiedBeatDetector.detectOnsets(envelope: [0.1, 0.2, 0.3], sampleRate: 48_000).isEmpty)
-    }
-
-    func test_simplified_detectOnsets_flat_envelope_finds_nothing() {
-        // 완전 평탄 → MAD=0, threshold=median, local-max 조건 미충족(> 비교) → onset 없음.
-        let flat = [Float](repeating: 0.5, count: 10_000)
-        let onsets = SimplifiedBeatDetector.detectOnsets(envelope: flat, sampleRate: 48_000)
-        XCTAssertTrue(onsets.isEmpty)
-    }
-
-    func test_simplified_detectOnsets_periodic_peaks_match_count() {
-        // 200Hz envelope 위에 0.125s 간격(28800 BPH=8/s) peak → 2초에 약 16개.
-        // refractory 80ms < 125ms 간격 → 각 peak 개별 검출.
-        let sampleRate = 200.0
-        let n = Int(sampleRate * 2.0)
-        var env = [Float](repeating: 0.05, count: n)
-        let period = Int(0.125 * sampleRate)  // 25 samples
-        var idx = period
-        while idx < n - 1 {
-            env[idx] = 1.0
-            idx += period
-        }
-        let onsets = SimplifiedBeatDetector.detectOnsets(envelope: env, sampleRate: sampleRate, refractoryMs: 80, kMad: 3.0)
-        // 약 15개 (시작/끝 경계 ±2).
-        XCTAssertGreaterThanOrEqual(onsets.count, 13)
-        XCTAssertLessThanOrEqual(onsets.count, 17)
-        // onset timestamp 는 단조 증가 + 초 단위.
-        for i in 1..<onsets.count {
-            XCTAssertGreaterThan(onsets[i], onsets[i - 1])
-        }
-        XCTAssertLessThanOrEqual(onsets.last ?? 0, 2.0)
-    }
-
-    func test_simplified_detectOnsets_refractory_suppresses_close_peaks() {
-        // 인접한 두 peak 가 refractory 안에 있으면 첫 번째만 검출.
-        let sampleRate = 1_000.0
-        var env = [Float](repeating: 0.05, count: 2_000)
-        env[500] = 1.0
-        env[510] = 1.0   // 10ms 뒤 — refractory 80ms 안 → 억제돼야 함
-        let onsets = SimplifiedBeatDetector.detectOnsets(envelope: env, sampleRate: sampleRate, refractoryMs: 80)
-        XCTAssertEqual(onsets.count, 1)
-        XCTAssertEqual(onsets[0], 0.5, accuracy: 0.005)  // 인덱스 500 / 1000Hz
-    }
-
-    // MARK: - SimplifiedBeatDetector.rateFromOnsets
-
-    func test_simplified_rateFromOnsets_too_few_returns_nil() {
-        // onsets < 8 가드.
-        let onsets = (0..<5).map { Double($0) * 0.125 }
-        XCTAssertNil(SimplifiedBeatDetector.rateFromOnsets(onsets: onsets, nominalBph: 28_800))
-    }
-
-    func test_simplified_rateFromOnsets_perfect_28800_returns_nominal_bph() {
-        // 정확히 0.125s 간격 16개 onset → bph ≈ 28800, residual RMS ≈ 0.
-        let onsets = (0..<16).map { Double($0) * 0.125 }
-        let result = SimplifiedBeatDetector.rateFromOnsets(onsets: onsets, nominalBph: 28_800)
-        let unwrapped = try? XCTUnwrap(result)
-        XCTAssertNotNil(unwrapped)
-        if let r = unwrapped {
-            XCTAssertEqual(r.bph, 28_800, accuracy: 1.0)
-            XCTAssertEqual(r.beatCount, 16)
-            XCTAssertEqual(r.residualRMSSeconds, 0, accuracy: 1e-6)
-        }
-    }
-
-    func test_simplified_rateFromOnsets_fast_watch_higher_bph() {
-        // 약간 빠른 watch — IOI 0.124s (tight 5% 안) → bph > 28800.
-        let ioi = 0.124
-        let onsets = (0..<20).map { Double($0) * ioi }
-        let result = SimplifiedBeatDetector.rateFromOnsets(onsets: onsets, nominalBph: 28_800)
-        if let r = result {
-            XCTAssertEqual(r.bph, 3600.0 / ioi, accuracy: 5.0)
-            XCTAssertGreaterThan(r.bph, 28_800)
-        } else {
-            XCTFail("tight 5% 안의 IOI 는 rate 가 나와야 한다")
-        }
-    }
-
-    func test_simplified_rateFromOnsets_all_outliers_returns_nil() {
-        // nominal 대비 50% 벗어난 IOI 들 → tight 필터 통과 0 → nil.
-        let onsets = (0..<12).map { Double($0) * 0.2 }  // 0.2s vs nominal 0.125s → +60%
-        XCTAssertNil(SimplifiedBeatDetector.rateFromOnsets(onsets: onsets, nominalBph: 28_800))
     }
 
     // MARK: - 라이브 스트림 종료 + 진단 (legacy path)
