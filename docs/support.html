@@ -37,49 +37,73 @@ footer a { color: var(--ink2); margin-right: 16px; text-decoration: none; }
   <h1>지원 · 문의</h1>
 
   <div class="contact-card">
-    <p style="font-size: 13px; color: var(--ink2); margin-bottom: 8px;">이메일</p>
+    <p style="font-size: 13px; color: var(--ink2); margin-bottom: 8px;">이메일 · 앱 내 설정 → 피드백 보내기</p>
     <a href="mailto:imurmkj@naver.com">imurmkj@naver.com</a>
-    <p style="font-size: 13px; color: var(--ink3); margin-top: 12px;">평균 응답 시간 24~48시간</p>
+    <p style="font-size: 13px; color: var(--ink3); margin-top: 12px;">평균 응답 시간 24~48시간 · 부적절 콘텐츠 신고는 24시간 내 조치</p>
   </div>
 
-  <h2>자주 묻는 질문</h2>
+  <h2>측정 · 정확도</h2>
   <div class="faq">
     <details>
       <summary>측정 결과가 평소보다 큰 오차로 나와요</summary>
-      <p>가장 흔한 원인은 <strong>동력 부족</strong>입니다. 시계를 풀와인딩 (수동 30~40 회전 또는 자동 시계는 1~2분 흔들기) 한 후 5분 안정화 시간을 두고 재측정해 보세요. 측정 자세 (다이얼 업·다이얼 다운·크라운 업·다운·좌·우) 가 picker 선택과 일치하는지도 확인하세요.</p>
+      <p>가장 흔한 원인은 <strong>동력 부족</strong>입니다. 시계를 풀와인딩 (수동 30~40 회전 또는 자동 시계는 1~2분 흔들기) 한 후 5분 안정화 시간을 두고 재측정해 보세요. 측정 자세 (다이얼 업·다운·크라운 업·다운·좌·우) 가 picker 선택과 일치하는지도 확인하세요. 같은 자세에서 단일 측정 재현성은 약 ±2 s/d이며, 자세에 따라 ±5 s/d까지 달라질 수 있어 3~5회 평균을 참고하면 더 안정적입니다.</p>
     </details>
     <details>
       <summary>amplitude (진폭) 가 표시되지 않아요</summary>
       <p>일부 무브먼트 (사파이어 케이스백, 코악시얼 이스케이프먼트 등) 는 마이크 기반 진폭 측정 정확도가 낮아 의도적으로 표시하지 않습니다. rate (일오차) 와 beat error 는 정상적으로 측정됩니다.</p>
     </details>
     <details>
-      <summary>Pro 결제 후 기능이 바로 풀리지 않아요</summary>
-      <p>설정 → 계정 카드 탭 → "이전 구매 복원" 을 눌러보세요. 같은 Apple ID 로 App Store 에 로그인되어 있는지 확인하세요. 그래도 문제가 있으면 imurmkj@naver.com 으로 영수증 이메일과 함께 연락주세요.</p>
-    </details>
-    <details>
-      <summary>구독 취소 방법</summary>
-      <p>iPhone <strong>설정 앱 → [본인 Apple ID] → 구독</strong> 에서 TickLab Pro 선택 → 취소. 또는 앱 설정 → 계정 카드 탭하면 구독 관리 시트가 열립니다.</p>
+      <summary>측정 정확도가 표시되는 기준은?</summary>
+      <p>측정 결과에는 A/B/C/F grade 가 부여됩니다. A·B 는 신뢰 가능 범위, C·F 는 재측정을 권장합니다. 신뢰도는 신호 대 잡음비 (SNR), 측정 시간, BPH lock 품질, 측정 간 재현성(cross-window) 종합으로 결정됩니다. 깨끗한 신호면 ~10~30초 내에 측정이 끝납니다.</p>
     </details>
     <details>
       <summary>측정 도중 화면이 꺼져요</summary>
       <p>설정 → 측정 섹션 → "측정 중 화면 항상 켜기" 가 켜져 있는지 확인하세요. 기본값은 ON 입니다.</p>
     </details>
     <details>
-      <summary>일기·시계 데이터가 사라졌어요</summary>
-      <p>모든 데이터는 기기 내부에 저장되며 iCloud 백업은 아직 지원되지 않습니다. 디바이스 변경·앱 삭제 시 데이터가 함께 삭제됩니다. 데이터 export 는 시계 디테일 → 메뉴 → "내보내기 (CSV)" 로 가능합니다.</p>
-    </details>
-    <details>
       <summary>AI 진단이 작동하지 않아요</summary>
-      <p>AI 진단은 <strong>Apple Intelligence 지원 디바이스</strong> (iPhone 15 Pro 이상, iOS 18.1+) 에서만 동작합니다. 미지원 디바이스에서는 규칙 기반 fallback 이 자동 사용됩니다. Free 사용자는 시계당 3회 trial 후 fallback 으로 전환됩니다.</p>
+      <p>AI 진단은 <strong>Apple Intelligence 지원 디바이스</strong>에서 기기 내부적으로 동작합니다. 미지원 디바이스에서는 규칙 기반 fallback 이 자동 사용됩니다.</p>
+    </details>
+  </div>
+
+  <h2>커뮤니티</h2>
+  <div class="faq">
+    <details>
+      <summary>커뮤니티는 어떻게 이용하나요?</summary>
+      <p>커뮤니티 탭에서 시계 사진/글을 익명으로 게시하고 좋아요·댓글·팔로우할 수 있습니다. 첫 게시 전 커뮤니티 약관에 동의해야 하며, 게시는 <strong>하루 1건</strong>으로 제한됩니다. 화면에는 닉네임/실명이 노출되지 않지만, 검열·차단을 위해 내부 식별자가 사용됩니다.</p>
     </details>
     <details>
-      <summary>측정 정확도가 표시되는 기준은?</summary>
-      <p>측정 결과에는 A/B/C/F grade 가 부여됩니다. A·B 는 신뢰 가능 범위, C·F 는 재측정을 권장합니다. 신뢰도는 신호 대 잡음비 (SNR), 측정 시간, BPH lock 품질, beat error 종합으로 결정됩니다.</p>
+      <summary>사진을 올리면 측정값이나 위치가 같이 올라가나요?</summary>
+      <p>아니요. 게시 시 사진의 <strong>위치 정보(EXIF)는 제거</strong>되며, 측정 데이터(일오차·진폭·비트에러)·시리얼 번호·구매가는 <strong>전송되지 않습니다.</strong> 함께 올라가는 것은 표시명·선택한 브랜드/뱃지·한 줄 캡션뿐입니다.</p>
+    </details>
+    <details>
+      <summary>부적절한 게시물을 봤어요</summary>
+      <p>게시물의 메뉴에서 <strong>신고</strong> 또는 작성자 <strong>차단</strong>을 할 수 있습니다. 신고된 콘텐츠는 24시간 내 조치되며, 온디바이스 콘텐츠 필터와 무관용 정책이 함께 적용됩니다. 긴급 사안은 imurmkj@naver.com 으로 알려주세요.</p>
+    </details>
+    <details>
+      <summary>브랜드 리그에 내 데이터가 올라가나요?</summary>
+      <p>브랜드 리그는 <strong>기본 꺼짐(opt-in)</strong>입니다. 설정에서 직접 켠 경우에만 시계 브랜드명과 착용 빈도가 익명으로 집계되며, 개인정보·시리얼·사진은 전송되지 않습니다.</p>
+    </details>
+  </div>
+
+  <h2>구독 · 데이터</h2>
+  <div class="faq">
+    <details>
+      <summary>Pro 결제 후 기능이 바로 풀리지 않아요</summary>
+      <p>설정 → 계정 카드 탭 → "이전 구매 복원" 을 눌러보세요. 같은 Apple ID 로 App Store 에 로그인되어 있는지 확인하세요. 그래도 문제가 있으면 imurmkj@naver.com 으로 영수증 이메일과 함께 연락주세요.</p>
+    </details>
+    <details>
+      <summary>구독 취소 방법</summary>
+      <p>iPhone <strong>설정 앱 → [본인 Apple ID] → 구독</strong> 에서 TickLab Pro(월간/연간) 선택 → 취소. 또는 앱 설정 → 계정 카드를 탭하면 구독 관리 시트가 열립니다.</p>
+    </details>
+    <details>
+      <summary>일기·시계 데이터가 사라졌어요</summary>
+      <p>기기 내 데이터는 로컬에 저장되며 iCloud 백업은 아직 지원되지 않습니다. 디바이스 변경·앱 삭제 시 데이터가 함께 삭제됩니다. 측정 기록 export 는 시계 디테일 → 메뉴 → "내보내기 (CSV)" 로 가능합니다.</p>
     </details>
   </div>
 
   <h2>버그 신고 / 기능 제안</h2>
-  <p style="color: var(--ink2);">이메일로 보내주시면 가장 빠릅니다. 아래 정보를 함께 주시면 진단이 빨라요.</p>
+  <p style="color: var(--ink2);">앱 내 <strong>설정 → 피드백 보내기</strong>로 보내면 운영자에게 바로 전달됩니다. 이메일로도 받습니다. 아래 정보를 함께 주시면 진단이 빨라요.</p>
   <ul style="padding-left: 24px; margin: 12px 0; color: var(--ink2); font-size: 14px;">
     <li>iPhone 모델 + iOS 버전</li>
     <li>TickLab 버전 (설정 → 정보)</li>
