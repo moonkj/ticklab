@@ -133,13 +133,22 @@ struct MeasurementView: View {
                     // Round 170: coupling coaching bars (마이크 접촉 / 락 안정도) 숨김 — 사용자 요청.
                     diagnosticStrip
                 }
-                controls
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
             .padding(.bottom, 32)
         }
         .background(AppColors.paper0.ignoresSafeArea())
+        // Round 175 (사용자 보고: "측정시작 버튼 터치 잘 안됨"): controls 를 ScrollView 밖
+        //   safeAreaInset 하단 고정 — 스크롤 제스처 경쟁 제거 + 항상 도달 가능(컬렉션 측정 버튼처럼 확실히 눌림).
+        .safeAreaInset(edge: .bottom) {
+            controls
+                .padding(.horizontal, 20)
+                .padding(.top, 8)
+                .padding(.bottom, 6)
+                .frame(maxWidth: .infinity)
+                .background(AppColors.paper0)
+        }
         // Round 139 (Jay High): "측정 시작" 버튼 키를 화면 제목으로 재사용 — "측정" 으로 변경.
         .navigationTitle(String(localized: "measurement.title"))
         .navigationBarTitleDisplayMode(.inline)
