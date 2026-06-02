@@ -96,6 +96,24 @@ final class CommunityModelDecodeTests: XCTestCase {
         XCTAssertNil(s.note)
     }
 
+    func test_feedback() throws {
+        let f = try decode(Community.Feedback.self, """
+        {"id":"f1","type":"bug","message":"crash on launch","app_version":"1.2.0","created_at":"2026-06-02T00:00:00Z"}
+        """)
+        XCTAssertEqual(f.id, "f1")
+        XCTAssertEqual(f.type, "bug")
+        XCTAssertEqual(f.message, "crash on launch")
+        XCTAssertEqual(f.appVersion, "1.2.0")
+    }
+
+    func test_feedback_app_version_absent() throws {
+        let f = try decode(Community.Feedback.self, """
+        {"id":"f2","type":"general","message":"nice app","created_at":"2026-06-02T00:00:00Z"}
+        """)
+        XCTAssertNil(f.appVersion)
+        XCTAssertEqual(f.type, "general")
+    }
+
     func test_announcement_and_warning() throws {
         let a = try decode(Community.Announcement.self, """
         {"id":"a1","body":"hello","active":true,"created_at":"2026-06-01T00:00:00Z"}

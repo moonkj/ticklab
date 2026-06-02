@@ -1048,7 +1048,7 @@ final class DSPPipeline {
             let sumSq = currentResiduals.reduce(0.0) { $0 + $1 * $1 }
             let rms: Double? = (currentResiduals.count > 0) ? (sumSq / Double(currentResiduals.count)).squareRoot() : nil
             // 3) R² 검증 — 너무 noisy 면 fallback (단 RMS 는 보존해 게이트가 nil 로 무력화되지 않도록).
-            let r2 = Self.coefficientOfDetermination(beats: currentBeats, slope: currentSlope)
+            let r2 = Self.coefficientOfDetermination(beats: currentBeats, slope: currentSlope, nominalPeriod: nominalPeriod)
             guard r2 >= 0.999 else {
                 return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), rms)
             }
@@ -1246,7 +1246,7 @@ final class DSPPipeline {
             }
             let sumSq = currentResiduals.reduce(0.0) { $0 + $1 * $1 }
             let rms: Double? = (currentResiduals.count > 0) ? (sumSq / Double(currentResiduals.count)).squareRoot() : nil
-            let r2 = Self.coefficientOfDetermination(beats: currentBeats, slope: currentSlope)
+            let r2 = Self.coefficientOfDetermination(beats: currentBeats, slope: currentSlope, nominalPeriod: nominalPeriod)
             guard r2 >= 0.999 else {
                 return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), rms)
             }
@@ -1270,18 +1270,6 @@ final class DSPPipeline {
     }
 
     // MARK: - SNR / utilities
-
-    /// 라이브 emit 시점에 buffer snapshot 떠서 SNR 만 계산 (BPH 분석 못할 때 fallback).
-    private func computeSNRSnapshot() -> Double? {
-        bufferLock.lock()
-        let env = envelopeBuffer.suffix(Int(source.sampleRate * Self.liveAnalysisWindowSeconds))
-        let raw = rawBuffer.suffix(Int(source.sampleRate * Self.liveAnalysisWindowSeconds))
-        let envCopy = Array(env)
-        let rawCopy = Array(raw)
-        bufferLock.unlock()
-        guard !envCopy.isEmpty else { return nil }
-        return Self.estimateSNR(envelope: envCopy, raw: rawCopy)
-    }
 
     // Round 150 (Müller H1): Phase-locked linear regression helpers.
     // beat index → timestamp 의 OLS slope = period (rate 정밀도의 √N leverage).
@@ -1335,10 +1323,13 @@ final class DSPPipeline {
     /// Round 156 (Doyoon #8 fix): R² for slope fit — 정확한 OLS intercept 계산.
     /// 이전 코드는 `meanT - slope * (count-1)/2` 로 mean(index) 를 (count-1)/2 로 가정했으나
     /// RANSAC 필터링 후엔 임의 sparse index — 항상 옳지 않음. 실제 mean(index) 사용.
-    private static func coefficientOfDetermination(beats: [BeatEvent], slope: Double) -> Double {
-        guard beats.count >= 2 else { return 0 }
+    /// R² — OLS 적합도. 인덱스는 ordinaryLeastSquaresPeriod 와 **동일한** sparse nominal-round
+    /// (round((t-t0)/nominalPeriod)) 를 써야 한다. sequential 0..N-1 을 쓰면 beat 누락(sparse) 구간에서
+    /// slope 가 적합된 x축과 어긋나 R² 가 잘못(과소) 계산 → 정상 OLS 가 median 으로 잘못 fallback.
+    static func coefficientOfDetermination(beats: [BeatEvent], slope: Double, nominalPeriod: Double) -> Double {
+        guard beats.count >= 2, nominalPeriod > 0, let t0 = beats.first?.timestampSeconds else { return 0 }
         let times = beats.map { $0.timestampSeconds }
-        let indices = (0..<beats.count).map { Double($0) }
+        let indices = beats.map { Double(Int(round(($0.timestampSeconds - t0) / nominalPeriod))) }
         let meanT = times.reduce(0, +) / Double(times.count)
         let meanI = indices.reduce(0, +) / Double(indices.count)
         let intercept = meanT - slope * meanI

@@ -168,7 +168,7 @@ final class UserPreferences {
             Keys.useSimplifiedDSP: true,
             Keys.overhaulReminder: true,
             Keys.overhaulReminderYears: 4,
-            Keys.brandLeagueOptIn: true,
+            Keys.brandLeagueOptIn: false,
             Keys.rotationNudge: true,
             Keys.rotationNudgeDays: 7,
             Keys.haptics: true
@@ -207,7 +207,7 @@ final class UserPreferences {
         // 사용자 요청: 오버홀 리마인더 — 기본 ON, 기본 주기 4년.
         self.overhaulReminderEnabled = (defaults.object(forKey: Keys.overhaulReminder) as? Bool) ?? true
         self.overhaulReminderYears = (defaults.object(forKey: Keys.overhaulReminderYears) as? Int) ?? 4
-        self.brandLeagueOptIn = (defaults.object(forKey: Keys.brandLeagueOptIn) as? Bool) ?? true
+        self.brandLeagueOptIn = (defaults.object(forKey: Keys.brandLeagueOptIn) as? Bool) ?? false
         self.rotationNudgeEnabled = (defaults.object(forKey: Keys.rotationNudge) as? Bool) ?? true
         self.rotationNudgeDays = (defaults.object(forKey: Keys.rotationNudgeDays) as? Int) ?? 7
         self.lastSeenWhatsNewVersion = defaults.string(forKey: Keys.whatsNewVersion) ?? ""

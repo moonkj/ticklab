@@ -159,7 +159,7 @@ struct MeasurementResultView: View {
                     Text(String(format: "%+.1f", t.meanRate))
                         .font(.system(size: 30, weight: .bold, design: .rounded))
                         .foregroundStyle(AppColors.ink0)
-                    Text("s/d")
+                    Text(String(localized: "unit.seconds_per_day_short"))
                         .font(.system(size: 14, weight: .medium))
                         .foregroundStyle(AppColors.ink3)
                 }

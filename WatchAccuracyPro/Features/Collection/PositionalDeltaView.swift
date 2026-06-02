@@ -72,7 +72,7 @@ struct PositionalDeltaView: View {
                     // 타이포 SSOT: 숫자=monospaced 통일 (이전 rounded → mono).
                     .font(.system(size: 36, weight: .bold, design: .monospaced))
                     .foregroundStyle(tone)
-                Text("s/d")
+                Text(String(localized: "unit.seconds_per_day_short"))
                     .font(.system(size: 14)).foregroundStyle(AppColors.ink2)
                 Spacer()
                 Text(label)

@@ -5,6 +5,16 @@ import Foundation
 /// BadgesView.swift 의 b(id, emoji, …) 정의에서 자동 추출 — 추가 시 함께 갱신.
 enum BadgeCatalog {
     static let emojiToID: [String: String] = [
+        // 감사 수정: b1~b9 누락 시 해당 9개 뱃지 장착 시 닉네임 옆 이름칩이 공백 처리됐음.
+        "🌊": "b1",
+        "🏆": "b2",
+        "🎯": "b3",
+        "🌅": "b4",
+        "⚙️": "b5",
+        "🌕": "b6",
+        "✈️": "b7",
+        "💯": "b8",
+        "🎨": "b9",
         "✅": "b10",
         "🌙": "b16",
         "🔟": "b17",

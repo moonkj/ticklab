@@ -533,11 +533,6 @@ struct StatsView: View {
     }
 
     private struct MoodCount { let mood: Mood; let count: Int }
-    private func moodCounts() -> [MoodCount] {
-        let groups = Dictionary(grouping: thisMonthEntries, by: { $0.mood })
-        return groups.map { MoodCount(mood: $0.key, count: $0.value.count) }
-            .sorted { $0.count > $1.count }
-    }
 
     /// Round 59: 6가지 mood color 색약 친화 — Okabe-Ito 팔레트 일부 차용 + 시각 명도 차이 확대.
     private func colorForMood(_ mood: Mood) -> Color {

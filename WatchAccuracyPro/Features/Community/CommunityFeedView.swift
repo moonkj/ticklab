@@ -260,6 +260,7 @@ struct CommunityFeedView: View {
                         },
                         onUnlock: { purchaseRouter?.intend(.community) },
                         onReport: { reason in
+                            guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 거짓 "신고 완료" 방지
                             Task { await service.report(post, reason: reason); reportDone = true }
                         },
                         onBlock: { Task { await service.block(authorOf: post) } },

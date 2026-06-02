@@ -117,8 +117,8 @@ final class BadgeCatalogTests: XCTestCase {
     // MARK: - catalog 규모 회귀 (추가/삭제 감지)
 
     func test_catalog_has_expected_minimum_count() {
-        // 2026-06-02 기준 29개 확인. 향후 뱃지 추가 시 이 값을 올려준다.
-        XCTAssertGreaterThanOrEqual(BadgeCatalog.emojiToID.count, 29,
-                                    "뱃지 삭제 회귀 — 29개 이상이어야 함")
+        // b1~b38 전 뱃지 매핑 — 감사 수정으로 b1~b9 추가(38개). 향후 추가 시 올려준다.
+        XCTAssertGreaterThanOrEqual(BadgeCatalog.emojiToID.count, 38,
+                                    "뱃지 삭제/누락 회귀 — b1~b38 38개 이상이어야 함")
     }
 }

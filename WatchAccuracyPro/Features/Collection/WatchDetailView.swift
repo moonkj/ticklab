@@ -1852,7 +1852,7 @@ struct WatchDetailView: View {
 
     /// Round 170: 측정 1건 삭제 — SwiftData context 에서 제거 + watch.measurements relationship 갱신.
     private func deleteMeasurement(_ m: WatchMeasurement) {
-        modelContext.delete(m)
+        m.deleteWithJournalCleanup(in: modelContext)   // 감사 수정: JournalEntry.measurementId 댕글링 방지
         try? modelContext.save()
         sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
         WatchMoodService.invalidate(for: watch)
@@ -1861,7 +1861,7 @@ struct WatchDetailView: View {
     /// Round 170: 이 시계의 모든 측정 삭제.
     private func deleteAllMeasurements() {
         for m in watch.measurements {
-            modelContext.delete(m)
+            m.deleteWithJournalCleanup(in: modelContext)   // 감사 수정: JournalEntry.measurementId 댕글링 방지
         }
         try? modelContext.save()
         sortedMeasurements = []

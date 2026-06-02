@@ -35,8 +35,8 @@ struct CommunitySavedView: View {
                                     isMine: post.isMine(currentUID: service.myUID),
                                     onLike: { Task { await service.toggleLike(post) } },
                                     onUnlock: {},
-                                    onReport: { _ in },
-                                    onBlock: {},
+                                    onReport: { reason in Task { await service.report(post, reason: reason) } },
+                                    onBlock: { Task { await service.block(authorOf: post) } },
                                     onFollow: { Task { await service.toggleFollow(post.authorUID) } },
                                     onBookmark: { Task { await service.toggleBookmark(post) } },
                                     onShare: {

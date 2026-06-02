@@ -137,7 +137,7 @@ struct ShareCardComposerView: View {
                                 .font(.system(size: w * 0.14, weight: .bold, design: .monospaced))
                                 .foregroundStyle(.white)
                                 .shadow(color: .black.opacity(0.4), radius: 4, x: 0, y: 2)
-                            Text("s/d")
+                            Text(String(localized: "unit.seconds_per_day_short"))
                                 .font(.system(size: w * 0.045, design: .monospaced))
                                 .foregroundStyle(.white.opacity(0.75))
                         }
