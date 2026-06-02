@@ -1872,3 +1872,9 @@
 "community.photo.consent" = "写真は公開で投稿され、位置情報(EXIF)は削除され、測定データ・シリアル・購入価格は送信されません。";
 "community.eula.contact" = "通報・お問い合わせ: imurmkj@naver.com · 不適切なコンテンツは24時間以内に対応します。";
 "settings.help.community_guidelines" = "コミュニティガイドライン";
+
+/* Round 175: in-app feedback */
+"feedback.submit.success" = "フィードバックを送信しました。ありがとうございます！";
+"feedback.submit.failure" = "送信に失敗しました。後でもう一度お試しください。";
+"admin.feedback.section" = "フィードバック";
+"admin.feedback.empty" = "フィードバックはまだありません";

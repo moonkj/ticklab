@@ -398,6 +398,40 @@ final class CommunityService: ObservableObject {
         return (200...299).contains(http.statusCode)
     }
 
+    // MARK: - App Feedback (사용자 → 운영자, 인앱 피드백)
+
+    /// 사용자: 피드백 제출. 익명 세션도 가능(본인 uid INSERT). mailto 대체(Round 175).
+    @discardableResult
+    func submitFeedback(type: String, message: String, appVersion: String?) async -> Bool {
+        await ensureSignedIn()
+        guard let endpoint = URL(string: "\(baseURL)/rest/v1/app_feedback") else { return false }
+        var req = authedRequest(endpoint, method: "POST")
+        var body: [String: Any] = ["type": type, "message": message]
+        if let v = appVersion, !v.isEmpty { body["app_version"] = v }
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 운영자: 피드백 목록(최신순).
+    func fetchFeedback() async -> [Community.Feedback] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/app_feedback?select=*&order=created_at.desc&limit=200") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Feedback].self, from: data) else { return [] }
+        return arr
+    }
+
+    /// 운영자: 피드백 삭제(처리 완료).
+    @discardableResult
+    func deleteFeedback(id: String) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/app_feedback?id=eq.\(id)") else { return false }
+        guard let (_, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE")),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
     // MARK: - Curated YouTube Channels (운영자 큐레이션 — 영상 피드)
 
     /// 활성 채널 — locale 매칭. 호출 측에서 비면 'en' 폴백. 모든 사용자 읽기.

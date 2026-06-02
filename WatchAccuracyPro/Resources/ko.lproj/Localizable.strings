@@ -1934,3 +1934,9 @@
 "community.photo.consent" = "사진은 공개로 게시되며, 위치정보(EXIF)는 제거되고 측정 데이터·시리얼·구매가는 전송되지 않습니다.";
 "community.eula.contact" = "신고·문의: imurmkj@naver.com · 부적절 콘텐츠는 24시간 내 조치합니다.";
 "settings.help.community_guidelines" = "커뮤니티 가이드라인";
+
+/* Round 175: 인앱 피드백 (app_feedback) */
+"feedback.submit.success" = "피드백이 전송됐어요. 감사합니다!";
+"feedback.submit.failure" = "전송에 실패했어요. 잠시 후 다시 시도해 주세요.";
+"admin.feedback.section" = "피드백";
+"admin.feedback.empty" = "받은 피드백이 없습니다";

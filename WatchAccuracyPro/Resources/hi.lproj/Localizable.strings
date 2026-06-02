@@ -1872,3 +1872,9 @@
 "community.photo.consent" = "फ़ोटो सार्वजनिक रूप से पोस्ट की जाती हैं। स्थान डेटा (EXIF) हटा दिया जाता है; माप डेटा, सीरियल और कीमत कभी नहीं भेजे जाते।";
 "community.eula.contact" = "रिपोर्ट / संपर्क: imurmkj@naver.com · आपत्तिजनक सामग्री पर 24 घंटे में कार्रवाई की जाती है।";
 "settings.help.community_guidelines" = "कम्युनिटी दिशानिर्देश";
+
+/* Round 175: in-app feedback */
+"feedback.submit.success" = "फ़ीडबैक भेजा गया। धन्यवाद!";
+"feedback.submit.failure" = "नहीं भेजा जा सका। बाद में पुनः प्रयास करें।";
+"admin.feedback.section" = "फ़ीडबैक";
+"admin.feedback.empty" = "अभी तक कोई फ़ीडबैक नहीं";

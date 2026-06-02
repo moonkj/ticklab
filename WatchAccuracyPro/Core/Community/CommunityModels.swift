@@ -146,6 +146,21 @@ enum Community {
         enum CodingKeys: String, CodingKey { case id, url, note; case createdAt = "created_at" }
     }
 
+    /// 인앱 피드백 — 사용자가 설정>피드백에서 보낸 의견(버그/제안/일반). 운영자만 조회.
+    /// (Round 175) 기존 mailto 대신 Supabase 로 수집 → 운영 대시보드에서 확인.
+    struct Feedback: Codable, Identifiable {
+        let id: String
+        let type: String        // "bug" | "suggestion" | "general"
+        let message: String
+        let appVersion: String?
+        let createdAt: Date
+        enum CodingKeys: String, CodingKey {
+            case id, type, message
+            case appVersion = "app_version"
+            case createdAt = "created_at"
+        }
+    }
+
     /// 운영자 큐레이션 YouTube 채널(영상 피드). 언어별. RSS는 channelId 로 앱이 직접 읽음.
     struct CuratedChannel: Codable, Identifiable {
         let id: String

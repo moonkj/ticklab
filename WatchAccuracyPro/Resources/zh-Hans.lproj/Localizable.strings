@@ -1872,3 +1872,9 @@
 "community.photo.consent" = "照片将公开发布。位置信息(EXIF)将被移除；测量数据、序列号和购买价格不会被发送。";
 "community.eula.contact" = "举报·联系: imurmkj@naver.com · 不当内容将在24小时内处理。";
 "settings.help.community_guidelines" = "社区规范";
+
+/* Round 175: in-app feedback */
+"feedback.submit.success" = "反馈已发送，谢谢！";
+"feedback.submit.failure" = "发送失败，请稍后再试。";
+"admin.feedback.section" = "反馈";
+"admin.feedback.empty" = "暂无反馈";

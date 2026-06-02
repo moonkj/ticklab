@@ -20,6 +20,7 @@ private struct AdminOpsView: View {
     @State private var composingChannel = false
     @State private var channels: [Community.CuratedChannel] = []
     @State private var suggestions: [Community.ChannelSuggestion] = []
+    @State private var feedback: [Community.Feedback] = []
 
     private struct ReportGroup: Identifiable {
         let postID: String
@@ -137,6 +138,30 @@ private struct AdminOpsView: View {
                     }
                 }
             }
+            Section(String(localized: "admin.feedback.section")) {
+                if feedback.isEmpty {
+                    Text(String(localized: "admin.feedback.empty")).font(.caption).foregroundStyle(.secondary)
+                } else {
+                    ForEach(feedback) { f in
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(feedbackTypeLabel(f.type))
+                                .font(.system(size: 10, weight: .bold))
+                                .foregroundStyle(AppColors.accentDark)
+                            Text(f.message).font(.system(size: 13)).lineLimit(6)
+                            HStack(spacing: 6) {
+                                if let v = f.appVersion { Text("v\(v)") }
+                                Text(f.createdAt.formatted(.relative(presentation: .named)))
+                            }
+                            .font(.caption2).foregroundStyle(.secondary)
+                        }
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                Task { await deleteFeedbackItem(f) }
+                            } label: { Label(String(localized: "common.delete"), systemImage: "trash") }
+                        }
+                    }
+                }
+            }
             Section(String(localized: "admin.report.section")) {
                 if grouped.isEmpty {
                     Text(loaded
@@ -189,6 +214,21 @@ private struct AdminOpsView: View {
         }
     }
 
+    private func deleteFeedbackItem(_ f: Community.Feedback) async {
+        feedback.removeAll { $0.id == f.id }
+        if !(await service.deleteFeedback(id: f.id)) {
+            feedback = await service.fetchFeedback()
+        }
+    }
+
+    private func feedbackTypeLabel(_ raw: String) -> String {
+        switch raw {
+        case "bug":        return String(localized: "feedback.type.bug")
+        case "suggestion": return String(localized: "feedback.type.suggestion")
+        default:           return String(localized: "feedback.type.general")
+        }
+    }
+
     @ViewBuilder
     private func reportRow(_ g: ReportGroup) -> some View {
         let post = reportedPosts[g.postID]
@@ -232,12 +272,14 @@ private struct AdminOpsView: View {
         async let a = service.fetchAnnouncements()
         async let c = service.fetchAllCuratedChannels()
         async let sg = service.fetchChannelSuggestions()
+        async let fb = service.fetchFeedback()
         stats = await s
         let rep = await r
         reports = rep
         announcements = await a
         channels = await c
         suggestions = await sg
+        feedback = await fb
         let ids = Array(Set(rep.map { $0.postID }))
         let posts = await service.fetchReportedPosts(ids: ids)
         reportedPosts = Dictionary(posts.map { ($0.id, $0) }, uniquingKeysWith: { x, _ in x })

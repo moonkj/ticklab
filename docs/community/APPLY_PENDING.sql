@@ -151,3 +151,30 @@ alter table public.community_posts add column if not exists author_rep_brand tex
 alter table public.community_posts drop constraint if exists community_posts_author_rep_brand_len;
 alter table public.community_posts add constraint community_posts_author_rep_brand_len
     check (author_rep_brand is null or char_length(author_rep_brand) <= 40);
+
+-- ─────────────────────────────────────────────────────────
+-- 10) 인앱 피드백 (Round 175) — app_feedback 테이블 (mailto 대체)
+--     사용자 설정>피드백 → Supabase 수집 → 운영 대시보드(AdminOpsView)에서 확인.
+--     ※ admin_rls.sql(is_admin) 먼저 배포돼 있어야 운영자 조회 가능.
+--       미배포 시 submitFeedback 이 실패(전송 실패 alert)하지만 게시 등 다른 기능엔 영향 없음.
+--     전체 정의·인덱스·RLS 는 docs/community/app_feedback.sql.
+-- ─────────────────────────────────────────────────────────
+create table if not exists public.app_feedback (
+    id          uuid primary key default gen_random_uuid(),
+    uid         uuid not null default auth.uid(),
+    type        text not null default 'general',
+    message     text not null,
+    app_version text,
+    created_at  timestamptz not null default now()
+);
+create index if not exists idx_app_feedback_created on public.app_feedback (created_at desc);
+alter table public.app_feedback enable row level security;
+drop policy if exists app_feedback_insert_own on public.app_feedback;
+create policy app_feedback_insert_own on public.app_feedback
+    for insert with check (uid = auth.uid());
+drop policy if exists app_feedback_admin_select on public.app_feedback;
+create policy app_feedback_admin_select on public.app_feedback
+    for select using (public.is_admin(auth.uid()));
+drop policy if exists app_feedback_admin_delete on public.app_feedback;
+create policy app_feedback_admin_delete on public.app_feedback
+    for delete using (public.is_admin(auth.uid()));

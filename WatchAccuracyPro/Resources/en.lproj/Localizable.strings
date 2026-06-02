@@ -1935,3 +1935,9 @@
 "community.photo.consent" = "Photos are posted publicly. Location data (EXIF) is removed; measurement data, serial, and price are never sent.";
 "community.eula.contact" = "Report / contact: imurmkj@naver.com · Objectionable content is addressed within 24 hours.";
 "settings.help.community_guidelines" = "Community Guidelines";
+
+/* Round 175: in-app feedback (app_feedback) */
+"feedback.submit.success" = "Feedback sent. Thank you!";
+"feedback.submit.failure" = "Couldn't send. Please try again later.";
+"admin.feedback.section" = "Feedback";
+"admin.feedback.empty" = "No feedback yet";

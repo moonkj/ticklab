@@ -9,7 +9,8 @@ struct InAppFeedbackView: View {
     @State private var feedbackText: String = ""
     @State private var feedbackType: FeedbackType = .general
     @State private var isSubmitting: Bool = false
-    @State private var showingMail: Bool = false
+    @State private var submitSucceeded: Bool = false
+    @State private var submitFailed: Bool = false
 
     enum FeedbackType: String, CaseIterable, Identifiable {
         case bug, suggestion, general
@@ -45,11 +46,6 @@ struct InAppFeedbackView: View {
                     TextField(String(localized: "feedback.placeholder"), text: $feedbackText, axis: .vertical)
                         .lineLimit(5...10)
                 }
-                Section {
-                    Text(String(localized: "feedback.email.hint"))
-                        .font(.system(size: 12))
-                        .foregroundStyle(AppColors.ink3)
-                }
             }
             .navigationTitle(String(localized: "feedback.nav.title"))
             .navigationBarTitleDisplayMode(.inline)
@@ -65,21 +61,29 @@ struct InAppFeedbackView: View {
                     .disabled(feedbackText.trimmingCharacters(in: .whitespaces).isEmpty || isSubmitting)
                 }
             }
+            .alert(String(localized: "feedback.submit.success"), isPresented: $submitSucceeded) {
+                Button(String(localized: "common.ok")) { dismiss() }
+            }
+            .alert(String(localized: "feedback.submit.failure"), isPresented: $submitFailed) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            }
         }
         .presentationDetents([.large])
     }
 
+    /// Round 175: mailto 대신 Supabase(app_feedback)로 전송 → 운영 대시보드에서 확인.
     private func submit() {
-        guard !feedbackText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
-        // 이메일 URL scheme으로 피드백 전송
-        let subject = "[\(feedbackType.rawValue.uppercased())] \(String(localized: "feedback.email.subject"))"
-        let body = feedbackText + "\n\n---\nApp Version: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown")"
-        let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
-        let mailURL = URL(string: "mailto:imurmkj@naver.com?subject=\(encodedSubject)&body=\(encodedBody)")!
-        if UIApplication.shared.canOpenURL(mailURL) {
-            UIApplication.shared.open(mailURL)
+        let trimmed = feedbackText.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty else { return }
+        isSubmitting = true
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown"
+        Task {
+            let ok = await CommunityService.shared.submitFeedback(
+                type: feedbackType.rawValue, message: trimmed, appVersion: version)
+            await MainActor.run {
+                isSubmitting = false
+                if ok { submitSucceeded = true } else { submitFailed = true }
+            }
         }
-        dismiss()
     }
 }
