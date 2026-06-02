@@ -110,7 +110,7 @@ struct JournalFeedView: View {
     /// "+ 새 일기" dashed border 카드 + watch silhouette circles (hasEntry 면 gold border).
     private var editorialHeader: some View {
         EditorialPageHeader(
-            eyebrow: "FIELD NOTES",
+            eyebrow: String(localized: "journal.eyebrow"),
             title: String(localized: "journal.title"),
             subtitle: String(localized: "journal.subtitle")
         )

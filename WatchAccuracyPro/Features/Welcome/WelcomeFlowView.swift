@@ -317,7 +317,7 @@ private struct FeatureCarousel: View {
                 ctx.fill(Path(ellipseIn: rect), with: .color(color))
             }
             // Round 158: "+5.2 s/d" → "+0.8 s/d" (정상 워치 범위, ±1 s/d body 카피와 일치).
-            let text = Text("+0.8 s/d")
+            let text = Text("+0.8 \(String(localized: "unit.seconds_per_day"))")
                 .font(.system(size: 16 * s, weight: .medium, design: .monospaced))
                 .foregroundColor(AppColors.ink0)
             ctx.draw(text, at: CGPoint(x: 100 * s, y: 140 * s), anchor: .center)

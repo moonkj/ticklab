@@ -1863,3 +1863,16 @@
 "feedback.submit.failure" = "नहीं भेजा जा सका। बाद में पुनः प्रयास करें।";
 "admin.feedback.section" = "फ़ीडबैक";
 "admin.feedback.empty" = "अभी तक कोई फ़ीडबैक नहीं";
+
+/* Round 176 */
+"collection.dashboard.total_watches" = "%d घड़ियाँ";
+"collection.chip.new" = "नया";
+"journal.eyebrow" = "फ़ील्ड नोट्स";
+"watchbox.material.walnut" = "अखरोट";
+"watchbox.material.ebony" = "आबनूस";
+"watchbox.material.leather" = "चमड़ा";
+"watchbox.material.linen" = "लिनन";
+"report.last_measurement" = "अंतिम माप";
+"report.kv.rate" = "दर";
+"report.kv.beat_error" = "बीट त्रुटि";
+"analytics.period" = "अवधि";

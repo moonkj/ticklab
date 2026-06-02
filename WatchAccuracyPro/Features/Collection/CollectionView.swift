@@ -580,7 +580,7 @@ struct CollectionView: View {
                     Rectangle().fill(AppColors.rule).frame(width: 1, height: 18).accessibilityHidden(true)
                     summaryItem(value: "\(counts.service)", label: NSLocalizedString("collection.status.service", comment: ""), tone: .danger)
                     Spacer(minLength: 0)
-                    Text("\(counts.total) WATCHES")
+                    Text(String(format: String(localized: "collection.dashboard.total_watches"), counts.total))
                         .font(.system(size: 9, weight: .semibold, design: .monospaced))
                         .tracking(1.5)
                         .foregroundStyle(AppColors.ink3)
@@ -1080,13 +1080,13 @@ struct WatchListRow: View {
                     if watch.isSmartwatch {
                         SmartwatchBatteryBadge(percent: watch.batteryPercent, compact: true)
                     } else if let last = lastMeasurement {
-                        Text("\(formatRate(last.rateSecondsPerDay)) s/d")
+                        Text("\(formatRate(last.rateSecondsPerDay)) \(String(localized: "unit.seconds_per_day"))")
                             .font(.system(size: 15, weight: .semibold, design: .monospaced))
                             .monospacedDigit()
                             .foregroundStyle(AppColors.ink0)
                         ConfidenceBadge(score: last.confidenceScore, compact: true)
                     } else {
-                        Chip("NEW", tone: .accent, small: true)
+                        Chip(String(localized: "collection.chip.new"), tone: .accent, small: true)
                     }
                 }
                 .padding(.top, 2)

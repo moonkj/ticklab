@@ -468,7 +468,7 @@ struct WatchDetailView: View {
                         .foregroundStyle(.white.opacity(0.7))
                 }
                 if let movement {
-                    Text("\(movement.id) · \(movement.bph) BPH")
+                    Text("\(movement.id) · \(movement.bph) \(String(localized: "watch.spec.bph"))")
                         .font(.system(size: 11, design: .monospaced))
                         .tracking(1)
                         .foregroundStyle(.white.opacity(0.78))

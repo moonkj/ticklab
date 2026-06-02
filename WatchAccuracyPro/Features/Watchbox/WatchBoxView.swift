@@ -32,10 +32,10 @@ struct WatchBoxView: View {
         var id: String { rawValue }
         var label: String {
             switch self {
-            case .walnut: return "WALNUT"
-            case .ebony: return "EBONY"
-            case .leather: return "LEATHER"
-            case .linen: return "LINEN"
+            case .walnut: return String(localized: "watchbox.material.walnut")
+            case .ebony: return String(localized: "watchbox.material.ebony")
+            case .leather: return String(localized: "watchbox.material.leather")
+            case .linen: return String(localized: "watchbox.material.linen")
             }
         }
         /// 외함 색상.

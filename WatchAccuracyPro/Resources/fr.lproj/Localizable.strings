@@ -1863,3 +1863,16 @@
 "feedback.submit.failure" = "Échec de l'envoi. Réessayez plus tard.";
 "admin.feedback.section" = "Commentaires";
 "admin.feedback.empty" = "Aucun commentaire pour le moment";
+
+/* Round 176 */
+"collection.dashboard.total_watches" = "%d MONTRES";
+"collection.chip.new" = "NOUVEAU";
+"journal.eyebrow" = "NOTES";
+"watchbox.material.walnut" = "NOYER";
+"watchbox.material.ebony" = "ÉBÈNE";
+"watchbox.material.leather" = "CUIR";
+"watchbox.material.linen" = "LIN";
+"report.last_measurement" = "DERNIÈRE MESURE";
+"report.kv.rate" = "Marche";
+"report.kv.beat_error" = "Erreur de battement";
+"analytics.period" = "Période";

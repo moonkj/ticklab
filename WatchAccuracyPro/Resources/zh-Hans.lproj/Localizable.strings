@@ -1863,3 +1863,16 @@
 "feedback.submit.failure" = "发送失败，请稍后再试。";
 "admin.feedback.section" = "反馈";
 "admin.feedback.empty" = "暂无反馈";
+
+/* Round 176 */
+"collection.dashboard.total_watches" = "%d 块腕表";
+"collection.chip.new" = "新";
+"journal.eyebrow" = "随手记";
+"watchbox.material.walnut" = "胡桃木";
+"watchbox.material.ebony" = "乌木";
+"watchbox.material.leather" = "皮革";
+"watchbox.material.linen" = "亚麻";
+"report.last_measurement" = "最近测量";
+"report.kv.rate" = "日差";
+"report.kv.beat_error" = "摆频误差";
+"analytics.period" = "时段";

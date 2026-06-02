@@ -1863,3 +1863,16 @@
 "feedback.submit.failure" = "送出失敗，請稍後再試。";
 "admin.feedback.section" = "意見回饋";
 "admin.feedback.empty" = "尚無意見回饋";
+
+/* Round 176 */
+"collection.dashboard.total_watches" = "%d 隻腕錶";
+"collection.chip.new" = "新";
+"journal.eyebrow" = "隨手記";
+"watchbox.material.walnut" = "胡桃木";
+"watchbox.material.ebony" = "烏木";
+"watchbox.material.leather" = "皮革";
+"watchbox.material.linen" = "亞麻";
+"report.last_measurement" = "最近測量";
+"report.kv.rate" = "日差";
+"report.kv.beat_error" = "擺頻誤差";
+"analytics.period" = "時段";

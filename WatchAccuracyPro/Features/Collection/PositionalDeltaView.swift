@@ -140,7 +140,7 @@ struct PositionalDeltaView: View {
                         .font(.system(size: 13))
                         .foregroundStyle(AppColors.ink2)
                     Spacer()
-                    Text(String(format: "%+.1f s/d", stat.avgRate))
+                    Text("\(String(format: "%+.1f", stat.avgRate)) \(String(localized: "unit.seconds_per_day"))")
                         .font(.system(size: 14, weight: .semibold, design: .monospaced))
                         .foregroundStyle(AppColors.ink0)
                     Text("(\(stat.count))")

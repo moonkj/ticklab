@@ -164,13 +164,13 @@ enum MasterReportGenerator {
 
         // 최근 측정
         if let last = watch.measurements.max(by: { $0.timestamp < $1.timestamp }) {
-            NSAttributedString(string: "LAST MEASUREMENT", attributes: [
+            NSAttributedString(string: String(localized: "report.last_measurement"), attributes: [
                 .font: UIFont.systemFont(ofSize: 9, weight: .semibold),
                 .foregroundColor: UIColor.systemIndigo
             ]).draw(at: CGPoint(x: margin, y: y))
             y += 16
-            y = drawKV("Rate", String(format: "%+.1f s/d", last.rateSecondsPerDay), y: y)
-            y = drawKV("Beat Error", String(format: "%.1f ms", last.beatErrorMs), y: y)
+            y = drawKV(String(localized: "report.kv.rate"), String(format: "%+.1f s/d", last.rateSecondsPerDay), y: y)
+            y = drawKV(String(localized: "report.kv.beat_error"), String(format: "%.1f ms", last.beatErrorMs), y: y)
             y = drawKV(String(localized: "report.measurement.confidenceLabel"), "\(last.confidenceScore)", y: y)
         }
 

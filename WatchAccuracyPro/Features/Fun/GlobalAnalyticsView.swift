@@ -60,7 +60,7 @@ struct GlobalAnalyticsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 // 기간 피커
-                Picker("Period", selection: $period) {
+                Picker(String(localized: "analytics.period"), selection: $period) {
                     Text(String(localized: "league.period.day")).tag(SupabaseBrandLeagueService.PeriodType.day)
                     Text(String(localized: "league.period.month")).tag(SupabaseBrandLeagueService.PeriodType.month)
                     Text(String(localized: "league.period.year")).tag(SupabaseBrandLeagueService.PeriodType.year)

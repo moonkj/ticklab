@@ -339,7 +339,7 @@ struct AddWatchView: View {
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(movement.id)
                                     .font(AppTypography.headline)
-                                Text("\(movement.bph) BPH · \(Int(movement.liftAngleDegrees))° · \(movement.escapement.rawValue)")
+                                Text("\(movement.bph) \(String(localized: "watch.spec.bph")) · \(Int(movement.liftAngleDegrees))° · \(movement.escapement.rawValue)")
                                     .font(AppTypography.caption)
                                     .foregroundStyle(AppColors.textSecondary)
                             }

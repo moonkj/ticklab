@@ -1863,3 +1863,16 @@
 "feedback.submit.failure" = "送信に失敗しました。後でもう一度お試しください。";
 "admin.feedback.section" = "フィードバック";
 "admin.feedback.empty" = "フィードバックはまだありません";
+
+/* Round 176 */
+"collection.dashboard.total_watches" = "時計 %d本";
+"collection.chip.new" = "新着";
+"journal.eyebrow" = "フィールドノート";
+"watchbox.material.walnut" = "ウォルナット";
+"watchbox.material.ebony" = "エボニー";
+"watchbox.material.leather" = "レザー";
+"watchbox.material.linen" = "リネン";
+"report.last_measurement" = "最近の計測";
+"report.kv.rate" = "日差";
+"report.kv.beat_error" = "ビート誤差";
+"analytics.period" = "期間";

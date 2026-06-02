@@ -1926,3 +1926,16 @@
 "feedback.submit.failure" = "Couldn't send. Please try again later.";
 "admin.feedback.section" = "Feedback";
 "admin.feedback.empty" = "No feedback yet";
+
+/* Round 176 */
+"collection.dashboard.total_watches" = "%d WATCHES";
+"collection.chip.new" = "NEW";
+"journal.eyebrow" = "FIELD NOTES";
+"watchbox.material.walnut" = "WALNUT";
+"watchbox.material.ebony" = "EBONY";
+"watchbox.material.leather" = "LEATHER";
+"watchbox.material.linen" = "LINEN";
+"report.last_measurement" = "LAST MEASUREMENT";
+"report.kv.rate" = "Rate";
+"report.kv.beat_error" = "Beat Error";
+"analytics.period" = "Period";
