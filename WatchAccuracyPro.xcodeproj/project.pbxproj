@@ -155,7 +155,6 @@
 		6F233D907A273CE7E26E0E51 /* CompareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D6B32751965EEE6B1CEE269 /* CompareView.swift */; };
 		6F7E17E43B1AA8608A165574 /* PINService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D899D1AF17FEFF9EF707EDAB /* PINService.swift */; };
 		71B079E8367404BFF8513C0A /* WatchPhotoProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 028695DB4A28B20E92BD63E8 /* WatchPhotoProcessor.swift */; };
-		71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */; };
 		73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */; };
 		73F5D2BB7934DB165063FC84 /* EmptyState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9C0B1191FD9B5AC52121059 /* EmptyState.swift */; };
 		7447BD1465D3E483AD3B210A /* PhotoCropView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3F867375C95643C502D0FB /* PhotoCropView.swift */; };
@@ -442,7 +441,6 @@
 		4A1CAF6DD7442127666C2E8E /* AudioCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioCapture.swift; sourceTree = "<group>"; };
 		4A76DDC618140213CBA00D5B /* ReferralServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReferralServiceTests.swift; sourceTree = "<group>"; };
 		4AC7E595283DDDC8B06AE417 /* BPHEstimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimator.swift; sourceTree = "<group>"; };
-		4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiBandEnvelope.swift; sourceTree = "<group>"; };
 		4B7B7B53D5426F40471DE06F /* TrendDiagnosisServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendDiagnosisServiceTests.swift; sourceTree = "<group>"; };
 		4C71660316049739E9F0D772 /* BandPassFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BandPassFilter.swift; sourceTree = "<group>"; };
 		4D0C205ABA318DC38E1FBC54 /* CommunityJWTTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityJWTTests.swift; sourceTree = "<group>"; };
@@ -806,7 +804,6 @@
 				4C71660316049739E9F0D772 /* BandPassFilter.swift */,
 				93567E741B9D07241DB8502A /* EnvelopeExtractor.swift */,
 				F5D6F05B7D6C49E563D6B7F1 /* MatchedFilter.swift */,
-				4B1946DF2567F7888B253319 /* MultiBandEnvelope.swift */,
 				EF08ED067A88B19F40F1D21F /* NoiseFloorSuppressor.swift */,
 				D108343299A885B737F001A1 /* NoiseSuppressor.swift */,
 				8B1879D095A91B915EF8E875 /* PreEmphasisFilter.swift */,
@@ -1800,7 +1797,6 @@
 				E37390163694686A0BC080FD /* MovementDatabase.swift in Sources */,
 				E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */,
 				96E18BF4543AA4B570297798 /* MovementPickerSheet.swift in Sources */,
-				71D4AF9B04109898591A1B3B /* MultiBandEnvelope.swift in Sources */,
 				622C5D72CC63BECCE1FB19B5 /* NetworkMonitor.swift in Sources */,
 				EA0C0A6D8A4281B2E37D2BFF /* NextStepsGuideCard.swift in Sources */,
 				486F772C05AC0CB5B0E5FC57 /* NoiseFloorSuppressor.swift in Sources */,

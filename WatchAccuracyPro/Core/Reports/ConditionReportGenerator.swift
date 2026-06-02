@@ -25,7 +25,7 @@ enum ConditionReportGenerator {
             y = drawSpecSection(watch: watch, y: y)
             y = drawDivider(y: y)
             y = drawMeasurementSection(measurements: measurements, y: y)
-            if let price = watch.purchasePrice, let priceStr = formattedPrice(watch: watch) {
+            if watch.purchasePrice != nil, let priceStr = formattedPrice(watch: watch) {
                 y = drawDivider(y: y)
                 _ = drawFinanceSection(watch: watch, price: priceStr, wearCount: measurements.count, y: y)
             }

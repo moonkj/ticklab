@@ -233,7 +233,6 @@ struct BrandLeagueView: View {
 
         // 포디움 배치: [2위, 1위, 3위] 순서
         let podiumIndices: [Int] = n >= 3 ? [1, 0, 2] : n == 2 ? [1, 0] : [0]
-        let barHeights: [CGFloat] = [100, 130, 80]
         let displayRanks = [2, 1, 3]
 
         return AnyView(

@@ -40,20 +40,11 @@ final class DSPPipeline {
     private let preEmphasis = PreEmphasisFilter()
     private let bandPass: BandPassFilter
     private let envelopeExtractor: EnvelopeExtractor
-    // Round 158 (Wang 권고): Multi-band envelope fusion — sapphire-back IWC 같은 frequency-dependent
-    // attenuation 환경에서 single band 가 죽어도 다른 band 가 살아남음.
-    private let multiBandEnvelope: MultiBandEnvelope
     // Round 158 (tickIQ 분석): noise floor 제거 (crest 2.6 → 9.5 모방).
     private let noiseSuppressor: NoiseFloorSuppressor
     /// 사용자 보고된 BPH lock 실패 root cause 해결 (Audit 4 권고):
     /// envelope 대신 spectral flux 로 onset/BPH 검출.
     private let fluxExtractor = SpectralFluxExtractor()
-    /// Round 151 (Kim + Müller + Chen 토론): caliber-conditioned matched filter.
-    /// Round 37 IWC 35111 mismatch 회피 — escapement+bph 기반 5개 profile dispatch.
-    /// `.bypass` 면 no-op (현재 flux 경로 유지). Layer 3 안전망.
-    private let matchedFilter: MatchedFilter
-    /// Round 151 (Müller Layer 2): A/B guard — 첫 5초 onset count 비교 후 mf 결과 약하면 자동 bypass.
-    private var matchedFilterBypassed: Bool = false
 
     /// Buffers 는 audio 콜백과 analyzer 가 동시 접근 → lock 으로 보호.
     private let bufferLock = NSLock()
@@ -120,9 +111,7 @@ final class DSPPipeline {
             sampleRate: source.sampleRate,
             cutoffHz: bpSpec.envCutoffHz
         )
-        self.multiBandEnvelope = MultiBandEnvelope(sampleRate: source.sampleRate)
         self.noiseSuppressor = NoiseFloorSuppressor(sampleRate: source.sampleRate)
-        self.matchedFilter = MatchedFilter(profile: mfProfile, sampleRate: source.sampleRate)
 
         var metricsCont: AsyncStream<LiveMetrics>.Continuation!
         self.liveMetricsStream = AsyncStream(bufferingPolicy: .bufferingNewest(8)) { c in metricsCont = c }
@@ -147,10 +136,8 @@ final class DSPPipeline {
         preEmphasis.reset()
         bandPass.reset()
         envelopeExtractor.reset()
-        multiBandEnvelope.reset()
         noiseSuppressor.reset()
         fluxExtractor.reset()
-        matchedFilter.reset()
         lastSnapshot = nil
         lastLockedSnapshot = nil
         lastLockedAt = nil
@@ -165,8 +152,6 @@ final class DSPPipeline {
             guard let self else { return }
             // Round 153 (Doyoon coaching): rate ring 5 element — closure capture, lock 없이.
             var rateRing: [Double] = []
-            // Round 154 (Müller A/B guard): 5초 시점에 mf vs bypass onset count 비교, mismatch 면 bypass.
-            var abGuardChecked = false
             while !Task.isCancelled {
                 try? await Task.sleep(nanoseconds: UInt64(Self.liveEmitInterval * 1_000_000_000))
                 if Task.isCancelled { break }
@@ -195,13 +180,6 @@ final class DSPPipeline {
                     } else {
                         rateRing.removeAll(keepingCapacity: true)
                     }
-                    // Round 154 (Müller Layer 2): 5초 시점에 1회 A/B guard.
-                    // matched filter 의 onset count 가 bypass(=raw bp flux) 대비 70% 미만이면
-                    // profile mismatch → 즉시 bypass 전환. Round 37 silent regression 회피.
-                    if !abGuardChecked, elapsed >= 5.0, self.matchedFilter.profile != .bypass {
-                        abGuardChecked = true
-                        await self.evaluateMatchedFilterABGuard()
-                    }
                     // Round 172 (tg σ 기반 적응형 조기종료): tg 는 전체 파형 자기상관이라 "틀린 값에 안정 lock"
                     //   이 안 됨 → σ 작다 = 진짜 정밀. (이전 onset rateRollingStdDev 는 틀린값 안정에 속았음.)
                     //   최소 시간 경과 + tg σ ≤ 임계 → 수렴. UI 가 30초 cap 전 auto-stop → 빠른 측정.
@@ -213,24 +191,6 @@ final class DSPPipeline {
                 }
             }
         }
-    }
-
-    /// Round 154: 현재까지 buffer 위에서 matched filter 경로 vs bypass 경로 onset count 비교.
-    /// 70% 미만이면 matchedFilterBypassed=true 설정 → 이후 chunk 부터 bypass.
-    private func evaluateMatchedFilterABGuard() async {
-        bufferLock.lock()
-        let bpSnapshot = Array(rawBuffer.suffix(Int(source.sampleRate * 5)))
-        let fluxSnapshot = Array(fluxBuffer.suffix(Int(SpectralFluxExtractor.outputSampleRate * 5)))
-        bufferLock.unlock()
-        guard !fluxSnapshot.isEmpty, !bpSnapshot.isEmpty else { return }
-        // Round 158 (사용자 보고: 106 beats / 480 expected 후 디버그):
-        // A/B guard 일시 비활성화. 이전 코드의 `bpOnsets / 240` 산술 오류로 guard 가 절대 발동 안 했고,
-        // 그 상태 (matched filter 항상 on) 가 사실상 더 정확한 detection 을 만들었음 (451 beats).
-        // 산술 정정 후 guard 가 발동되어 matched filter 가 bypass 되면서 *오히려* detection 약해짐.
-        // 올바른 A/B guard premise 는 향후 라운드에서 재설계.
-        _ = fluxSnapshot
-        _ = bpSnapshot
-        return
     }
 
     func stop() -> MeasurementResult? {
@@ -264,14 +224,6 @@ final class DSPPipeline {
                     crossWindowDelta: r.crossWindowRateDelta,
                     rateSecondsPerDay: r.rateSecondsPerDay
                 )
-                // (DEBUG 진단) 구간별 rate + 오디오 클록 드리프트(ppm) — 고정 시계 변동 원인 추적.
-                let ppm: Double = {
-                    guard let first = firstChunkUptime, totalAudioSamples > firstChunkSamples, lastChunkUptime > first else { return 0 }
-                    let wall = lastChunkUptime - first
-                    let audio = Double(totalAudioSamples - firstChunkSamples) / source.sampleRate
-                    guard audio > 5, wall > 5 else { return 0 }
-                    return (wall / audio - 1.0) * 1e6
-                }()
                 let winStr = rates.map { String(format: "%+.0f", $0) }.joined(separator: ",")
                 let hw = AudioCapture.lastHardwareSampleRate
                 let hwStr = hw > 0 ? " hw\(Int(hw))" : ""
@@ -384,9 +336,8 @@ final class DSPPipeline {
                 lastAnalyzeFailReason = "synthesized_nominal_echo"
             }
         }
-        // Round 170 (사용자 보고: 분석 30s+ hang):
-        // cross-window delta 계산이 추가 3× analyzeSubwindow → 분석 시간 4× 증가.
-        // delta nil 로 두면 ReliabilityGrade.from 이 windowPenalty=0 으로 처리 — 거의 영향 없음.
+        // crossWindowRateDelta 는 nil — ReliabilityGrade.from 이 windowPenalty=0 으로 처리(거의 영향 없음).
+        // 재현성 신호는 위의 tgSigma 경로가 담당.
         if var r = result {
             r.crossWindowRateDelta = nil
             r.reliabilityGrade = ReliabilityGrade.from(confidence: r.confidenceScore, crossWindowDelta: nil, rateSecondsPerDay: r.rateSecondsPerDay)
@@ -398,80 +349,11 @@ final class DSPPipeline {
         return result
     }
 
-    /// Round 152 + Round 156 (Hyemi F5 fix): analysisWindow 60s 에 맞춰 sub-window 도 20s × 3.
-    /// 이전 코드는 30s 고정 sub-window 라 60s 윈도우의 절반(앞 30s)이 검증에서 누락됐음.
-    /// nil 반환은 데이터 부족 → grade 영향 없음 (fail-soft).
-    private func computeCrossWindowDelta() -> Double? {
-        let total = Self.analysisWindowSeconds
-        let span = total / 3.0
-        let ranges = [(0.0, span), (span, span * 2), (span * 2, total)]
-        let subRates: [Double] = ranges.compactMap { (start, end) in
-            analyzeSubwindow(startSeconds: start, endSeconds: end)?.rateSecondsPerDay
-        }
-        guard subRates.count == 3 else { return nil }
-        return (subRates.max() ?? 0) - (subRates.min() ?? 0)
-    }
-
-    /// Sub-window 분석 — analyze(windowSeconds:) 의 변종. 시간 offset 적용.
-    private func analyzeSubwindow(startSeconds: Double, endSeconds: Double) -> MeasurementResult? {
-        bufferLock.lock()
-        let envCount = envelopeBuffer.count
-        let totalSeconds = Double(envCount) / source.sampleRate
-        guard totalSeconds >= endSeconds else {
-            bufferLock.unlock()
-            return nil
-        }
-        let startIdx = Int((totalSeconds - endSeconds) * source.sampleRate)
-        let endIdx = Int((totalSeconds - startSeconds) * source.sampleRate)
-        guard startIdx >= 0, endIdx <= envCount, endIdx > startIdx else {
-            bufferLock.unlock()
-            return nil
-        }
-        let envSlice = Array(envelopeBuffer[startIdx..<endIdx])
-        // Flux 도 동일 시간 slice — sampleRate 차이만큼 scaling.
-        let fluxRate = SpectralFluxExtractor.outputSampleRate
-        let fluxTotalCount = fluxBuffer.count
-        let fluxStartIdx = Int((Double(fluxTotalCount) / fluxRate - endSeconds) * fluxRate)
-        let fluxEndIdx = Int((Double(fluxTotalCount) / fluxRate - startSeconds) * fluxRate)
-        guard fluxStartIdx >= 0, fluxEndIdx <= fluxTotalCount, fluxEndIdx > fluxStartIdx else {
-            bufferLock.unlock()
-            return nil
-        }
-        let fluxSlice = Array(fluxBuffer[fluxStartIdx..<fluxEndIdx])
-        bufferLock.unlock()
-
-        // 간략 분석 — beat detect + BPH lock + rate 계산만. (amplitude/SNR/grade 등 skip)
-        let rawBeats = BeatDetector.detectOnsets(envelope: fluxSlice, sampleRate: fluxRate)
-        // Round 156: sub-pulse cluster — main analyze 와 같은 처리.
-        let beats = BeatDetector.clusterSubPulses(beats: rawBeats, nominalBph: nominalBph)
-        guard let bphEst = BPHEstimator.estimate(
-            envelope: fluxSlice, beats: beats, sampleRate: fluxRate, nominalBphHint: nominalBph
-        ) else { return nil }
-        let refined = BeatDetector.refineTimestamps(beats: beats, envelope: envSlice, envelopeSampleRate: source.sampleRate)
-        // 단순 median IOI — sub-window 는 정밀도보다 일관성 게이트.
-        let intervals = (1..<refined.count).map { refined[$0].timestampSeconds - refined[$0 - 1].timestampSeconds }
-        let expected = 3600.0 / Double(bphEst.bph)
-        let valid = intervals.filter { abs($0 - expected) <= expected * 0.10 }
-        guard valid.count >= 8 else { return nil }
-        let sorted = valid.sorted()
-        let medianIOI = sorted[sorted.count / 2]
-        let rawBph = 3600.0 / medianIOI
-        let rate = RateCalculator.secondsPerDay(measuredBph: rawBph, nominalBph: nominalBph)
-        return MeasurementResult(
-            bph: bphEst.bph, rateSecondsPerDay: rate, beatErrorMs: 0,
-            amplitudeDegrees: nil, confidenceScore: 0,
-            durationSeconds: Int(endSeconds - startSeconds),
-            snrDB: 0, beatCount: refined.count,
-            reliabilityNote: nil
-        )
-    }
-
     // MARK: - Phase B 신뢰 게이트 — OLS 기준 cross-window 일관성
 
-    /// Round 171 Phase B: sub-window 의 OLS rate (일관성 게이트 전용).
-    /// analyzeSubwindow 의 median-IOI(+140 s/d phase bias [[project_dsp_rate_calculation]]) 대신
-    /// 프로덕션과 동일한 preciseRate(OLS) 사용 → spread 가 headline rate 와 같은 추정기의 재현성 지표.
-    /// 부작용 없음(liveOnsetTimes 등 미변경) — 버퍼 슬라이스만 읽는다.
+    /// sub-window 의 OLS rate (일관성 게이트 전용). median-IOI(+140 s/d phase bias) 대신
+    /// 프로덕션과 동일한 preciseRate(OLS) 사용 — spread 가 headline rate 와 같은 추정기의 재현성 지표.
+    /// 부작용 없음 — 버퍼 슬라이스만 읽는다.
     private func subwindowOLSRate(startSeconds: Double, endSeconds: Double) -> Double? {
         bufferLock.lock()
         let envCount = envelopeBuffer.count
@@ -515,13 +397,6 @@ final class DSPPipeline {
             .compactMap { subwindowOLSRate(startSeconds: $0.0, endSeconds: $0.1) }
     }
 
-    /// 일관성 게이트: 3 sub-window rate 의 max-min spread. 2개 미만이면 nil(fail-soft).
-    func crossWindowOLSSpread() -> Double? {
-        let rates = crossWindowOLSRates()
-        guard rates.count >= 2, let lo = rates.min(), let hi = rates.max() else { return nil }
-        return hi - lo
-    }
-
     /// Round 172: 라이브 tg σ — 적응형 조기종료 판단용. 전체 envelope(최대 30s) 자기상관의 cycle 일관성.
     /// σ 작음 = tg 가 정밀하게 lock = 더 측정할 필요 없음.
     func liveTgSigma() -> Double? {
@@ -546,16 +421,12 @@ final class DSPPipeline {
         // 1) filter chain (CPU light, runs on audio thread).
         let pre = preEmphasis.process(chunk)
         let bp = bandPass.process(pre)
-        // Round 151 (Müller Layer 3): envelopeExtractor 는 bp 그대로 — amplitude 계산은 unfiltered burst 필요.
-        // flux 경로만 matched filter (캘리버 conditioned Gabor) 적용 → noise reject + coupling invariance.
-        // `.bypass` 또는 runtime A/B guard 발동 시 mf 가 input 그대로 반환 → 기존 동작 회귀 보장.
+        // envelopeExtractor 는 bp 그대로 — amplitude 계산은 unfiltered burst 필요.
         let env = envelopeExtractor.process(bp)
         // Round 158: NoiseSuppressor 재활성화 (Grade A 달성한 조합 복원).
         // Accuracy 변동은 다른 source — measurement-to-measurement variance (mic coupling 등 물리 요인).
         let suppressed = noiseSuppressor.process(bp)
         let flux = fluxExtractor.process(suppressed)
-        _ = matchedFilter.process(bp)
-        _ = multiBandEnvelope.process(chunk)
 
         // 2) buffer append + ring trim — protected by lock.
         bufferLock.lock()
