@@ -29,6 +29,7 @@ struct SettingsView: View {
     @State private var showingOffboarding: Bool = false
     /// Sprint 6 (P3-14): 인앱 피드백.
     @State private var showingFeedback: Bool = false
+    @State private var showingCommunityGuidelines: Bool = false
     /// #10 백업/복원: 로컬 JSON 가져오기.
     @State private var showingRestoreImporter: Bool = false
     @State private var restoreResult: Int? = nil
@@ -573,6 +574,19 @@ struct SettingsView: View {
                                 .foregroundStyle(AppColors.ink3)
                         }
                     }
+                    // 커뮤니티 가이드라인(약관) — 인앱 상시 열람 (App Store 1.2). EULA뷰 읽기전용 재사용.
+                    Button { showingCommunityGuidelines = true } label: {
+                        HStack {
+                            Text(String(localized: "settings.help.community_guidelines"))
+                            Spacer()
+                            Image(systemName: "person.2")
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink3)
+                        }
+                    }
+                    .sheet(isPresented: $showingCommunityGuidelines) {
+                        CommunityEULAView(reviewOnly: true) {}
+                    }
                     Link(destination: URL(string: "mailto:imurmkj@naver.com?subject=TickLab%20%EB%AC%B8%EC%9D%98")!) {
                         HStack {
                             Text(String(localized: "settings.help.contact"))
@@ -925,7 +939,9 @@ struct GlossaryView: View {
 }
 
 struct GlossaryEntryID: Identifiable {
-    let id = UUID()
+    // Round 174 (사용자 보고): UUID 면 .sheet(item:) Binding 의 get 이 매 렌더 새 id 생성 →
+    //   SwiftUI 가 시트를 끝없이 dismiss/재표시(깜빡임·동작불가). key 기반 안정 id 로 고정.
+    var id: String { key }
     let key: String; let descKey: String; let icon: String
 }
 
