@@ -84,8 +84,12 @@ struct PressableButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .contentShape(Rectangle())
-            .scaleEffect((!reduceMotion && configuration.isPressed) ? 0.95 : 1.0)
-            .brightness(configuration.isPressed ? -0.05 : 0)
+            .scaleEffect((!reduceMotion && configuration.isPressed) ? 0.96 : 1.0)
+            // Round 175 (사용자 보고: "측정시작 버튼 누름효과 없음/터치 잘 안됨"):
+            //   기존 scale 은 Reduce Motion 시 사라져 피드백이 없어 보였음. opacity dim 은
+            //   Reduce Motion 무관 항상 보임 — 컬렉션 시계 셀(.plain) 탭 느낌과 통일.
+            .opacity(configuration.isPressed ? 0.72 : 1.0)
+            .brightness(configuration.isPressed ? -0.04 : 0)
             .animation(
                 configuration.isPressed
                     ? .easeIn(duration: 0.08)
