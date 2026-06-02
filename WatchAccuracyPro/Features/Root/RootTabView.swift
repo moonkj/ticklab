@@ -147,7 +147,7 @@ struct RootTabView: View {
                             .padding(.horizontal, 5).padding(.vertical, 1)
                             .background(Capsule().fill(.red))
                     }
-                    Text("관리자")
+                    Text(String(localized: "announce.admin.badge"))
                         .font(.system(size: 11, weight: .heavy))
                         .foregroundStyle(.red)
                 }
@@ -256,36 +256,37 @@ private struct AnnouncementBottomSheet: View {
     var body: some View {
         VStack(spacing: 0) {
             ScrollView {
-                VStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 14) {
                     Image(systemName: "megaphone.fill")
                         .font(.system(size: 28)).foregroundStyle(AppColors.accent)
                         .padding(.top, 28)
-                    Text("공지").font(.system(size: 12, weight: .bold)).tracking(3).foregroundStyle(AppColors.ink3)
+                    Text(String(localized: "announce.eyebrow")).font(.system(size: 12, weight: .bold)).tracking(3).foregroundStyle(.white.opacity(0.6))
                     Text(announcement.body)
-                        .font(.system(size: 16)).foregroundStyle(AppColors.ink0)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 24)
+                        .font(.system(size: 16)).foregroundStyle(.white)
+                        .multilineTextAlignment(.leading)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 24)
                 .padding(.bottom, 24)
             }
-            Divider()
+            Divider().background(.white.opacity(0.15))
             HStack {
                 Button { dontShowToday.toggle() } label: {
                     HStack(spacing: 8) {
                         Image(systemName: dontShowToday ? "checkmark.square.fill" : "square")
-                            .foregroundStyle(dontShowToday ? AppColors.accent : AppColors.ink3)
-                        Text("오늘 하루 보지 않기").font(.system(size: 14)).foregroundStyle(AppColors.ink2)
+                            .foregroundStyle(dontShowToday ? AppColors.accent : .white.opacity(0.6))
+                        Text(String(localized: "announce.dismiss.today")).font(.system(size: 14)).foregroundStyle(.white.opacity(0.85))
                     }
                 }
                 .buttonStyle(.plain)
                 Spacer()
-                Button("닫기") { onClose(dontShowToday) }
+                Button(String(localized: "common.close")) { onClose(dontShowToday) }
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AppColors.ink0)
+                    .foregroundStyle(.white)
             }
             .padding(.horizontal, 20).padding(.vertical, 14)
         }
-        .background(AppColors.paper0)
+        .background(AppColors.primaryDeep)
     }
 }

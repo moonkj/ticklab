@@ -119,3 +119,24 @@ drop policy if exists suggestions_admin_select on public.channel_suggestions;
 create policy suggestions_admin_select on public.channel_suggestions for select using (public.is_admin(auth.uid()));
 drop policy if exists suggestions_admin_delete on public.channel_suggestions;
 create policy suggestions_admin_delete on public.channel_suggestions for delete using (public.is_admin(auth.uid()));
+
+-- ─────────────────────────────────────────────────────────
+-- 7) 글-전용 게시 (Round 171) — image_path nullable + 빈 게시 방지 CHECK
+--    ※ 미배포 시 사진 없는 글 게시가 NOT NULL 위반으로 전부 실패하므로 필수.
+-- ─────────────────────────────────────────────────────────
+alter table public.community_posts alter column image_path drop not null;
+alter table public.community_posts drop constraint if exists community_posts_content_present;
+alter table public.community_posts add constraint community_posts_content_present
+    check (
+        image_path is not null
+        or (caption is not null and length(btrim(caption)) > 0)
+    );
+
+-- ─────────────────────────────────────────────────────────
+-- 8) 닉네임 옆 장착 뱃지 (Round 171) — author_badge 컬럼
+--    ※ 미배포 시 uploadPost 의 author_badge 필드가 PostgREST 400 유발 가능.
+-- ─────────────────────────────────────────────────────────
+alter table public.community_posts add column if not exists author_badge text;
+alter table public.community_posts drop constraint if exists community_posts_author_badge_len;
+alter table public.community_posts add constraint community_posts_author_badge_len
+    check (author_badge is null or char_length(author_badge) <= 8);

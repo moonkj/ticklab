@@ -13,6 +13,7 @@ struct BadgesView: View {
     @State private var filter: BadgeFilter = .all
     @State private var selectedBadge: Badge? = nil
     @State private var toastBadge: Badge? = nil
+    @State private var community: Community.MyStats? = nil   // Round 172: 커뮤니티 배지 통계(서버).
     @AppStorage("badges.seenIds") private var seenIdsJSON: String = "[]"
 
     // MARK: Types
@@ -173,6 +174,14 @@ struct BadgesView: View {
             seasonsCount: seasons.count, hasAllSeasons: hasAllSeasons,
             vintageCount: measuredVintageIds.count, hasVintageHistory: hasVintageHistory
         )
+        // Round 172 커뮤니티 배지 파라미터 — 서버 통계(미로드면 0) + 로컬(준 좋아요·팔로잉).
+        let comm = CommunityBadgeParams(
+            postCount: community?.postCount ?? 0,
+            likesReceived: community?.likesReceived ?? 0,
+            likesGiven: CommunityService.shared.likedPostIDs.count,
+            following: CommunityService.shared.followedUIDs.count,
+            followers: community?.followerCount ?? 0
+        )
         let partial = makeBadges(
             registered: registered, totalM: totalM,
             earlyMorning: earlyMorning, lateNight: lateNight,
@@ -181,9 +190,11 @@ struct BadgesView: View {
             hasGMT: hasGMT, hasMoon: hasMoon, hasDiver: hasDiver,
             hasChrono: hasChrono, hasVintage: hasVintage,
             hasCOSCM: hasCOSCM, hasGradeA: hasGradeA, hasPerfectB: hasPerfectB,
-            allOtherEarned: false, new: newParams
+            allOtherEarned: false, new: newParams, community: comm
         )
-        let allOther = partial.filter { $0.id != "b12" }.allSatisfy(\.earned)
+        // b12("모두 획득")는 본인 데이터 배지 기준 — 커뮤니티(b33+) 참여/바이럴은 제외(b12 달성 가능하게).
+        let communityIDs: Set<String> = ["b33", "b34", "b35", "b36", "b37", "b38"]
+        let allOther = partial.filter { $0.id != "b12" && !communityIDs.contains($0.id) }.allSatisfy(\.earned)
         return makeBadges(
             registered: registered, totalM: totalM,
             earlyMorning: earlyMorning, lateNight: lateNight,
@@ -192,8 +203,17 @@ struct BadgesView: View {
             hasGMT: hasGMT, hasMoon: hasMoon, hasDiver: hasDiver,
             hasChrono: hasChrono, hasVintage: hasVintage,
             hasCOSCM: hasCOSCM, hasGradeA: hasGradeA, hasPerfectB: hasPerfectB,
-            allOtherEarned: allOther, new: newParams
+            allOtherEarned: allOther, new: newParams, community: comm
         )
+    }
+
+    /// Round 172 커뮤니티 배지 파라미터.
+    private struct CommunityBadgeParams {
+        let postCount: Int      // 내 글 수
+        let likesReceived: Int  // 내 글이 받은 좋아요
+        let likesGiven: Int     // 내가 누른 좋아요(로컬)
+        let following: Int      // 내가 팔로우(로컬)
+        let followers: Int      // 나를 팔로우(서버)
     }
 
     private struct NewBadgeParams {
@@ -213,7 +233,7 @@ struct BadgesView: View {
         hasGMT: Bool, hasMoon: Bool, hasDiver: Bool,
         hasChrono: Bool, hasVintage: Bool,
         hasCOSCM: Bool, hasGradeA: Bool, hasPerfectB: Bool,
-        allOtherEarned: Bool, new: NewBadgeParams
+        allOtherEarned: Bool, new: NewBadgeParams, community comm: CommunityBadgeParams
     ) -> [Badge] {
         func nm(_ id: String) -> String { NSLocalizedString("badges.\(id).name", comment: "") }
         func ds(_ id: String) -> String { NSLocalizedString("badges.\(id).desc", comment: "") }
@@ -256,6 +276,13 @@ struct BadgesView: View {
             b("b30", "🔬", .epic,      new.measuredBPHTypes >= 3,               min(new.measuredBPHTypes,3), 3),
             b("b31", "🍂", .epic,      new.hasAllSeasons,                       min(new.seasonsCount,4), 4),
             b("b32", "🏛️", .legendary, new.hasVintageHistory,                   min(new.vintageCount,5), 5),
+            // ── 커뮤니티 b33-b38 (Round 172) ──────────────────────────────────
+            b("b33", "🖼️", .common,    comm.postCount >= 1,        min(comm.postCount,1),     1),
+            b("b34", "👍", .common,    comm.likesGiven >= 20,      min(comm.likesGiven,20),   20),
+            b("b35", "🔥", .rare,      comm.likesReceived >= 20,   min(comm.likesReceived,20),20),
+            b("b36", "📷", .rare,      comm.postCount >= 10,       min(comm.postCount,10),    10),
+            b("b37", "🤝", .rare,      comm.following >= 10,       min(comm.following,10),    10),
+            b("b38", "📣", .legendary, comm.followers >= 100,      min(comm.followers,100),   100),
         ]
     }
 
@@ -307,6 +334,8 @@ struct BadgesView: View {
         .navigationTitle(String(localized: "badges.nav.title"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { checkNewBadges() }
+        // Round 172: 커뮤니티 배지 통계 로드(내 글·받은좋아요·팔로워). 실패/오프라인이면 0 유지.
+        .task { if community == nil { community = await CommunityService.shared.fetchMyStats() } }
         .onChange(of: badges) { _, newBadges in checkNewBadges(badges: newBadges) }
     }
 

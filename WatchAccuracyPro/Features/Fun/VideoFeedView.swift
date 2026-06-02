@@ -8,6 +8,8 @@ struct VideoFeedView: View {
     /// 비어있으면 전체, 값이 있으면 그 채널들만(복수 선택).
     @State private var selectedChannels: Set<String> = []
     @State private var showSuggest = false
+    /// Round 173 (사용자 보고): 최초 로딩 동안 스피너가 확실히 뜨도록 — isLoading 타이밍과 무관하게 보장.
+    @State private var didFirstLoad = false
 
     /// 피드에 등장하는 채널(중복 제거, 가나다/알파벳 정렬).
     private var distinctChannels: [String] {
@@ -32,8 +34,9 @@ struct VideoFeedView: View {
 
     var body: some View {
         Group {
-            if service.isLoading && service.videos.isEmpty {
+            if (service.isLoading || !didFirstLoad) && service.videos.isEmpty {
                 ProgressView().frame(maxWidth: .infinity, minHeight: 220)
+                    .frame(maxHeight: .infinity)
             } else if service.videos.isEmpty {
                 EmptyState(
                     icon: "play.rectangle",
@@ -55,6 +58,9 @@ struct VideoFeedView: View {
         .navigationTitle(String(localized: "video.feed.title"))
         .navigationBarTitleDisplayMode(.inline)
         .background(AppColors.paper0.ignoresSafeArea())
+        // Round 173 (사용자 보고): 상단 nav 바를 본문(paper0)과 통일 — 흰색 띠/버튼 가시성 문제 해소.
+        .toolbarBackground(AppColors.paper0, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
@@ -87,7 +93,7 @@ struct VideoFeedView: View {
             }
         }
         .sheet(isPresented: $showSuggest) { ChannelSuggestSheet() }
-        .task { await service.load() }
+        .task { await service.load(); didFirstLoad = true }
         .refreshable { await service.load(force: true) }
     }
 

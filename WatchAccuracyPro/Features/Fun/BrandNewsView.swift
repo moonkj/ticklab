@@ -5,13 +5,16 @@ import SwiftUI
 struct BrandNewsView: View {
     @Query private var watches: [Watch]
     @StateObject private var service = BrandNewsService.shared
+    /// Round 173 (사용자 보고): 최초 로딩 동안 스피너 보장.
+    @State private var didFirstLoad = false
 
     private var myBrands: [String] { Array(Set(watches.map(\.brand))) }
 
     var body: some View {
         Group {
-            if service.isLoading && service.articles.isEmpty {
+            if (service.isLoading || !didFirstLoad) && service.articles.isEmpty {
                 ProgressView().frame(maxWidth: .infinity, minHeight: 200)
+                    .frame(maxHeight: .infinity)
             } else if service.articles.isEmpty {
                 EmptyState(
                     icon: "newspaper",
@@ -30,8 +33,11 @@ struct BrandNewsView: View {
         .navigationTitle(String(localized: "news.nav.title"))
         .navigationBarTitleDisplayMode(.inline)
         .background(AppColors.paper0.ignoresSafeArea())
+        .toolbarBackground(AppColors.paper0, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .task {
             await service.fetchNews(for: myBrands)
+            didFirstLoad = true
         }
         .refreshable {
             await service.fetchNews(for: myBrands)

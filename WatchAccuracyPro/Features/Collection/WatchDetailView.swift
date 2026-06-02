@@ -273,6 +273,8 @@ struct WatchDetailView: View {
                     }
                 }
             }
+            // Round 173 (사용자 보고): 시트가 화면 끝까지 안 올라오게 — medium 에서 열고 필요시 드래그.
+            .presentationDetents([.medium, .large])
         }
         .navigationTitle(watch.model)
         .navigationBarTitleDisplayMode(.inline)
@@ -1155,8 +1157,8 @@ struct WatchDetailView: View {
 
     private var actionsSection: some View {
         VStack(spacing: 10) {
-            // Round 138 사용자 요청: 쿼츠 시계는 측정 무의미 — 측정/장기측정 버튼 숨김.
-            if watch.movementType != .quartz {
+            // Round 138/173: 쿼츠·스마트워치(애플워치 등)는 rate 측정 무의미 — 측정 버튼 숨김.
+            if watch.movementType != .quartz && !watch.isSmartwatch {
                 NavigationLink {
                     MeasurementView(watch: watch, preferences: preferences)
                 } label: {
@@ -1166,7 +1168,7 @@ struct WatchDetailView: View {
             }
         }
         .padding(.horizontal, 20)
-        .padding(.top, watch.movementType == .quartz ? 0 : 14)
+        .padding(.top, (watch.movementType == .quartz || watch.isSmartwatch) ? 0 : 14)
     }
 
     // MARK: - Status strip (Round 176, 사용자 UX 요청)

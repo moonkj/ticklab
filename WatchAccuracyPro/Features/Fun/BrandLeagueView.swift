@@ -101,6 +101,8 @@ struct BrandLeagueView: View {
             .padding(.top, 12)
         }
         .background(AppColors.paper0.ignoresSafeArea())
+        .toolbarBackground(AppColors.paper0, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .navigationTitle(String(localized: "league.nav.title"))
         .navigationBarTitleDisplayMode(.inline)
         // Sprint 12 (UX4): 글로벌분석을 브랜드리그 내부로 흡수 — 상단 버튼으로 진입.

@@ -115,8 +115,8 @@ struct CommunityFeedView: View {
             .alert(String(localized: "community.daily_limit.title"), isPresented: $showDailyLimit) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
             } message: { Text(String(localized: "community.daily_limit.body")) }
-            .alert("운영자 경고", isPresented: $showWarning) {
-                Button("확인") {
+            .alert(String(localized: "community.warning.title"), isPresented: $showWarning) {
+                Button(String(localized: "common.ok")) {
                     let ids = myWarnings.map { $0.id }
                     Task { await service.markWarningsSeen(ids) }
                 }
@@ -127,7 +127,7 @@ struct CommunityFeedView: View {
                 Button(String(localized: "common.done"), role: .cancel) {}
             }
             .confirmationDialog(
-                "이 게시물을 삭제할까요? (관리자)",
+                String(localized: "community.admin.delete.confirm"),
                 isPresented: Binding(get: { adminDeleteTarget != nil }, set: { if !$0 { adminDeleteTarget = nil } }),
                 titleVisibility: .visible
             ) {
@@ -143,7 +143,7 @@ struct CommunityFeedView: View {
     /// 에디토리얼 헤더 — 제목 + (우상단) 버튼들을 같은 최상단 영역에.
     private var editorialHeader: some View {
         EditorialPageHeader(
-            eyebrow: "THE LOUNGE",
+            eyebrow: String(localized: "community.eyebrow"),
             title: String(localized: "community.tab.title"),
             subtitle: String(localized: "community.subtitle")
         )
@@ -160,19 +160,19 @@ struct CommunityFeedView: View {
         HStack(spacing: 0) {
             Button { openNotifications() } label: {
                 Image(systemName: notifCount > 0 ? "bell.badge.fill" : "bell")
-                    .font(.system(size: 18))
+                    .font(.system(size: 22, weight: .regular))
                     .foregroundStyle(notifCount > 0 ? AppColors.accent : AppColors.ink0)
                     .symbolRenderingMode(notifCount > 0 ? .multicolor : .monochrome)
                     .frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "collection.notifications"))
             Button { showSavedTab() } label: {
-                Image(systemName: "bookmark").font(.system(size: 18))
+                Image(systemName: "bookmark").font(.system(size: 22, weight: .regular))
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "community.saved.title"))
             Button { startCompose() } label: {
-                Image(systemName: "plus.circle.fill").font(.system(size: 22))
+                Image(systemName: "plus.circle.fill").font(.system(size: 22, weight: .regular))
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "community.compose"))
@@ -193,7 +193,7 @@ struct CommunityFeedView: View {
                     }
                 }
             } label: {
-                Image(systemName: "gearshape").font(.system(size: 18))
+                Image(systemName: "gearshape").font(.system(size: 22, weight: .regular))
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "community.account"))
@@ -209,10 +209,10 @@ struct CommunityFeedView: View {
     private var feedScopePicker: some View {
         HStack(spacing: 20) {
             Spacer()
-            scopeTab("All", selected: !followingOnly) {
+            scopeTab(String(localized: "community.scope.all"), selected: !followingOnly) {
                 withAnimation(.easeOut(duration: 0.15)) { followingOnly = false }
             }
-            scopeTab("Following", selected: followingOnly) {
+            scopeTab(String(localized: "community.scope.following"), selected: followingOnly) {
                 withAnimation(.easeOut(duration: 0.15)) { followingOnly = true }
             }
         }
@@ -239,7 +239,7 @@ struct CommunityFeedView: View {
         ScrollView {
             LazyVStack(spacing: 0) {
                 if followingOnly && displayedFeed.isEmpty {
-                    Text("팔로우한 계정의 글이 아직 없어요.\n관심 있는 계정을 팔로우해 보세요.")
+                    Text(String(localized: "community.scope.following.empty"))
                         .font(.system(size: 13))
                         .foregroundStyle(AppColors.ink3)
                         .multilineTextAlignment(.center)
@@ -697,7 +697,7 @@ private struct CommunityPostCard: View {
             }
             if let onAdminDelete {
                 Button(role: .destructive, action: onAdminDelete) {
-                    Label("관리자 삭제", systemImage: "trash.slash")
+                    Label(String(localized: "community.admin.delete"), systemImage: "trash.slash")
                 }
             }
         } label: {

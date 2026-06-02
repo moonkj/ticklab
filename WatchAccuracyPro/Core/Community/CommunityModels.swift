@@ -48,6 +48,14 @@ enum Community {
         }
     }
 
+    /// Round 172: 커뮤니티 배지용 내 활동 통계.
+    struct MyStats: Equatable {
+        let postCount: Int          // 내가 올린 글 수
+        let likesReceived: Int      // 내 글이 받은 좋아요 합
+        let commentsReceived: Int   // 내 글에 달린 댓글 합
+        var followerCount: Int = 0  // 나를 팔로우한 사람 수(community_follows)
+    }
+
     /// 운영 대시보드 — 신고 항목(관리자 조회용).
     struct AdminReport: Codable, Identifiable {
         let postID: String

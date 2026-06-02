@@ -701,3 +701,26 @@ vacaboja/tg 의 핵심 알고리즘 도입. 합성 신호 테스트도 PASS (Gab
 - CollectionView toolbar `square.grid.2x2` Menu → "시계 보관함" / "스펙 카드"
 
 **누적 139 라운드** — 모든 빌드 SUCCESS + iPhone install 완료. 모든 mock 데이터 → 실제 SwiftData @Model 기반 동작.
+
+### 라운드 173 — 전체 재검토(팀에이전트 4명 병렬) + 4클러스터 동시 보완
+
+**배경**: 사용자 실측에서 세션마다 σ0.9~7.4, AC garbage(±수백), TG fallback, 고정 −6 s/d 편향. "첫 측정이 이상하면 사용자 이탈" 우려. DSP/테스트/아키텍처/커뮤니티·컴플라이언스 4영역 감사.
+
+**감사 핵심 발견**:
+- [DSP P0] confidence 계산에 tgSigma·TG실패·클린비율 미반영 → σ7.4 garbage 가 "우수/보통" 통과 (`DSPPipeline.swift:862`). grade tgSigma penalty 도 약함(σ7.4→−6점, `MeasurementResult.swift:39`).
+- [DSP P0] TgRateEstimator multi-cycle K-doubling 반주기/2배 latch 가능(`TgRateEstimator.swift:88`), |rate|≤300 만 가드.
+- [DSP P0] cleanedBeats 필터 기준이 등록 nominal 아닌 bphEst.bph (`DSPPipeline.swift:1281`).
+- [DSP P0] 클록 보정 사실상 항상 OFF(30분 baseline·세션당 1점) → −6 편향 그대로.
+- [Compliance P0] text_only_posts.sql 배포 확인 / per-photo 동의 미구현 / Guideline 1.2 커뮤니티 내 연락처 미노출.
+- [Community P1] deleteMyPost ensureSignedIn 누락(`CommunityService.swift:654`) / 배지 b34 likesGiven 로컬카운트(재설치 리셋) / 인라인 한국어 8건(Hard Rule #3).
+- [Test P1] PLLTracker·TgRateEstimator(driftFactor)·recordCalibrationPoint·ViewModel.completed·text-only 디코딩 테스트 공백. DSPCoverage accuracy:200 과대.
+
+**4클러스터 실행 계획** (사용자: "전부 / process.md 기록 / 병렬 빠르게"):
+- [클러스터1 측정신뢰] confidence 에 TG실패·클린비율 penalty + grade tgSigma penalty 강화 + TG 결과 OLS 대비 sanity 게이트. 테스트 동반.
+- [클러스터2 앱스토어] per-photo 동의(게시 직전) + 커뮤니티 내 연락처 노출 + SQL APPLY_PENDING 일원화. **SQL 실제 배포는 사용자 액션**.
+- [클러스터3 커뮤니티] deleteMyPost ensureSignedIn + 배지 b34 데이터 안정화 + 인라인 문자열 8건 Localizable 이관(8 locale).
+- [클러스터4 클록보정] wall-vs-mach 분단위 회귀(3회 수렴) + 측정마다 점 누적 + 소급 self-heal + "보정 중(n회)" 안내.
+
+**사용자 결정 필요 / 외부 액션**:
+- Supabase SQL 배포: `text_only_posts.sql`, `author_badge.sql`, `community_comments.sql`(status 컬럼) 적용 여부 확인.
+

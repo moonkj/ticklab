@@ -440,7 +440,7 @@ struct CollectionView: View {
         HStack(spacing: 0) {
             Button { openNotifications() } label: {
                 Image(systemName: notifCount > 0 ? "bell.badge.fill" : "bell")
-                    .font(.system(size: 18, weight: .regular))
+                    .font(.system(size: 22, weight: .regular))
                     .foregroundStyle(notifCount > 0 ? AppColors.accent : AppColors.ink1)
                     .symbolRenderingMode(notifCount > 0 ? .multicolor : .monochrome)
                     .frame(width: 40, height: 40)
@@ -458,7 +458,7 @@ struct CollectionView: View {
                 }
             } label: {
                 Image(systemName: "ellipsis.circle")
-                    .font(.system(size: 18, weight: .regular))
+                    .font(.system(size: 22, weight: .regular))
                     .foregroundStyle(AppColors.ink1)
                     .frame(width: 40, height: 40)
             }
@@ -471,14 +471,14 @@ struct CollectionView: View {
                 }
             } label: {
                 Image(systemName: "plus.circle.fill")
-                    .font(.system(size: 22))
+                    .font(.system(size: 22, weight: .regular))
                     .foregroundStyle(AppColors.ink0)
                     .frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "collection.add_watch"))
             Button { showingSettings = true } label: {
                 Image(systemName: "gearshape")
-                    .font(.system(size: 18, weight: .regular))
+                    .font(.system(size: 22, weight: .regular))
                     .foregroundStyle(AppColors.ink1)
                     .frame(width: 40, height: 40)
             }

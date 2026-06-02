@@ -92,7 +92,7 @@ final class CommunityService: ObservableObject {
         req.httpBody = "{}".data(using: .utf8)
         do {
             let (data, _) = try await URLSession.shared.data(for: req)
-            if !applyAuth(data) { lastError = "익명 가입 응답 파싱 실패" }
+            if !applyAuth(data) { lastError = String(localized: "community.error.anon_auth_parse") }
         } catch {
             lastError = error.localizedDescription
         }
@@ -292,6 +292,20 @@ final class CommunityService: ObservableObject {
         return arr
     }
 
+    /// Round 172: 커뮤니티 배지용 내 활동 통계. 내 글 + 받은 좋아요/댓글 합산. (준 좋아요·팔로잉은 로컬에서 별도.)
+    func fetchMyStats() async -> Community.MyStats {
+        await ensureSignedIn()
+        guard let uid = myUID else { return Community.MyStats(postCount: 0, likesReceived: 0, commentsReceived: 0) }
+        let posts = await fetchPostsByAuthor(uid: uid)
+        let likes = posts.reduce(0) { $0 + $1.likeCount }
+        let comments = posts.reduce(0) { $0 + ($1.commentCount ?? 0) }
+        // 팔로워(나를 팔로우한 사람) 수 — community_follows 카운트.
+        let followers = await countRows(table: "community_follows", selectCol: "follower_uid",
+                                        filter: "followed_uid=eq.\(uid)")
+        return Community.MyStats(postCount: posts.count, likesReceived: likes,
+                                 commentsReceived: comments, followerCount: followers)
+    }
+
     /// 게시물 라이커 목록(인스타 "누가 좋아요") — 차단 작성자 제외. likes 전체 읽기 RLS 필요.
     func fetchLikers(postID: String) async -> [Community.Liker] {
         await ensureSignedIn()
@@ -418,11 +432,11 @@ final class CommunityService: ObservableObject {
         if let c = category, !c.isEmpty { body["category"] = c }
         req.httpBody = try? JSONSerialization.data(withJSONObject: body)
         guard let (data, resp) = try? await URLSession.shared.data(for: req),
-              let http = resp as? HTTPURLResponse else { lastError = "네트워크 오류"; return false }
+              let http = resp as? HTTPURLResponse else { lastError = String(localized: "community.error.network"); return false }
         if (200...299).contains(http.statusCode) { lastError = nil; return true }
         // 404=테이블 없음(SQL 미배포), 401/403=admin RLS, 409=중복(channel_id+locale).
         let msg = String(data: data, encoding: .utf8) ?? ""
-        lastError = "실패 \(http.statusCode) · \(msg.prefix(160))"
+        lastError = String(localized: "community.error.http_failure") + " \(http.statusCode) · \(msg.prefix(160))"
         return false
     }
 
@@ -638,6 +652,7 @@ final class CommunityService: ObservableObject {
     }
 
     func deleteMyPost(_ post: Community.Post) async {
+        await ensureSignedIn()   // Round 173 (감사 P1): 토큰 만료 시 RLS 인증 실패로 서버 글 잔존 방지.
         guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?id=eq.\(post.id)") else { return }
         _ = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE"))
         feed.removeAll { $0.id == post.id }
@@ -655,12 +670,12 @@ final class CommunityService: ObservableObject {
         // 글-전용은 캡션이 반드시 있어야 (빈 게시 방지).
         let trimmedCaption = caption?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         if imageData == nil && trimmedCaption.isEmpty {
-            lastError = "글-전용 게시에는 내용이 필요합니다."
+            lastError = String(localized: "community.error.text_only_empty")
             throw UploadError.storageFailed
         }
         await ensureSignedIn()
         guard let uid = myUID else {
-            lastError = "익명 로그인 실패 — Supabase Anonymous Sign-in 확인 필요"
+            lastError = String(localized: "community.error.anon_signin_failed")
             throw UploadError.notSignedIn
         }
 

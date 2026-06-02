@@ -98,6 +98,8 @@ struct GlobalAnalyticsView: View {
             .padding(.bottom, 40)
         }
         .background(AppColors.paper0.ignoresSafeArea())
+        .toolbarBackground(AppColors.paper0, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         .navigationTitle(String(localized: "analytics.nav.title"))
         .navigationBarTitleDisplayMode(.inline)
         .task(id: period.rawValue) {
@@ -258,7 +260,7 @@ struct GlobalAnalyticsView: View {
                         }
                     }
                     .frame(height: 10)
-                    Text("\(item.count)개 (\(Int(pct))%)")
+                    Text(String(format: String(localized: "misc.analytics.movement.count"), item.count, Int(pct)))
                         .font(.system(size: 11, design: .monospaced))
                         .foregroundStyle(AppColors.ink3)
                         .frame(width: 70, alignment: .trailing)
