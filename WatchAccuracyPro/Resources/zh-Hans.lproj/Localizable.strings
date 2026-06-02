@@ -780,7 +780,7 @@
 "measurement.setup.step2.title" = "2. 麦克风对准底盖中央";
 "measurement.setup.step2.body" = "iPhone 底部麦克风(充电口旁的小孔)应接触腕表底盖中央。注意不要用手指遮挡麦克风。";
 "measurement.setup.step3.title" = "3. 安静的环境";
-"measurement.setup.step3.body" = "屏蔽环境噪声(电视、谈话、风扇)。建议 SNR ≥ 20dB。";
+"measurement.setup.step3.body" = "屏蔽环境噪声(电视、谈话、风扇)。建议 SNR ≥ 15dB。";
 "measurement.tips.average.title" = "精准测量小贴士";
 "measurement.tips.average.body" = "单次测量的方差为 ±2 s/d。**3-5 次测量取平均**可达 ±1 s/d 的精度。请在多次测量间保持相同表位。";
 "measurement.tips.average.body.free" = "单次测量的方差为 ±2 s/d。Free 版每日支持 3 次测量 — 在同一表位连续测量可让平均值更稳定。升级至 Pro 可享无限次数,并在 5 次以上测量后达到 ±1 s/d 的精度。";

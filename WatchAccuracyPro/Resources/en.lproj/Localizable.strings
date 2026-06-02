@@ -788,7 +788,7 @@
 "measurement.setup.step2.title" = "2. Center the mic on the caseback";
 "measurement.setup.step2.body" = "The iPhone's bottom mic (small hole next to the charge port) should touch the center of the watch caseback. Avoid covering the mic with your fingers.";
 "measurement.setup.step3.title" = "3. Quiet environment";
-"measurement.setup.step3.body" = "Block ambient noise (TV, conversation, fans). Aim for SNR ≥ 20dB.";
+"measurement.setup.step3.body" = "Block ambient noise (TV, conversation, fans). Aim for SNR ≥ 15dB.";
 "measurement.tips.average.title" = "Tip for accurate measurement";
 "measurement.tips.average.body" = "Single-measurement variance is ±2 s/d. Average **3-5 measurements** for ±1 s/d precision. Keep the watch in the same position between measurements.";
 "measurement.tips.average.body.free" = "Single-measurement variance is ±2 s/d. The free plan allows 3 measurements per day — consecutive runs in the same position stabilize the average. Upgrade to Pro for unlimited runs and ±1 s/d precision with 5+ measurements.";

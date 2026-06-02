@@ -780,7 +780,7 @@
 "measurement.setup.step2.title" = "2. Centrez le micro sur le fond de boîte";
 "measurement.setup.step2.body" = "Le micro inférieur de l'iPhone (petit trou près du port de charge) doit toucher le centre du fond de boîte. Évitez de couvrir le micro avec vos doigts.";
 "measurement.setup.step3.title" = "3. Environnement silencieux";
-"measurement.setup.step3.body" = "Éliminez les bruits ambiants (télévision, conversations, ventilateurs). Visez un SNR ≥ 20 dB.";
+"measurement.setup.step3.body" = "Éliminez les bruits ambiants (télévision, conversations, ventilateurs). Visez un SNR ≥ 15 dB.";
 "measurement.tips.average.title" = "Conseil pour une mesure précise";
 "measurement.tips.average.body" = "La variance d'une mesure unique est de ±2 s/d. Faites la moyenne de **3 à 5 mesures** pour une précision de ±1 s/d. Conservez la montre dans la même position entre chaque mesure.";
 "measurement.tips.average.body.free" = "La variance d'une mesure unique est de ±2 s/d. La formule gratuite autorise 3 mesures par jour — des prises successives dans la même position stabilisent la moyenne. Passez à Pro pour des mesures illimitées et une précision de ±1 s/d avec 5 mesures ou plus.";

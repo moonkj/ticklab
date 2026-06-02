@@ -780,7 +780,7 @@
 "measurement.setup.step2.title" = "2. Centra el micrófono sobre el fondo de caja";
 "measurement.setup.step2.body" = "El micrófono inferior del iPhone (el orificio pequeño junto al puerto de carga) debe tocar el centro del fondo del reloj. Evita cubrir el micrófono con los dedos.";
 "measurement.setup.step3.title" = "3. Entorno silencioso";
-"measurement.setup.step3.body" = "Bloquea el ruido ambiental (TV, conversaciones, ventiladores). Apunta a un SNR ≥ 20 dB.";
+"measurement.setup.step3.body" = "Bloquea el ruido ambiental (TV, conversaciones, ventiladores). Apunta a un SNR ≥ 15 dB.";
 "measurement.tips.average.title" = "Consejo para una medición precisa";
 "measurement.tips.average.body" = "La variación de una sola medición es de ±2 s/d. Promedia **3-5 mediciones** para una precisión de ±1 s/d. Mantén el reloj en la misma posición entre mediciones.";
 "measurement.tips.average.body.free" = "La variación de una sola medición es de ±2 s/d. El plan gratuito permite 3 mediciones por día — varias tomas consecutivas en la misma posición estabilizan la media. Actualiza a Pro para mediciones ilimitadas y precisión de ±1 s/d con 5 o más mediciones.";
