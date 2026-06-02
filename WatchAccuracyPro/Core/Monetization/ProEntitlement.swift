@@ -1,7 +1,7 @@
 import Foundation
 import StoreKit
 
-/// 월 $1.99 / 연 $9.99 구독 + ₩25,000 평생 (non-consumable) — TickLab Pro.
+/// TickLab Pro — 월간 / 연간 자동 갱신 구독. 가격은 App Store 표시값(지역별).
 ///
 /// Free tier 제한:
 /// - 시계 등록 최대 1개

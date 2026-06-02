@@ -74,7 +74,7 @@
 "stats.average_rate.subtitle" = "Basado en %d mediciones";
 "stats.average_rate.stddev" = "Dispersión ±%.1f s/d";
 "stats.empty.mood" = "Registra entradas para ver el desglose de ánimo.";
-"stats.empty.positions" = "Los promedios por posición aparecen cuando indicas la posición al medir.";
+"stats.empty.positions" = "Aún no hay mediciones. Las estadísticas aparecen al medir.";
 
 /* Share Card */
 "share.title" = "Tarjeta para compartir";
@@ -137,7 +137,6 @@
 "collection.last_rate" = "Última marcha";
 "collection.runs" = "%d mediciones";
 "collection.no_measurements" = "Sin mediciones aún — toca para empezar";
-"collection.footer" = "TICKLAB · v0.2 · 2026";
 
 /* Watch detail (new) */
 "watch.section.latest" = "Última lectura";
@@ -456,8 +455,6 @@
 "shake.cta.wear.done" = "Llevándolo hoy";
 "shake.tip" = "Agita el móvil o toca. También puedes programar una notificación diaria.";
 "shake.section.mywatches" = "Mis relojes";
-"league.collecting" = "Aún se está recopilando el ranking de %@.";
-"league.cheer" = "Animar";
 "league.ranking.all" = "Todos los rankings";
 "badges.earned" = "Obtenida";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
@@ -607,8 +604,8 @@
 "badges.b1.name" = "Buzo profundo";        "badges.b1.desc" = "Mide un reloj de buceo";
 "badges.b2.name" = "Coleccionista";         "badges.b2.desc" = "Registra 5 o más relojes";
 "badges.b3.name" = "Un solo reloj";    "badges.b3.desc" = "Lleva un único reloj durante 30 días seguidos";
-"badges.b4.name" = "Patrulla del alba";       "badges.b4.desc" = "10 mediciones antes de las 5 a. m.";
-"badges.b5.name" = "Maestro COSC";       "badges.b5.desc" = "7 días con resultados COSC";
+"badges.b4.name" = "Patrulla del alba";       "badges.b4.desc" = "10 mediciones de madrugada (4-7 a. m.)";
+"badges.b5.name" = "Maestro de marcas";       "badges.b5.desc" = "Ten 7 marcas diferentes";
 "badges.b6.name" = "Caminante lunar";        "badges.b6.desc" = "Registra un reloj con fase lunar";
 "badges.b7.name" = "Viajero del tiempo";        "badges.b7.desc" = "Mide un reloj GMT";
 "badges.b8.name" = "Centurión";         "badges.b8.desc" = "100 mediciones en un mismo reloj";
@@ -623,13 +620,13 @@
 "badges.b17.name" = "10 mediciones";  "badges.b17.desc" = "Construyendo datos constantes";           "badges.b17.condition" = "10 mediciones en total";
 "badges.b18.name" = "50 mediciones";  "badges.b18.desc" = "En serio con la precisión";             "badges.b18.condition" = "50 mediciones en total";
 "badges.b19.name" = "Campeón anual";  "badges.b19.desc" = "365 mediciones en un mismo reloj";      "badges.b19.condition" = "365 mediciones en el mismo reloj";
-"badges.b20.name" = "Amante del vintage";    "badges.b20.desc" = "El encanto de los movimientos retro";           "badges.b20.condition" = "Registra un reloj de 18000/19800 BPH";
+"badges.b20.name" = "Amante del vintage";    "badges.b20.desc" = "El encanto de los movimientos retro";           "badges.b20.condition" = "Registra un reloj vintage (anterior a 2000)";
 "badges.b21.name" = "Cronografista";    "badges.b21.desc" = "Dueño de complicaciones complejas";         "badges.b21.condition" = "Registra un reloj cronógrafo";
 "badges.b22.name" = "Dos cifras";    "badges.b22.desc" = "10 o más relojes en la colección";       "badges.b22.condition" = "Registra 10 o más relojes";
 "badges.b1.condition" = "Registra un reloj de buceo/submarinista";
 "badges.b2.condition" = "Registra 5 o más relojes";
 "badges.b3.condition" = "30 o más registros de uso en un mismo reloj";
-"badges.b4.condition" = "10 mediciones antes de las 5 a. m.";
+"badges.b4.condition" = "10 mediciones de madrugada (4-7 a. m.)";
 "badges.b5.condition" = "7 o más marcas distintas";
 "badges.b6.condition" = "Registra un reloj con fase lunar";
 "badges.b7.condition" = "Registra un reloj GMT";
@@ -637,7 +634,7 @@
 "badges.b9.condition" = "5 o más marcas distintas";
 "badges.b10.condition" = "Completa la primera medición";
 "badges.b11.condition" = "Escribe 50 o más entradas de diario";
-"badges.b12.condition" = "Desbloquea las otras 21 insignias";
+"badges.b12.condition" = "Desbloquea todas las insignias no comunitarias";
 "badges.toast.title" = "¡Insignia desbloqueada!";
 "service.section.type" = "Tipo";
 "service.picker.type" = "Tipo de servicio";
@@ -1005,9 +1002,6 @@
 "shake.cta.a11y.hint" = "Toca el botón o agita el móvil para elegir el reloj de hoy";
 
 /* Round 117 — Hard Rule 9 + misc */
-"result.amplitude.low_confidence" = "Amplitud omitida — este movimiento tiene una clasificación de fiabilidad baja.";
-"result.amplitude.unavailable.title" = "Amplitud no mostrada";
-"result.amplitude.unavailable.body" = "La amplitud basada en micrófono no es fiable para este movimiento (fondo de zafiro, escape coaxial, etc.) y se omite.";
 
 /* Round 118 — storyCard + journalTab compose */
 "watch.story.empty_prompt" = "Añade la historia de este reloj";
@@ -1346,12 +1340,6 @@
 "addwatch.movement.section.results" = "Resultados de búsqueda";
 
 /* Lifetime IAP (v1.0.1) */
-"purchase.plan.toggle.lifetime" = "De por vida";
-"purchase.plan.lifetime" = "Acceso de por vida";
-"purchase.plan.lifetime.one_time" = "Compra única · para siempre";
-"purchase.plan.lifetime.badge" = "BEST";
-"purchase.cta.buy_lifetime" = "Comprar de por vida";
-"purchase.legal.one_time" = "TickLab Pro · compra única para acceso de por vida. El pago se carga una sola vez a tu Apple ID y no se renueva automáticamente. Todas las funciones Pro quedan desbloqueadas permanentemente.";
 
 /* Backfill (v1.0.1) — pre-existing missing keys */
 "watch.spec.serial" = "Número de serie";
@@ -1549,7 +1537,6 @@
 "feedback.type.general" = "General";
 "feedback.section.message" = "Message";
 "feedback.placeholder" = "What could be better? What feature would you love?";
-"feedback.email.hint" = "Feedback is sent via email.";
 "feedback.send" = "Send";
 "settings.help.feedback" = "Send Feedback";
 "powerreserve.title" = "POWER RESERVE";
@@ -1561,8 +1548,6 @@
 "analytics.header.disclaimer" = "Anonymized data. Only shown with 100+ records.";
 "analytics.top5.title" = "TOP 5 BRANDS";
 "analytics.empty" = "Not enough data collected yet.";
-"stats.entry.global" = "Global Analytics";
-"stats.entry.global.subtitle" = "Worldwide wear trends";
 "analytics.vs.me" = "My Wears";
 "analytics.vs.global" = "Global";
 "analytics.vs.unit" = "wears";
@@ -1650,6 +1635,7 @@
 "profile.rep_brand" = "Marca destacada";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
+"profile.badge.dealer" = "DISTRIBUIDOR";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
 "profile.section.invite" = "Invite Code";
 "settings.data.gallery_html" = "Collection Gallery (HTML)";
@@ -1835,7 +1821,6 @@
 "admin.license.status.pro" = "Pro: Unlimited watches, all features enabled";
 "admin.license.status.free" = "Free: Up to %d watches";
 "admin.panel.title" = "Admin Panel";
-"feedback.email.subject" = "Comentarios de TickLab";
 "strap.material.leather" = "Cuero";
 "strap.material.rubber" = "Caucho";
 "strap.material.nato" = "NATO";

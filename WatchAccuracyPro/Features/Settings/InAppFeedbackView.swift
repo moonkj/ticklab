@@ -3,7 +3,7 @@ import UIKit
 
 /// Sprint 6 (P3-14): 인앱 피드백 시트.
 /// 흔들기(Motion) 또는 설정 > 피드백 진입.
-/// 현재 화면 스크린샷 자동 첨부 → 이메일로 전송.
+/// Round 175: Supabase(app_feedback)로 전송 → 운영 대시보드에서 확인 (구 mailto 대체).
 struct InAppFeedbackView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var feedbackText: String = ""

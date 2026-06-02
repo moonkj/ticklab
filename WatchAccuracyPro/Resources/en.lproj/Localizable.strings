@@ -74,7 +74,7 @@
 "stats.average_rate.subtitle" = "Based on %d measurements";
 "stats.average_rate.stddev" = "Spread ±%.1f s/d";
 "stats.empty.mood" = "Log entries to see mood breakdown.";
-"stats.empty.positions" = "Position averages appear when you set position on measurement.";
+"stats.empty.positions" = "No measurements yet. Stats appear once you measure.";
 
 /* Share Card */
 "share.title" = "Share card";
@@ -137,7 +137,6 @@
 "collection.last_rate" = "Last rate";
 "collection.runs" = "%d runs";
 "collection.no_measurements" = "No measurements yet — tap to begin";
-"collection.footer" = "TICKLAB · v0.2 · 2026";
 
 /* Watch detail (new) */
 "watch.section.latest" = "Latest reading";
@@ -463,8 +462,6 @@
 "shake.cta.wear.done" = "Wearing today";
 "shake.tip" = "Shake your phone or tap. You can also schedule a daily notification.";
 "shake.section.mywatches" = "My watches";
-"league.collecting" = "This %@ ranking is still being collected.";
-"league.cheer" = "Cheer";
 "league.ranking.all" = "All rankings";
 "badges.earned" = "Earned";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
@@ -615,8 +612,8 @@
 "badges.b1.name" = "Deep Diver";        "badges.b1.desc" = "Measure a diver watch";
 "badges.b2.name" = "Collector";         "badges.b2.desc" = "Register 5+ watches";
 "badges.b3.name" = "One True Watch";    "badges.b3.desc" = "Wear one watch 30 days straight";
-"badges.b4.name" = "Dawn Patrol";       "badges.b4.desc" = "10 measurements before 5 AM";
-"badges.b5.name" = "COSC Master";       "badges.b5.desc" = "7 days of COSC results";
+"badges.b4.name" = "Dawn Patrol";       "badges.b4.desc" = "10 early-morning measurements (4-7 AM)";
+"badges.b5.name" = "Brand Master";       "badges.b5.desc" = "Own 7 different brands";
 "badges.b6.name" = "Moonwalker";        "badges.b6.desc" = "Register a moonphase watch";
 "badges.b7.name" = "Time Traveler";     "badges.b7.desc" = "Measure a GMT watch";
 "badges.b8.name" = "Centurion";         "badges.b8.desc" = "100 measurements on one watch";
@@ -631,13 +628,13 @@
 "badges.b17.name" = "10 Measurements";  "badges.b17.desc" = "Building consistent data";           "badges.b17.condition" = "10 total measurements";
 "badges.b18.name" = "50 Measurements";  "badges.b18.desc" = "Serious about accuracy";             "badges.b18.condition" = "50 total measurements";
 "badges.b19.name" = "Yearly Champion";  "badges.b19.desc" = "365 measurements on one watch";      "badges.b19.condition" = "365 runs on same watch";
-"badges.b20.name" = "Vintage Lover";    "badges.b20.desc" = "Charm of retro movements";           "badges.b20.condition" = "Register 18000/19800 BPH watch";
+"badges.b20.name" = "Vintage Lover";    "badges.b20.desc" = "Charm of retro movements";           "badges.b20.condition" = "Register a pre-2000 (vintage) watch";
 "badges.b21.name" = "Chronographer";    "badges.b21.desc" = "Complex complications owner";         "badges.b21.condition" = "Register a Chronograph watch";
 "badges.b22.name" = "Double Digits";    "badges.b22.desc" = "10 or more watches collected";       "badges.b22.condition" = "Register 10+ watches";
 "badges.b1.condition" = "Register a diver/submariner watch";
 "badges.b2.condition" = "Register 5+ watches";
 "badges.b3.condition" = "30+ wear logs on one watch";
-"badges.b4.condition" = "10 measurements before 5am";
+"badges.b4.condition" = "10 early-morning measurements (4-7 AM)";
 "badges.b5.condition" = "7+ different brands";
 "badges.b6.condition" = "Register a moonphase watch";
 "badges.b7.condition" = "Register a GMT watch";
@@ -645,7 +642,7 @@
 "badges.b9.condition" = "5+ different brands";
 "badges.b10.condition" = "Complete first measurement";
 "badges.b11.condition" = "Write 50+ journal entries";
-"badges.b12.condition" = "Unlock all 21 other badges";
+"badges.b12.condition" = "Unlock all non-community badges";
 "badges.toast.title" = "Badge Unlocked!";
 "service.section.type" = "Type";
 "service.picker.type" = "Service type";
@@ -1013,9 +1010,6 @@
 "shake.cta.a11y.hint" = "Tap the button or shake your phone to pick today's watch";
 
 /* Round 117 — Hard Rule 9 + misc */
-"result.amplitude.low_confidence" = "Amplitude omitted — this movement has a low measurement confidence rating.";
-"result.amplitude.unavailable.title" = "Amplitude not shown";
-"result.amplitude.unavailable.body" = "Mic-based amplitude is unreliable for this movement (sapphire caseback, co-axial escapement, etc.) and is omitted.";
 
 /* Round 118 — storyCard + journalTab compose */
 "watch.story.empty_prompt" = "Add this watch's story";
@@ -1102,18 +1096,12 @@
 "purchase.plan.yearly.badge" = "%d%% off";
 "purchase.plan.toggle.monthly" = "Monthly";
 "purchase.plan.toggle.yearly" = "Yearly";
-"purchase.plan.toggle.lifetime" = "Lifetime";
-"purchase.plan.lifetime" = "Lifetime access";
-"purchase.plan.lifetime.one_time" = "One-time purchase · forever";
-"purchase.plan.lifetime.badge" = "BEST";
 "purchase.cta.subscribe" = "Start Pro";
-"purchase.cta.buy_lifetime" = "Buy Lifetime";
 "purchase.cta.processing" = "Processing…";
 "purchase.cta.restore" = "Restore Purchase";
 "purchase.cta.restoring" = "Restoring…";
 "purchase.legal.auto_renew" = "TickLab Pro · 1-year auto-renewing subscription. Payment charges your Apple ID at confirmation. Auto-renews at the same price within 24 hours before the period ends unless cancelled at least 24 hours prior. Manage or cancel anytime in your Apple ID settings.";
 "purchase.legal.auto_renew.monthly" = "TickLab Pro · 1-month auto-renewing subscription. Payment charges your Apple ID at confirmation. Auto-renews at the same price within 24 hours before the period ends unless cancelled at least 24 hours prior. Manage or cancel anytime in your Apple ID settings.";
-"purchase.legal.one_time" = "TickLab Pro · one-time purchase for lifetime access. Payment charges your Apple ID once and does not auto-renew. All Pro features remain unlocked permanently.";
 "purchase.legal.terms" = "Terms of Use";
 "purchase.legal.privacy" = "Privacy Policy";
 "purchase.success.title" = "Pro Activated";
@@ -1572,7 +1560,6 @@
 "feedback.type.general" = "General";
 "feedback.section.message" = "Message";
 "feedback.placeholder" = "What could be better? What feature would you love?";
-"feedback.email.hint" = "Feedback is sent via email.";
 "feedback.send" = "Send";
 "settings.help.feedback" = "Send Feedback";
 "powerreserve.title" = "POWER RESERVE";
@@ -1586,8 +1573,6 @@
 "analytics.header.disclaimer" = "Anonymized data. Only shown with 100+ records.";
 "analytics.top5.title" = "TOP 5 BRANDS";
 "analytics.empty" = "Not enough data collected yet.";
-"stats.entry.global" = "Global Analytics";
-"stats.entry.global.subtitle" = "Worldwide wear trends";
 
 /* Sprint 6 — P3-9 Global analytics v2 */
 "analytics.vs.me" = "My Wears";
@@ -1693,6 +1678,7 @@
 "profile.rep_brand" = "Signature Brand";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
+"profile.badge.dealer" = "DEALER";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
 "profile.section.invite" = "Invite Code";
 
@@ -1898,7 +1884,6 @@
 "admin.license.status.pro" = "Pro: Unlimited watches, all features enabled";
 "admin.license.status.free" = "Free: Up to %d watches";
 "admin.panel.title" = "Admin Panel";
-"feedback.email.subject" = "TickLab Feedback";
 "strap.material.leather" = "Leather";
 "strap.material.rubber" = "Rubber";
 "strap.material.nato" = "NATO";

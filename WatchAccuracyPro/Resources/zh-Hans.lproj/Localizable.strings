@@ -74,7 +74,7 @@
 "stats.average_rate.subtitle" = "基于 %d 次测量";
 "stats.average_rate.stddev" = "波动 ±%.1f s/d";
 "stats.empty.mood" = "记录日志以查看心情分布。";
-"stats.empty.positions" = "在测量时设置位置后,将显示各方位的平均值。";
+"stats.empty.positions" = "暂无测量记录。开始测量后显示统计。";
 
 /* Share Card */
 "share.title" = "分享卡片";
@@ -137,7 +137,6 @@
 "collection.last_rate" = "最近走时";
 "collection.runs" = "%d 次记录";
 "collection.no_measurements" = "尚无测量记录 — 点按开始";
-"collection.footer" = "TICKLAB · v0.2 · 2026";
 
 /* Watch detail (new) */
 "watch.section.latest" = "最新读数";
@@ -456,8 +455,6 @@
 "shake.cta.wear.done" = "今日佩戴中";
 "shake.tip" = "摇一摇或轻点即可。也可设置每日通知。";
 "shake.section.mywatches" = "我的腕表";
-"league.collecting" = "本 %@ 的榜单仍在收集中。";
-"league.cheer" = "加油";
 "league.ranking.all" = "全部榜单";
 "badges.earned" = "已获得";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
@@ -607,8 +604,8 @@
 "badges.b1.name" = "深海潜士";        "badges.b1.desc" = "测量一枚潜水表";
 "badges.b2.name" = "藏家";         "badges.b2.desc" = "登记 5 枚以上腕表";
 "badges.b3.name" = "一表一生";    "badges.b3.desc" = "连续 30 天佩戴同一枚腕表";
-"badges.b4.name" = "黎明值守";       "badges.b4.desc" = "凌晨 5 点前完成 10 次测量";
-"badges.b5.name" = "COSC 大师";       "badges.b5.desc" = "7 天均符合 COSC 标准";
+"badges.b4.name" = "黎明值守";       "badges.b4.desc" = "清晨（4-7 点）完成 10 次测量";
+"badges.b5.name" = "品牌大师";       "badges.b5.desc" = "拥有 7 个不同品牌";
 "badges.b6.name" = "月相行者";        "badges.b6.desc" = "登记一枚月相表";
 "badges.b7.name" = "时区旅人";       "badges.b7.desc" = "测量一枚 GMT 腕表";
 "badges.b8.name" = "百次礼赞";         "badges.b8.desc" = "对同一枚腕表完成 100 次测量";
@@ -623,13 +620,13 @@
 "badges.b17.name" = "10 次测量";  "badges.b17.desc" = "正在建立稳定的数据";           "badges.b17.condition" = "累计 10 次测量";
 "badges.b18.name" = "50 次测量";  "badges.b18.desc" = "对精度认真起来";             "badges.b18.condition" = "累计 50 次测量";
 "badges.b19.name" = "年度冠军";  "badges.b19.desc" = "对同一枚腕表完成 365 次测量";      "badges.b19.condition" = "对同一枚腕表完成 365 次测量";
-"badges.b20.name" = "古董之爱";    "badges.b20.desc" = "复古机芯的独特魅力";           "badges.b20.condition" = "登记 18000/19800 BPH 的腕表";
+"badges.b20.name" = "古董之爱";    "badges.b20.desc" = "复古机芯的独特魅力";           "badges.b20.condition" = "登记 2000 年前（古董）腕表";
 "badges.b21.name" = "计时大师";    "badges.b21.desc" = "复杂功能的拥有者";         "badges.b21.condition" = "登记一枚计时码表";
 "badges.b22.name" = "两位数藏家";    "badges.b22.desc" = "藏品达到 10 枚以上";       "badges.b22.condition" = "登记 10 枚以上腕表";
 "badges.b1.condition" = "登记一枚潜水/Submariner 腕表";
 "badges.b2.condition" = "登记 5 枚以上腕表";
 "badges.b3.condition" = "对同一枚腕表记录 30 次以上佩戴";
-"badges.b4.condition" = "凌晨 5 点前完成 10 次测量";
+"badges.b4.condition" = "清晨（4-7 点）完成 10 次测量";
 "badges.b5.condition" = "7 个以上不同品牌";
 "badges.b6.condition" = "登记一枚月相表";
 "badges.b7.condition" = "登记一枚 GMT 腕表";
@@ -637,7 +634,7 @@
 "badges.b9.condition" = "5 个以上不同品牌";
 "badges.b10.condition" = "完成首次测量";
 "badges.b11.condition" = "撰写 50 篇以上日志";
-"badges.b12.condition" = "解锁全部 21 枚其他徽章";
+"badges.b12.condition" = "解锁全部非社区徽章";
 "badges.toast.title" = "徽章已解锁!";
 "service.section.type" = "类型";
 "service.picker.type" = "保养类型";
@@ -1005,9 +1002,6 @@
 "shake.cta.a11y.hint" = "点按按钮或摇晃手机以挑选今日腕表";
 
 /* Round 117 — Hard Rule 9 + misc */
-"result.amplitude.low_confidence" = "已省略振幅 — 此机芯的测量置信度评级较低。";
-"result.amplitude.unavailable.title" = "未显示振幅";
-"result.amplitude.unavailable.body" = "此机芯(蓝宝石底盖、同轴擒纵等)基于麦克风的振幅测量不可靠,故已省略。";
 
 /* Round 118 — storyCard + journalTab compose */
 "watch.story.empty_prompt" = "添加这枚腕表的故事";
@@ -1346,12 +1340,6 @@
 "addwatch.movement.section.results" = "搜索结果";
 
 /* Lifetime IAP (v1.0.1) */
-"purchase.plan.toggle.lifetime" = "终身";
-"purchase.plan.lifetime" = "终身使用权";
-"purchase.plan.lifetime.one_time" = "一次性付款 · 永久使用";
-"purchase.plan.lifetime.badge" = "BEST";
-"purchase.cta.buy_lifetime" = "购买终身版";
-"purchase.legal.one_time" = "TickLab Pro · 一次性付款获得终身使用权。仅向您的 Apple ID 收取一次费用,不自动续订。所有 Pro 功能将永久解锁。";
 
 /* Backfill (v1.0.1) — pre-existing missing keys */
 "watch.spec.serial" = "序列号";
@@ -1549,7 +1537,6 @@
 "feedback.type.general" = "General";
 "feedback.section.message" = "Message";
 "feedback.placeholder" = "What could be better? What feature would you love?";
-"feedback.email.hint" = "Feedback is sent via email.";
 "feedback.send" = "Send";
 "settings.help.feedback" = "Send Feedback";
 "powerreserve.title" = "POWER RESERVE";
@@ -1561,8 +1548,6 @@
 "analytics.header.disclaimer" = "Anonymized data. Only shown with 100+ records.";
 "analytics.top5.title" = "TOP 5 BRANDS";
 "analytics.empty" = "Not enough data collected yet.";
-"stats.entry.global" = "Global Analytics";
-"stats.entry.global.subtitle" = "Worldwide wear trends";
 "analytics.vs.me" = "My Wears";
 "analytics.vs.global" = "Global";
 "analytics.vs.unit" = "wears";
@@ -1650,6 +1635,7 @@
 "profile.rep_brand" = "代表品牌";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
+"profile.badge.dealer" = "经销商";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
 "profile.section.invite" = "Invite Code";
 "settings.data.gallery_html" = "Collection Gallery (HTML)";
@@ -1835,7 +1821,6 @@
 "admin.license.status.pro" = "Pro: Unlimited watches, all features enabled";
 "admin.license.status.free" = "Free: Up to %d watches";
 "admin.panel.title" = "Admin Panel";
-"feedback.email.subject" = "TickLab 反馈";
 "strap.material.leather" = "皮革";
 "strap.material.rubber" = "橡胶";
 "strap.material.nato" = "NATO";

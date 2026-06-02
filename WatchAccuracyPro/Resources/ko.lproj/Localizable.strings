@@ -74,7 +74,7 @@
 "stats.average_rate.subtitle" = "측정 %d회 기준";
 "stats.average_rate.stddev" = "표준편차 ±%.1f s/d";
 "stats.empty.mood" = "기록을 기록하면 기분 분포가 표시됩니다.";
-"stats.empty.positions" = "측정 시 자세를 지정하면 평균이 표시됩니다.";
+"stats.empty.positions" = "아직 측정 기록이 없어요. 측정하면 통계가 쌓여요.";
 
 /* Share Card */
 "share.title" = "공유 카드";
@@ -157,7 +157,6 @@
 "collection.last_rate" = "최근 rate";
 "collection.runs" = "%d회 측정";
 "collection.no_measurements" = "아직 측정 없음 — 탭하여 시작";
-"collection.footer" = "TICKLAB · v0.2 · 2026";
 
 /* Watch row */
 "watch.cta.measure" = "측정 시작";
@@ -387,8 +386,6 @@
 "shake.cta.wear.done" = "착용 완료";
 "shake.tip" = "폰을 직접 흔들거나 버튼을 눌러요 · 설정한 시간에 알림으로도 보내드려요";
 "shake.section.mywatches" = "내 시계";
-"league.collecting" = "이번 %@ 랭킹이 집계 중이에요.";
-"league.cheer" = "응원하기";
 "league.ranking.all" = "전체 순위";
 "badges.earned" = "획득";
 // Round 19: 중복 key "badges.locked" 삭제 — line 1137 의 "잠김" 이 long variant 를 silently 마스킹하던 버그.
@@ -539,8 +536,8 @@
 "badges.b1.name" = "심해 정복자";  "badges.b1.desc" = "다이버 워치 측정";
 "badges.b2.name" = "성공한 덕후";   "badges.b2.desc" = "시계 5개 이상 등록";
 "badges.b3.name" = "한우물";       "badges.b3.desc" = "한 시계만 30일 내내 착용";
-"badges.b4.name" = "새벽의 측정자"; "badges.b4.desc" = "오전 5시 이전 측정 10회";
-"badges.b5.name" = "COSC 마스터";  "badges.b5.desc" = "7일 연속 COSC 결과";
+"badges.b4.name" = "새벽의 측정자"; "badges.b4.desc" = "이른 아침(오전 4~7시) 측정 10회";
+"badges.b5.name" = "브랜드 마스터";  "badges.b5.desc" = "서로 다른 브랜드 7개 보유";
 "badges.b6.name" = "월면 산책";    "badges.b6.desc" = "문페이즈 시계 등록";
 "badges.b7.name" = "시간 여행자";  "badges.b7.desc" = "GMT 워치 측정";
 "badges.b8.name" = "백 일의 시계"; "badges.b8.desc" = "같은 시계로 100회 측정";
@@ -557,7 +554,7 @@
 "badges.b17.name" = "10회 돌파";      "badges.b17.desc" = "꾸준한 데이터 수집";       "badges.b17.condition" = "누적 측정 10회 이상";
 "badges.b18.name" = "50회 돌파";      "badges.b18.desc" = "진지한 측정의 시작";       "badges.b18.condition" = "누적 측정 50회 이상";
 "badges.b19.name" = "연간 측정왕";    "badges.b19.desc" = "한 시계를 1년간 매일 측정"; "badges.b19.condition" = "같은 시계로 365회 측정";
-"badges.b20.name" = "빈티지 러버";    "badges.b20.desc" = "레트로 무브먼트의 매력";   "badges.b20.condition" = "18000/19800 BPH 시계 등록";
+"badges.b20.name" = "빈티지 러버";    "badges.b20.desc" = "레트로 무브먼트의 매력";   "badges.b20.condition" = "2000년 이전(빈티지) 시계 등록";
 "badges.b21.name" = "크로노그래프";   "badges.b21.desc" = "복잡한 구조의 시계 소유";  "badges.b21.condition" = "Chronograph 시계 등록";
 "badges.b22.name" = "두 자리 컬렉터"; "badges.b22.desc" = "10개 이상의 시계 보유";    "badges.b22.condition" = "시계 10개 이상 등록";
 
@@ -565,7 +562,7 @@
 "badges.b1.condition" = "다이버/서브마리너 시계 등록";
 "badges.b2.condition" = "시계 5개 이상 등록";
 "badges.b3.condition" = "한 시계 착용 로그 30일 이상";
-"badges.b4.condition" = "오전 5시 이전 측정 10회";
+"badges.b4.condition" = "이른 아침(오전 4~7시) 측정 10회";
 "badges.b5.condition" = "7개 이상의 서로 다른 브랜드";
 "badges.b6.condition" = "문페이즈 시계 등록";
 "badges.b7.condition" = "GMT 모델 시계 등록";
@@ -573,7 +570,7 @@
 "badges.b9.condition" = "5개 이상의 서로 다른 브랜드";
 "badges.b10.condition" = "첫 번째 측정 완료";
 "badges.b11.condition" = "저널 50회 이상 작성";
-"badges.b12.condition" = "나머지 21개 뱃지 모두 획득";
+"badges.b12.condition" = "커뮤니티 외 모든 뱃지 획득";
 
 // ── 토스트 ──────────────────────────────────────────────────────────
 "badges.toast.title" = "뱃지 획득!";
@@ -1013,9 +1010,6 @@
 "shake.cta.a11y.hint" = "버튼을 누르거나 폰을 흔들어 오늘의 시계를 뽑아요";
 
 /* Round 117 — Hard Rule 9 보정 + 기타 */
-"result.amplitude.low_confidence" = "이 무브먼트는 진폭 측정 신뢰도가 낮아 표시를 생략했어요.";
-"result.amplitude.unavailable.title" = "진폭은 표시하지 않아요";
-"result.amplitude.unavailable.body" = "이 무브먼트는 사파이어 케이스백·코액시얼 이스케이프먼트 등으로 마이크 진폭 측정 신뢰도가 낮아 생략합니다.";
 
 /* Round 118 — storyCard + journalTab compose */
 "watch.story.empty_prompt" = "이 시계의 이야기를 추가해보세요";
@@ -1029,7 +1023,7 @@
 "glossary.confidence" = "신뢰도";
 "glossary.confidence.desc" = "측정값이 얼마나 믿을 수 있는지 나타내는 0-100 점수. SNR·측정 시간·BPH 잠금 품질·박동 오차로 결정됩니다.";
 "glossary.snr" = "SNR (신호 대 잡음비)";
-"glossary.snr.desc" = "시계 소리 대비 주변 소음의 비율(dB). 값이 높을수록 정확한 측정이 가능합니다. 10dB 이상을 권장하며, 케이스백을 마이크에 밀착할수록 높아집니다.";
+"glossary.snr.desc" = "시계 소리 대비 주변 소음의 비율(dB). 값이 높을수록 정확한 측정이 가능합니다. 15dB 이상을 권장하며, 케이스백을 마이크에 밀착할수록 높아집니다.";
 "glossary.drift" = "드리프트 (Drift)";
 "glossary.drift.desc" = "시간이 지남에 따라 Rate가 변하는 경향. 온도·자세·태엽 상태에 따라 달라집니다.";
 "glossary.isochronism" = "등시성 (Isochronism)";
@@ -1084,7 +1078,7 @@
 "collection.status.service" = "서비스";
 "pro.limit.upgrade" = "Pro로 업그레이드";
 
-/* TickLab Pro 구독 페이월 (연 9.99$) */
+/* TickLab Pro 구독 페이월 (월간·연간) */
 "purchase.headline" = "TickLab Pro";
 "purchase.subtitle" = "컬렉션과 측정을 무제한으로 — 진정한 워치메이커의 도구를 누려보세요.";
 "purchase.benefit.unlimited_watches.title" = "무제한 시계 등록";
@@ -1102,18 +1096,12 @@
 "purchase.plan.yearly.badge" = "%d%% 할인";
 "purchase.plan.toggle.monthly" = "월간";
 "purchase.plan.toggle.yearly" = "연간";
-"purchase.plan.toggle.lifetime" = "평생";
-"purchase.plan.lifetime" = "평생 이용권";
-"purchase.plan.lifetime.one_time" = "1회 결제로 영구 사용";
-"purchase.plan.lifetime.badge" = "BEST";
 "purchase.cta.subscribe" = "Pro 시작하기";
-"purchase.cta.buy_lifetime" = "평생 이용권 구매";
 "purchase.cta.processing" = "처리 중…";
 "purchase.cta.restore" = "이전 구매 복원";
 "purchase.cta.restoring" = "복원 중…";
 "purchase.legal.auto_renew" = "TickLab Pro · 1년 자동 갱신 구독. 결제는 Apple ID 계정에 청구되며, 현재 기간 종료 24시간 이전에 취소하지 않으면 같은 가격으로 자동 갱신됩니다. 구독은 Apple ID 계정 설정에서 언제든 관리·취소할 수 있어요.";
 "purchase.legal.auto_renew.monthly" = "TickLab Pro · 1개월 자동 갱신 구독. 결제는 Apple ID 계정에 청구되며, 현재 기간 종료 24시간 이전에 취소하지 않으면 같은 가격으로 자동 갱신됩니다. 구독은 Apple ID 계정 설정에서 언제든 관리·취소할 수 있어요.";
-"purchase.legal.one_time" = "TickLab Pro · 1회 결제 평생 이용권. 결제는 Apple ID 계정에 한 번만 청구되며 자동 갱신되지 않습니다. 이후 모든 Pro 기능을 영구적으로 사용할 수 있어요.";
 "purchase.legal.terms" = "이용 약관";
 "purchase.legal.privacy" = "개인정보 처리방침";
 "purchase.success.title" = "Pro 활성화 완료";
@@ -1571,7 +1559,6 @@
 "feedback.type.general" = "일반 의견";
 "feedback.section.message" = "메시지";
 "feedback.placeholder" = "어떤 점이 불편하셨나요? 어떤 기능이 있으면 좋을까요?";
-"feedback.email.hint" = "피드백은 이메일로 전송됩니다.";
 "feedback.send" = "보내기";
 "settings.help.feedback" = "피드백 보내기";
 "powerreserve.title" = "파워리저브";
@@ -1585,8 +1572,6 @@
 "analytics.header.disclaimer" = "익명 집계 데이터. 100명 이상 데이터만 표시.";
 "analytics.top5.title" = "TOP 5 브랜드";
 "analytics.empty" = "아직 충분한 데이터가 수집되지 않았어요.";
-"stats.entry.global" = "글로벌 분석";
-"stats.entry.global.subtitle" = "전세계 착용 트렌드";
 
 /* Sprint 6 — P3-9 글로벌 분석 v2 */
 "analytics.vs.me" = "내 착용";
@@ -1692,6 +1677,7 @@
 "profile.rep_brand" = "대표 메이커";
 "profile.bio" = "소개";
 "profile.dealer_badge" = "딜러 배지";
+"profile.badge.dealer" = "딜러";
 "profile.dealer_badge.hint" = "시계 거래를 하시면 활성화하세요.";
 "profile.section.invite" = "초대 코드";
 
@@ -1897,7 +1883,6 @@
 "admin.license.status.pro" = "Pro: 무제한 시계, 모든 기능 사용 가능";
 "admin.license.status.free" = "Free: 시계 최대 %d개";
 "admin.panel.title" = "관리자 패널";
-"feedback.email.subject" = "TickLab 피드백";
 "strap.material.leather" = "가죽";
 "strap.material.rubber" = "러버";
 "strap.material.nato" = "나토";

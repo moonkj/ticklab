@@ -68,7 +68,7 @@ private struct CollectionShareCard: View {
                         .foregroundStyle(AppColors.ink0)
                         .lineLimit(1)
                     if UserProfile.isDealer {
-                        Text("DEALER")
+                        Text(String(localized: "profile.badge.dealer"))
                             .font(.system(size: 9, weight: .bold))
                             .foregroundStyle(AppColors.primaryDeep)
                             .padding(.horizontal, 5).padding(.vertical, 2)

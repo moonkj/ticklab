@@ -428,7 +428,7 @@ struct WatchBoxView: View {
             statCard(label: String(localized: "watchbox.stats.occupied"), value: "\(occupied)/\(slotCount)")
             statCard(label: String(localized: "watchbox.stats.brands"), value: "\(brands)")
             if let avg = avgRate {
-                statCard(label: String(localized: "watchbox.stats.avg_rate"), value: String(format: "%@%.1f", avg >= 0 ? "+" : "", avg), unit: "s/d")
+                statCard(label: String(localized: "watchbox.stats.avg_rate"), value: String(format: "%@%.1f", avg >= 0 ? "+" : "", avg), unit: String(localized: "unit.seconds_per_day"))
             } else {
                 statCard(label: String(localized: "watchbox.stats.avg_rate"), value: "—")
             }

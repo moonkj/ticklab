@@ -94,7 +94,7 @@ struct SettingsView: View {
                                         .font(.system(size: 16, weight: .semibold))
                                         .foregroundStyle(AppColors.ink0)
                                     if UserProfile.isDealer {
-                                        Text("DEALER")
+                                        Text(String(localized: "profile.badge.dealer"))
                                             .font(.system(size: 9, weight: .bold))
                                             .foregroundStyle(AppColors.primaryDeep)
                                             .padding(.horizontal, 5).padding(.vertical, 2)

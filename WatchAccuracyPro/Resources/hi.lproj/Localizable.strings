@@ -74,7 +74,7 @@
 "stats.average_rate.subtitle" = "%d माप पर आधारित";
 "stats.average_rate.stddev" = "विचलन ±%.1f s/d";
 "stats.empty.mood" = "मनोदशा का विभाजन देखने के लिए प्रविष्टियाँ दर्ज करें।";
-"stats.empty.positions" = "माप पर पोज़ीशन सेट करने पर पोज़ीशन का औसत दिखेगा।";
+"stats.empty.positions" = "अभी तक कोई माप नहीं। मापने पर आँकड़े दिखेंगे।";
 
 /* Share Card */
 "share.title" = "शेयर कार्ड";
@@ -137,7 +137,6 @@
 "collection.last_rate" = "अंतिम रेट";
 "collection.runs" = "%d रन";
 "collection.no_measurements" = "अभी कोई माप नहीं — शुरू करने के लिए टैप करें";
-"collection.footer" = "TICKLAB · v0.2 · 2026";
 
 /* Watch detail (new) */
 "watch.section.latest" = "नवीनतम रीडिंग";
@@ -456,8 +455,6 @@
 "shake.cta.wear.done" = "आज पहन रहे हैं";
 "shake.tip" = "अपना फ़ोन हिलाएँ या टैप करें। आप रोज़ाना सूचना भी निर्धारित कर सकते हैं।";
 "shake.section.mywatches" = "मेरी घड़ियाँ";
-"league.collecting" = "यह %@ रैंकिंग अभी एकत्रित की जा रही है।";
-"league.cheer" = "उत्साह दें";
 "league.ranking.all" = "सभी रैंकिंग";
 "badges.earned" = "अर्जित";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
@@ -607,8 +604,8 @@
 "badges.b1.name" = "डीप डाइवर";        "badges.b1.desc" = "एक डाइवर घड़ी मापें";
 "badges.b2.name" = "कलेक्टर";         "badges.b2.desc" = "5+ घड़ियाँ पंजीकृत करें";
 "badges.b3.name" = "एक सच्ची घड़ी";    "badges.b3.desc" = "एक घड़ी लगातार 30 दिन पहनें";
-"badges.b4.name" = "डॉन पट्रोल";       "badges.b4.desc" = "सुबह 5 बजे से पहले 10 माप";
-"badges.b5.name" = "COSC मास्टर";       "badges.b5.desc" = "7 दिन COSC परिणाम";
+"badges.b4.name" = "डॉन पट्रोल";       "badges.b4.desc" = "तड़के (सुबह 4-7 बजे) 10 माप";
+"badges.b5.name" = "ब्रांड मास्टर";       "badges.b5.desc" = "7 अलग-अलग ब्रांड रखें";
 "badges.b6.name" = "मूनवॉकर";        "badges.b6.desc" = "एक मूनफ़ेज़ घड़ी पंजीकृत करें";
 "badges.b7.name" = "टाइम ट्रैवलर";     "badges.b7.desc" = "एक GMT घड़ी मापें";
 "badges.b8.name" = "सेंचुरियन";         "badges.b8.desc" = "एक घड़ी पर 100 माप";
@@ -623,13 +620,13 @@
 "badges.b17.name" = "10 माप";  "badges.b17.desc" = "लगातार डेटा बना रहे हैं";           "badges.b17.condition" = "कुल 10 माप";
 "badges.b18.name" = "50 माप";  "badges.b18.desc" = "एक्यूरेसी के बारे में गंभीर";             "badges.b18.condition" = "कुल 50 माप";
 "badges.b19.name" = "वार्षिक चैंपियन";  "badges.b19.desc" = "एक घड़ी पर 365 माप";      "badges.b19.condition" = "एक ही घड़ी पर 365 रन";
-"badges.b20.name" = "विंटेज प्रेमी";    "badges.b20.desc" = "रेट्रो मूवमेंट का आकर्षण";           "badges.b20.condition" = "18000/19800 BPH घड़ी पंजीकृत करें";
+"badges.b20.name" = "विंटेज प्रेमी";    "badges.b20.desc" = "रेट्रो मूवमेंट का आकर्षण";           "badges.b20.condition" = "2000 से पहले की (विंटेज) घड़ी पंजीकृत करें";
 "badges.b21.name" = "क्रोनोग्राफ़र";    "badges.b21.desc" = "जटिल कॉम्प्लिकेशंस के मालिक";         "badges.b21.condition" = "एक क्रोनोग्राफ़ घड़ी पंजीकृत करें";
 "badges.b22.name" = "डबल डिजिट्स";    "badges.b22.desc" = "10 या अधिक घड़ियाँ संग्रहीत";       "badges.b22.condition" = "10+ घड़ियाँ पंजीकृत करें";
 "badges.b1.condition" = "एक डाइवर/सबमरीनर घड़ी पंजीकृत करें";
 "badges.b2.condition" = "5+ घड़ियाँ पंजीकृत करें";
 "badges.b3.condition" = "एक घड़ी पर 30+ वियर लॉग";
-"badges.b4.condition" = "सुबह 5 बजे से पहले 10 माप";
+"badges.b4.condition" = "तड़के (सुबह 4-7 बजे) 10 माप";
 "badges.b5.condition" = "7+ अलग ब्रांड";
 "badges.b6.condition" = "एक मूनफ़ेज़ घड़ी पंजीकृत करें";
 "badges.b7.condition" = "एक GMT घड़ी पंजीकृत करें";
@@ -637,7 +634,7 @@
 "badges.b9.condition" = "5+ अलग ब्रांड";
 "badges.b10.condition" = "पहली माप पूरी करें";
 "badges.b11.condition" = "50+ जर्नल प्रविष्टियाँ लिखें";
-"badges.b12.condition" = "सभी 21 अन्य बैज अनलॉक करें";
+"badges.b12.condition" = "सभी गैर-समुदाय बैज अनलॉक करें";
 "badges.toast.title" = "बैज अनलॉक हुआ!";
 "service.section.type" = "प्रकार";
 "service.picker.type" = "सर्विस प्रकार";
@@ -1005,9 +1002,6 @@
 "shake.cta.a11y.hint" = "आज की घड़ी चुनने के लिए बटन टैप करें या फ़ोन हिलाएँ";
 
 /* Round 117 — Hard Rule 9 + misc */
-"result.amplitude.low_confidence" = "एम्प्लीट्यूड छोड़ दिया गया — इस मूवमेंट की माप विश्वास रेटिंग कम है।";
-"result.amplitude.unavailable.title" = "एम्प्लीट्यूड नहीं दिखाया गया";
-"result.amplitude.unavailable.body" = "इस मूवमेंट के लिए माइक-आधारित एम्प्लीट्यूड अविश्वसनीय है (सैफ़ायर केसबैक, को-एक्सियल एस्केपमेंट, आदि) और छोड़ा जाता है।";
 
 /* Round 118 — storyCard + journalTab compose */
 "watch.story.empty_prompt" = "इस घड़ी की कहानी जोड़ें";
@@ -1346,12 +1340,6 @@
 "addwatch.movement.section.results" = "खोज परिणाम";
 
 /* Lifetime IAP (v1.0.1) */
-"purchase.plan.toggle.lifetime" = "आजीवन";
-"purchase.plan.lifetime" = "आजीवन एक्सेस";
-"purchase.plan.lifetime.one_time" = "एक बार खरीद · हमेशा के लिए";
-"purchase.plan.lifetime.badge" = "BEST";
-"purchase.cta.buy_lifetime" = "आजीवन खरीदें";
-"purchase.legal.one_time" = "TickLab Pro · एक बार की खरीद के साथ आजीवन एक्सेस। आपके Apple ID पर एक बार शुल्क लगेगा और यह स्वचालित रूप से नवीनीकृत नहीं होगा। सभी Pro सुविधाएँ स्थायी रूप से अनलॉक रहेंगी।";
 
 /* Backfill (v1.0.1) — pre-existing missing keys */
 "watch.spec.serial" = "सीरियल नंबर";
@@ -1549,7 +1537,6 @@
 "feedback.type.general" = "General";
 "feedback.section.message" = "Message";
 "feedback.placeholder" = "What could be better? What feature would you love?";
-"feedback.email.hint" = "Feedback is sent via email.";
 "feedback.send" = "Send";
 "settings.help.feedback" = "Send Feedback";
 "powerreserve.title" = "POWER RESERVE";
@@ -1561,8 +1548,6 @@
 "analytics.header.disclaimer" = "Anonymized data. Only shown with 100+ records.";
 "analytics.top5.title" = "TOP 5 BRANDS";
 "analytics.empty" = "Not enough data collected yet.";
-"stats.entry.global" = "Global Analytics";
-"stats.entry.global.subtitle" = "Worldwide wear trends";
 "analytics.vs.me" = "My Wears";
 "analytics.vs.global" = "Global";
 "analytics.vs.unit" = "wears";
@@ -1650,6 +1635,7 @@
 "profile.rep_brand" = "मुख्य ब्रांड";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
+"profile.badge.dealer" = "डीलर";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
 "profile.section.invite" = "Invite Code";
 "settings.data.gallery_html" = "Collection Gallery (HTML)";
@@ -1835,7 +1821,6 @@
 "admin.license.status.pro" = "Pro: Unlimited watches, all features enabled";
 "admin.license.status.free" = "Free: Up to %d watches";
 "admin.panel.title" = "Admin Panel";
-"feedback.email.subject" = "TickLab फ़ीडबैक";
 "strap.material.leather" = "चमड़ा";
 "strap.material.rubber" = "रबर";
 "strap.material.nato" = "NATO";

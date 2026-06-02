@@ -305,7 +305,7 @@ struct AddWatchView: View {
                                         TextField("28800", text: $manualBphText)
                                             .keyboardType(.numberPad)
                                             .font(.system(size: 17, design: .monospaced))
-                                        Text("BPH")
+                                        Text(String(localized: "watch.spec.bph"))
                                             .font(AppTypography.caption)
                                             .foregroundStyle(AppColors.textSecondary)
                                     }

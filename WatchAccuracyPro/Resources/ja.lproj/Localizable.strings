@@ -74,7 +74,7 @@
 "stats.average_rate.subtitle" = "%d 回の計測を基準";
 "stats.average_rate.stddev" = "ばらつき ±%.1f s/d";
 "stats.empty.mood" = "記録を残すと気分の分布が表示されます。";
-"stats.empty.positions" = "計測時に姿勢を指定すると、姿勢別平均が表示されます。";
+"stats.empty.positions" = "まだ計測記録がありません。計測すると統計が表示されます。";
 
 /* Share Card */
 "share.title" = "シェアカード";
@@ -137,7 +137,6 @@
 "collection.last_rate" = "最新歩度";
 "collection.runs" = "%d 回";
 "collection.no_measurements" = "まだ計測がありません — タップして始める";
-"collection.footer" = "TICKLAB · v0.2 · 2026";
 
 /* Watch detail (new) */
 "watch.section.latest" = "最新の計測";
@@ -456,8 +455,6 @@
 "shake.cta.wear.done" = "今日着用中";
 "shake.tip" = "iPhone を振るかタップ。毎日の通知も設定できます。";
 "shake.section.mywatches" = "マイウォッチ";
-"league.collecting" = "%@ ランキングは現在集計中です。";
-"league.cheer" = "応援";
 "league.ranking.all" = "全ランキング";
 "badges.earned" = "獲得済み";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
@@ -607,8 +604,8 @@
 "badges.b1.name" = "ディープダイバー";        "badges.b1.desc" = "ダイバーズウォッチを計測";
 "badges.b2.name" = "コレクター";         "badges.b2.desc" = "5本以上の時計を登録";
 "badges.b3.name" = "ワン・トゥルー・ウォッチ";    "badges.b3.desc" = "同じ時計を30日連続で着用";
-"badges.b4.name" = "ドーンパトロール";       "badges.b4.desc" = "午前5時前に10回計測";
-"badges.b5.name" = "COSC マスター";       "badges.b5.desc" = "COSC 範囲内の結果を7日間";
+"badges.b4.name" = "ドーンパトロール";       "badges.b4.desc" = "早朝（午前4〜7時）に10回計測";
+"badges.b5.name" = "ブランドマスター";       "badges.b5.desc" = "異なるブランドを7つ所有";
 "badges.b6.name" = "ムーンウォーカー";        "badges.b6.desc" = "ムーンフェイズの時計を登録";
 "badges.b7.name" = "タイムトラベラー";       "badges.b7.desc" = "GMT 時計を計測";
 "badges.b8.name" = "センチュリオン";         "badges.b8.desc" = "1本で100回計測";
@@ -623,13 +620,13 @@
 "badges.b17.name" = "10回計測";  "badges.b17.desc" = "一貫したデータを蓄積";           "badges.b17.condition" = "合計10回の計測";
 "badges.b18.name" = "50回計測";  "badges.b18.desc" = "本気の精度追求";             "badges.b18.condition" = "合計50回の計測";
 "badges.b19.name" = "イヤリーチャンピオン";  "badges.b19.desc" = "1本で365回の計測";      "badges.b19.condition" = "同じ時計で365回計測";
-"badges.b20.name" = "ヴィンテージラバー";    "badges.b20.desc" = "レトロムーブメントの魅力";           "badges.b20.condition" = "18000/19800 BPH の時計を登録";
+"badges.b20.name" = "ヴィンテージラバー";    "badges.b20.desc" = "レトロムーブメントの魅力";           "badges.b20.condition" = "2000年以前（ヴィンテージ）の時計を登録";
 "badges.b21.name" = "クロノグラファー";    "badges.b21.desc" = "複雑機構の所有者";         "badges.b21.condition" = "クロノグラフを登録";
 "badges.b22.name" = "ダブルディジット";    "badges.b22.desc" = "10本以上のコレクション";       "badges.b22.condition" = "10本以上を登録";
 "badges.b1.condition" = "ダイバー/サブマリーナーを登録";
 "badges.b2.condition" = "5本以上を登録";
 "badges.b3.condition" = "同じ時計で30回以上の着用記録";
-"badges.b4.condition" = "午前5時前に10回計測";
+"badges.b4.condition" = "早朝（午前4〜7時）に10回計測";
 "badges.b5.condition" = "7つ以上の異なるブランド";
 "badges.b6.condition" = "ムーンフェイズの時計を登録";
 "badges.b7.condition" = "GMT 時計を登録";
@@ -637,7 +634,7 @@
 "badges.b9.condition" = "5つ以上の異なるブランド";
 "badges.b10.condition" = "最初の計測を完了";
 "badges.b11.condition" = "ジャーナルを50件以上記録";
-"badges.b12.condition" = "他の21個のバッジをすべて解放";
+"badges.b12.condition" = "コミュニティ以外の全バッジを解放";
 "badges.toast.title" = "バッジ獲得!";
 "service.section.type" = "種別";
 "service.picker.type" = "サービス種別";
@@ -1005,9 +1002,6 @@
 "shake.cta.a11y.hint" = "ボタンをタップするか iPhone を振って今日の時計を選びます";
 
 /* Round 117 — Hard Rule 9 + misc */
-"result.amplitude.low_confidence" = "振り角は非表示 — このムーブメントは計測信頼度評価が低いためです。";
-"result.amplitude.unavailable.title" = "振り角は表示されません";
-"result.amplitude.unavailable.body" = "このムーブメント (サファイア裏蓋、コーアクシャル脱進機など) ではマイク計測の振り角が不確かなため非表示にしています。";
 
 /* Round 118 — storyCard + journalTab compose */
 "watch.story.empty_prompt" = "この時計のストーリーを追加";
@@ -1346,12 +1340,6 @@
 "addwatch.movement.section.results" = "検索結果";
 
 /* Lifetime IAP (v1.0.1) */
-"purchase.plan.toggle.lifetime" = "永続";
-"purchase.plan.lifetime" = "永続アクセス";
-"purchase.plan.lifetime.one_time" = "1回購入 · 永続利用";
-"purchase.plan.lifetime.badge" = "BEST";
-"purchase.cta.buy_lifetime" = "永続版を購入";
-"purchase.legal.one_time" = "TickLab Pro · 1回購入の永続アクセス。Apple ID に1回のみ請求され、自動更新はありません。すべての Pro 機能を永続的に利用できます。";
 
 /* Backfill (v1.0.1) — pre-existing missing keys */
 "watch.spec.serial" = "シリアルナンバー";
@@ -1549,7 +1537,6 @@
 "feedback.type.general" = "General";
 "feedback.section.message" = "Message";
 "feedback.placeholder" = "What could be better? What feature would you love?";
-"feedback.email.hint" = "Feedback is sent via email.";
 "feedback.send" = "Send";
 "settings.help.feedback" = "Send Feedback";
 "powerreserve.title" = "POWER RESERVE";
@@ -1561,8 +1548,6 @@
 "analytics.header.disclaimer" = "Anonymized data. Only shown with 100+ records.";
 "analytics.top5.title" = "TOP 5 BRANDS";
 "analytics.empty" = "Not enough data collected yet.";
-"stats.entry.global" = "Global Analytics";
-"stats.entry.global.subtitle" = "Worldwide wear trends";
 "analytics.vs.me" = "My Wears";
 "analytics.vs.global" = "Global";
 "analytics.vs.unit" = "wears";
@@ -1650,6 +1635,7 @@
 "profile.rep_brand" = "代表メーカー";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
+"profile.badge.dealer" = "ディーラー";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
 "profile.section.invite" = "Invite Code";
 "settings.data.gallery_html" = "Collection Gallery (HTML)";
@@ -1835,7 +1821,6 @@
 "admin.license.status.pro" = "Pro: Unlimited watches, all features enabled";
 "admin.license.status.free" = "Free: Up to %d watches";
 "admin.panel.title" = "Admin Panel";
-"feedback.email.subject" = "TickLab フィードバック";
 "strap.material.leather" = "レザー";
 "strap.material.rubber" = "ラバー";
 "strap.material.nato" = "NATO";

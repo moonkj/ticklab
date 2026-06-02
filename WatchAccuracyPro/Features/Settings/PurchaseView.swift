@@ -199,10 +199,10 @@ struct PurchaseView: View {
         HStack(spacing: 0) {
             planToggleButton(.monthly,
                              label: String(localized: "purchase.plan.toggle.monthly"),
-                             price: monthlyProduct?.displayPrice ?? "$1.99")
+                             price: monthlyProduct?.displayPrice ?? "")
             planToggleButton(.yearly,
                              label: String(localized: "purchase.plan.toggle.yearly"),
-                             price: yearlyProduct?.displayPrice ?? "$9.99")
+                             price: yearlyProduct?.displayPrice ?? "")
         }
         .frame(maxWidth: .infinity)
         .background(AppColors.paper1)
