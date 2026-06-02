@@ -167,9 +167,14 @@ struct MeasurementView: View {
                 viewModel.stop(modelContext: modelContext)
             }
         }
-        // Round 171 (사용자 실측 결정): auto 조기종료 OFF. 15초 조기종료(−12.1)가 30초(+1.4)보다
-        // 더 틀린 케이스 확인 — 30초가 더 많이 평균돼 정확. 신뢰 숫자는 "다회 평균"으로 얻는다([[]]).
-        // converged 신호는 계산만 유지(향후 '안정됨' 표시용 가능), 자동 stop 트리거는 제거.
+        // Round 172 (tg σ 기반 적응형 조기종료): tg 는 robust 라 σ 작으면 진짜 정밀(틀린값 안정 lock 불가).
+        //   converged(=tg σ≤임계 + 최소시간) 시 30초 cap 전 자동 stop → 깨끗하면 ~10~13초로 빠른 측정.
+        //   불안정하면 converged=false 유지 → 30초까지 계속(정확도 확보).
+        .onChange(of: viewModel.liveMetrics.converged) { _, converged in
+            if converged, case .measuring = viewModel.state {
+                viewModel.stop(modelContext: modelContext)
+            }
+        }
         // Round 15 (Hyemi): weakSnrSeenAt mutation 을 body 밖으로.
         .onChange(of: viewModel.lastSnapshotSNRDB) { _, newValue in
             updateWeakSnrSeenAt(newValue)

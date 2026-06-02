@@ -790,6 +790,8 @@
 "result.suspicious.body" = "訊號品質看來良好,但走時異常偏高。請調整麥克風位置後再次測量。";
 "result.suspicious.retry" = "重新測量";
 "measurement.disclaimer.body" = "本應用的測量結果僅供參考。麥克風測量的精度會受腕錶姿勢、環境與錶背材質影響,並無法取代專業校錶儀(如 Witschi)。保養決策請諮詢製錶師。";
+"result.calibration.calibrating" = "使用越多,裝置時鐘會自動校準,測量越準確。";
+"result.calibration.calibrated" = "已套用裝置時鐘自動校準的精度校正測量。";
 "measurement.progress.label" = "%d / %d 秒(建議)";
 "measurement.hint.minimum_duration" = "至少測量 5 秒以取得穩定讀數。";
 "measurement.hint.move_closer" = "訊號偏弱。請將麥克風更靠近腕錶(貼住錶背)。";

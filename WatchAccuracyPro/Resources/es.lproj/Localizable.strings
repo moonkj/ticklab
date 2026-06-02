@@ -790,6 +790,8 @@
 "result.suspicious.body" = "La calidad de la señal parece buena, pero la marcha es inusualmente alta. Prueba a ajustar la posición del micrófono y vuelve a medir.";
 "result.suspicious.retry" = "Volver a medir";
 "measurement.disclaimer.body" = "Las mediciones de esta app son solo orientativas. La precisión basada en micrófono depende de la posición del reloj, el entorno y el material del fondo de caja, y no sustituye a un timegrapher profesional (p. ej., Witschi). Consulta a un relojero para decisiones de servicio.";
+"result.calibration.calibrating" = "Cuanto más usas la app, más se autocalibra el reloj del dispositivo y más precisas son las medidas.";
+"result.calibration.calibrated" = "Autocalibración del reloj del dispositivo aplicada — medida corregida en precisión.";
 "measurement.progress.label" = "%d / %d s (recomendado)";
 "measurement.hint.minimum_duration" = "Mide durante al menos 5 segundos para obtener lecturas estables.";
 "measurement.hint.move_closer" = "La señal es débil. Acerca el micrófono al reloj (tocando el fondo de caja).";

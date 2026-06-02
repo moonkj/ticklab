@@ -790,6 +790,8 @@
 "result.suspicious.body" = "信号品質は良好ですが歩度が異常に高いです。マイクの位置を調整して再計測してください。";
 "result.suspicious.retry" = "再計測";
 "measurement.disclaimer.body" = "このアプリの計測値は参考用です。マイク計測の精度は時計の姿勢、環境、裏蓋の素材に左右され、専門のタイムグラファー (例: Witschi) の代わりにはなりません。サービス判断は時計師にご相談ください。";
+"result.calibration.calibrating" = "アプリを使うほど端末クロックが自動補正され、計測精度が上がります。";
+"result.calibration.calibrated" = "端末クロックの自動補正が適用された精度補正済みの計測です。";
 "measurement.progress.label" = "%d / %d 秒 (推奨)";
 "measurement.hint.minimum_duration" = "安定した結果のため、最低5秒以上計測してください。";
 "measurement.hint.move_closer" = "信号が弱いです。マイクを時計に近づけて裏蓋に当ててください。";

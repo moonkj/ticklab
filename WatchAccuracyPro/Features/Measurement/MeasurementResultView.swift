@@ -218,6 +218,20 @@ struct MeasurementResultView: View {
                     nextStepGuide
                 }
                 actions
+                // Round 172: 기기 시계 자동 보정 안내 — 사용할수록 baseline 이 쌓여 정확도↑.
+                HStack(spacing: 6) {
+                    Image(systemName: ClockCalibrationService.shared.isCalibrated ? "checkmark.seal.fill" : "clock.arrow.2.circlepath")
+                        .font(.system(size: 12))
+                        .foregroundStyle(AppColors.accent)
+                    Text(String(localized: ClockCalibrationService.shared.isCalibrated
+                                ? "result.calibration.calibrated" : "result.calibration.calibrating"))
+                        .font(.system(size: 11))
+                        .foregroundStyle(AppColors.ink2)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.top, 10)
                 // Round 170: 참고용 disclaimer — 결과 화면 하단.
                 Text(String(localized: "measurement.disclaimer.body"))
                     .font(.system(size: 11))

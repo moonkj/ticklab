@@ -214,6 +214,8 @@ private struct RootView: View {
             if newValue { isUnlocked = false }
         }
         .task {
+            // Round 172 (clock 보정): 최초 실행에 앵커(NTP↔monotonic) 설정. 이후 foreground 마다 갱신.
+            await ClockCalibrationService.shared.calibrateNow()
             // Round 152: launch 시 알림 재예약.
             // - 랜덤 시계 픽: 매일 단발 알림 → 매 launch 마다 새 watch 로 다시 예약.
             // - 수동감기 / Quartz 배터리: 기존 시계 설정에 따라 재예약 (idempotent — 같은 identifier 면 덮어씀).
@@ -284,6 +286,9 @@ private struct RootView: View {
             // Sprint 13 (F3): On This Day 추억 알림 검사 (1일 1회 내부 제한).
             let wears = (try? modelContext.fetch(FetchDescriptor<WearLog>())) ?? []
             OnThisDayService.checkAndNotify(watches: allWatches, wearLogs: wears)
+            // Round 172 (clock 보정): 앱 foreground 마다 NTP↔monotonic 점 누적 → 측정 안 해도
+            //   사용할수록 발진기 드리프트 baseline 이 차서 rate 보정이 정확해진다.
+            Task { await ClockCalibrationService.shared.calibrateNow() }
             lastBackgroundedAt = nil
         @unknown default: break
         }

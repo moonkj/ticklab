@@ -790,6 +790,8 @@
 "result.suspicious.body" = "信号质量良好,但走时异常偏高。请尝试调整麦克风位置后重新测量。";
 "result.suspicious.retry" = "重新测量";
 "measurement.disclaimer.body" = "本 App 提供的读数仅供参考。基于麦克风的精度测量受表位、环境与底盖材质影响,不能取代专业校表仪(如 Witschi)。送修决策请咨询制表师。";
+"result.calibration.calibrating" = "使用越多,设备时钟会自动校准,测量越准确。";
+"result.calibration.calibrated" = "已应用设备时钟自动校准的精度校正测量。";
 "measurement.progress.label" = "%d / %d 秒(推荐)";
 "measurement.hint.minimum_duration" = "至少测量 5 秒以获得稳定读数。";
 "measurement.hint.move_closer" = "信号较弱。请让麦克风更靠近腕表(贴住底盖)。";

@@ -798,6 +798,8 @@
 "result.suspicious.body" = "Signal quality looks good but the rate is unusually high. Try adjusting the microphone position and remeasure.";
 "result.suspicious.retry" = "Remeasure";
 "measurement.disclaimer.body" = "Measurements from this app are for reference only. Mic-based accuracy depends on watch position, environment, and caseback material, and does not replace a professional timegrapher (e.g., Witschi). Consult a watchmaker for service decisions.";
+"result.calibration.calibrating" = "The more you use the app, the more your device clock self-calibrates and measurements get more accurate.";
+"result.calibration.calibrated" = "Device-clock auto-calibration is applied — this reading is accuracy-corrected.";
 "measurement.progress.label" = "%d / %d s (recommended)";
 "measurement.hint.minimum_duration" = "Measure for at least 5 seconds to get stable readings.";
 "measurement.hint.move_closer" = "Signal is weak. Move the microphone closer to the watch (touching the caseback).";

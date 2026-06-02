@@ -24,7 +24,9 @@ enum TgRateEstimator {
     ///   - envelope: 48kHz rectified/smoothed envelope (analyzeSimplified 의 envSlice).
     ///   - sampleRate: envelope 샘플레이트 (보통 48000).
     ///   - nominalBph: 명목 BPH (lag 탐색 중심).
-    static func estimate(envelope: [Float], sampleRate: Double, nominalBph: Int) -> Result? {
+    ///   - clockDriftFactor: 오디오↔호스트 클록 드리프트 보정(host/audio). true period = lag/sr × factor.
+    ///     1.0 = 무보정(합성/테스트). AudioCapture 가 AVAudioTime 으로 산출(예: −80ppm → 0.99992).
+    static func estimate(envelope: [Float], sampleRate: Double, nominalBph: Int, clockDriftFactor: Double = 1.0) -> Result? {
         let n = envelope.count
         guard nominalBph > 0, sampleRate > 0 else { return nil }
         let nominalBeatSec = 3600.0 / Double(nominalBph)        // 0.125s @28800
@@ -95,14 +97,15 @@ enum TgRateEstimator {
             k *= 2
         }
 
-        let beatSec = beatLag / sampleRate
+        // Round 172: 클록 드리프트 보정 — true period = 측정 period × (host/audio).
+        let beatSec = beatLag / sampleRate * clockDriftFactor
         guard beatSec > 0 else { return nil }
         let rate = (nominalBeatSec - beatSec) / beatSec * 86400.0
         guard abs(rate) <= 300 else { return nil }
 
-        // sigma: cycle 별 추정의 s/d 환산 표준편차(일관성).
+        // sigma: cycle 별 추정의 s/d 환산 표준편차(일관성). 보정은 상수배라 sigma 에 영향 미미.
         let perRates = perCycle.map { lag -> Double in
-            let s = lag / sampleRate
+            let s = lag / sampleRate * clockDriftFactor
             return (nominalBeatSec - s) / s * 86400.0
         }
         let m = perRates.reduce(0, +) / Double(perRates.count)

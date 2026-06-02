@@ -764,6 +764,8 @@
 "result.suspicious.body" = "신호 품질은 양호하지만 rate 값이 비정상적으로 큽니다. 마이크와 시계 위치를 조정 후 재측정을 권장합니다.";
 "result.suspicious.retry" = "재측정";
 "measurement.disclaimer.body" = "이 앱의 측정값은 참고용입니다. 마이크 기반 측정은 자세·환경·케이스 재질에 영향을 받으며, 전문 타임그래퍼 (Witschi 등) 의 정확도를 대체하지 않습니다. 시계 점검·정비 결정은 워치메이커와 상담하세요.";
+"result.calibration.calibrating" = "앱을 사용할수록 기기 시계가 자동 보정되어 측정 정확도가 올라가요.";
+"result.calibration.calibrated" = "기기 시계 자동 보정이 적용된 정확한 측정이에요.";
 "measurement.progress.label" = "%d / %d초 (권장)";
 "measurement.hint.minimum_duration" = "최소 5초 이상 측정해야 결과가 안정됩니다.";
 "measurement.hint.move_closer" = "신호가 약합니다. 마이크를 시계에 더 가까이 (직접 닿게) 대주세요.";

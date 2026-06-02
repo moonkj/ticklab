@@ -790,6 +790,8 @@
 "result.suspicious.body" = "La qualité du signal semble bonne mais la marche est anormalement élevée. Essayez d'ajuster la position du microphone et de mesurer à nouveau.";
 "result.suspicious.retry" = "Mesurer à nouveau";
 "measurement.disclaimer.body" = "Les mesures de cette application sont indicatives. La précision basée sur un microphone dépend de la position de la montre, de l'environnement et du matériau du fond de boîte ; elle ne remplace pas un chronocomparateur professionnel (Witschi, par exemple). Consultez un horloger pour toute décision d'entretien.";
+"result.calibration.calibrating" = "Plus vous utilisez l'app, plus l'horloge de l'appareil se calibre et les mesures gagnent en précision.";
+"result.calibration.calibrated" = "Auto-calibrage de l'horloge de l'appareil appliqué — mesure corrigée en précision.";
 "measurement.progress.label" = "%d / %d s (recommandé)";
 "measurement.hint.minimum_duration" = "Mesurez pendant au moins 5 secondes pour obtenir des lectures stables.";
 "measurement.hint.move_closer" = "Le signal est faible. Rapprochez le microphone de la montre (en contact avec le fond de boîte).";

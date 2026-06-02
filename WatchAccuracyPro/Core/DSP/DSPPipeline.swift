@@ -21,10 +21,11 @@ final class DSPPipeline {
     /// Round 158: 60s 측정 동안 BPH 한 번 lock 되면 끝까지 유지. 23s 후 사라지는 사용자 보고 해결.
     static let lockMemorySeconds: Double = 60
     static let waveformDownsampleCount = 200
-    /// Round 171 C3 (적응형 조기종료): 이 시간(초) 이후부터 수렴 판정 허용. 12s 라이브 윈도우가 차고
-    /// 안정 cycle 이 쌓일 최소 시간. 깨끗한 신호면 여기서 멈춰 ~2× 빠른 측정.
-    static let minConvergeSeconds: Double = 15
-    /// Round 171 C3: 최근 rate 의 rolling stddev 가 이 값(s/d) 이하로 안정되면 수렴으로 본다.
+    /// Round 172 (tg σ 적응형 조기종료): 이 시간(초) 이후부터 수렴 판정 허용. tg multi-cycle 이
+    /// 충분한 baseline 을 갖는 최소 시간. 깨끗한 신호면 여기서 멈춰 빠른 측정(30초→~10~13초).
+    static let minConvergeSeconds: Double = 10
+    /// Round 172: tg cycle-to-cycle σ(s/d) 가 이 값 이하로 정밀해지면 수렴. tg 는 robust 라
+    /// σ 작음 = 진짜 정밀(틀린 값 안정 lock 불가) → 조기종료 안전.
     static let convergeToleranceSD: Double = 2.5
 
     private let source: AudioSource
@@ -190,14 +191,6 @@ final class DSPPipeline {
                             // stddev 0 → 100, 30+ → 낮은 점수 (exponential decay τ=18).
                             let score = Int(100.0 * exp(-stddev / 18.0))
                             metrics.lockStabilityScore = max(0, min(100, score))
-                            // Round 171 C3 (적응형 조기종료): 최소 시간 경과 + 5-cycle rate 안정 +
-                            // 신뢰도 확보 시 수렴. UI 가 이 신호로 30초 전 자동 stop → 빠른 측정.
-                            // 불안정(stddev 큼)하면 수렴 안 함 → 계속 측정(나쁜 후반 데이터에 휘둘리지 않음).
-                            if elapsed >= Self.minConvergeSeconds,
-                               stddev <= Self.convergeToleranceSD,
-                               metrics.confidenceScore >= 55 {
-                                metrics.converged = true
-                            }
                         }
                     } else {
                         rateRing.removeAll(keepingCapacity: true)
@@ -208,6 +201,13 @@ final class DSPPipeline {
                     if !abGuardChecked, elapsed >= 5.0, self.matchedFilter.profile != .bypass {
                         abGuardChecked = true
                         await self.evaluateMatchedFilterABGuard()
+                    }
+                    // Round 172 (tg σ 기반 적응형 조기종료): tg 는 전체 파형 자기상관이라 "틀린 값에 안정 lock"
+                    //   이 안 됨 → σ 작다 = 진짜 정밀. (이전 onset rateRollingStdDev 는 틀린값 안정에 속았음.)
+                    //   최소 시간 경과 + tg σ ≤ 임계 → 수렴. UI 가 30초 cap 전 auto-stop → 빠른 측정.
+                    if metrics.bph != nil, elapsed >= Self.minConvergeSeconds,
+                       let tgSig = self.liveTgSigma(), tgSig <= Self.convergeToleranceSD {
+                        metrics.converged = true
                     }
                     self.metricsContinuation?.yield(metrics)
                 }
@@ -275,7 +275,9 @@ final class DSPPipeline {
                 let winStr = rates.map { String(format: "%+.0f", $0) }.joined(separator: ",")
                 let hw = AudioCapture.lastHardwareSampleRate
                 let hwStr = hw > 0 ? " hw\(Int(hw))" : ""
-                r.diagnostic = (r.diagnostic ?? "") + " | win[\(winStr)] ppm\(String(format: "%+.0f", ppm))\(hwStr)"
+                let driftPpm = (source.clockDriftFactor - 1.0) * 1e6   // AVAudioTime 오디오→mach 드리프트
+                let calPpm = ClockCalibrationService.shared.driftPpm    // NTP 누적 mach→진짜 (0=미수렴)
+                r.diagnostic = (r.diagnostic ?? "") + " | win[\(winStr)] drift\(String(format: "%+.0f", driftPpm)) cal\(String(format: "%+.0f", calPpm))\(hwStr)"
                 print("🔁 spread=\(r.crossWindowRateDelta.map { String(format: "%.1f", $0) } ?? "—") rate=\(String(format: "%.1f", r.rateSecondsPerDay)) → grade=\(r.reliabilityGrade?.rawValue ?? "?")")
                 result = r
             }
@@ -517,6 +519,16 @@ final class DSPPipeline {
         let rates = crossWindowOLSRates()
         guard rates.count >= 2, let lo = rates.min(), let hi = rates.max() else { return nil }
         return hi - lo
+    }
+
+    /// Round 172: 라이브 tg σ — 적응형 조기종료 판단용. 전체 envelope(최대 30s) 자기상관의 cycle 일관성.
+    /// σ 작음 = tg 가 정밀하게 lock = 더 측정할 필요 없음.
+    func liveTgSigma() -> Double? {
+        bufferLock.lock()
+        let maxSamples = Int(source.sampleRate * Self.analysisWindowSeconds)
+        let env = Array(envelopeBuffer.suffix(maxSamples))
+        bufferLock.unlock()
+        return TgRateEstimator.estimate(envelope: env, sampleRate: source.sampleRate, nominalBph: nominalBph)?.sigma
     }
 
     // MARK: - Audio callback path
@@ -786,8 +798,11 @@ final class DSPPipeline {
         let precise = preciseRate(beats: refined, bphEstimate: bphEst)
         // Round 172 (tg 분석): headline 은 envelope 자기상관+multi-cycle(TgRateEstimator) — onset jitter
         //   원천 제거로 고정 시계 변동 최소화. 실패 시 OLS fallback. (OLS/TM/AC 는 진단에 병기.)
-        let tgEst = TgRateEstimator.estimate(envelope: envSlice, sampleRate: source.sampleRate, nominalBph: nominalBph)
-        let rate = tgEst?.rate ?? RateCalculator.secondsPerDay(measuredBph: precise.rawBph, nominalBph: nominalBph)
+        // Round 172: 클록 보정 = 오디오→mach(AVAudioTime) × mach→진짜시간(NTP 누적). 둘 다 체인.
+        let totalClockFactor = source.clockDriftFactor * ClockCalibrationService.shared.correctionFactor
+        let tgEst = TgRateEstimator.estimate(envelope: envSlice, sampleRate: source.sampleRate, nominalBph: nominalBph,
+                                             clockDriftFactor: totalClockFactor)
+        let rate = tgEst?.rate ?? RateCalculator.secondsPerDay(measuredBph: precise.rawBph / totalClockFactor, nominalBph: nominalBph)
 
         // 5) Sanity guards (기존 path 와 동일).
         guard abs(rate) <= 300 else {
