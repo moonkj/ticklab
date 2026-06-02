@@ -35,7 +35,9 @@ struct VideoFeedView: View {
     var body: some View {
         Group {
             if (service.isLoading || !didFirstLoad) && service.videos.isEmpty {
-                ProgressView().frame(maxWidth: .infinity, minHeight: 220)
+                // 하이라이트 빈상태와 동일한 회전 링 스피너 — 로딩 완료 시 위 조건이 false 가 되어 즉시 콘텐츠 표시.
+                AnimatedEmptyIcon(icon: "play.rectangle")
+                    .frame(maxWidth: .infinity, minHeight: 220)
                     .frame(maxHeight: .infinity)
             } else if service.videos.isEmpty {
                 EmptyState(
