@@ -101,7 +101,9 @@ struct SmartwatchBatteryBadge: View {
         }
         .foregroundStyle(tone)
         .modifier(BatteryBadgeChrome(compact: compact, tone: tone))
-        .accessibilityLabel(percent == nil ? "배터리 미설정" : "배터리 \(pct)퍼센트")
+        .accessibilityLabel(percent == nil
+            ? String(localized: "misc.battery.a11y.unset")
+            : String(format: String(localized: "misc.battery.a11y.percent"), pct))
     }
 }
 

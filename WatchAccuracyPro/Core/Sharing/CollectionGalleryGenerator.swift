@@ -22,7 +22,7 @@ enum CollectionGalleryGenerator {
 
         return """
         <!DOCTYPE html>
-        <html lang="ko">
+        <html lang="\(Locale.current.language.languageCode?.identifier ?? "en")">
         <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,14 +48,14 @@ enum CollectionGalleryGenerator {
         <body>
         <div class="header">
           <h1>⌚ \(title)</h1>
-          <p>\(watches.count)개 시계 · \(date)</p>
+          <p>\(String(format: String(localized: "report.gallery.subtitle"), watches.count, date))</p>
         </div>
         <div class="grid">
         \(cards)
         </div>
         <div class="footer">
           <p>⌚ Measured & tracked with <a href="\(ReferralService.shareURL.absoluteString)">TickLab</a></p>
-          <p style="font-size:10px;color:#DDD;">iPhone 마이크로 시계 정확도를 측정하는 앱 · Watch accuracy on your iPhone</p>
+          <p style="font-size:10px;color:#DDD;">\(String(localized: "report.gallery.tagline"))</p>
         </div>
         </body>
         </html>

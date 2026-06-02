@@ -72,7 +72,7 @@ struct InAppFeedbackView: View {
     private func submit() {
         guard !feedbackText.trimmingCharacters(in: .whitespaces).isEmpty else { return }
         // 이메일 URL scheme으로 피드백 전송
-        let subject = "[\(feedbackType.rawValue.uppercased())] TickLab 피드백"
+        let subject = "[\(feedbackType.rawValue.uppercased())] \(String(localized: "feedback.email.subject"))"
         let body = feedbackText + "\n\n---\nApp Version: \(Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "unknown")"
         let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
         let encodedBody = body.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

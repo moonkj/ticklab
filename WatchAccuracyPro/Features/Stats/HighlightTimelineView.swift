@@ -71,7 +71,7 @@ struct HighlightTimelineView: View {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 6) {
                             ForEach(log.tags, id: \.self) { tag in
-                                Text(tag)
+                                Text(WearTag.displayName(for: tag))
                                     .font(.system(size: 10, weight: .semibold))
                                     .foregroundStyle(AppColors.accentDark)
                                     .padding(.horizontal, 8).padding(.vertical, 3)

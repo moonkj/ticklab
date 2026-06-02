@@ -83,17 +83,24 @@ final class LocalizationParityTests: XCTestCase {
     /// Round 19 (Jay): NSDictionary 가 중복 키를 silently collapse 하던 문제 검출.
     /// raw line scan 으로 같은 키가 2 번 이상 등장하는 경우 탐지.
     func test_no_duplicate_keys() throws {
-        let bundle = Bundle.main
-        let candidates: [(String, String)] = ["ko", "en"].compactMap { lang in
-            guard let path = bundle.path(
-                forResource: "Localizable", ofType: "strings",
-                inDirectory: nil, forLocalization: lang
-            ) else { return nil }
-            return (lang, path)
+        // Round 172: 컴파일된 번들(.strings)은 toolchain 에 따라 binary plist 로 변환되어
+        // ⓐ 텍스트로 읽을 수 없고 ⓑ 중복 키가 이미 collapse 됨 → 중복 탐지 불가.
+        // 따라서 소스 .strings 를 #filePath 기준으로 직접 읽어 raw line scan 한다.
+        // (.../WatchAccuracyPro/Tests/WatchAccuracyProTests/<this>.swift → .../WatchAccuracyPro)
+        let resourcesDir = URL(fileURLWithPath: #filePath)
+            .deletingLastPathComponent()   // WatchAccuracyProTests/
+            .deletingLastPathComponent()   // Tests/
+            .deletingLastPathComponent()   // WatchAccuracyPro/
+            .appendingPathComponent("Resources")
+        let candidates: [(String, String)] = Self.supportedLocales.compactMap { lang in
+            let path = resourcesDir
+                .appendingPathComponent("\(lang).lproj")
+                .appendingPathComponent("Localizable.strings").path
+            return FileManager.default.fileExists(atPath: path) ? (lang, path) : nil
         }
-        try XCTSkipIf(candidates.isEmpty, "Localizable.strings not in test bundle")
+        try XCTSkipIf(candidates.isEmpty, "소스 Localizable.strings 를 찾을 수 없음: \(resourcesDir)")
         for (lang, path) in candidates {
-            // Round (3-2): Xcode 가 빌드 시 .strings 를 UTF-16 으로 변환 — encoding 자동 추정 사용.
+            // 소스는 UTF-8 (자동 추정 fallback 포함).
             var detected: String.Encoding = .utf8
             let content: String
             if let auto = try? String(contentsOfFile: path, usedEncoding: &detected) {

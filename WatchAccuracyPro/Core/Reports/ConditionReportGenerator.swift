@@ -74,7 +74,7 @@ enum ConditionReportGenerator {
             .font: UIFont.systemFont(ofSize: 9, weight: .semibold),
             .foregroundColor: UIColor.systemIndigo.withAlphaComponent(0.7)
         ]
-        NSAttributedString(string: "TickLab Pro 인증", attributes: wmAttrs)
+        NSAttributedString(string: String(localized: "report.watermark.certified"), attributes: wmAttrs)
             .draw(at: CGPoint(x: pageWidth - margin - 80, y: currentY))
 
         currentY += 96
@@ -94,11 +94,11 @@ enum ConditionReportGenerator {
     @discardableResult
     private static func drawSpecSection(watch: Watch, y: CGFloat) -> CGFloat {
         var currentY = y
-        currentY = drawSectionTitle("스펙", y: currentY)
+        currentY = drawSectionTitle(String(localized: "report.section.spec"), y: currentY)
         let rows: [(String, String?)] = [
-            ("레퍼런스", watch.referenceNumber),
-            ("칼리버", watch.caliber == Watch.manualCaliberTag ? nil : watch.caliber),
-            ("무브먼트", watch.movementType.displayName),
+            (String(localized: "report.spec.reference"), watch.referenceNumber),
+            (String(localized: "report.spec.caliber"), watch.caliber == Watch.manualCaliberTag ? nil : watch.caliber),
+            (String(localized: "report.col.movement"), watch.movementType.displayName),
         ]
         for (k, v) in rows {
             if let v, !v.isEmpty {
@@ -111,15 +111,15 @@ enum ConditionReportGenerator {
     @discardableResult
     private static func drawMeasurementSection(measurements: [WatchMeasurement], y: CGFloat) -> CGFloat {
         var currentY = y
-        currentY = drawSectionTitle("정확도 측정 이력 (최근 \(min(measurements.count, 5))회)", y: currentY)
+        currentY = drawSectionTitle(String(format: String(localized: "report.section.measurementHistory"), min(measurements.count, 5)), y: currentY)
         let recent = measurements.sorted(by: { $0.timestamp > $1.timestamp }).prefix(5)
         if recent.isEmpty {
-            currentY = drawKeyValue(key: "", value: "측정 기록 없음", y: currentY)
+            currentY = drawKeyValue(key: "", value: String(localized: "report.measurement.noRecords"), y: currentY)
         } else {
             for m in recent {
                 let dateStr = DateFormatter.localizedString(from: m.timestamp, dateStyle: .short, timeStyle: .none)
                 let rateStr = String(format: "%+.1f s/d", m.rateSecondsPerDay)
-                let conf = "신뢰도 \(m.confidenceScore)"
+                let conf = String(format: String(localized: "report.measurement.confidenceValue"), m.confidenceScore)
                 currentY = drawKeyValue(key: dateStr, value: "\(rateStr)  \(conf)", y: currentY)
             }
         }
@@ -129,15 +129,15 @@ enum ConditionReportGenerator {
     @discardableResult
     private static func drawFinanceSection(watch: Watch, price: String, wearCount: Int, y: CGFloat) -> CGFloat {
         var currentY = y
-        currentY = drawSectionTitle("재무", y: currentY)
-        currentY = drawKeyValue(key: "구매가", value: price, y: currentY)
+        currentY = drawSectionTitle(String(localized: "report.section.finance"), y: currentY)
+        currentY = drawKeyValue(key: String(localized: "report.col.purchasePrice"), value: price, y: currentY)
         if wearCount > 0, let p = watch.purchasePrice {
             let cpw = NSDecimalNumber(decimal: p / Decimal(wearCount))
             let fmt = NumberFormatter()
             fmt.numberStyle = .currency
             fmt.currencyCode = watch.purchaseCurrency ?? "KRW"
             if let cpwStr = fmt.string(from: cpw) {
-                currentY = drawKeyValue(key: "착용당 비용 (\(wearCount)회 기준)", value: cpwStr, y: currentY)
+                currentY = drawKeyValue(key: String(format: String(localized: "report.finance.costPerWear"), wearCount), value: cpwStr, y: currentY)
             }
         }
         return currentY
@@ -149,7 +149,7 @@ enum ConditionReportGenerator {
             .foregroundColor: UIColor.systemGray3
         ]
         NSAttributedString(
-            string: "본 리포트는 TickLab Pro 앱(ticklab.app)에서 생성됐습니다. 마이크 기반 측정은 참고용이며 전문 타임그래퍼를 대체하지 않습니다.",
+            string: String(localized: "report.footer.conditionDisclaimer"),
             attributes: attrs
         ).draw(in: CGRect(x: margin, y: pageHeight - 36, width: pageWidth - margin * 2, height: 24))
     }

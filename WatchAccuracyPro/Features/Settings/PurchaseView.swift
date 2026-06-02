@@ -44,7 +44,7 @@ struct PurchaseView: View {
         let annualIfMonthly = monthlyPrice * 12
         guard annualIfMonthly > 0 else { return "" }
         let pct = Int(((annualIfMonthly - yearlyPrice) / annualIfMonthly * 100).rounded())
-        return "\(pct)% 할인"
+        return String(format: String(localized: "purchase.plan.yearly.badge"), pct)
     }
 
     var body: some View {

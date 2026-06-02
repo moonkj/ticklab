@@ -74,6 +74,23 @@ enum WearTag: String, CaseIterable, Identifiable, Sendable {
         case .sports:   return "figure.run"
         }
     }
+
+    /// 화면 표시용 현지화 이름. rawValue(저장 키)는 절대 변경 금지.
+    var displayName: String {
+        switch self {
+        case .business: return String(localized: "wear.tag.business")
+        case .casual:   return String(localized: "wear.tag.casual")
+        case .formal:   return String(localized: "wear.tag.formal")
+        case .travel:   return String(localized: "wear.tag.travel")
+        case .special:  return String(localized: "wear.tag.special")
+        case .sports:   return String(localized: "wear.tag.sports")
+        }
+    }
+
+    /// rawValue 문자열로부터 displayName 을 반환. 프리셋이 아닌 커스텀 태그는 그대로 반환.
+    static func displayName(for rawValue: String) -> String {
+        WearTag(rawValue: rawValue)?.displayName ?? rawValue
+    }
 }
 
 extension WearLog: Identifiable {}

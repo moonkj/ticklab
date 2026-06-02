@@ -40,7 +40,7 @@ enum MasterReportGenerator {
             .font: UIFont.systemFont(ofSize: 28, weight: .bold),
             .foregroundColor: UIColor.label
         ]
-        NSAttributedString(string: "TickLab 컬렉션 리포트", attributes: titleAttrs)
+        NSAttributedString(string: String(localized: "report.collection.title"), attributes: titleAttrs)
             .draw(at: CGPoint(x: margin, y: y))
         y += 44
 
@@ -50,7 +50,7 @@ enum MasterReportGenerator {
             .foregroundColor: UIColor.systemGray
         ]
         let dateStr = DateFormatter.localizedString(from: Date(), dateStyle: .long, timeStyle: .none)
-        NSAttributedString(string: "생성일: \(dateStr)  |  총 \(watches.count)개 시계", attributes: subAttrs)
+        NSAttributedString(string: String(format: String(localized: "report.cover.subtitle"), dateStr, watches.count), attributes: subAttrs)
             .draw(at: CGPoint(x: margin, y: y))
         y += 24
 
@@ -63,11 +63,11 @@ enum MasterReportGenerator {
             .font: UIFont.systemFont(ofSize: 10, weight: .semibold),
             .foregroundColor: UIColor.systemIndigo
         ]
-        NSAttributedString(string: "브랜드", attributes: headerAttrs).draw(at: CGPoint(x: margin, y: y))
-        NSAttributedString(string: "모델", attributes: headerAttrs).draw(at: CGPoint(x: margin + 120, y: y))
-        NSAttributedString(string: "무브먼트", attributes: headerAttrs).draw(at: CGPoint(x: margin + 300, y: y))
+        NSAttributedString(string: String(localized: "report.col.brand"), attributes: headerAttrs).draw(at: CGPoint(x: margin, y: y))
+        NSAttributedString(string: String(localized: "report.col.model"), attributes: headerAttrs).draw(at: CGPoint(x: margin + 120, y: y))
+        NSAttributedString(string: String(localized: "report.col.movement"), attributes: headerAttrs).draw(at: CGPoint(x: margin + 300, y: y))
         if includePrices {
-            NSAttributedString(string: "구매가", attributes: headerAttrs).draw(at: CGPoint(x: margin + 420, y: y))
+            NSAttributedString(string: String(localized: "report.col.purchasePrice"), attributes: headerAttrs).draw(at: CGPoint(x: margin + 420, y: y))
         }
         y += 18
 
@@ -114,7 +114,7 @@ enum MasterReportGenerator {
                     .font: UIFont.systemFont(ofSize: 12, weight: .bold),
                     .foregroundColor: UIColor.label
                 ]
-                NSAttributedString(string: "총 컬렉션 가치: \(totalFmt.string(from: NSDecimalNumber(decimal: total)) ?? "")", attributes: totalAttrs)
+                NSAttributedString(string: String(format: String(localized: "report.cover.totalValue"), totalFmt.string(from: NSDecimalNumber(decimal: total)) ?? ""), attributes: totalAttrs)
                     .draw(at: CGPoint(x: margin + 300, y: y))
             }
         }
@@ -146,18 +146,18 @@ enum MasterReportGenerator {
         y += 24
 
         // 스펙
-        y = drawKV("캘리버", watch.caliber == Watch.manualCaliberTag ? nil : watch.caliber, y: y)
-        y = drawKV("무브먼트", watch.movementType.displayName, y: y)
-        y = drawKV("레퍼런스", watch.referenceNumber, y: y)
+        y = drawKV(String(localized: "report.spec.caliber"), watch.caliber == Watch.manualCaliberTag ? nil : watch.caliber, y: y)
+        y = drawKV(String(localized: "report.col.movement"), watch.movementType.displayName, y: y)
+        y = drawKV(String(localized: "report.spec.reference"), watch.referenceNumber, y: y)
         if includePrices {
             if let price = watch.purchasePrice {
                 let fmt = NumberFormatter(); fmt.numberStyle = .currency
                 fmt.currencyCode = watch.purchaseCurrency ?? "KRW"; fmt.maximumFractionDigits = 0
-                y = drawKV("구매가", fmt.string(from: NSDecimalNumber(decimal: price)), y: y)
+                y = drawKV(String(localized: "report.col.purchasePrice"), fmt.string(from: NSDecimalNumber(decimal: price)), y: y)
             }
         }
-        y = drawKV("구매일", watch.purchaseDate.map { DateFormatter.localizedString(from: $0, dateStyle: .medium, timeStyle: .none) }, y: y)
-        y = drawKV("보증 만료", watch.warrantyExpirationDate.map { DateFormatter.localizedString(from: $0, dateStyle: .medium, timeStyle: .none) }, y: y)
+        y = drawKV(String(localized: "report.spec.purchaseDate"), watch.purchaseDate.map { DateFormatter.localizedString(from: $0, dateStyle: .medium, timeStyle: .none) }, y: y)
+        y = drawKV(String(localized: "report.spec.warrantyExpiry"), watch.warrantyExpirationDate.map { DateFormatter.localizedString(from: $0, dateStyle: .medium, timeStyle: .none) }, y: y)
         y += 4
         drawDivider(y: y)
         y += 20
@@ -171,7 +171,7 @@ enum MasterReportGenerator {
             y += 16
             y = drawKV("Rate", String(format: "%+.1f s/d", last.rateSecondsPerDay), y: y)
             y = drawKV("Beat Error", String(format: "%.1f ms", last.beatErrorMs), y: y)
-            y = drawKV("신뢰도", "\(last.confidenceScore)", y: y)
+            y = drawKV(String(localized: "report.measurement.confidenceLabel"), "\(last.confidenceScore)", y: y)
         }
 
         drawFooter()
@@ -197,7 +197,7 @@ enum MasterReportGenerator {
 
     private static func drawFooter() {
         let attrs: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 8), .foregroundColor: UIColor.systemGray3]
-        NSAttributedString(string: "TickLab Pro 컬렉션 리포트 — 보험 증빙 / 정비 이력 / 딜러 포트폴리오용. 참고용 문서입니다.", attributes: attrs)
+        NSAttributedString(string: String(localized: "report.footer.masterDisclaimer"), attributes: attrs)
             .draw(in: CGRect(x: margin, y: pageHeight - 36, width: pageWidth - margin * 2, height: 24))
     }
 }

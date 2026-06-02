@@ -646,10 +646,10 @@ struct SettingsView: View {
             }
             // Round 138 (관리자 모드 — DEBUG 전용 영역) {
             #if DEBUG
-            .alert("관리자 접근", isPresented: $showingAdminPinPrompt) {
+            .alert(String(localized: "admin.access.title"), isPresented: $showingAdminPinPrompt) {
                 SecureField("PIN", text: $adminPinInput)
                     .keyboardType(.numberPad)
-                Button("입력") {
+                Button(String(localized: "admin.access.submit")) {
                     if adminPinInput == "1639316" {
                         adminPinInput = ""
                         showingAdminPanel = true
@@ -657,11 +657,11 @@ struct SettingsView: View {
                         adminPinError = true
                     }
                 }
-                Button("취소", role: .cancel) {
+                Button(String(localized: "common.cancel"), role: .cancel) {
                     adminPinInput = ""
                 }
             } message: {
-                Text(adminPinError ? "PIN이 틀렸습니다." : "관리자 PIN을 입력하세요.")
+                Text(adminPinError ? String(localized: "admin.access.pin_wrong") : String(localized: "admin.access.pin_prompt"))
             }
             #endif
             // Round 149 (Hyemi 7 C3): sheet 자체도 #if DEBUG — release 빌드 안 컴파일.
@@ -996,23 +996,23 @@ private struct AdminOpsView: View {
         List {
             Section {
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-                    AdminStatTile(icon: "person.2.fill", value: stats.activeUsers, label: "현재 활동", tone: AppColors.accent)
-                    AdminStatTile(icon: "calendar", value: stats.todayPosts, label: "오늘 게시물", tone: AppColors.info)
-                    AdminStatTile(icon: "square.grid.2x2", value: stats.totalPosts, label: "전체 게시물", tone: AppColors.ink2)
-                    AdminStatTile(icon: "flag.fill", value: grouped.count, label: "신고", tone: AppColors.danger)
+                    AdminStatTile(icon: "person.2.fill", value: stats.activeUsers, label: String(localized: "admin.stats.active_users"), tone: AppColors.accent)
+                    AdminStatTile(icon: "calendar", value: stats.todayPosts, label: String(localized: "admin.stats.today_posts"), tone: AppColors.info)
+                    AdminStatTile(icon: "square.grid.2x2", value: stats.totalPosts, label: String(localized: "admin.stats.total_posts"), tone: AppColors.ink2)
+                    AdminStatTile(icon: "flag.fill", value: grouped.count, label: String(localized: "admin.stats.reports"), tone: AppColors.danger)
                 }
                 .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                 .listRowBackground(Color.clear)
             } header: {
-                Text("통계")
+                Text(String(localized: "admin.stats.section"))
             } footer: {
-                Text("‘현재 활동’은 최근 2분 내 사용(presence) 근사치 · 진짜 동시접속은 Realtime 필요")
+                Text(String(localized: "admin.stats.footer"))
             }
-            Section("공지") {
+            Section(String(localized: "admin.notice.section")) {
                 Button {
                     composingAnnouncement = true
                 } label: {
-                    Label("새 공지 작성", systemImage: "megaphone")
+                    Label(String(localized: "admin.notice.new"), systemImage: "megaphone")
                 }
                 ForEach(announcements) { a in
                     NavigationLink {
@@ -1020,26 +1020,26 @@ private struct AdminOpsView: View {
                     } label: {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(a.body).font(.system(size: 13)).lineLimit(1)
-                            Text(announcementPeriod(a) + (a.active ? "" : " · 비활성"))
+                            Text(announcementPeriod(a) + (a.active ? "" : " · " + String(localized: "admin.toggle.inactive")))
                                 .font(.caption2).foregroundStyle(.secondary)
                         }
                     }
                     .swipeActions(edge: .trailing) {
                         Button(role: .destructive) {
                             Task { await deleteAnnouncement(a) }
-                        } label: { Label("삭제", systemImage: "trash") }
+                        } label: { Label(String(localized: "common.delete"), systemImage: "trash") }
                     }
                 }
                 .onDelete { offsets in
                     Task { await deleteAnnouncements(at: offsets) }
                 }
                 if announcements.isEmpty {
-                    Text("작성한 공지 없음").font(.caption).foregroundStyle(.secondary)
+                    Text(String(localized: "admin.notice.empty")).font(.caption).foregroundStyle(.secondary)
                 }
             }
-            Section("큐레이션 영상 채널") {
+            Section(String(localized: "admin.channel.section")) {
                 Button { composingChannel = true } label: {
-                    Label("새 채널 추가", systemImage: "play.rectangle")
+                    Label(String(localized: "admin.channel.new"), systemImage: "play.rectangle")
                 }
                 ForEach(channels) { ch in
                     NavigationLink {
@@ -1047,25 +1047,25 @@ private struct AdminOpsView: View {
                     } label: {
                         VStack(alignment: .leading, spacing: 2) {
                             Text(ch.title).font(.system(size: 13)).lineLimit(1)
-                            Text("\(ch.locale.uppercased()) · \(ch.channelID)" + (ch.active ? "" : " · 비활성"))
+                            Text("\(ch.locale.uppercased()) · \(ch.channelID)" + (ch.active ? "" : " · " + String(localized: "admin.toggle.inactive")))
                                 .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
                         }
                     }
                     .swipeActions(edge: .trailing) {
                         Button(role: .destructive) {
                             Task { await deleteChannel(ch) }
-                        } label: { Label("삭제", systemImage: "trash") }
+                        } label: { Label(String(localized: "common.delete"), systemImage: "trash") }
                     }
                 }
                 if channels.isEmpty {
-                    Text("등록된 채널 없음").font(.caption).foregroundStyle(.secondary)
+                    Text(String(localized: "admin.channel.empty")).font(.caption).foregroundStyle(.secondary)
                 }
-                Text("YouTube 채널 ID(UCxxxx)를 언어별로 등록. 채널 RSS로 신규 영상을 분석 탭 ‘영상’에 표시.")
+                Text(String(localized: "admin.channel.hint"))
                     .font(.caption2).foregroundStyle(.secondary)
             }
-            Section("채널 제안 (사용자)") {
+            Section(String(localized: "admin.suggestion.section")) {
                 if suggestions.isEmpty {
-                    Text("받은 제안 없음").font(.caption).foregroundStyle(.secondary)
+                    Text(String(localized: "admin.suggestion.empty")).font(.caption).foregroundStyle(.secondary)
                 } else {
                     ForEach(suggestions) { s in
                         VStack(alignment: .leading, spacing: 3) {
@@ -1084,16 +1084,16 @@ private struct AdminOpsView: View {
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
                                 Task { await deleteSuggestion(s) }
-                            } label: { Label("삭제", systemImage: "trash") }
+                            } label: { Label(String(localized: "common.delete"), systemImage: "trash") }
                         }
                     }
                 }
             }
-            Section("신고된 게시물") {
+            Section(String(localized: "admin.report.section")) {
                 if grouped.isEmpty {
                     Text(loaded
-                         ? "신고된 게시물 없음 (또는 admin RLS 미배포 — docs/community/admin_ops.sql)"
-                         : "불러오는 중…")
+                         ? String(localized: "admin.report.empty")
+                         : String(localized: "community.loading"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 } else {
@@ -1109,7 +1109,7 @@ private struct AdminOpsView: View {
                 }
             }
         }
-        .navigationTitle("운영 대시보드")
+        .navigationTitle(String(localized: "admin.dashboard.title"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear { Task { await reload() } }
         .refreshable { await reload() }
@@ -1159,14 +1159,14 @@ private struct AdminOpsView: View {
                 HStack(spacing: 6) {
                     Text(post?.authorName ?? "—").font(.system(size: 13, weight: .semibold))
                     if let st = post?.status, st != .approved {
-                        Text(st == .hidden ? "숨김" : "차단")
+                        Text(st == .hidden ? String(localized: "admin.report.post.hidden") : String(localized: "admin.report.post.blocked"))
                             .font(.system(size: 9, weight: .bold)).foregroundStyle(.orange)
                     }
                 }
                 if let cap = post?.caption, !cap.isEmpty {
                     Text(cap).font(.caption).foregroundStyle(.secondary).lineLimit(2)
                 }
-                Text("신고 \(g.count)건 · \(g.reasons.joined(separator: ", "))")
+                Text(String(format: String(localized: "admin.report.count"), g.count, g.reasons.joined(separator: ", ")))
                     .font(.system(size: 11)).foregroundStyle(.red)
             }
             Spacer(minLength: 0)
@@ -1265,22 +1265,22 @@ private struct AdminPostDetailView: View {
                         .listRowInsets(EdgeInsets())
                 }
             }
-            Section("게시물") {
-                LabeledContent("작성자", value: post.authorName ?? "—")
+            Section(String(localized: "admin.post.section")) {
+                LabeledContent(String(localized: "admin.post.author"), value: post.authorName ?? "—")
                 if let cap = post.caption, !cap.isEmpty { Text(cap) }
-                LabeledContent("상태", value: post.status.rawValue)
-                Text("신고 \(reportCount)건 · \(reasons.joined(separator: ", "))").font(.caption).foregroundStyle(.red)
+                LabeledContent(String(localized: "admin.post.status"), value: post.status.rawValue)
+                Text(String(format: String(localized: "admin.report.count"), reportCount, reasons.joined(separator: ", "))).font(.caption).foregroundStyle(.red)
             }
-            Section("조치") {
+            Section(String(localized: "admin.action.section")) {
                 Button { Task { _ = await service.adminHidePost(post.id); await onChanged(); dismiss() } } label: {
-                    Label("숨김 처리", systemImage: "eye.slash")
+                    Label(String(localized: "admin.action.hide"), systemImage: "eye.slash")
                 }
                 Button(role: .destructive) { Task { _ = await service.adminDeletePost(post); await onChanged(); dismiss() } } label: {
-                    Label("게시물 삭제", systemImage: "trash")
+                    Label(String(localized: "admin.action.delete_post"), systemImage: "trash")
                 }
             }
-            Section("작성자에게 경고") {
-                TextField("경고 메시지", text: $warning, axis: .vertical).lineLimit(2...5)
+            Section(String(localized: "admin.warning.section")) {
+                TextField(String(localized: "admin.warning.placeholder"), text: $warning, axis: .vertical).lineLimit(2...5)
                 Button {
                     sending = true
                     Task {
@@ -1289,12 +1289,12 @@ private struct AdminPostDetailView: View {
                         warning = ""
                         sending = false
                     }
-                } label: { Label("경고 보내기", systemImage: "exclamationmark.bubble") }
+                } label: { Label(String(localized: "admin.warning.send"), systemImage: "exclamationmark.bubble") }
                 .disabled(warning.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || sending)
                 if let toast { Text(toast).font(.caption).foregroundStyle(AppColors.success) }
             }
         }
-        .navigationTitle("신고 게시물")
+        .navigationTitle(String(localized: "admin.report.detail.title"))
         .navigationBarTitleDisplayMode(.inline)
     }
 }
@@ -1314,16 +1314,16 @@ private struct AdminAnnouncementSheet: View {
 
     var body: some View {
         Form {
-            Section("내용") {
-                TextField("공지 내용", text: $bodyText, axis: .vertical).lineLimit(3...8)
+            Section(String(localized: "admin.notice.content.section")) {
+                TextField(String(localized: "admin.notice.content.placeholder"), text: $bodyText, axis: .vertical).lineLimit(3...8)
             }
-            Section("노출 기간") {
-                DatePicker("시작", selection: $startsAt)
-                DatePicker("종료", selection: $endsAt)
-                Toggle("활성", isOn: $active)
+            Section(String(localized: "admin.notice.period.section")) {
+                DatePicker(String(localized: "admin.notice.period.start"), selection: $startsAt)
+                DatePicker(String(localized: "admin.notice.period.end"), selection: $endsAt)
+                Toggle(String(localized: "admin.toggle.active"), isOn: $active)
             }
             Section {
-                Button(existing == nil ? "발송" : "수정 저장") {
+                Button(existing == nil ? String(localized: "admin.notice.send") : String(localized: "admin.notice.update")) {
                     saving = true
                     Task {
                         let ok: Bool
@@ -1340,9 +1340,9 @@ private struct AdminAnnouncementSheet: View {
                 if let error { Text(error).font(.caption).foregroundStyle(.red) }
             }
         }
-        .navigationTitle(existing == nil ? "공지 작성" : "공지 수정")
+        .navigationTitle(existing == nil ? String(localized: "admin.notice.compose.title") : String(localized: "admin.notice.edit.title"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } } }
+        .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "common.cancel")) { dismiss() } } }
         .onAppear {
             if let e = existing {
                 bodyText = e.body
@@ -1378,30 +1378,30 @@ private struct AdminChannelSheet: View {
 
     var body: some View {
         Form {
-            Section("채널") {
-                TextField("채널 ID · @핸들 · URL", text: $channelID)
+            Section(String(localized: "admin.channel.form.section")) {
+                TextField(String(localized: "admin.channel.id.placeholder"), text: $channelID)
                     .autocorrectionDisabled().textInputAutocapitalization(.never)
-                TextField("채널명", text: $title)
-                TextField("썸네일 URL (선택)", text: $thumbnailURL)
+                TextField(String(localized: "admin.channel.name.placeholder"), text: $title)
+                TextField(String(localized: "admin.channel.thumbnail.placeholder"), text: $thumbnailURL)
                     .autocorrectionDisabled().textInputAutocapitalization(.never)
             }
-            Section("노출") {
-                Picker("언어", selection: $locale) {
+            Section(String(localized: "admin.channel.display.section")) {
+                Picker(String(localized: "admin.channel.locale.label"), selection: $locale) {
                     ForEach(locales, id: \.self) { Text($0).tag($0) }
                 }
-                TextField("카테고리 (선택: review/news…)", text: $category).autocorrectionDisabled()
-                Stepper("정렬 순서: \(sortOrder)", value: $sortOrder, in: 0...999)
-                Toggle("활성", isOn: $active)
+                TextField(String(localized: "admin.channel.category.placeholder"), text: $category).autocorrectionDisabled()
+                Stepper(String(format: String(localized: "admin.channel.sort_order"), sortOrder), value: $sortOrder, in: 0...999)
+                Toggle(String(localized: "admin.toggle.active"), isOn: $active)
             }
             Section {
-                Button(existing == nil ? "추가" : "수정 저장") {
+                Button(existing == nil ? String(localized: "admin.channel.add") : String(localized: "admin.notice.update")) {
                     saving = true
                     error = nil
                     Task {
                         // @핸들·URL·UCxxxx 모두 받아 RSS용 채널 ID(UCxxxx)로 변환.
                         guard let cid = await YouTubeFeedService.resolveChannelID(from: channelID) else {
                             saving = false
-                            error = "채널 ID를 찾지 못했어요. @핸들·채널 URL이 정확한지 확인하거나 UCxxxx를 직접 입력하세요."
+                            error = String(localized: "admin.channel.resolve_error")
                             return
                         }
                         let ok: Bool
@@ -1417,16 +1417,16 @@ private struct AdminChannelSheet: View {
                 }
                 .disabled(!canSave)
                 if saving {
-                    HStack(spacing: 8) { ProgressView(); Text("채널 ID 변환·저장 중…").font(.caption).foregroundStyle(.secondary) }
+                    HStack(spacing: 8) { ProgressView(); Text(String(localized: "admin.channel.saving")).font(.caption).foregroundStyle(.secondary) }
                 }
-                Text("@핸들·채널 URL·UCxxxx 모두 가능 — 자동으로 채널 ID로 변환합니다.")
+                Text(String(localized: "admin.channel.format_hint"))
                     .font(.caption2).foregroundStyle(.secondary)
                 if let error { Text(error).font(.caption).foregroundStyle(.red) }
             }
         }
-        .navigationTitle(existing == nil ? "채널 추가" : "채널 수정")
+        .navigationTitle(existing == nil ? String(localized: "admin.channel.add.title") : String(localized: "admin.channel.edit.title"))
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar { ToolbarItem(placement: .cancellationAction) { Button("취소") { dismiss() } } }
+        .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "common.cancel")) { dismiss() } } }
         .onAppear {
             if let e = existing {
                 channelID = e.channelID; title = e.title; thumbnailURL = e.thumbnailURL ?? ""
@@ -1451,15 +1451,15 @@ private struct AdminPanelView: View {
         @Bindable var prefs = preferences
         NavigationStack {
             Form {
-                Section("운영 ID") {
-                    Picker("커뮤니티 게시 신원", selection: $actingAsTickLab) {
-                        Text("사용자").tag(false)
-                        Text("관리자 (TickLab)").tag(true)
+                Section(String(localized: "admin.ops_id.section")) {
+                    Picker(String(localized: "admin.ops_id.identity.label"), selection: $actingAsTickLab) {
+                        Text(String(localized: "admin.ops_id.user")).tag(false)
+                        Text(String(localized: "admin.ops_id.admin")).tag(true)
                     }
                     .pickerStyle(.segmented)
                     Text(actingAsTickLab
-                         ? "커뮤니티 게시 시 닉네임 'TickLab' + 앱 아이콘 아바타로 표시됩니다. (서버 RLS 적용 시 admin 등록 필수)"
-                         : "일반 사용자 프로필 이름으로 게시됩니다.")
+                         ? String(localized: "admin.ops_id.hint.admin")
+                         : String(localized: "admin.ops_id.hint.user"))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     // Supabase admin_users 등록용 — 내 uid 복사.
@@ -1468,7 +1468,7 @@ private struct AdminPanelView: View {
                             UIPasteboard.general.string = uid
                             seedToast = "📋 내 UID 복사됨 — Supabase admin_users 에 등록하세요"
                         } label: {
-                            Label("내 커뮤니티 UID 복사", systemImage: "doc.on.doc")
+                            Label(String(localized: "admin.ops_id.copy_uid"), systemImage: "doc.on.doc")
                         }
                         Text(uid)
                             .font(.system(size: 10, design: .monospaced))
@@ -1477,21 +1477,21 @@ private struct AdminPanelView: View {
                             .lineLimit(1)
                             .truncationMode(.middle)
                     } else {
-                        Text("커뮤니티 탭에 한 번 들어가 로그인하면 UID가 표시됩니다.")
+                        Text(String(localized: "admin.ops_id.uid_hint"))
                             .font(.caption)
                             .foregroundStyle(.orange)
                     }
                     NavigationLink {
                         AdminOpsView()
                     } label: {
-                        Label("운영 대시보드 (신고·통계·활동)", systemImage: "shield.lefthalf.filled")
+                        Label(String(localized: "admin.ops_id.dashboard_link"), systemImage: "shield.lefthalf.filled")
                     }
                     if let toast = seedToast {
                         Text(toast).font(.caption).foregroundStyle(.green)
                     }
                 }
-                Section("라이선스 모드") {
-                    Toggle("Pro 잠금 해제", isOn: Binding(
+                Section(String(localized: "admin.license.section")) {
+                    Toggle(String(localized: "admin.license.pro_unlock"), isOn: Binding(
                         get: { prefs.isPro },
                         set: { newValue in
                             prefs.isPro = newValue
@@ -1499,17 +1499,17 @@ private struct AdminPanelView: View {
                         }
                     ))
                     Text(prefs.isPro
-                         ? "Pro: 무제한 시계, 모든 기능 사용 가능"
-                         : "Free: 시계 최대 \(ProEntitlement.freeWatchLimit)개")
+                         ? String(localized: "admin.license.status.pro")
+                         : String(format: String(localized: "admin.license.status.free"), ProEntitlement.freeWatchLimit))
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle("관리자 패널")
+            .navigationTitle(String(localized: "admin.panel.title"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("완료") { dismiss() }
+                    Button(String(localized: "common.done")) { dismiss() }
                 }
             }
         }

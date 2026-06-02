@@ -23,7 +23,7 @@ struct TCOCard: View {
     }
 
     private var currencyCode: String {
-        watch.purchaseCurrency ?? "KRW"
+        watch.purchaseCurrency ?? (Locale.current.currency?.identifier ?? "USD")
     }
 
     private func format(_ value: Decimal) -> String {

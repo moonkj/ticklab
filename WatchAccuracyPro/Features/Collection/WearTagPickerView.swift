@@ -26,7 +26,7 @@ struct WearTagPickerView: View {
                 LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible()), GridItem(.flexible())],
                           spacing: 10) {
                     ForEach(WearTag.allCases) { tag in
-                        tagChip(tag.rawValue, icon: tag.icon,
+                        tagChip(tag.displayName, icon: tag.icon,
                                 isSelected: selected.contains(tag.rawValue)) {
                             toggle(tag.rawValue)
                         }

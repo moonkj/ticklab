@@ -71,14 +71,14 @@ struct StrapListView: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 HStack(spacing: 6) {
-                    Text(strap.name.isEmpty ? strap.material : strap.name)
+                    Text(strap.name.isEmpty ? StrapMaterialHelper.displayName(for: strap.material) : strap.name)
                         .font(.system(size: 15, weight: .semibold)).foregroundStyle(AppColors.ink0)
                     if strap.isNearReplacement {
                         Image(systemName: "exclamationmark.triangle.fill")
                             .font(.system(size: 11)).foregroundStyle(AppColors.warning)
                     }
                 }
-                Text(strap.material + (strap.colorName.isEmpty ? "" : " · \(strap.colorName)"))
+                Text(StrapMaterialHelper.displayName(for: strap.material) + (strap.colorName.isEmpty ? "" : " · \(strap.colorName)"))
                     .font(.system(size: 12)).foregroundStyle(AppColors.ink2)
                 HStack(spacing: 12) {
                     Label("\(strap.wearCount)\(String(localized: "strap.wears"))",
@@ -96,6 +96,28 @@ struct StrapListView: View {
     }
 }
 
+// MARK: - StrapMaterialHelper
+
+/// SwiftData 에 저장된 원문(한국어) 소재 키 → 현재 로케일 표시명 변환.
+/// rawValue 변경 불가(스키마 보존) — 표시 시에만 이 헬퍼를 통한다.
+enum StrapMaterialHelper {
+    private static let map: [String: String] = [
+        "가죽":   "strap.material.leather",
+        "러버":   "strap.material.rubber",
+        "나토":   "strap.material.nato",
+        "메탈":   "strap.material.metal",
+        "패브릭": "strap.material.fabric",
+        "세라믹": "strap.material.ceramic",
+        "기타":   "strap.material.other",
+    ]
+
+    /// 알려진 소재는 현지화된 이름으로, 커스텀 자유입력은 그대로 반환.
+    static func displayName(for raw: String) -> String {
+        guard let key = map[raw] else { return raw }
+        return String(localized: String.LocalizationValue(key))
+    }
+}
+
 struct StrapComposerView: View {
     let watch: Watch
     var existing: Strap?
@@ -110,6 +132,8 @@ struct StrapComposerView: View {
     @State private var replaceThresholdText = ""
     @State private var showTextFilterAlert = false
 
+    // rawValue 는 SwiftData 에 저장되는 키 — 변경 금지.
+    // 화면 표시는 StrapMaterialHelper.displayName(for:) 사용.
     private static let materials = ["가죽", "러버", "나토", "메탈", "패브릭", "세라믹", "기타"]
 
     var body: some View {
@@ -118,7 +142,9 @@ struct StrapComposerView: View {
                 Section(String(localized: "strap.section.basic")) {
                     TextField(String(localized: "strap.name"), text: $name)
                     Picker(String(localized: "strap.material"), selection: $material) {
-                        ForEach(Self.materials, id: \.self) { Text($0).tag($0) }
+                        ForEach(Self.materials, id: \.self) {
+                            Text(StrapMaterialHelper.displayName(for: $0)).tag($0)
+                        }
                     }
                     TextField(String(localized: "strap.color"), text: $colorName)
                     TextField(String(localized: "strap.source"), text: $source)

@@ -17,7 +17,7 @@ struct CollectionValueCard: View {
     }
 
     private var formattedTotal: String {
-        let currency = priceWatches.first?.purchaseCurrency ?? "KRW"
+        let currency = priceWatches.first?.purchaseCurrency ?? (Locale.current.currency?.identifier ?? "USD")
         // 사용자 요청: KRW 는 "1,234.5 만원" 형태(만 단위 · 천단위 콤마 · 소수 1자리).
         if currency == "KRW" {
             let manwon = NSDecimalNumber(decimal: totalValue).doubleValue / 10_000.0

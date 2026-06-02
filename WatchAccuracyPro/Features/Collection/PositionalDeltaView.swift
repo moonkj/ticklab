@@ -122,8 +122,8 @@ struct PositionalDeltaView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 10))
                 .accessibilityElement(children: .combine)
                 .accessibilityLabel(stat == nil
-                    ? "\(pos.localizedName) 데이터 없음"
-                    : String(format: "%@ %+.1f초/일", pos.localizedName, stat!.avgRate))
+                    ? String(format: String(localized: "misc.positional.a11y.no_data"), pos.localizedName)
+                    : String(format: String(localized: "misc.positional.a11y.rate"), pos.localizedName, stat!.avgRate))
             }
         }
     }

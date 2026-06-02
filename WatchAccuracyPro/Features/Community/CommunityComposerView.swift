@@ -266,7 +266,7 @@ struct CommunityReviewView: View {
         case .allowed:
             onPost(caption)
         case .tradeBan:
-            blockMessage = "거래·판매·연락처 유도는 허용되지 않습니다. TickLab은 감상·기록 커뮤니티예요."
+            blockMessage = String(localized: "community.moderation.trade.blocked.body")
             textBlocked = true
         case .profane, .tooLong:
             blockMessage = String(localized: "community.moderation.text.blocked.body")
@@ -277,10 +277,10 @@ struct CommunityReviewView: View {
     /// 콘텐츠 정책 고지 — 거래 금지 등(가이드라인 요약).
     private var communityGuidelineNote: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label("커뮤니티 가이드라인", systemImage: "info.circle")
+            Label(String(localized: "community.guideline.title"), systemImage: "info.circle")
                 .font(.system(size: 12, weight: .semibold))
                 .foregroundStyle(AppColors.ink2)
-            Text("거래·판매·가격 흥정·연락처 유도 금지 · 욕설/차별 금지 · 타인 사진 금지. 위반 시 삭제·제재될 수 있어요.")
+            Text(String(localized: "community.guideline.body"))
                 .font(.system(size: 11))
                 .foregroundStyle(AppColors.ink3)
         }
