@@ -11,5 +11,5 @@
 // 현재는 앱 모듈에서 직접 import 하므로 이 파일은 placeholder.
 
 public enum TickLabUIVersion {
-    public static let current = "1.0.0"
+    public static let current = "1.1.0"
 }

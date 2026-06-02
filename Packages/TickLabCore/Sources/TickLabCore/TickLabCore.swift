@@ -13,5 +13,5 @@
 // 현재는 앱 모듈에서 직접 컴파일 — 이 파일은 placeholder.
 
 public enum TickLabCoreVersion {
-    public static let current = "1.0.0"
+    public static let current = "1.1.0"
 }
