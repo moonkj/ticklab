@@ -345,7 +345,12 @@ struct BadgesView: View {
         let current = list ?? badges
         let earnedIds = Set(current.filter(\.earned).map(\.id))
         let newlyEarned = earnedIds.subtracting(seenIds)
-        if let data = try? JSONEncoder().encode(Array(earnedIds)),
+        // Round 175 (사용자 보고: 진입마다 "첫 게시" 토스트 재등장):
+        //   커뮤니티 통계(b33+)는 async 로 늦게 로드 → onAppear 시점 earnedIds 엔 빠져 있음.
+        //   earnedIds 로 '덮어쓰면' 이미 본 커뮤니티 배지가 seen 에서 제거돼 재토스트됨.
+        //   → union 으로 누적만(절대 제거 안 함).
+        let updatedSeen = seenIds.union(earnedIds)
+        if let data = try? JSONEncoder().encode(Array(updatedSeen)),
            let str = String(data: data, encoding: .utf8) { seenIdsJSON = str }
         guard let newId = newlyEarned.first,
               let badge = current.first(where: { $0.id == newId }) else { return }
