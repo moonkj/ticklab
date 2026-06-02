@@ -782,9 +782,9 @@
 "measurement.setup.step3.title" = "3. 安静的环境";
 "measurement.setup.step3.body" = "屏蔽环境噪声(电视、谈话、风扇)。建议 SNR ≥ 20dB。";
 "measurement.tips.average.title" = "精准测量小贴士";
-"measurement.tips.average.body" = "单次测量的方差为 ±5 s/d。**3-5 次测量取平均**可达 ±2 s/d 的精度。请在多次测量间保持相同表位。";
-"measurement.tips.average.body.free" = "单次测量的方差为 ±5 s/d。Free 版每日支持 3 次测量 — 在同一表位连续测量可让平均值更稳定。升级至 Pro 可享无限次数,并在 5 次以上测量后达到 ±2 s/d 的精度。";
-"measurement.tips.average.body.pro" = "单次测量的方差为 ±5 s/d。**3-5 次测量取平均**可达 ±2 s/d 的精度。请在多次测量间保持相同表位。";
+"measurement.tips.average.body" = "单次测量的方差为 ±2 s/d。**3-5 次测量取平均**可达 ±1 s/d 的精度。请在多次测量间保持相同表位。";
+"measurement.tips.average.body.free" = "单次测量的方差为 ±2 s/d。Free 版每日支持 3 次测量 — 在同一表位连续测量可让平均值更稳定。升级至 Pro 可享无限次数,并在 5 次以上测量后达到 ±1 s/d 的精度。";
+"measurement.tips.average.body.pro" = "单次测量的方差为 ±2 s/d。**3-5 次测量取平均**可达 ±1 s/d 的精度。请在多次测量间保持相同表位。";
 "measurement.disclaimer.title" = "读数仅供参考";
 "result.suspicious.title" = "可能存在测量错误";
 "result.suspicious.body" = "信号质量良好,但走时异常偏高。请尝试调整麦克风位置后重新测量。";

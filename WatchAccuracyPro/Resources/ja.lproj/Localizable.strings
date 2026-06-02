@@ -782,9 +782,9 @@
 "measurement.setup.step3.title" = "3. 静かな環境で";
 "measurement.setup.step3.body" = "テレビ、会話、扇風機などの環境音を遮断。SNR ≥ 20dB を目標に。";
 "measurement.tips.average.title" = "正確な計測のヒント";
-"measurement.tips.average.body" = "単回計測のばらつきは ±5 s/d。**3〜5回の平均**で ±2 s/d の精度になります。計測間は時計の姿勢を変えずに。";
-"measurement.tips.average.body.free" = "単回計測のばらつきは ±5 s/d。無料プランでは 1日3回まで — 同じ姿勢で続けて計測すると平均が安定します。Pro にアップグレードすると回数無制限、5回以上の平均で ±2 s/d の精度に。";
-"measurement.tips.average.body.pro" = "単回計測のばらつきは ±5 s/d。**3〜5回の平均**で ±2 s/d の精度になります。計測間は時計の姿勢を変えずに。";
+"measurement.tips.average.body" = "単回計測のばらつきは ±2 s/d。**3〜5回の平均**で ±1 s/d の精度になります。計測間は時計の姿勢を変えずに。";
+"measurement.tips.average.body.free" = "単回計測のばらつきは ±2 s/d。無料プランでは 1日3回まで — 同じ姿勢で続けて計測すると平均が安定します。Pro にアップグレードすると回数無制限、5回以上の平均で ±1 s/d の精度に。";
+"measurement.tips.average.body.pro" = "単回計測のばらつきは ±2 s/d。**3〜5回の平均**で ±1 s/d の精度になります。計測間は時計の姿勢を変えずに。";
 "measurement.disclaimer.title" = "計測値は参考用です";
 "result.suspicious.title" = "計測誤差の可能性";
 "result.suspicious.body" = "信号品質は良好ですが歩度が異常に高いです。マイクの位置を調整して再計測してください。";

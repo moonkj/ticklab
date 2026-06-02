@@ -790,9 +790,9 @@
 "measurement.setup.step3.title" = "3. Quiet environment";
 "measurement.setup.step3.body" = "Block ambient noise (TV, conversation, fans). Aim for SNR ≥ 20dB.";
 "measurement.tips.average.title" = "Tip for accurate measurement";
-"measurement.tips.average.body" = "Single-measurement variance is ±5 s/d. Average **3-5 measurements** for ±2 s/d precision. Keep the watch in the same position between measurements.";
-"measurement.tips.average.body.free" = "Single-measurement variance is ±5 s/d. The free plan allows 3 measurements per day — consecutive runs in the same position stabilize the average. Upgrade to Pro for unlimited runs and ±2 s/d precision with 5+ measurements.";
-"measurement.tips.average.body.pro" = "Single-measurement variance is ±5 s/d. Average **3-5 measurements** for ±2 s/d precision. Keep the watch in the same position between measurements.";
+"measurement.tips.average.body" = "Single-measurement variance is ±2 s/d. Average **3-5 measurements** for ±1 s/d precision. Keep the watch in the same position between measurements.";
+"measurement.tips.average.body.free" = "Single-measurement variance is ±2 s/d. The free plan allows 3 measurements per day — consecutive runs in the same position stabilize the average. Upgrade to Pro for unlimited runs and ±1 s/d precision with 5+ measurements.";
+"measurement.tips.average.body.pro" = "Single-measurement variance is ±2 s/d. Average **3-5 measurements** for ±1 s/d precision. Keep the watch in the same position between measurements.";
 "measurement.disclaimer.title" = "Readings are for reference";
 "result.suspicious.title" = "Possible measurement error";
 "result.suspicious.body" = "Signal quality looks good but the rate is unusually high. Try adjusting the microphone position and remeasure.";

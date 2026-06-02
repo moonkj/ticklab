@@ -756,9 +756,9 @@
 "measurement.setup.step3.title" = "3. 조용한 환경";
 "measurement.setup.step3.body" = "주변 소음 (TV, 대화, 환풍기) 차단. 권장 SNR 20dB 이상.";
 "measurement.tips.average.title" = "정확한 측정 팁";
-"measurement.tips.average.body" = "단일 측정 분산 ±5 s/d. **3-5회 측정 평균** 으로 ±2 s/d 정밀도 도달 가능. 측정 사이엔 시계 위치 그대로 유지 권장.";
-"measurement.tips.average.body.free" = "단일 측정 분산 ±5 s/d. 무료 플랜은 하루 3회 측정 가능 — 같은 자세로 연달아 측정하면 평균값이 안정돼요. Pro 로 업그레이드하면 ±2 s/d 정밀도(5회+ 평균) 도달이 쉬워져요.";
-"measurement.tips.average.body.pro" = "단일 측정 분산 ±5 s/d. **3-5회 측정 평균** 으로 ±2 s/d 정밀도 도달 가능. 측정 사이엔 시계 위치 그대로 유지 권장.";
+"measurement.tips.average.body" = "단일 측정 분산 ±2 s/d. **3-5회 측정 평균** 으로 ±1 s/d 정밀도 도달 가능. 측정 사이엔 시계 위치 그대로 유지 권장.";
+"measurement.tips.average.body.free" = "단일 측정 분산 ±2 s/d. 무료 플랜은 하루 3회 측정 가능 — 같은 자세로 연달아 측정하면 평균값이 안정돼요. Pro 로 업그레이드하면 ±1 s/d 정밀도(5회+ 평균) 도달이 쉬워져요.";
+"measurement.tips.average.body.pro" = "단일 측정 분산 ±2 s/d. **3-5회 측정 평균** 으로 ±1 s/d 정밀도 도달 가능. 측정 사이엔 시계 위치 그대로 유지 권장.";
 "measurement.disclaimer.title" = "참고용 측정값";
 "result.suspicious.title" = "측정 오류일 수 있어요";
 "result.suspicious.body" = "신호 품질은 양호하지만 rate 값이 비정상적으로 큽니다. 마이크와 시계 위치를 조정 후 재측정을 권장합니다.";

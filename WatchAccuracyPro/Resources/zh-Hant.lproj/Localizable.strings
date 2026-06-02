@@ -782,9 +782,9 @@
 "measurement.setup.step3.title" = "3. 安靜的環境";
 "measurement.setup.step3.body" = "排除環境噪音(電視、交談聲、風扇)。目標 SNR ≥ 20dB。";
 "measurement.tips.average.title" = "精準測量小提示";
-"measurement.tips.average.body" = "單次測量誤差約 ±5 s/d。**取 3–5 次測量的平均值**可達 ±2 s/d 精度。測量間請保持腕錶於同一姿勢。";
-"measurement.tips.average.body.free" = "單次測量誤差約 ±5 s/d。Free 方案每日 3 次 — 同姿勢連續測量有助於穩定平均值。升級為 Pro 可享無限次數,並透過 5+ 次測量達到 ±2 s/d 精度。";
-"measurement.tips.average.body.pro" = "單次測量誤差約 ±5 s/d。**取 3–5 次測量的平均值**可達 ±2 s/d 精度。測量間請保持腕錶於同一姿勢。";
+"measurement.tips.average.body" = "單次測量誤差約 ±2 s/d。**取 3–5 次測量的平均值**可達 ±1 s/d 精度。測量間請保持腕錶於同一姿勢。";
+"measurement.tips.average.body.free" = "單次測量誤差約 ±2 s/d。Free 方案每日 3 次 — 同姿勢連續測量有助於穩定平均值。升級為 Pro 可享無限次數,並透過 5+ 次測量達到 ±1 s/d 精度。";
+"measurement.tips.average.body.pro" = "單次測量誤差約 ±2 s/d。**取 3–5 次測量的平均值**可達 ±1 s/d 精度。測量間請保持腕錶於同一姿勢。";
 "measurement.disclaimer.title" = "讀數僅供參考";
 "result.suspicious.title" = "疑似測量誤差";
 "result.suspicious.body" = "訊號品質看來良好,但走時異常偏高。請調整麥克風位置後再次測量。";
