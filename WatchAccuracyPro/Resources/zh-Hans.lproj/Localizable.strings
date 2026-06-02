@@ -351,6 +351,8 @@
 "community.compose" = "发布照片";
 "community.compose.hint" = "分享今天的腕表。每天一张。";
 "community.compose.anonymous_note" = "以你的资料发布 · 每天一张";
+"community.compose.text_only" = "仅文字";
+"community.compose.text_only.empty" = "请输入内容。";
 "community.empty.title" = "还没有帖子";
 "community.empty.body" = "成为第一个分享今天腕表的人。";
 "community.like" = "赞";
@@ -460,6 +462,9 @@
 "badges.earned" = "已获得";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
 "badges.detail.header" = "已解锁徽章";
+"badges.detail.header.locked" = "未解锁徽章 · 解锁条件";
+"badges.detail.equip" = "佩戴在昵称旁";
+"badges.detail.unequip" = "取消佩戴";
 "fortune.title.eyebrow" = "今日表盘运势";
 "fortune.today_prefix" = "今日属于 ";
 "fortune.today_suffix" = "";
@@ -811,6 +816,12 @@
 "result.verdict.service.body" = "偏差较大。建议送至制表师处检修。";
 "result.verdict.first_anomaly.title" = "再测一次?";
 "result.verdict.first_anomaly.body" = "本次读数显示出明显偏差。单次测量不足为据 — 请在不同表位或时段再次测量后再下结论。";
+"result.verdict.unreliable.title" = "测量不稳定";
+"result.verdict.unreliable.body" = "信号有波动，本次读数可靠性较低。请调整表位后重新测量。";
+"result.recent_avg.title" = "本表近期平均";
+"result.recent_avg.detail" = "最近 %1$d 次平均 · ±%2$.0f s/d 波动";
+"result.recent_avg.detail_trimmed" = "最近 %1$d 次中剔除 %3$d 个离群值 · ±%2$.0f s/d 波动";
+"result.recent_avg.hint" = "在多个表位测量，平均值会更准确。";
 "result.next_step.eyebrow" = "下一步";
 "result.next_step.body" = "机械腕表会因表位、温度与发条松紧呈现不同的走时。请在每日相近时段持续测量一周 — 走时趋势图将揭示真实情况。";
 "result.beginner.why" = "为什么会得到这个结果?";

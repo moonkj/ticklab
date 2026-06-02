@@ -351,6 +351,8 @@
 "community.compose" = "फ़ोटो पोस्ट करें";
 "community.compose.hint" = "आज की घड़ी साझा करें। दिन में एक फ़ोटो।";
 "community.compose.anonymous_note" = "आपकी प्रोफ़ाइल से पोस्ट · दिन में एक बार";
+"community.compose.text_only" = "केवल टेक्स्ट";
+"community.compose.text_only.empty" = "कृपया कुछ टेक्स्ट लिखें।";
 "community.empty.title" = "अभी कोई पोस्ट नहीं";
 "community.empty.body" = "आज की घड़ी साझा करने वाले पहले बनें।";
 "community.like" = "पसंद";
@@ -460,6 +462,9 @@
 "badges.earned" = "अर्जित";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
 "badges.detail.header" = "अनलॉक किया गया बैज";
+"badges.detail.header.locked" = "लॉक बैज · कैसे अनलॉक करें";
+"badges.detail.equip" = "नाम के पास दिखाएं";
+"badges.detail.unequip" = "हटाएं";
 "fortune.title.eyebrow" = "आज की डायल राशिफल";
 "fortune.today_prefix" = "आज है ";
 "fortune.today_suffix" = " का दिन";
@@ -811,6 +816,12 @@
 "result.verdict.service.body" = "विचलन महत्वपूर्ण है। हम वॉचमेकर के पास ले जाने की सलाह देते हैं।";
 "result.verdict.first_anomaly.title" = "एक बार और प्रयास करें?";
 "result.verdict.first_anomaly.body" = "इस रीडिंग में महत्वपूर्ण ड्रिफ़्ट दिख रहा है। एक माप निर्णायक नहीं है — निर्णय लेने से पहले अलग पोज़ीशन या किसी और समय पर फिर से प्रयास करें।";
+"result.verdict.unreliable.title" = "माप अस्थिर रहा";
+"result.verdict.unreliable.body" = "सिग्नल में उतार-चढ़ाव रहा, इसलिए यह रीडिंग विश्वसनीय नहीं है। स्थिति बदलकर दोबारा मापें।";
+"result.recent_avg.title" = "इस घड़ी का हालिया औसत";
+"result.recent_avg.detail" = "पिछली %1$d माप का औसत · ±%2$.0f s/d उतार-चढ़ाव";
+"result.recent_avg.detail_trimmed" = "पिछली %1$d में से %3$d विषम मान हटाए · ±%2$.0f s/d उतार-चढ़ाव";
+"result.recent_avg.hint" = "कई पोज़ीशन में मापने से औसत अधिक सटीक होता है।";
 "result.next_step.eyebrow" = "अगला क़दम";
 "result.next_step.body" = "यांत्रिक घड़ियाँ पोज़ीशन, तापमान और वाइंडिंग स्तर के अनुसार अलग ड्रिफ़्ट करती हैं। एक हफ़्ते तक रोज़ लगभग एक ही समय पर मापें — ट्रेंड चार्ट असली तस्वीर दिखाएगा।";
 "result.beginner.why" = "मुझे यह परिणाम क्यों मिला?";

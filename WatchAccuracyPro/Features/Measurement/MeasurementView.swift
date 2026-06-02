@@ -150,12 +150,12 @@ struct MeasurementView: View {
         .navigationDestination(item: completedResultBinding) { result in
             MeasurementResultView(result: result, watch: viewModel.watch, onRetry: {
                 viewModel.cancel()
-            }, debugFastShadow: viewModel.fastShadowText)
+            })
         }
         .navigationDestination(for: MeasurementResult.self) { result in
             MeasurementResultView(result: result, watch: viewModel.watch, onRetry: {
                 viewModel.cancel()
-            }, debugFastShadow: viewModel.fastShadowText)
+            })
         }
         // Round 161 (사용자 보고: "30초 측정인데 35초까지 측정함"):
         // 기존 liveMetrics.elapsedSeconds 는 analyzer cycle(~1s)에 묶여 wall-clock 보다 늦음.
@@ -167,6 +167,9 @@ struct MeasurementView: View {
                 viewModel.stop(modelContext: modelContext)
             }
         }
+        // Round 171 (사용자 실측 결정): auto 조기종료 OFF. 15초 조기종료(−12.1)가 30초(+1.4)보다
+        // 더 틀린 케이스 확인 — 30초가 더 많이 평균돼 정확. 신뢰 숫자는 "다회 평균"으로 얻는다([[]]).
+        // converged 신호는 계산만 유지(향후 '안정됨' 표시용 가능), 자동 stop 트리거는 제거.
         // Round 15 (Hyemi): weakSnrSeenAt mutation 을 body 밖으로.
         .onChange(of: viewModel.lastSnapshotSNRDB) { _, newValue in
             updateWeakSnrSeenAt(newValue)

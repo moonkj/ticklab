@@ -42,7 +42,10 @@ final class DSPPipelineTests: XCTestCase {
         // Phase 2 spectral-flux 통합 후 synthetic 신호의 일부 BPH 가 락 못 할 수 있음 (실 디바이스 robust 우선).
         if let result = pipeline.stop() {
             XCTAssertNil(result.amplitudeDegrees, "코악시얼은 amplitude 미산출")
-            XCTAssertEqual(result.reliabilityNoteKey, "movement.reliability.coaxial.notice")
+            // Round 170: amplitude cell 제거에 맞춰 coaxial/amplitudeUnstable 노트 비활성 →
+            // medium/low 캘리버는 generic 측정정확도 안내만 부여 (DSPPipeline reliabilityNote 참조).
+            // Round 171 (OLS rate 근본수정): 이 5s coaxial 신호가 이제 정상 lock → 결과 산출됨.
+            XCTAssertEqual(result.reliabilityNoteKey, "movement.reliability.generic.notice")
         }
     }
 

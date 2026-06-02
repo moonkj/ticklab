@@ -351,6 +351,8 @@
 "community.compose" = "Publier une photo";
 "community.compose.hint" = "Partagez la montre du jour. Une photo par jour.";
 "community.compose.anonymous_note" = "Publié avec votre profil · une fois par jour";
+"community.compose.text_only" = "Texte seul";
+"community.compose.text_only.empty" = "Veuillez saisir du texte.";
 "community.empty.title" = "Aucune publication";
 "community.empty.body" = "Soyez le premier à partager la montre du jour.";
 "community.like" = "J'aime";
@@ -460,6 +462,9 @@
 "badges.earned" = "Obtenu";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
 "badges.detail.header" = "Badge débloqué";
+"badges.detail.header.locked" = "Badge verrouillé · Comment débloquer";
+"badges.detail.equip" = "Afficher près du nom";
+"badges.detail.unequip" = "Retirer";
 "fortune.title.eyebrow" = "Horoscope du cadran";
 "fortune.today_prefix" = "Aujourd'hui est ";
 "fortune.today_suffix" = ", son jour";
@@ -811,6 +816,12 @@
 "result.verdict.service.body" = "L'écart est important. Nous recommandons une visite chez un horloger.";
 "result.verdict.first_anomaly.title" = "Une autre tentative ?";
 "result.verdict.first_anomaly.body" = "Cette lecture montre une dérive importante. Une seule mesure n'est pas concluante — réessayez dans différentes positions ou à un autre moment avant de conclure.";
+"result.verdict.unreliable.title" = "La mesure était instable";
+"result.verdict.unreliable.body" = "Le signal a fluctué, cette lecture n'est donc pas fiable. Repositionnez la montre et mesurez à nouveau.";
+"result.recent_avg.title" = "Moyenne récente";
+"result.recent_avg.detail" = "Moyenne des %1$d dernières · ±%2$.0f s/d d'écart";
+"result.recent_avg.detail_trimmed" = "%1$d dernières, %3$d aberrante(s) exclue(s) · ±%2$.0f s/d d'écart";
+"result.recent_avg.hint" = "Mesurer dans plusieurs positions rend la moyenne plus précise.";
 "result.next_step.eyebrow" = "Prochaine étape";
 "result.next_step.body" = "Les montres mécaniques dérivent différemment selon la position, la température et la réserve de marche. Mesurez à peu près à la même heure chaque jour pendant une semaine — la courbe de tendance révèle la véritable image.";
 "result.beginner.why" = "Pourquoi ai-je obtenu ce résultat ?";

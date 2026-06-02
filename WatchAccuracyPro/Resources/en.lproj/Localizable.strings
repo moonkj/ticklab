@@ -358,6 +358,8 @@
 "community.compose" = "Post a photo";
 "community.compose.hint" = "Share today's watch. One photo a day.";
 "community.compose.anonymous_note" = "Posted with your profile · once a day";
+"community.compose.text_only" = "Text only";
+"community.compose.text_only.empty" = "Please enter some text.";
 "community.empty.title" = "No posts yet";
 "community.empty.body" = "Be the first to share today's watch.";
 "community.like" = "Like";
@@ -467,6 +469,9 @@
 "badges.earned" = "Earned";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
 "badges.detail.header" = "Unlocked Badge";
+"badges.detail.header.locked" = "Locked Badge · How to unlock";
+"badges.detail.equip" = "Show next to name";
+"badges.detail.unequip" = "Remove";
 "fortune.title.eyebrow" = "Today's dial fortune";
 "fortune.today_prefix" = "Today is ";
 "fortune.today_suffix" = "'s day";
@@ -819,6 +824,12 @@
 "result.verdict.service.body" = "The deviation is significant. We recommend taking it to a watchmaker.";
 "result.verdict.first_anomaly.title" = "Try once more?";
 "result.verdict.first_anomaly.body" = "This reading shows significant drift. One measurement isn't conclusive — try again in different positions or at another time before deciding.";
+"result.verdict.unreliable.title" = "The measurement was unstable";
+"result.verdict.unreliable.body" = "The signal fluctuated, so this reading isn't reliable. Reposition the watch and measure again.";
+"result.recent_avg.title" = "Recent average";
+"result.recent_avg.detail" = "Mean of last %1$d · ±%2$.0f s/d spread";
+"result.recent_avg.detail_trimmed" = "Last %1$d, %3$d outlier(s) excluded · ±%2$.0f s/d spread";
+"result.recent_avg.hint" = "Measuring in several positions makes the average more accurate.";
 "result.next_step.eyebrow" = "Next step";
 "result.next_step.body" = "Mechanical watches drift differently across positions, temperatures, and wind levels. Measure around the same time daily for a week — the trend chart reveals the true picture.";
 "result.beginner.why" = "Why did I get this result?";

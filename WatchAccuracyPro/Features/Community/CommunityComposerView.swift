@@ -12,6 +12,7 @@ struct CommunityComposerView: View {
     @State private var showingLibrary = false
     @State private var cropPayload: CropImagePayload?
     @State private var pendingPost: PendingPost?   // 크롭·검열 통과 → 캡션 입력(리뷰) 단계
+    @State private var showTextReview = false      // Round 171: 글-전용 게시(사진 없음)
     @State private var isUploading = false
     @State private var moderationBlocked = false
     @State private var uploadError: String?
@@ -34,6 +35,10 @@ struct CommunityComposerView: View {
                     }
                     Button { showingCamera = true } label: {
                         sourceLabel(icon: "camera", key: "photo.source.camera")
+                    }
+                    // Round 171: 사진 없이 글만 게시.
+                    Button { showTextReview = true } label: {
+                        sourceLabel(icon: "text.alignleft", key: "community.compose.text_only")
                     }
                 }
                 .padding(.horizontal, 32)
@@ -94,6 +99,14 @@ struct CommunityComposerView: View {
                     onCancel: { pendingPost = nil }
                 )
             }
+            .fullScreenCover(isPresented: $showTextReview) {
+                // Round 171 글-전용 — 이미지 없이 캡션만 입력해 게시.
+                CommunityReviewView(
+                    imageData: nil,
+                    onPost: { caption in showTextReview = false; performUpload(data: nil, caption: caption) },
+                    onCancel: { showTextReview = false }
+                )
+            }
             .overlay { if isUploading { uploadingOverlay } }
             .alert(String(localized: "community.moderation.blocked.title"), isPresented: $moderationBlocked) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
@@ -142,7 +155,8 @@ struct CommunityComposerView: View {
     }
 
     /// 리뷰에서 "게시" → 캡션과 함께 업로드. 캡션 텍스트 검열은 리뷰 화면에서 이미 통과.
-    private func performUpload(data: Data, caption: String) {
+    /// data nil 이면 글-전용 게시(Round 171).
+    private func performUpload(data: Data?, caption: String) {
         Task {
             isUploading = true
             do {
@@ -170,7 +184,8 @@ struct PendingPost: Identifiable {
 /// 게시 직전 리뷰 — 정사각 미리보기 + 짧은 캡션(선택) 입력 + 온디바이스 텍스트 검열.
 /// 사진 작성기와 "공유카드 → 커뮤니티" 양쪽에서 재사용.
 struct CommunityReviewView: View {
-    let imageData: Data
+    /// nil 이면 글-전용 게시(사진 없음) — 이미지 미리보기 생략, 캡션 필수. Round 171.
+    let imageData: Data?
     let onPost: (String) -> Void
     let onCancel: () -> Void
 
@@ -183,7 +198,7 @@ struct CommunityReviewView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    if let ui = UIImage(data: imageData) {
+                    if let imageData, let ui = UIImage(data: imageData) {
                         Image(uiImage: ui)
                             .resizable()
                             .scaledToFill()
@@ -241,6 +256,12 @@ struct CommunityReviewView: View {
     }
 
     private func submit() {
+        // Round 171 글-전용: 사진이 없으면 내용이 비어 있으면 안 됨.
+        if imageData == nil, caption.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            blockMessage = String(localized: "community.compose.text_only.empty")
+            textBlocked = true
+            return
+        }
         switch CommunityTextModerator.screen(caption) {
         case .allowed:
             onPost(caption)

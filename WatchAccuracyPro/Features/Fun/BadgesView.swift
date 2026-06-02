@@ -461,6 +461,16 @@ private struct BadgeDetailCardView: View {
     @State private var rotation: Double = -180
     @State private var scale: CGFloat = 0.3
     @State private var opacity: Double = 0
+    /// Round 171: 닉네임 옆에 장착한 뱃지 이모지. 커뮤니티 게시 시 함께 전송(author_badge).
+    @AppStorage("ticklab.profile.equippedBadge") private var equippedBadge: String = ""
+
+    private var isEquipped: Bool { badge.earned && equippedBadge == badge.emoji }
+
+    /// 잠긴 뱃지는 무채색 카드 — 획득 카드와 시각적으로 구분.
+    private var cardGradient: [Color] {
+        badge.earned ? badge.rarity.gradientColors
+                     : [Color(white: 0.46), Color(white: 0.30)]
+    }
 
     var body: some View {
         ZStack {
@@ -472,7 +482,9 @@ private struct BadgeDetailCardView: View {
                 .accessibilityAction(.escape) { onClose() }
 
             VStack(spacing: 18) {
-                Text(String(localized: "badges.detail.header"))
+                // Round 171 (사용자 보고: 잠긴 뱃지 클릭 시 "획득"으로 표시되는 버그):
+                // earned/locked 를 명확히 구분. 잠김이면 자물쇠 + 획득 조건 + 진행도.
+                Text(String(localized: badge.earned ? "badges.detail.header" : "badges.detail.header.locked"))
                     .font(.system(size: 12, weight: .semibold, design: .monospaced))
                     .tracking(2)
                     .foregroundStyle(.white.opacity(0.7))
@@ -481,18 +493,24 @@ private struct BadgeDetailCardView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: 24, style: .continuous)
                         .fill(LinearGradient(
-                            colors: badge.rarity.gradientColors,
+                            colors: cardGradient,
                             startPoint: .topLeading, endPoint: .bottomTrailing
                         ))
                         .frame(width: 220, height: 300)
-                        .shadow(color: badge.rarity.color.opacity(0.5), radius: 24, x: 0, y: 12)
+                        .shadow(color: (badge.earned ? badge.rarity.color : Color.black).opacity(0.5), radius: 24, x: 0, y: 12)
                     VStack(spacing: 16) {
                         ZStack {
                             Circle()
                                 .fill(.white.opacity(0.18))
                                 .frame(width: 140, height: 140)
-                            Text(badge.emoji)
-                                .font(.system(size: 64))
+                            if badge.earned {
+                                Text(badge.emoji)
+                                    .font(.system(size: 64))
+                            } else {
+                                Image(systemName: "lock.fill")
+                                    .font(.system(size: 52))
+                                    .foregroundStyle(.white.opacity(0.9))
+                            }
                         }
                         Text(badge.name)
                             .font(.system(size: 16, weight: .semibold))
@@ -508,11 +526,53 @@ private struct BadgeDetailCardView: View {
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundStyle(.white)
 
-                Text(badge.desc)
-                    .font(.system(size: 14))
-                    .foregroundStyle(.white.opacity(0.75))
-                    .multilineTextAlignment(.center)
-                    .padding(.horizontal, 24)
+                if badge.earned {
+                    Text(badge.desc)
+                        .font(.system(size: 14))
+                        .foregroundStyle(.white.opacity(0.75))
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 24)
+                } else {
+                    // 잠김 — 획득 조건 + 진행도.
+                    VStack(spacing: 10) {
+                        Text(badge.condition.isEmpty ? badge.desc : badge.condition)
+                            .font(.system(size: 14))
+                            .foregroundStyle(.white.opacity(0.85))
+                            .multilineTextAlignment(.center)
+                            .padding(.horizontal, 24)
+                        if badge.total > 1 {
+                            ZStack(alignment: .leading) {
+                                Capsule().fill(.white.opacity(0.25))
+                                Capsule().fill(.white.opacity(0.85))
+                                    .frame(width: 160 * CGFloat(min(1.0, Double(badge.progress) / Double(max(1, badge.total)))))
+                            }
+                            .frame(width: 160, height: 6)
+                            Text("\(badge.progress) / \(badge.total)")
+                                .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                                .foregroundStyle(.white.opacity(0.75))
+                        }
+                    }
+                }
+
+                // Round 171: 획득한 뱃지는 닉네임 옆에 장착/해제 가능 (커뮤니티 표시).
+                if badge.earned {
+                    Button {
+                        UISelectionFeedbackGenerator().selectionChanged()
+                        equippedBadge = isEquipped ? "" : badge.emoji
+                    } label: {
+                        Label(
+                            String(localized: isEquipped ? "badges.detail.unequip" : "badges.detail.equip"),
+                            systemImage: isEquipped ? "checkmark.seal.fill" : "seal"
+                        )
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(badge.rarity.color)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 11)
+                        .background(Capsule().fill(.white))
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.top, 2)
+                }
 
                 Button(action: onClose) {
                     Text(String(localized: "common.close"))

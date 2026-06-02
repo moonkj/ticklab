@@ -18,8 +18,15 @@ final class AudioCapture: AudioSource {
     // 신호가 검출 임계 직전 → 약한 신호 증폭. soft-knee tanh 가 clip 방지하므로 gain 5.0 안전.
     // Round 158 (Lim/Hyemi 패널): -47 dBFS 환경 (IWC sapphire-back) 검출 부족 → 5 → 10 으로 상향.
     // tanh argument 0.9 → 0.6 으로 압축 시작점 늦춰 약신호 헤드룸 확보.
-    static let softwareGain: Float = 10.0
+    // Round 171 (사용자: 1.0.0 때가 더 정확했다 / 고정 시계 단일측정 변동 추적):
+    //   게인 10× 는 강한 tic 을 tanh 포화영역으로 밀어 envelope 피크 위치를 흔듦(=onset jitter→주기 변동).
+    //   1.0.0 은 게인 없이 선형이었음. 절충: 게인 10→5 (tanh 유지로 clip 방지하되 포화 완화).
+    //   약신호 검출 떨어지면 되돌린다(실험).
+    static let softwareGain: Float = 5.0
     static let tanhArgScale: Float = 0.6
+
+    /// (DEBUG 진단) 실제 하드웨어 입력 샘플레이트 — 44.1k 인지 48k 인지 확인용. 진단 줄에 표시.
+    static var lastHardwareSampleRate: Double = 0
 
     private let engine = AVAudioEngine()
     private var converter: AVAudioConverter?
@@ -42,6 +49,8 @@ final class AudioCapture: AudioSource {
             print("⚠️ setVoiceProcessingEnabled(false) failed: \(error) — DSP 결과에 영향 가능")
         }
         let inputFormat = input.outputFormat(forBus: 0)
+        Self.lastHardwareSampleRate = inputFormat.sampleRate   // (DEBUG) 진단 — 44.1k/48k 확인
+        print("🎚️ inputFormat.sampleRate=\(inputFormat.sampleRate) session.sampleRate=\(AVAudioSession.sharedInstance().sampleRate)")
         guard let targetFormat = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
             sampleRate: sampleRate,
@@ -158,6 +167,9 @@ final class AudioCapture: AudioSource {
             // `.playAndRecord + .videoRecording` 으로 전환 — video pipeline 으로 system 이 인식하여
             // Voice Isolation 자동 우회. `.defaultToSpeaker` 는 input/output 분리 보장.
             try session.setCategory(.playAndRecord, mode: .videoRecording, options: [.defaultToSpeaker])
+            // Round 171 (사용자 질문: 44.1k? 48k?): 하드웨어 샘플레이트를 48kHz 로 고정 요청 →
+            //   44.1k→48k 리샘플링 보간으로 인한 onset 타이밍 jitter 제거. (요청일 뿐 강제 아님 — 달성값 확인)
+            try? session.setPreferredSampleRate(48_000)
             // 사용자가 명시 선택한 외부 마이크만 적용. 기본은 iPhone 내장.
             try AudioInputManager.shared.applyPreferredToSession()
             // 추가 안전: builtInMic 명시 선택 + bottom data source (iPhone Air beamforming 회피).

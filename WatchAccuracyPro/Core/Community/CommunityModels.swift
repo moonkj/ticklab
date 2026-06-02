@@ -13,11 +13,14 @@ enum Community {
     struct Post: Codable, Identifiable, Equatable {
         let id: String              // uuid
         let authorUID: String       // 내부 식별자(화면엔 비노출 — 익명)
-        let imagePath: String       // Storage 'community' 경로
+        /// Storage 'community' 경로. **글-전용 게시(사진 없음)면 nil** (Round 171).
+        let imagePath: String?
         let brand: String?
         let caption: String?        // 짧은 한 줄 멘트(선택) — 온디바이스 텍스트 검열 통과분만
         let authorName: String?     // 공개 프로필 표시명(신원 전환). nil = 구 익명 글
         let authorAvatarPath: String?
+        /// Round 171: 작성자가 닉네임 옆에 장착한 뱃지 이모지(선택). nil = 미장착.
+        let authorBadge: String?
         var likeCount: Int
         var commentCount: Int?      // 비정규화(트리거). 미배포 시 nil → 0 처리.
         let status: PostStatus
@@ -31,6 +34,7 @@ enum Community {
             case caption
             case authorName = "author_name"
             case authorAvatarPath = "author_avatar_path"
+            case authorBadge = "author_badge"
             case likeCount = "like_count"
             case commentCount = "comment_count"
             case status

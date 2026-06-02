@@ -1895,12 +1895,17 @@ struct WatchDetailView: View {
     private func computeStats(_ ms: [WatchMeasurement]) -> (mean: String, deviation: String, best: String) {
         guard !ms.isEmpty else { return ("—", "—", "—") }
         let rates = ms.map { $0.rateSecondsPerDay }
-        let mean = rates.reduce(0, +) / Double(rates.count)
-        let variance = rates.map { pow($0 - mean, 2) }.reduce(0, +) / Double(rates.count)
-        let stdev = sqrt(variance)
         let best = rates.map { (rate: $0, abs: abs($0)) }.min(by: { $0.abs < $1.abs })?.rate ?? 0
         let fmt: (Double) -> String = { ($0 >= 0 ? "+" : "") + String(format: "%.1f", $0) }
-        return (fmt(mean), String(format: "%.1f", stdev), fmt(best))
+        // Round 171 (사용자 보고: 평균이 옛 알고리즘 측정에 오염됨):
+        // 평균은 MAD outlier 제거 robust 평균(결과화면 '최근 평균'과 동일 로직) — 극단 측정 배제.
+        // 편차(Σ)는 제거 전 전체 기준 — 실제 흩어짐을 정직하게 표시.
+        if let t = RateAggregate.trusted(rates: rates) {
+            return (fmt(t.meanRate), String(format: "%.1f", t.spread), fmt(best))
+        }
+        let mean = rates.reduce(0, +) / Double(rates.count)
+        let variance = rates.map { pow($0 - mean, 2) }.reduce(0, +) / Double(rates.count)
+        return (fmt(mean), String(format: "%.1f", sqrt(variance)), fmt(best))
     }
 }
 

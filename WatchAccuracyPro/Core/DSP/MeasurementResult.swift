@@ -32,9 +32,13 @@ enum ReliabilityGrade: String, Sendable, Hashable, Codable {
     /// Round 158 (사용자 보고: Grade B 인데 +157 s/d): rate 절대값 기반 추가 penalty.
     /// 정상 시계는 ±50 s/d 이내. |rate| 큰 측정은 consistency 무관하게 grade 낮춤.
     static func from(confidence: Int, crossWindowDelta: Double?, rateSecondsPerDay: Double) -> ReliabilityGrade {
+        // Round 171 Phase B (사용자 실측: spread~40→A 과신, ±14 인데 A — 임계 강화).
+        // OLS 도입으로 sub-window rate 가 정밀(각 ~±1 fit) → cross-window spread 는 깨끗한 재현성 신호.
+        // 8 s/d 초과부터 점진(×1.0), cap 50: spread~20(±10) A 유지, ~28(±14) B, ~40 B/C, ~60+ C.
+        // confidence(창내부 자기일관성)가 높아도 강한 cross-window 불일치면 강등되도록 cap 큼.
         let windowPenalty: Int = {
-            guard let d = crossWindowDelta, d > 25 else { return 0 }
-            return Int(min(20, d - 25))
+            guard let d = crossWindowDelta, d > 8 else { return 0 }
+            return Int(min(50, (d - 8) * 1.0))
         }()
         let absRate = abs(rateSecondsPerDay)
         let ratePenalty: Int = {
@@ -57,7 +61,8 @@ enum ReliabilityGrade: String, Sendable, Hashable, Codable {
 /// DSPPipeline 의 분석 산출물. UI 표시용 + SwiftData 저장용 중간 모델.
 struct MeasurementResult: Equatable, Hashable, Sendable {
     let bph: Int
-    let rateSecondsPerDay: Double
+    /// Round 171 C1: stop() 의 robust 윈도우 집계가 오염 구간 배제 후 median 으로 교체할 수 있어 var.
+    var rateSecondsPerDay: Double
     let beatErrorMs: Double
     /// 코악시얼/스프링드라이브 또는 추정 실패 시 nil.
     let amplitudeDegrees: Double?
@@ -76,6 +81,11 @@ struct MeasurementResult: Equatable, Hashable, Sendable {
     /// Round 170 (팀 토론): OLS residual RMS (seconds). rate 정밀도 직접 metric — internal gate 용.
     /// ±1 s/d 목표 시 240 beats 면 RMS ≤ 22μs, 96 beats 면 ≤ 35μs.
     var residualRMSSeconds: Double? = nil
+    /// Round 172 (tg estimator): envelope 자기상관 cycle-to-cycle 일관성(s/d). 작을수록 신뢰.
+    /// tg 가 headline 일 때 ±/grade 의 재현성 신호로 사용(노이즈 큰 10s-window spread 대체).
+    var tgSigma: Double? = nil
+    /// (DEBUG 진단) 추정기 내부값 한 줄 — 고정 시계 run-to-run 변동 원인 추적용. 릴리스 미표시.
+    var diagnostic: String? = nil
 
     /// 후방 호환 — UI 가 String key 를 직접 다루는 코드가 있으면 이 프로퍼티 사용.
     var reliabilityNoteKey: String? { reliabilityNote?.rawValue }
@@ -110,6 +120,9 @@ struct LiveMetrics: Sendable, Equatable {
     /// 사용자 요청: 실시간 tic/toc 점 시각화 — 최근 검출 onset 시각 (측정 시작 기준 seconds).
     /// 알고리즘 자체는 unchanged — 기존 detection 결과 외부 노출 전용. nil 이면 빈 화면.
     var recentOnsetTimes: [Double]? = nil
+    /// Round 171 C3 (적응형 조기종료): 최근 rate 가 충분히 안정 + 신뢰도 확보 → 더 측정할 필요 없음.
+    /// UI 가 true 를 보면 30초 cap 전에 자동 stop. 불안정하면 false 유지 → 계속 측정.
+    var converged: Bool = false
 }
 
 /// 라이브 파형 표시용 페이로드. -1...1 범위 다운샘플 진폭 + 측정 시작부터의 경과 시각.

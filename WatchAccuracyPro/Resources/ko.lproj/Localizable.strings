@@ -282,6 +282,8 @@
 "community.compose" = "사진 올리기";
 "community.compose.hint" = "오늘의 시계를 공유하세요. 하루 한 장.";
 "community.compose.anonymous_note" = "프로필로 게시됩니다 · 하루 1장";
+"community.compose.text_only" = "글만 쓰기";
+"community.compose.text_only.empty" = "내용을 입력해 주세요.";
 "community.empty.title" = "아직 게시물이 없어요";
 "community.empty.body" = "첫 번째로 오늘의 시계를 공유해보세요.";
 "community.like" = "좋아요";
@@ -391,6 +393,9 @@
 "badges.earned" = "획득";
 // Round 19: 중복 key "badges.locked" 삭제 — line 1137 의 "잠김" 이 long variant 를 silently 마스킹하던 버그.
 "badges.detail.header" = "획득한 뱃지";
+"badges.detail.header.locked" = "잠긴 뱃지 · 획득 조건";
+"badges.detail.equip" = "닉네임 옆에 장착";
+"badges.detail.unequip" = "장착 해제";
 "fortune.title.eyebrow" = "오늘의 다이얼 운세";
 "fortune.today_prefix" = "오늘은 ";
 "fortune.today_suffix" = "의 날";
@@ -785,6 +790,12 @@
 "result.verdict.service.body" = "오차가 큽니다. 워치메이커에게 점검을 받아보시는 것을 권장합니다.";
 "result.verdict.first_anomaly.title" = "한 번 더 측정해 볼까요?";
 "result.verdict.first_anomaly.body" = "이번 측정에서 오차가 다소 컸어요. 한 번의 측정으로 단정하기 어려우니, 다른 자세나 시간대에 다시 측정해 평균을 확인해 보세요.";
+"result.verdict.unreliable.title" = "측정이 불안정했어요";
+"result.verdict.unreliable.body" = "측정 신호가 흔들려 신뢰도가 낮아요. 자세를 바꿔 다시 측정해 보세요.";
+"result.recent_avg.title" = "이 시계 최근 평균";
+"result.recent_avg.detail" = "최근 %1$d회 평균 · ±%2$.0f s/d 변동";
+"result.recent_avg.detail_trimmed" = "최근 %1$d회 중 동떨어진 %3$d개 제외 · ±%2$.0f s/d 변동";
+"result.recent_avg.hint" = "여러 자세에서 측정할수록 평균이 더 정확해져요.";
 "result.next_step.eyebrow" = "다음 단계";
 "result.next_step.body" = "기계식 시계는 자세 · 온도 · 태엽 감김 정도에 따라 정확도가 달라집니다. 일주일 정도 비슷한 시간대에 측정해서 평균을 보세요. 이력 그래프가 진짜 모습을 보여줍니다.";
 "result.beginner.why" = "이 결과가 왜 나왔을까?";

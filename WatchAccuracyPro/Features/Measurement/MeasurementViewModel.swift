@@ -36,21 +36,6 @@ final class MeasurementViewModel {
     /// Round 170 (디버깅): persist 실패 시 마지막 거부 result + 사유 코드 보존 → 화면에 노출.
     private(set) var lastRejectedResult: MeasurementResult? = nil
     private(set) var lastRejectionReason: String? = nil
-    /// (DEBUG 진단) 빠른측정 섀도우 — 측정 동작은 30초 그대로, 조기종료라면 어땠을지만 표시.
-    struct FastShadowInfo: Equatable {
-        let convergedSeconds: Double
-        let earlyRate: Double
-        let fullRate: Double
-        let didConverge: Bool
-    }
-    private(set) var fastShadow: FastShadowInfo? = nil
-    /// 결과 화면 DEBUG 라인 텍스트. 릴리스에선 fastShadow 가 항상 nil → nil.
-    var fastShadowText: String? {
-        guard let s = fastShadow else { return nil }
-        return String(format: "⚡ 빠른측정 시뮬: %.0f초 수렴%@ · %+.1f s/d (전체 %+.1f · Δ%+.1f)",
-                      s.convergedSeconds, s.didConverge ? "✓" : "✗",
-                      s.earlyRate, s.fullRate, s.earlyRate - s.fullRate)
-    }
     /// 라이브 wave 표시용 — 최근 200개 다운샘플된 진폭 (-1...1).
     private(set) var waveformSamples: [Float] = Array(repeating: 0, count: 200)
     /// 페르소나 (김재철) wish: position picker. 측정 전 사용자가 자세 선택.
@@ -225,20 +210,8 @@ final class MeasurementViewModel {
         pipeline = nil
         Task.detached(priority: .userInitiated) { [weak self] in
             let result = pipelineRef?.stop()
-            // (DEBUG) 빠른측정 섀도우 — 같은 버퍼로 조기종료 시뮬레이션. 측정 동작 불변.
-            // stop() 후 pipelineRef·버퍼 유지 + analyzer 취소됨 → 경합 없이 analyze 스윕 가능.
-            var shadow: MeasurementViewModel.FastShadowInfo? = nil
-            #if DEBUG
-            if let p = pipelineRef, let full = result,
-               let oc = p.measureEarlyExit(candidateWindows: [3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 18, 22, 26, 30],
-                                           totalSeconds: Double(full.durationSeconds),
-                                           toleranceSecondsPerDay: 3.0, stableCount: 3) {
-                shadow = .init(convergedSeconds: oc.convergedSeconds,
-                               earlyRate: oc.result.rateSecondsPerDay,
-                               fullRate: full.rateSecondsPerDay,
-                               didConverge: oc.didConverge)
-            }
-            #endif
+            // Round 171: DEBUG 빠른측정 섀도우 제거 — 진단 목적 종료(조기종료 OFF 결정).
+            //   추가 14→5 윈도우 재분석이 "분석 중" 지연의 주원인이라 함께 제거.
             await MainActor.run {
                 guard let self else {
                     // self deinit 됐어도 RootTabView 보호 해제는 해야 함.
@@ -250,7 +223,6 @@ final class MeasurementViewModel {
                     NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
                     return
                 }
-                self.fastShadow = shadow   // (DEBUG) state=.completed 직전 → 결과뷰가 즉시 표시
                 if let result {
                     // Round 169: anomaly 면 .completed 가 아닌 .failed 로 → 사용자에게 명확히 알림.
                     // Round 100: anomaly trip 은 .lockFailure 로 분기 (BPH lock 잡혔으나 신뢰 X).

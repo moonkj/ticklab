@@ -351,6 +351,8 @@
 "community.compose" = "Publicar foto";
 "community.compose.hint" = "Comparte el reloj de hoy. Una foto al día.";
 "community.compose.anonymous_note" = "Publicado con tu perfil · una vez al día";
+"community.compose.text_only" = "Solo texto";
+"community.compose.text_only.empty" = "Escribe algún texto.";
 "community.empty.title" = "Aún no hay publicaciones";
 "community.empty.body" = "Sé el primero en compartir el reloj de hoy.";
 "community.like" = "Me gusta";
@@ -460,6 +462,9 @@
 "badges.earned" = "Obtenida";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
 "badges.detail.header" = "Insignia desbloqueada";
+"badges.detail.header.locked" = "Insignia bloqueada · Cómo desbloquear";
+"badges.detail.equip" = "Mostrar junto al nombre";
+"badges.detail.unequip" = "Quitar";
 "fortune.title.eyebrow" = "Suerte de esfera de hoy";
 "fortune.today_prefix" = "Hoy es ";
 "fortune.today_suffix" = ", el día de";
@@ -811,6 +816,12 @@
 "result.verdict.service.body" = "La desviación es significativa. Recomendamos llevarlo a un relojero.";
 "result.verdict.first_anomaly.title" = "¿Probamos de nuevo?";
 "result.verdict.first_anomaly.body" = "Esta lectura muestra una deriva significativa. Una sola medición no es concluyente — vuelve a intentarlo en distintas posiciones o en otro momento antes de decidir.";
+"result.verdict.unreliable.title" = "La medición fue inestable";
+"result.verdict.unreliable.body" = "La señal fluctuó, por lo que esta lectura no es fiable. Recoloca el reloj y vuelve a medir.";
+"result.recent_avg.title" = "Media reciente";
+"result.recent_avg.detail" = "Media de las últimas %1$d · ±%2$.0f s/d de variación";
+"result.recent_avg.detail_trimmed" = "Últimas %1$d, %3$d atípica(s) excluida(s) · ±%2$.0f s/d de variación";
+"result.recent_avg.hint" = "Medir en varias posiciones hace la media más precisa.";
 "result.next_step.eyebrow" = "Siguiente paso";
 "result.next_step.body" = "Los relojes mecánicos derivan de forma distinta según posición, temperatura y nivel de cuerda. Mide a la misma hora cada día durante una semana — el gráfico de tendencia revela la imagen real.";
 "result.beginner.why" = "¿Por qué obtuve este resultado?";

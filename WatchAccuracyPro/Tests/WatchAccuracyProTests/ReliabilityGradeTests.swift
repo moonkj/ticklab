@@ -35,21 +35,26 @@ final class ReliabilityGradeTests: XCTestCase {
     // MARK: - cross-window delta penalty
 
     func test_small_delta_below_threshold_no_penalty() {
-        // delta 25 이하 → windowPenalty 0. confidence 75 유지 → .a
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 25), .a)
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 10), .a)
+        // Round 171: delta 8 이하 → windowPenalty 0. confidence 75 유지 → .a
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 8), .a)
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 5), .a)
     }
 
     func test_delta_penalty_drops_grade() {
-        // delta 30 → penalty = min(20, 30-25) = 5. 75 - 5 = 70 → .b
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 30), .b)
+        // Round 171: delta 30 → penalty = (30-8)*1.0 = 22. 75 - 22 = 53 → .c
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 30), .c)
+        // delta 20(±10) 은 A 유지: (20-8)=12, 90-12=78 → .a
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 20), .a)
+        // delta 28(±14) 은 강등: (28-8)=20, 90-20=70 → .b
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 28), .b)
     }
 
-    func test_delta_penalty_is_capped_at_20() {
-        // delta 1000 → penalty cap 20. 90 - 20 = 70 → .b (cap 아니면 음수가 됐을 것)
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 1000), .b)
-        // 95 - 20 = 75 → 정확히 .a 경계
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 95, crossWindowDelta: 1000), .a)
+    func test_delta_penalty_is_capped() {
+        // Round 171: delta 매우 큼 → windowPenalty cap 50. 최고 confidence 100 - 50 = 50 → 최선 .c.
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 100, crossWindowDelta: 1000), .c)
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 1000), .c)
+        // 55 - 50 = 5 → .f
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 55, crossWindowDelta: 1000), .f)
     }
 
     // MARK: - |rate| penalty (Round 158)
@@ -105,11 +110,11 @@ final class ReliabilityGradeTests: XCTestCase {
     // MARK: - 결합 penalty
 
     func test_window_and_rate_penalty_combine() {
-        // delta 35 → windowPenalty min(20, 10) = 10.
-        // rate 50 → ratePenalty 20. confidence 95 - 10 - 20 = 65 → .b
+        // Round 171: delta 35 → windowPenalty (35-8)*1.0 = 27.
+        // rate 50 → ratePenalty 20. confidence 95 - 27 - 20 = 48 → .c
         XCTAssertEqual(
             ReliabilityGrade.from(confidence: 95, crossWindowDelta: 35, rateSecondsPerDay: 50),
-            .b
+            .c
         )
     }
 

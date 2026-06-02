@@ -21,6 +21,11 @@ final class DSPPipeline {
     /// Round 158: 60s 측정 동안 BPH 한 번 lock 되면 끝까지 유지. 23s 후 사라지는 사용자 보고 해결.
     static let lockMemorySeconds: Double = 60
     static let waveformDownsampleCount = 200
+    /// Round 171 C3 (적응형 조기종료): 이 시간(초) 이후부터 수렴 판정 허용. 12s 라이브 윈도우가 차고
+    /// 안정 cycle 이 쌓일 최소 시간. 깨끗한 신호면 여기서 멈춰 ~2× 빠른 측정.
+    static let minConvergeSeconds: Double = 15
+    /// Round 171 C3: 최근 rate 의 rolling stddev 가 이 값(s/d) 이하로 안정되면 수렴으로 본다.
+    static let convergeToleranceSD: Double = 2.5
 
     private let source: AudioSource
     private let nominalBph: Int
@@ -185,6 +190,14 @@ final class DSPPipeline {
                             // stddev 0 → 100, 30+ → 낮은 점수 (exponential decay τ=18).
                             let score = Int(100.0 * exp(-stddev / 18.0))
                             metrics.lockStabilityScore = max(0, min(100, score))
+                            // Round 171 C3 (적응형 조기종료): 최소 시간 경과 + 5-cycle rate 안정 +
+                            // 신뢰도 확보 시 수렴. UI 가 이 신호로 30초 전 자동 stop → 빠른 측정.
+                            // 불안정(stddev 큼)하면 수렴 안 함 → 계속 측정(나쁜 후반 데이터에 휘둘리지 않음).
+                            if elapsed >= Self.minConvergeSeconds,
+                               stddev <= Self.convergeToleranceSD,
+                               metrics.confidenceScore >= 55 {
+                                metrics.converged = true
+                            }
                         }
                     } else {
                         rateRing.removeAll(keepingCapacity: true)
@@ -233,12 +246,37 @@ final class DSPPipeline {
                 lastAnalyzeFailReason = nil
             }
             if var r = result {
-                r.crossWindowRateDelta = nil
+                // Round 171 C1+B (적응형 robust): 3 sub-window OLS rate 를 한 번 계산해
+                // ⓐ robust 집계(오염 구간 배제) ⓑ 일관성 게이트(grade/±) 둘 다에 사용.
+                let rates = crossWindowOLSRates()   // 진단 win[] 표시용 (노이즈 큼)
+                // Round 172: tg 가 headline 이면 재현성 신호 = tg cycle-consistency(σ×2).
+                //   10s-window OLS spread 는 onset 노이즈로 과대(±25)라 ±/grade 를 왜곡 → tg σ 사용.
+                if let tgS = r.tgSigma {
+                    r.crossWindowRateDelta = tgS * 2.0
+                } else if rates.count >= 2 {
+                    let sorted = rates.sorted()
+                    r.crossWindowRateDelta = sorted.last! - sorted.first!
+                } else {
+                    r.crossWindowRateDelta = nil
+                }
                 r.reliabilityGrade = ReliabilityGrade.from(
                     confidence: r.confidenceScore,
-                    crossWindowDelta: nil,
+                    crossWindowDelta: r.crossWindowRateDelta,
                     rateSecondsPerDay: r.rateSecondsPerDay
                 )
+                // (DEBUG 진단) 구간별 rate + 오디오 클록 드리프트(ppm) — 고정 시계 변동 원인 추적.
+                let ppm: Double = {
+                    guard let first = firstChunkUptime, totalAudioSamples > firstChunkSamples, lastChunkUptime > first else { return 0 }
+                    let wall = lastChunkUptime - first
+                    let audio = Double(totalAudioSamples - firstChunkSamples) / source.sampleRate
+                    guard audio > 5, wall > 5 else { return 0 }
+                    return (wall / audio - 1.0) * 1e6
+                }()
+                let winStr = rates.map { String(format: "%+.0f", $0) }.joined(separator: ",")
+                let hw = AudioCapture.lastHardwareSampleRate
+                let hwStr = hw > 0 ? " hw\(Int(hw))" : ""
+                r.diagnostic = (r.diagnostic ?? "") + " | win[\(winStr)] ppm\(String(format: "%+.0f", ppm))\(hwStr)"
+                print("🔁 spread=\(r.crossWindowRateDelta.map { String(format: "%.1f", $0) } ?? "—") rate=\(String(format: "%.1f", r.rateSecondsPerDay)) → grade=\(r.reliabilityGrade?.rawValue ?? "?")")
                 result = r
             }
             lastSnapshot = result
@@ -423,6 +461,62 @@ final class DSPPipeline {
             snrDB: 0, beatCount: refined.count,
             reliabilityNote: nil
         )
+    }
+
+    // MARK: - Phase B 신뢰 게이트 — OLS 기준 cross-window 일관성
+
+    /// Round 171 Phase B: sub-window 의 OLS rate (일관성 게이트 전용).
+    /// analyzeSubwindow 의 median-IOI(+140 s/d phase bias [[project_dsp_rate_calculation]]) 대신
+    /// 프로덕션과 동일한 preciseRate(OLS) 사용 → spread 가 headline rate 와 같은 추정기의 재현성 지표.
+    /// 부작용 없음(liveOnsetTimes 등 미변경) — 버퍼 슬라이스만 읽는다.
+    private func subwindowOLSRate(startSeconds: Double, endSeconds: Double) -> Double? {
+        bufferLock.lock()
+        let envCount = envelopeBuffer.count
+        let totalSeconds = Double(envCount) / source.sampleRate
+        guard totalSeconds >= endSeconds else { bufferLock.unlock(); return nil }
+        let startIdx = Int((totalSeconds - endSeconds) * source.sampleRate)
+        let endIdx = Int((totalSeconds - startSeconds) * source.sampleRate)
+        guard startIdx >= 0, endIdx <= envCount, endIdx > startIdx else { bufferLock.unlock(); return nil }
+        let envSlice = Array(envelopeBuffer[startIdx..<endIdx])
+        let fluxRate = SpectralFluxExtractor.outputSampleRate
+        let fluxTotalCount = fluxBuffer.count
+        let fluxStartIdx = Int((Double(fluxTotalCount) / fluxRate - endSeconds) * fluxRate)
+        let fluxEndIdx = Int((Double(fluxTotalCount) / fluxRate - startSeconds) * fluxRate)
+        guard fluxStartIdx >= 0, fluxEndIdx <= fluxTotalCount, fluxEndIdx > fluxStartIdx else { bufferLock.unlock(); return nil }
+        let fluxSlice = Array(fluxBuffer[fluxStartIdx..<fluxEndIdx])
+        bufferLock.unlock()
+
+        let coarseBeats = BeatDetector.detectOnsets(envelope: fluxSlice, sampleRate: fluxRate)
+        guard coarseBeats.count >= 8 else { return nil }
+        guard let bphEst = BPHEstimator.estimate(
+            envelope: fluxSlice, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nominalBph
+        ), bphEst.bph > 0 else { return nil }
+        let refined = BeatDetector.refineTimestamps(beats: coarseBeats, envelope: envSlice, envelopeSampleRate: source.sampleRate)
+        let precise = preciseRate(beats: refined, bphEstimate: bphEst)
+        let rate = RateCalculator.secondsPerDay(measuredBph: precise.rawBph, nominalBph: nominalBph)
+        guard abs(rate) <= 300 else { return nil }
+        return rate
+    }
+
+    /// Round 171 Phase B + C1: 겹치지 않는 3 sub-window(첫/중간/끝 1/3)의 OLS rate.
+    /// **실제 캡처 길이 기준** — 조기종료(15s 등)로 짧게 끝난 측정에서도 동작.
+    /// robust 집계(median)와 일관성 게이트(spread) 양쪽에 사용.
+    func crossWindowOLSRates() -> [Double] {
+        bufferLock.lock()
+        let total = Double(envelopeBuffer.count) / source.sampleRate
+        bufferLock.unlock()
+        guard total >= 9 else { return [] }   // 최소 3×3s 라야 sub-window 분석 의미
+        let span = total / 3.0
+        // subwindowOLSRate 는 (start,end) 를 버퍼 끝 기준으로 해석 → 3등분 커버.
+        return [(0.0, span), (span, span * 2), (span * 2, total)]
+            .compactMap { subwindowOLSRate(startSeconds: $0.0, endSeconds: $0.1) }
+    }
+
+    /// 일관성 게이트: 3 sub-window rate 의 max-min spread. 2개 미만이면 nil(fail-soft).
+    func crossWindowOLSSpread() -> Double? {
+        let rates = crossWindowOLSRates()
+        guard rates.count >= 2, let lo = rates.min(), let hi = rates.max() else { return nil }
+        return hi - lo
     }
 
     // MARK: - Audio callback path
@@ -685,8 +779,15 @@ final class DSPPipeline {
             }
         }
 
-        // 5) Rate = autocorrelation rawBph 기반 (unbiased).
-        let rate = RateCalculator.secondsPerDay(measuredBph: bphEst.rawBph, nominalBph: nominalBph)
+        // 5) Rate = 48kHz refined onset 의 OLS slope 기반 (Round 171 — 전원 재감사 후 근본수정).
+        //    200Hz autocorrelation rawBph(1 lag=±3500 s/d 라 ±5~40 변동·outlier 원인) 대신
+        //    √N leverage 의 OLS slope. bphEst 는 정수 BPH 패밀리 lock 에만 사용.
+        //    cleanedBeats<30(짧은 윈도우) 이면 helper 가 trimmed-mean/rawBph 로 자동 fallback.
+        let precise = preciseRate(beats: refined, bphEstimate: bphEst)
+        // Round 172 (tg 분석): headline 은 envelope 자기상관+multi-cycle(TgRateEstimator) — onset jitter
+        //   원천 제거로 고정 시계 변동 최소화. 실패 시 OLS fallback. (OLS/TM/AC 는 진단에 병기.)
+        let tgEst = TgRateEstimator.estimate(envelope: envSlice, sampleRate: source.sampleRate, nominalBph: nominalBph)
+        let rate = tgEst?.rate ?? RateCalculator.secondsPerDay(measuredBph: precise.rawBph, nominalBph: nominalBph)
 
         // 5) Sanity guards (기존 path 와 동일).
         guard abs(rate) <= 300 else {
@@ -772,8 +873,17 @@ final class DSPPipeline {
             beatCount: onsets.count,
             reliabilityNote: reliabilityNote
         )
-        result.residualRMSSeconds = residualRMS
-        print("📈 simplified rate=\(String(format: "%.2f", rate)) rawBph=\(String(format: "%.3f", bphEst.rawBph)) bph=\(bphEst.bph) onsets=\(onsets.count) tight=\(iois.count) RMS=\(residualRMS.map { String(format: "%.0fμs", $0 * 1e6) } ?? "—") conf=\(confidence)")
+        // OLS residual RMS 우선 (rate 와 동일 estimator 의 정밀도) — 표시 ±s/d 가 추정기와 일치.
+        // OLS 미engage(짧은 윈도우) 시에만 IOI-stddev fallback.
+        result.residualRMSSeconds = precise.residualRMSSeconds ?? residualRMS
+        result.tgSigma = tgEst?.sigma   // Round 172: tg 일관성 → ±/grade 신호.
+        let autocorrRate = RateCalculator.secondsPerDay(measuredBph: bphEst.rawBph, nominalBph: nominalBph)
+        // (DEBUG 진단) 추정기 구성요소 — 고정 시계 run-to-run 변동 원인 추적용.
+        let olsRate = RateCalculator.secondsPerDay(measuredBph: precise.olsBph, nominalBph: nominalBph)
+        let tmRateStr = precise.tmBph.map { String(format: "%+.1f", RateCalculator.secondsPerDay(measuredBph: $0, nominalBph: nominalBph)) } ?? "—"
+        let tgStr = tgEst.map { String(format: "%+.1f σ%.1f", $0.rate, $0.sigma) } ?? "—"
+        result.diagnostic = "TG\(tgStr) | cl\(precise.cleanedBeats.count)/\(onsets.count) OLS\(String(format: "%+.1f", olsRate)) TM\(tmRateStr) AC\(String(format: "%+.1f", autocorrRate))"
+        print("📈 simplified rate=\(String(format: "%.2f", rate)) (OLS) vs \(String(format: "%.2f", autocorrRate)) (autocorr) bph=\(bphEst.bph) onsets=\(onsets.count) cleaned=\(precise.cleanedBeats.count) RMS=\((precise.residualRMSSeconds ?? residualRMS).map { String(format: "%.0fμs", $0 * 1e6) } ?? "—") conf=\(confidence)")
         return result
     }
 
@@ -1127,6 +1237,122 @@ final class DSPPipeline {
         )
         result.residualRMSSeconds = residualRMS
         return result
+    }
+
+    // MARK: - Precise rate (48kHz OLS) — Round 171 (전원 재감사 후 rate 근본수정)
+
+    /// 48kHz refined onset timestamps 로부터 정밀 rate(rawBph) 산출.
+    /// OLS slope(√N leverage) + RANSAC outlier 제거 + R² 게이트 + trimmed-mean cross-check.
+    ///
+    /// 배경(2026-06-02 전원 재감사): 200Hz flux autocorrelation 의 rawBph 는 lag≈25 샘플에서
+    /// 1 샘플 = ±~3500 s/d 라, 3점 포물선 보간의 미세오차(0.001~0.01 샘플)가 그대로 ±5~40 s/d
+    /// 변동·outlier 로 증폭됐다. Round 132 가 이미 진단·48kHz 회귀로 수정했으나 Round 170 의
+    /// analyzeSimplified 재작성이 rawBph 로 되돌려 버그가 부활했다. 본 helper 가 그 경로를 복원한다.
+    /// median-IOI 의 +140 s/d phase bias([[project_dsp_rate_calculation]]) 와는 무관 —
+    /// OLS slope 는 인접 1쌍이 아닌 전체 누적 phase 의 기울기라 unbiased.
+    /// analyzeSimplified / analyzeInternal 공용(중복 제거).
+    private struct PreciseRate {
+        let rawBph: Double
+        let residualRMSSeconds: Double?
+        /// IOI 정합(±1% 정수배) 필터를 통과한 beat — 표시 metric(beatError 등) 출처 일치용.
+        let cleanedBeats: [BeatEvent]
+        // (DEBUG 진단) 추정기 구성요소 — run-to-run 변동 추적용.
+        let olsBph: Double
+        let tmBph: Double?
+    }
+
+    private func preciseRate(beats: [BeatEvent], bphEstimate: BPHEstimate) -> PreciseRate {
+        let nominalPeriodForFilter = 3600.0 / Double(bphEstimate.bph)
+        // sub-pulse/누락 보정: surrounding IOI 가 nominal 의 정수배(±1%)인 beat 만 채택.
+        let cleanedBeats: [BeatEvent] = {
+            let warmBeats = beats.filter { $0.timestampSeconds >= 2.0 }
+            let candidate = warmBeats.count >= 30 ? warmBeats : beats
+            guard candidate.count >= 5 else { return candidate }
+            let tolerance = 0.01
+            return (0..<candidate.count).compactMap { i in
+                let inIOI: Double = i > 0
+                    ? candidate[i].timestampSeconds - candidate[i-1].timestampSeconds
+                    : nominalPeriodForFilter
+                let outIOI: Double = i < candidate.count - 1
+                    ? candidate[i+1].timestampSeconds - candidate[i].timestampSeconds
+                    : nominalPeriodForFilter
+                func ioiOK(_ ioi: Double) -> Bool {
+                    let normalized = ioi / nominalPeriodForFilter
+                    let nearest = round(normalized)
+                    return nearest >= 1 && nearest <= 5 && abs(normalized - nearest) <= tolerance
+                }
+                return (ioiOK(inIOI) && ioiOK(outIOI)) ? candidate[i] : nil
+            }
+        }()
+
+        // Trimmed mean (강건 cross-check): 1× IOI 정렬 → 상하위 25% 제거 → 중간 50% 평균.
+        let trimmedMeanBph: Double? = {
+            guard cleanedBeats.count >= 16 else { return nil }
+            var ones: [Double] = []
+            for i in 1..<cleanedBeats.count {
+                let ioi = cleanedBeats[i].timestampSeconds - cleanedBeats[i-1].timestampSeconds
+                let n = ioi / nominalPeriodForFilter
+                if abs(n - 1.0) <= 0.03 { ones.append(ioi) }
+            }
+            guard ones.count >= 16 else { return nil }
+            let sorted = ones.sorted()
+            let trimCount = sorted.count / 4
+            let middle = Array(sorted[trimCount..<(sorted.count - trimCount)])
+            guard !middle.isEmpty else { return nil }
+            let avg = middle.reduce(0, +) / Double(middle.count)
+            return 3600.0 / avg
+        }()
+
+        // OLS slope + RANSAC(2×MAD, 5회) + R²≥0.999. 실패 시 trimmed-mean/rawBph fallback.
+        let (preciseRawBph, residualRMS): (Double, Double?) = {
+            guard cleanedBeats.count >= 30 else {
+                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), nil)
+            }
+            let nominalPeriod = nominalPeriodForFilter
+            let (slope, residuals) = ordinaryLeastSquaresPeriod(usable: cleanedBeats, nominalPeriod: nominalPeriod)
+            guard let slope, !residuals.isEmpty else {
+                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), nil)
+            }
+            var currentBeats = cleanedBeats
+            var currentSlope = slope
+            var currentResiduals = residuals
+            for _ in 0..<5 {
+                let mad = Self.medianAbsoluteDeviation(of: currentResiduals)
+                let threshold = min(0.001, max(0.0002, 2.0 * mad))
+                let filtered = zip(currentBeats, currentResiduals).compactMap { (b, r) in
+                    abs(r) <= threshold ? b : nil
+                }
+                guard filtered.count >= Int(Double(currentBeats.count) * 0.7),
+                      filtered.count >= 30 else { break }
+                let (newSlope, newResiduals) = ordinaryLeastSquaresPeriod(usable: filtered, nominalPeriod: nominalPeriod)
+                guard let newSlope, !newResiduals.isEmpty else { break }
+                currentBeats = filtered
+                currentSlope = newSlope
+                currentResiduals = newResiduals
+            }
+            let sumSq = currentResiduals.reduce(0.0) { $0 + $1 * $1 }
+            let rms: Double? = (currentResiduals.count > 0) ? (sumSq / Double(currentResiduals.count)).squareRoot() : nil
+            let r2 = Self.coefficientOfDetermination(beats: currentBeats, slope: currentSlope)
+            guard r2 >= 0.999 else {
+                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), rms)
+            }
+            return (3600.0 / currentSlope, rms)
+        }()
+
+        // OLS vs Trimmed mean: 차이 > 5 s/d → TM 채택 (OLS bias 의심).
+        let finalRawBph: Double = {
+            guard let tm = trimmedMeanBph else { return preciseRawBph }
+            let olsRate = (preciseRawBph - Double(nominalBph)) / Double(nominalBph) * 86400.0
+            let tmRate = (tm - Double(nominalBph)) / Double(nominalBph) * 86400.0
+            if abs(olsRate - tmRate) > 5.0 {
+                print("📊 OLS vs TrimmedMean 차이 \(String(format: "%.1f", abs(olsRate - tmRate))) s/d — TM 채택 (OLS=\(String(format: "%.1f", olsRate)), TM=\(String(format: "%.1f", tmRate)))")
+                return tm
+            }
+            return preciseRawBph
+        }()
+
+        return PreciseRate(rawBph: finalRawBph, residualRMSSeconds: residualRMS, cleanedBeats: cleanedBeats,
+                           olsBph: preciseRawBph, tmBph: trimmedMeanBph)
     }
 
     // MARK: - SNR / utilities

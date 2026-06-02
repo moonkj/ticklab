@@ -492,13 +492,20 @@ private struct CommunityPostCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             header
-            imageView
-                .aspectRatio(1.0, contentMode: .fit)   // 인스타 정사각, 풀폭(edge-to-edge)
-                .frame(maxWidth: .infinity)
-                .clipped()
-                .overlay { if blurred { blurOverlay } }
+            if post.imagePath != nil {
+                // 사진 글 — 정사각 이미지.
+                imageView
+                    .aspectRatio(1.0, contentMode: .fit)   // 인스타 정사각, 풀폭(edge-to-edge)
+                    .frame(maxWidth: .infinity)
+                    .clipped()
+                    .overlay { if blurred { blurOverlay } }
+            } else {
+                // Round 171 글-전용 글 — 이미지 없이 본문을 텍스트 카드로.
+                textOnlyBody
+            }
             actions   // 좋아요·댓글 수는 아이콘 옆 인라인(actions 내부).
-            if let caption = post.caption, !caption.isEmpty, !blurred {
+            // 사진 글의 캡션은 액션 아래 인라인(글-전용은 textOnlyBody 가 본문 표시).
+            if post.imagePath != nil, let caption = post.caption, !caption.isEmpty, !blurred {
                 (Text(handle).font(.system(size: 13, weight: .semibold)).foregroundColor(AppColors.ink0)
                     + Text("  ")
                     + Text(caption).font(.system(size: 13)).foregroundColor(AppColors.ink1))
@@ -533,10 +540,16 @@ private struct CommunityPostCard: View {
             }
             .frame(width: 32, height: 32)
             VStack(alignment: .leading, spacing: 1) {
-                Text(handle)
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(AppColors.ink0)
-                    .lineLimit(1)
+                HStack(spacing: 5) {
+                    Text(handle)
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(AppColors.ink0)
+                        .lineLimit(1)
+                    // Round 171: 작성자가 장착한 뱃지(이모지) — 닉네임 옆 표시.
+                    if let badge = post.authorBadge, !badge.isEmpty {
+                        Text(badge).font(.system(size: 13))
+                    }
+                }
                 Text(timeAgo)
                     .font(.system(size: 11))
                     .foregroundStyle(AppColors.ink3)
@@ -559,6 +572,18 @@ private struct CommunityPostCard: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
+    }
+
+    /// Round 171 글-전용 게시 본문 — 이미지 없이 캡션을 카드로 표시.
+    private var textOnlyBody: some View {
+        Text(post.caption ?? "")
+            .font(.system(size: 16))
+            .foregroundColor(AppColors.ink0)
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 14)
+            .background(AppColors.paper1)
     }
 
     @ViewBuilder private var imageView: some View {
@@ -1129,10 +1154,27 @@ private struct UserPostsView: View {
                                 Color(AppColors.paper2)
                                     .aspectRatio(1, contentMode: .fit)
                                     .overlay {
-                                        AsyncImage(url: service.imageURL(for: p.imagePath)) { phase in
-                                            switch phase {
-                                            case .success(let img): img.resizable().scaledToFill()
-                                            default: Color.clear
+                                        if p.imagePath == nil {
+                                            // Round 171 글-전용 — 그리드엔 텍스트 발췌 타일.
+                                            Text(p.caption ?? "")
+                                                .font(.system(size: 12))
+                                                .foregroundStyle(AppColors.ink2)
+                                                .lineLimit(4)
+                                                .multilineTextAlignment(.leading)
+                                                .padding(8)
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                                                .overlay(alignment: .bottomTrailing) {
+                                                    Image(systemName: "text.alignleft")
+                                                        .font(.system(size: 11))
+                                                        .foregroundStyle(AppColors.ink3)
+                                                        .padding(6)
+                                                }
+                                        } else {
+                                            AsyncImage(url: service.imageURL(for: p.imagePath)) { phase in
+                                                switch phase {
+                                                case .success(let img): img.resizable().scaledToFill()
+                                                default: Color.clear
+                                                }
                                             }
                                         }
                                     }

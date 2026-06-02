@@ -351,6 +351,8 @@
 "community.compose" = "写真を投稿";
 "community.compose.hint" = "今日の時計をシェア。1日1枚。";
 "community.compose.anonymous_note" = "プロフィールで投稿 · 1日1枚";
+"community.compose.text_only" = "テキストのみ";
+"community.compose.text_only.empty" = "内容を入力してください。";
 "community.empty.title" = "まだ投稿がありません";
 "community.empty.body" = "最初に今日の時計をシェアしましょう。";
 "community.like" = "いいね";
@@ -460,6 +462,9 @@
 "badges.earned" = "獲得済み";
 // Round 19: 중복 key "badges.locked" 삭제 — 같은 키가 line 1137 에 "Locked" 로 재정의되어 NSDictionary 가 long variant 를 silently 마스킹하던 버그. short variant 유지.
 "badges.detail.header" = "獲得バッジ";
+"badges.detail.header.locked" = "未獲得バッジ · 獲得条件";
+"badges.detail.equip" = "名前の横に装着";
+"badges.detail.unequip" = "装着解除";
 "fortune.title.eyebrow" = "今日のダイヤル占い";
 "fortune.today_prefix" = "今日は ";
 "fortune.today_suffix" = " の日";
@@ -811,6 +816,12 @@
 "result.verdict.service.body" = "誤差が大きいです。時計師への持ち込みをおすすめします。";
 "result.verdict.first_anomaly.title" = "もう一度試しますか?";
 "result.verdict.first_anomaly.body" = "この計測は大きな誤差を示しています。1回では判断できません — 別の姿勢や時間帯で再度計測してください。";
+"result.verdict.unreliable.title" = "計測が不安定でした";
+"result.verdict.unreliable.body" = "信号が揺らいで信頼度が低い計測です。姿勢を変えて再計測してください。";
+"result.recent_avg.title" = "この時計の最近の平均";
+"result.recent_avg.detail" = "直近%1$d回の平均 · ±%2$.0f s/d ばらつき";
+"result.recent_avg.detail_trimmed" = "直近%1$d回中 外れ値%3$d件を除外 · ±%2$.0f s/d ばらつき";
+"result.recent_avg.hint" = "複数の姿勢で計測するほど平均が正確になります。";
 "result.next_step.eyebrow" = "次のステップ";
 "result.next_step.body" = "機械式時計は姿勢、温度、巻き上げ量によって誤差が変わります。1週間、毎日同じ時間に計測すると、トレンドチャートが本当の姿を映し出します。";
 "result.beginner.why" = "なぜこの結果に?";

@@ -6,8 +6,6 @@ struct MeasurementResultView: View {
     /// Round 133: 부모(MeasurementView) 가 state 를 .idle 로 reset 후 dismiss 하도록 콜백 주입.
     /// 없으면 단순 dismiss (sheet/standalone 으로 쓰는 경우).
     var onRetry: (() -> Void)? = nil
-    /// (DEBUG 진단) 빠른측정 섀도우 한 줄. 릴리스/일반 경로에선 nil → 미표시.
-    var debugFastShadow: String? = nil
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
     @ScaledMetric(relativeTo: .largeTitle) private var gradeTileSize: CGFloat = 64
@@ -53,56 +51,137 @@ struct MeasurementResultView: View {
     }
 
     /// Round 170: OLS slope uncertainty 기반 rate 정밀도 (±X s/d). nil 이면 표시 X.
+    /// Round 171 Phase B (전원 재감사 후 정직화): 표시 ± 는 **fit 정밀도 ⊕ 재현성** 의 결합.
+    ///   - fitUnc: 단일 윈도우 OLS slope 불확도(residual 기반) — "얼마나 정밀하게 쟀나".
+    ///   - reproUnc: 독립 sub-window rate spread/2 — "다시 재면 같은 값이 나오나".
+    /// 둘을 제곱합으로 결합 → sub-window 들이 흩어진(불안정) 측정은 ± 가 자동으로 넓어져
+    /// "±0.2 인데 사실 30 틀림" 식 과신 표시를 차단한다.
     private var rateUncertaintyString: String? {
         guard let rms = result.residualRMSSeconds, result.beatCount > 1 else { return nil }
         let n = Double(result.beatCount)
         let period = 3600.0 / Double(result.bph)
-        let uncertainty = rms * 12.0.squareRoot() / pow(n, 1.5) / period * 86400.0
+        let fitUnc = rms * 12.0.squareRoot() / pow(n, 1.5) / period * 86400.0
+        let reproUnc = (result.crossWindowRateDelta ?? 0) / 2.0   // spread → σ 근사
+        let uncertainty = (fitUnc * fitUnc + reproUnc * reproUnc).squareRoot()
         guard uncertainty.isFinite, uncertainty < 100 else { return nil }
         return String(format: "±%.1f s/d", uncertainty)
     }
 
     private var verdict: (toneColor: Color, tone: Chip.Tone, headline: String, body: String) {
-        let abs = abs(result.rateSecondsPerDay)
+        let absRate = abs(result.rateSecondsPerDay)
         // 페르소나 (정수민) 피드백: 1회 측정으로 "서비스 권장" 은 감정적 과장.
         // 측정 회수 < 3 이면 service verdict 대신 caution + "한 번 더 측정 권장".
         // Round 169: SwiftData reactive 로 인해 watch.measurements 가 이미 현재 측정 포함된 경우 double-count 방지.
         let measurementCount = max(1, watch.measurements.count)
+        let grade = result.reliabilityGrade
+        // Round 171 C2 (사용자 보고: grade B 인데 "정비사 가라" 모순):
+        // verdict 가 신뢰도를 존중. 신뢰 낮은 측정(C/F)은 *시계 상태*를 단정하지 않고
+        // "측정 자체가 불안정 → 다시 측정" 으로 안내 (오염 측정으로 '정비사' 단정 방지).
+        if grade == .c || grade == .f {
+            return (AppColors.warning, .warning,
+                    String(localized: "result.verdict.unreliable.title"),
+                    String(localized: "result.verdict.unreliable.body"))
+        }
         // Round 142 (Hyemi 4 H1 BUG): success cutoff 다른 화면 (CollectionView/WatchDetailView 등) <=6 인데
         // 여기만 <=10 이었음 — 같은 측정이 list 에선 warning, hero verdict 에선 success 모순. 6 으로 통일.
-        if abs <= 6 {
+        if absRate <= 6 {
             return (AppColors.success, .success,
                     String(localized: "result.verdict.ok.title"),
                     String(localized: "result.verdict.ok.body"))
-        } else if abs <= 20 {
+        } else if absRate <= 20 {
             return (AppColors.warning, .warning,
                     String(localized: "result.verdict.caution.title"),
                     String(localized: "result.verdict.caution.body"))
-        } else if measurementCount < 3 {
-            // 측정 누적 부족 — service 대신 "재측정 권장".
+        } else if grade == .b || measurementCount < 3 {
+            // Round 171 C2: 중간 신뢰(B) 또는 측정 누적 부족 — 큰 rate 라도 '정비사' 단정 대신 재측정 권장.
             return (AppColors.warning, .warning,
                     String(localized: "result.verdict.first_anomaly.title"),
                     String(localized: "result.verdict.first_anomaly.body"))
         } else {
+            // grade A(고신뢰) + |rate|>20 + 측정 누적 충분 → 비로소 "정비사" 단정.
             return (AppColors.danger, .danger,
                     String(localized: "result.verdict.service.title"),
                     String(localized: "result.verdict.service.body"))
         }
     }
 
+    // MARK: - Round 171 다회 측정 평균 (신뢰 대표값)
+
+    /// 이 시계 최근 측정(최신 5개)의 MAD outlier 제거 평균. 측정 3회 미만이면 nil.
+    /// 단일 측정의 물리적 변동(자세·커플링)을 평균으로 상쇄 — "매번 다른 숫자" 의 실질적 해법.
+    private var recentTrusted: RateAggregate.Trusted? {
+        let rates = watch.measurements
+            .sorted { $0.timestamp > $1.timestamp }
+            .prefix(5)
+            .map { $0.rateSecondsPerDay }
+        return RateAggregate.trusted(rates: Array(rates))
+    }
+
+    private func recentAverageDetail(_ t: RateAggregate.Trusted) -> String {
+        if t.excluded > 0 {
+            return String(format: String(localized: "result.recent_avg.detail_trimmed"), t.count, t.spread, t.excluded)
+        }
+        return String(format: String(localized: "result.recent_avg.detail"), t.count, t.spread)
+    }
+
+    @ViewBuilder private var recentAverageCard: some View {
+        if let t = recentTrusted {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(String(localized: "result.recent_avg.title"))
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppColors.accentDark)
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text(String(format: "%+.1f", t.meanRate))
+                        .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppColors.ink0)
+                    Text("s/d")
+                        .font(.system(size: 14, weight: .medium))
+                        .foregroundStyle(AppColors.ink3)
+                }
+                Text(recentAverageDetail(t))
+                    .font(.system(size: 12))
+                    .foregroundStyle(AppColors.ink2)
+                Text(String(localized: "result.recent_avg.hint"))
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppColors.ink3)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(14)
+            .background(AppColors.accent.opacity(0.08))
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
-                // (DEBUG 진단) 빠른측정 섀도우 — 측정은 30초 그대로, 조기종료라면 어땠을지 비교.
-                if let shadow = debugFastShadow {
-                    Text(shadow)
-                        .font(.system(size: 12, weight: .semibold, design: .monospaced))
+                #if DEBUG
+                // (DEBUG 진단) 추정기 내부값 — 고정 시계 run-to-run 변동 원인 추적. 릴리스 미표시.
+                if let diag = result.diagnostic {
+                    Text(diag)
+                        .font(.system(size: 11, weight: .semibold, design: .monospaced))
                         .foregroundStyle(AppColors.accentDark)
-                        .padding(.horizontal, 10).padding(.vertical, 8)
+                        .padding(.horizontal, 10).padding(.vertical, 7)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background(AppColors.accent.opacity(0.12))
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 }
+                #endif
+                // Round 171 (사용자 요청 레이아웃): '이 시계 최근 평균'(신뢰 대표값)을 최상단으로 —
+                //   단일 측정보다 평균이 신뢰값. 그 아래 측정 데이터(RATE), 그 아래 해석(신뢰도·verdict).
+                recentAverageCard
+                // === 측정 데이터 ===
+                rateDialCard
+                // Round 45 — 디자인 SSOT COSC bar 추가 (rateDial 후).
+                COSCBar(rate: result.rateSecondsPerDay)
+                    .padding(.horizontal, 4)
+                // Sprint 3 (P2-5): 정확도 등급 칩 — COSC/우수/보통/정비 권장.
+                AccuracyGradeChip(rateSecondsPerDay: result.rateSecondsPerDay)
+                    .padding(.top, 2)
+                metricsSection
+                if preferences.userMode == .pro { detailsSection }
+
+                // === 해석 블록 (측정 데이터 아래로 이동) ===
                 // Round 129 (실기기 피드백): 저장 완료 확인 배너 — AI 스피너와 혼동 방지.
                 HStack(spacing: 6) {
                     Image(systemName: "checkmark.circle.fill")
@@ -124,15 +203,6 @@ struct MeasurementResultView: View {
                     reliabilityGradeBadge(grade)
                 }
                 editorialVerdict
-                rateDialCard
-                // Round 45 — 디자인 SSOT COSC bar 추가 (rateDial 후).
-                COSCBar(rate: result.rateSecondsPerDay)
-                    .padding(.horizontal, 4)
-                // Sprint 3 (P2-5): 정확도 등급 칩 — COSC/우수/보통/정비 권장.
-                AccuracyGradeChip(rateSecondsPerDay: result.rateSecondsPerDay)
-                    .padding(.top, 2)
-                metricsSection
-                if preferences.userMode == .pro { detailsSection }
                 // Round 160: 진단 카드 — Apple Intelligence 가능하면 실제 LLM, 아니면 rule-based.
                 AIDiagnosisCard(
                     rateSecondsPerDay: result.rateSecondsPerDay,

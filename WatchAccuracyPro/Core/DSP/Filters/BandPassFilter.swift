@@ -94,7 +94,9 @@ struct BandPassSpec {
 
     // Round 158 (tickIQ deep analysis): tickIQ filter 가 2-5kHz 영역 -50dB 제거, 8-15kHz 영역 보존/boost.
     // 우리 2.5-7kHz 는 tickIQ 가 *무시하는* 영역 통과시킴. 6-15kHz 로 이동 — high-freq tic transient 영역.
-    static let `default` = BandPassSpec(lowHz: 6_000, highHz: 15_000, envCutoffHz: 500)
+    // Round 171 (사용자: 1.0.0(1-10kHz) 때가 더 정확 / 고정 시계 변동 추적): 6-15kHz 는 고역 transient 라
+    //   손/접촉 커플링에 민감 → 측정마다 주기 흔들림. tick 기본파 포함하도록 2.5-12kHz 로 넓힘(실험).
+    static let `default` = BandPassSpec(lowHz: 2_500, highHz: 12_000, envCutoffHz: 500)
 
     static func spec(for profile: MatchedFilterProfile, escapement: Escapement) -> BandPassSpec {
         // co-axial: matched filter 는 bypass 지만 BP 는 wide-band 로 sub-pulse 보존.

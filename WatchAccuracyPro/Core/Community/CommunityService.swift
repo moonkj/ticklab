@@ -648,30 +648,41 @@ final class CommunityService: ObservableObject {
     enum UploadError: Error { case notSignedIn, storageFailed, dailyLimit }
 
     /// 크롭·검열 통과한 JPEG 를 업로드. 성공 시 피드 갱신.
-    func uploadPost(imageData: Data, brand: String?, caption: String? = nil) async throws {
+    /// 게시. imageData nil 이면 **글-전용 게시**(사진 없음, caption 필수). Round 171.
+    func uploadPost(imageData: Data?, brand: String?, caption: String? = nil) async throws {
         lastError = nil
         guard canPostToday else { throw UploadError.dailyLimit }
+        // 글-전용은 캡션이 반드시 있어야 (빈 게시 방지).
+        let trimmedCaption = caption?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        if imageData == nil && trimmedCaption.isEmpty {
+            lastError = "글-전용 게시에는 내용이 필요합니다."
+            throw UploadError.storageFailed
+        }
         await ensureSignedIn()
         guard let uid = myUID else {
             lastError = "익명 로그인 실패 — Supabase Anonymous Sign-in 확인 필요"
             throw UploadError.notSignedIn
         }
 
-        let path = "\(uid)/\(UUID().uuidString).jpg"
-        // 1) Storage 업로드.
-        guard let storageURL = URL(string: "\(baseURL)/storage/v1/object/community/\(path)") else {
-            throw UploadError.storageFailed
-        }
-        var up = URLRequest(url: storageURL)
-        up.httpMethod = "POST"
-        up.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
-        up.setValue(anonKey, forHTTPHeaderField: "apikey")
-        up.setValue("Bearer \(accessToken ?? anonKey)", forHTTPHeaderField: "Authorization")
-        // upload(for:from:) 가 body 를 from: 으로 보냄 — httpBody 중복 설정 제거.
-        let (upData, resp) = try await URLSession.shared.upload(for: up, from: imageData)
-        if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
-            lastError = "storage \(http.statusCode): \(String(data: upData, encoding: .utf8) ?? "")"
-            throw UploadError.storageFailed
+        // 1) Storage 업로드 — 사진 있을 때만. 글-전용이면 path nil.
+        var path: String? = nil
+        if let imageData {
+            let p = "\(uid)/\(UUID().uuidString).jpg"
+            guard let storageURL = URL(string: "\(baseURL)/storage/v1/object/community/\(p)") else {
+                throw UploadError.storageFailed
+            }
+            var up = URLRequest(url: storageURL)
+            up.httpMethod = "POST"
+            up.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+            up.setValue(anonKey, forHTTPHeaderField: "apikey")
+            up.setValue("Bearer \(accessToken ?? anonKey)", forHTTPHeaderField: "Authorization")
+            // upload(for:from:) 가 body 를 from: 으로 보냄 — httpBody 중복 설정 제거.
+            let (upData, resp) = try await URLSession.shared.upload(for: up, from: imageData)
+            if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+                lastError = "storage \(http.statusCode): \(String(data: upData, encoding: .utf8) ?? "")"
+                throw UploadError.storageFailed
+            }
+            path = p
         }
         // 2) posts insert (author_uid 는 서버 default auth.uid()).
         guard let insertURL = URL(string: "\(baseURL)/rest/v1/community_posts") else {
@@ -679,7 +690,8 @@ final class CommunityService: ObservableObject {
         }
         var ins = authedRequest(insertURL, method: "POST")
         ins.setValue("return=representation", forHTTPHeaderField: "Prefer")
-        var body: [String: Any] = ["image_path": path]
+        var body: [String: Any] = [:]
+        if let path { body["image_path"] = path }   // 글-전용이면 image_path 미포함(서버 NULL)
         if let brand, !brand.isEmpty { body["brand"] = brand }
         // 작성자 표시명(공개 프로필). 운영 ID(관리자) 활성 시 "TickLab" 으로 고정 게시.
         // ⚠️ 클라이언트 표시/편의용 — 위조 방지는 서버 RLS(admin_users)로 "TickLab" 사용을
@@ -691,6 +703,10 @@ final class CommunityService: ObservableObject {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             body["author_name"] = authorName.isEmpty ? "Collector" : authorName
         }
+        // Round 171: 닉네임 옆 장착 뱃지(이모지). 미장착이면 미포함(서버 NULL).
+        let equippedBadge = (defaults.string(forKey: "ticklab.profile.equippedBadge") ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if !equippedBadge.isEmpty { body["author_badge"] = equippedBadge }
         if let caption {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
@@ -888,9 +904,10 @@ final class CommunityService: ObservableObject {
 
     // MARK: - Helpers
 
-    /// Storage 공개 URL (approved 사진).
-    func imageURL(for path: String) -> URL? {
-        URL(string: "\(baseURL)/storage/v1/object/public/community/\(path)")
+    /// Storage 공개 URL (approved 사진). 글-전용 게시(path nil)면 nil → 호출부가 이미지 영역 생략.
+    func imageURL(for path: String?) -> URL? {
+        guard let path, !path.isEmpty else { return nil }
+        return URL(string: "\(baseURL)/storage/v1/object/public/community/\(path)")
     }
 
     /// PostgREST timestamptz 파싱 — 마이크로초/타임존 변형 허용.
