@@ -1689,6 +1689,7 @@
 "profile.start_year" = "컬렉션 시작 연도";
 "profile.since" = "%@년부터";
 "profile.fav_brands" = "좋아하는 브랜드";
+"profile.rep_brand" = "대표 메이커";
 "profile.bio" = "소개";
 "profile.dealer_badge" = "딜러 배지";
 "profile.dealer_badge.hint" = "시계 거래를 하시면 활성화하세요.";
@@ -1928,3 +1929,8 @@
 "wrapped.empty.wears" = "아직 착용 기록이 없어요";
 "wrapped.empty.measure" = "아직 측정 기록이 없어요";
 "wrapped.empty.memories" = "아직 특별한 순간이 없어요";
+
+/* Round 174 — App Store 컴플라이언스(per-photo 동의 + 신고 연락처) */
+"community.photo.consent" = "사진은 공개로 게시되며, 위치정보(EXIF)는 제거되고 측정 데이터·시리얼·구매가는 전송되지 않습니다.";
+"community.eula.contact" = "신고·문의: imurmkj@naver.com · 부적절 콘텐츠는 24시간 내 조치합니다.";
+"settings.help.community_guidelines" = "커뮤니티 가이드라인";

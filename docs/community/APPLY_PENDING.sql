@@ -140,3 +140,14 @@ alter table public.community_posts add column if not exists author_badge text;
 alter table public.community_posts drop constraint if exists community_posts_author_badge_len;
 alter table public.community_posts add constraint community_posts_author_badge_len
     check (author_badge is null or char_length(author_badge) <= 8);
+
+-- ─────────────────────────────────────────────────────────
+-- 9) 아바타 하단 대표 시계 메이커 (Round 174) — author_rep_brand 컬럼
+--    프로필 '좋아하는 브랜드' 1순위를 게시 시 비정규화 저장. 피드 아바타 하단 칩.
+--    ※ 미배포 시 uploadPost 의 author_rep_brand 필드가 PostgREST 400 유발 → 게시 전체 실패.
+--      이 빌드 설치 전에 반드시 먼저 실행할 것.
+-- ─────────────────────────────────────────────────────────
+alter table public.community_posts add column if not exists author_rep_brand text;
+alter table public.community_posts drop constraint if exists community_posts_author_rep_brand_len;
+alter table public.community_posts add constraint community_posts_author_rep_brand_len
+    check (author_rep_brand is null or char_length(author_rep_brand) <= 40);

@@ -1690,6 +1690,7 @@
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "Since %@";
 "profile.fav_brands" = "Favorite Brands";
+"profile.rep_brand" = "Signature Brand";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
@@ -1929,3 +1930,8 @@
 "wrapped.empty.wears" = "No wears logged yet";
 "wrapped.empty.measure" = "No measurements yet";
 "wrapped.empty.memories" = "No highlights yet";
+
+/* Round 174 — App Store compliance */
+"community.photo.consent" = "Photos are posted publicly. Location data (EXIF) is removed; measurement data, serial, and price are never sent.";
+"community.eula.contact" = "Report / contact: imurmkj@naver.com · Objectionable content is addressed within 24 hours.";
+"settings.help.community_guidelines" = "Community Guidelines";

@@ -539,15 +539,36 @@ private struct CommunityPostCard: View {
                 }
             }
             .frame(width: 32, height: 32)
+            // Round 174 (사용자 요청): 아바타 하단에 대표 시계 메이커 칩(참고 디자인의 '주주' 위치).
+            .overlay(alignment: .bottom) {
+                if let rep = post.authorRepBrand, !rep.isEmpty {
+                    Text(rep)
+                        .font(.system(size: 8, weight: .bold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                        .padding(.horizontal, 5).padding(.vertical, 1.5)
+                        .background(AppColors.info)
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(AppColors.paper0, lineWidth: 1.5))
+                        .fixedSize()
+                        .offset(y: 7)
+                }
+            }
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 5) {
                     Text(handle)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(AppColors.ink0)
                         .lineLimit(1)
-                    // Round 171: 작성자가 장착한 뱃지(이모지) — 닉네임 옆 표시.
-                    if let badge = post.authorBadge, !badge.isEmpty {
-                        Text(badge).font(.system(size: 13))
+                    // Round 174 (사용자 요청): 이모지 대신 획득 뱃지 '이름'을 칩으로 표시.
+                    if let badge = post.authorBadge, let name = BadgeCatalog.name(forBadge: badge) {
+                        Text(name)
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundStyle(AppColors.accentDark)
+                            .lineLimit(1)
+                            .padding(.horizontal, 7).padding(.vertical, 2.5)
+                            .background(AppColors.accent50)
+                            .clipShape(Capsule())
                     }
                 }
                 Text(timeAgo)

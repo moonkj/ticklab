@@ -160,6 +160,7 @@
 		757978029C1BA9D26D547F18 /* RateAggregate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218602B8BE09350EE7663F13 /* RateAggregate.swift */; };
 		768BF43C1B87FE8C2ED801CE /* TrendDiagnosisServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B7B7B53D5426F40471DE06F /* TrendDiagnosisServiceTests.swift */; };
 		76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA49473933488382E08C687D /* MovementDBOTAService.swift */; };
+		777143BBFEF1FB30120E4C1E /* BadgeCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22056BC5E81A72C7486B9C31 /* BadgeCatalog.swift */; };
 		7857EBF7145DD9C4F71C5470 /* TgRateEstimatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46846B3332F75B72989372B1 /* TgRateEstimatorTests.swift */; };
 		78B6EDB3C335BE21E1E1058F /* MatchedFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5D6F05B7D6C49E563D6B7F1 /* MatchedFilter.swift */; };
 		7B2D09108649A77232213F87 /* CollectionShareCardGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0274767AAF6167667358503 /* CollectionShareCardGenerator.swift */; };
@@ -374,6 +375,7 @@
 		1EF23C6A7C06FDDB181FCF68 /* ReliabilityGradeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReliabilityGradeTests.swift; sourceTree = "<group>"; };
 		210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchAccuracyProWidgetBundle.swift; sourceTree = "<group>"; };
 		218602B8BE09350EE7663F13 /* RateAggregate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateAggregate.swift; sourceTree = "<group>"; };
+		22056BC5E81A72C7486B9C31 /* BadgeCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgeCatalog.swift; sourceTree = "<group>"; };
 		2276895B7370448EDD723736 /* SyntheticAudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyntheticAudioSource.swift; sourceTree = "<group>"; };
 		227978A140CA929AA168F9CD /* SpectralFluxExtractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectralFluxExtractorTests.swift; sourceTree = "<group>"; };
 		25EB59B27C918A69243C8960 /* LinearRegressionRate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinearRegressionRate.swift; sourceTree = "<group>"; };
@@ -1309,6 +1311,7 @@
 		CF99CA7454D79A11D3C82F78 /* Community */ = {
 			isa = PBXGroup;
 			children = (
+				22056BC5E81A72C7486B9C31 /* BadgeCatalog.swift */,
 				F438F2F3C7631E436F562F7D /* CommunityModels.swift */,
 				156B5A20F81D43120D72F7DC /* CommunityModerationService.swift */,
 				D2B8FBDA63BC87E5163F5279 /* CommunityService.swift */,
@@ -1678,6 +1681,7 @@
 				A85B3D645551F1C8177F6557 /* AudioInputManager.swift in Sources */,
 				1F5813C06CAC5657F2DE0F25 /* AudioSource.swift in Sources */,
 				5A9987E2B4D5776845869A91 /* BPHEstimator.swift in Sources */,
+				777143BBFEF1FB30120E4C1E /* BadgeCatalog.swift in Sources */,
 				FCAFE946FEC9AC5182167897 /* BadgesView.swift in Sources */,
 				21734A2CEE9B6E0DEA54C936 /* BandPassFilter.swift in Sources */,
 				7D721D082E524EB989AF94EC /* BatteryView.swift in Sources */,

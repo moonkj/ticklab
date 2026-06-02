@@ -1647,6 +1647,7 @@
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "%@ से";
 "profile.fav_brands" = "Favorite Brands";
+"profile.rep_brand" = "मुख्य ब्रांड";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
@@ -1866,3 +1867,8 @@
 "wrapped.empty.wears" = "अभी तक कोई पहनने का रिकॉर्ड नहीं";
 "wrapped.empty.measure" = "अभी तक कोई माप नहीं";
 "wrapped.empty.memories" = "अभी तक कोई ख़ास पल नहीं";
+
+/* Round 174 */
+"community.photo.consent" = "फ़ोटो सार्वजनिक रूप से पोस्ट की जाती हैं। स्थान डेटा (EXIF) हटा दिया जाता है; माप डेटा, सीरियल और कीमत कभी नहीं भेजे जाते।";
+"community.eula.contact" = "रिपोर्ट / संपर्क: imurmkj@naver.com · आपत्तिजनक सामग्री पर 24 घंटे में कार्रवाई की जाती है।";
+"settings.help.community_guidelines" = "कम्युनिटी दिशानिर्देश";

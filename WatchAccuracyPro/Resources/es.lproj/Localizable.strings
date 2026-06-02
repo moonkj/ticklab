@@ -1647,6 +1647,7 @@
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "Desde %@";
 "profile.fav_brands" = "Favorite Brands";
+"profile.rep_brand" = "Marca destacada";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
@@ -1866,3 +1867,8 @@
 "wrapped.empty.wears" = "Aún no hay registros de uso";
 "wrapped.empty.measure" = "Aún no hay mediciones";
 "wrapped.empty.memories" = "Aún no hay momentos destacados";
+
+/* Round 174 */
+"community.photo.consent" = "Las fotos se publican públicamente. Se eliminan los datos de ubicación (EXIF); los datos de medición, el número de serie y el precio nunca se envían.";
+"community.eula.contact" = "Reportar / contacto: imurmkj@naver.com · El contenido objetable se atiende en 24 horas.";
+"settings.help.community_guidelines" = "Normas de la comunidad";

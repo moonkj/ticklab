@@ -21,6 +21,8 @@ enum Community {
         let authorAvatarPath: String?
         /// Round 171: 작성자가 닉네임 옆에 장착한 뱃지 이모지(선택). nil = 미장착.
         let authorBadge: String?
+        /// Round 174: 작성자 대표 시계 메이커(프로필 좋아하는 브랜드 1순위). 아바타 하단 칩. nil = 미설정/구글.
+        let authorRepBrand: String?
         var likeCount: Int
         var commentCount: Int?      // 비정규화(트리거). 미배포 시 nil → 0 처리.
         let status: PostStatus
@@ -35,6 +37,7 @@ enum Community {
             case authorName = "author_name"
             case authorAvatarPath = "author_avatar_path"
             case authorBadge = "author_badge"
+            case authorRepBrand = "author_rep_brand"
             case likeCount = "like_count"
             case commentCount = "comment_count"
             case status

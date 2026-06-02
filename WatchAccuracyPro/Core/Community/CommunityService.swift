@@ -722,6 +722,14 @@ final class CommunityService: ObservableObject {
         let equippedBadge = (defaults.string(forKey: "ticklab.profile.equippedBadge") ?? "")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         if !equippedBadge.isEmpty { body["author_badge"] = equippedBadge }
+        // Round 174: 아바타 하단 대표 시계 메이커 — 명시 선택(repBrand) 우선, 없으면 좋아하는 브랜드 1순위.
+        // ⚠️ author_rep_brand 컬럼은 docs/community/APPLY_PENDING.sql 먼저 배포돼야 함(미배포 시 insert 거절).
+        let explicitRep = (defaults.string(forKey: "ticklab.profile.repBrand") ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let firstFav = (defaults.string(forKey: "ticklab.profile.brands") ?? "")
+            .split(separator: ",").first?.trimmingCharacters(in: .whitespaces) ?? ""
+        let repBrand = explicitRep.isEmpty ? firstFav : explicitRep
+        if !repBrand.isEmpty { body["author_rep_brand"] = repBrand }
         if let caption {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }

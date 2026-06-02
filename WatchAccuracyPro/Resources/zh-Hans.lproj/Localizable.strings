@@ -1647,6 +1647,7 @@
 "profile.start_year" = "Collection Start Year";
 "profile.since" = "%@年起";
 "profile.fav_brands" = "Favorite Brands";
+"profile.rep_brand" = "代表品牌";
 "profile.bio" = "Bio";
 "profile.dealer_badge" = "Dealer Badge";
 "profile.dealer_badge.hint" = "Activate if you deal watches.";
@@ -1866,3 +1867,8 @@
 "wrapped.empty.wears" = "还没有佩戴记录";
 "wrapped.empty.measure" = "还没有测量记录";
 "wrapped.empty.memories" = "还没有特别时刻";
+
+/* Round 174 */
+"community.photo.consent" = "照片将公开发布。位置信息(EXIF)将被移除；测量数据、序列号和购买价格不会被发送。";
+"community.eula.contact" = "举报·联系: imurmkj@naver.com · 不当内容将在24小时内处理。";
+"settings.help.community_guidelines" = "社区规范";

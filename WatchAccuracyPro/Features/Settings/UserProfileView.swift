@@ -8,6 +8,8 @@ struct UserProfileView: View {
     @State private var displayName: String = ""
     @State private var collectionStartYear: String = ""
     @State private var favoriteBrands: String = ""
+    /// Round 174: 커뮤니티 피드 아바타 하단에 노출할 대표 메이커(좋아하는 브랜드 중 1개).
+    @State private var repBrand: String = ""
     @State private var isDealerBadge: Bool = false
     @State private var bio: String = ""
     @State private var profilePhotoData: Data?
@@ -26,6 +28,7 @@ struct UserProfileView: View {
     private let nameChangedKey = "ticklab.profile.nameChangedAt"
     private let yearKey = "ticklab.profile.startYear"
     private let brandsKey = "ticklab.profile.brands"
+    private let repBrandKey = "ticklab.profile.repBrand"
     private let dealerKey = "ticklab.profile.isDealer"
     private let bioKey = "ticklab.profile.bio"
     private let photoKey = "ticklab.profile.photoData"
@@ -127,6 +130,21 @@ struct UserProfileView: View {
                             }
                         }
                     }
+                    // Round 174: 대표 메이커 — 커뮤니티 피드 아바타 하단 칩으로 노출(좋아하는 브랜드 중 선택).
+                    HStack {
+                        Text(String(localized: "profile.rep_brand"))
+                        Spacer()
+                        Menu {
+                            Button(String(localized: "common.unspecified")) { repBrand = "" }
+                            ForEach(favoriteBrandList, id: \.self) { b in
+                                Button(b) { repBrand = b }
+                            }
+                        } label: {
+                            Text(repBrand.isEmpty ? String(localized: "common.unspecified") : repBrand)
+                                .foregroundStyle(repBrand.isEmpty ? AppColors.ink3 : AppColors.ink0)
+                        }
+                        .disabled(favoriteBrandList.isEmpty)
+                    }
                     TextField(String(localized: "profile.bio"), text: $bio, axis: .vertical)
                         .lineLimit(2...4)
                 }
@@ -221,6 +239,7 @@ struct UserProfileView: View {
     }
     private func removeFavoriteBrand(_ b: String) {
         favoriteBrands = favoriteBrandList.filter { $0 != b }.joined(separator: ", ")
+        if repBrand == b { repBrand = "" }   // 대표 메이커로 지정돼 있었다면 해제.
     }
 
     private func load() {
@@ -229,6 +248,7 @@ struct UserProfileView: View {
         originalName = displayName
         collectionStartYear = d.string(forKey: yearKey) ?? ""
         favoriteBrands = d.string(forKey: brandsKey) ?? ""
+        repBrand = d.string(forKey: repBrandKey) ?? ""
         isDealerBadge = d.bool(forKey: dealerKey)
         bio = d.string(forKey: bioKey) ?? ""
         profilePhotoData = d.data(forKey: photoKey)
@@ -272,6 +292,7 @@ struct UserProfileView: View {
         d.set(displayName, forKey: nameKey)
         d.set(collectionStartYear, forKey: yearKey)
         d.set(favoriteBrands, forKey: brandsKey)
+        d.set(repBrand, forKey: repBrandKey)
         d.set(isDealerBadge, forKey: dealerKey)
         d.set(bio, forKey: bioKey)
         d.set(profilePhotoData, forKey: photoKey)
