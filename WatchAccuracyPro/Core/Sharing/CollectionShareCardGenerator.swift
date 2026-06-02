@@ -8,7 +8,7 @@ enum CollectionShareCardGenerator {
     @MainActor
     static func generate(watches: [Watch], ownerName: String) -> URL? {
         let card = CollectionShareCard(watches: watches, ownerName: ownerName)
-            .frame(width: 360, height: 450)
+            .frame(width: 360)   // 높이는 콘텐츠에 맞춰 늘어남(최소 450) — TickLab 워터마크까지 항상 포함.
         let renderer = ImageRenderer(content: card)
         renderer.scale = 3   // ~1080×1350
         renderer.isOpaque = true
@@ -114,7 +114,7 @@ private struct CollectionShareCard: View {
             .foregroundStyle(AppColors.accentDark)
             .padding(.bottom, 22)
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .frame(maxWidth: .infinity, minHeight: 450, alignment: .top)
         .background(
             LinearGradient(colors: [AppColors.accent50, AppColors.paper0],
                            startPoint: .top, endPoint: .bottom)
