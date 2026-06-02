@@ -84,21 +84,22 @@ struct PressableButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .contentShape(Rectangle())
-            .scaleEffect((!reduceMotion && configuration.isPressed) ? 0.96 : 1.0)
-            // Round 175 (사용자 보고: "측정시작 버튼 누름효과 없음/터치 잘 안됨"):
-            //   기존 scale 은 Reduce Motion 시 사라져 피드백이 없어 보였음. opacity dim 은
-            //   Reduce Motion 무관 항상 보임 — 컬렉션 시계 셀(.plain) 탭 느낌과 통일.
-            .opacity(configuration.isPressed ? 0.72 : 1.0)
+            .scaleEffect((!reduceMotion && configuration.isPressed) ? 0.94 : 1.0)
+            // Round 175 (사용자 보고: "측정시작 버튼 누름효과 약함 — 컬렉션 측정 버튼과 동일하게"):
+            //   scale 은 Reduce Motion 시 사라지므로 opacity dim 으로 항상 보이는 누름 피드백.
+            //   dim 을 더 뚜렷하게(0.6) + 햅틱을 컬렉션 측정 버튼과 동일한 selection tick 으로 통일.
+            .opacity(configuration.isPressed ? 0.6 : 1.0)
             .brightness(configuration.isPressed ? -0.04 : 0)
             .animation(
                 configuration.isPressed
-                    ? .easeIn(duration: 0.08)
-                    : .spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0),
+                    ? .easeIn(duration: 0.06)
+                    : .spring(response: 0.28, dampingFraction: 0.65, blendDuration: 0),
                 value: configuration.isPressed
             )
             .onChange(of: configuration.isPressed) { _, pressed in
                 if pressed {
-                    UIImpactFeedbackGenerator(style: .light).impactOccurred()
+                    // 컬렉션 측정 버튼(CollectionView)과 동일한 햅틱 — crisp selection tick.
+                    UISelectionFeedbackGenerator().selectionChanged()
                 }
             }
     }
