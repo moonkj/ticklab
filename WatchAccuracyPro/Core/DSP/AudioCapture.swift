@@ -35,7 +35,9 @@ final class AudioCapture: AudioSource {
     /// Round 141 (Min H2): 통화/Siri/알람 interruption 핸들러 — engine stale 방지.
     private var interruptionObserver: NSObjectProtocol?
 
-    // Round 172: 오디오↔호스트 클록 드리프트 정밀 측정(rate bias 보정). AVAudioTime 사용.
+    // Round 172: 오디오↔호스트(mach) 클록 드리프트 정밀 측정(rate bias 보정). AVAudioTime 사용.
+    // hostTime/sampleTime 은 **버퍼의 하드웨어 타임스탬프** — 콜백 지터/latency 무관. (Round 173: wall(Date)
+    // per-measurement 비교는 iOS slew wobble 로 noisy 함이 입증돼 철회 — mach 가 단기적으로 더 안정적.)
     private var firstWhen: AVAudioTime?
     private var lastWhen: AVAudioTime?
     private static let machSecondsPerTick: Double = {
@@ -44,7 +46,7 @@ final class AudioCapture: AudioSource {
         return Double(info.numer) / Double(info.denom) / 1_000_000_000.0
     }()
 
-    /// 오디오 클록 vs 시스템 호스트 클록 드리프트 계수(host/audio). 5초+ baseline, ±500ppm 이내만 적용.
+    /// 오디오 클록 vs 시스템 호스트(mach) 클록 드리프트 계수(host/audio). 5초+ baseline, ±500ppm 이내만 적용.
     var clockDriftFactor: Double {
         guard let f = firstWhen, let l = lastWhen else { return 1.0 }
         let frames = Double(l.sampleTime - f.sampleTime)
@@ -88,7 +90,7 @@ final class AudioCapture: AudioSource {
         firstWhen = nil; lastWhen = nil
         input.installTap(onBus: 0, bufferSize: chunkFrames, format: inputFormat) { [weak self] buffer, when in
             guard let self, let converter = self.converter else { return }
-            // Round 172: 오디오↔호스트 클록 드리프트 측정 — 첫/마지막 버퍼의 정밀 타임스탬프 누적.
+            // Round 172: 오디오↔호스트(mach) 클록 드리프트 측정 — 첫/마지막 버퍼의 정밀 하드웨어 타임스탬프 누적.
             if when.isSampleTimeValid, when.isHostTimeValid {
                 if self.firstWhen == nil { self.firstWhen = when }
                 self.lastWhen = when

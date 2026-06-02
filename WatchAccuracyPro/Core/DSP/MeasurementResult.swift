@@ -32,13 +32,13 @@ enum ReliabilityGrade: String, Sendable, Hashable, Codable {
     /// Round 158 (사용자 보고: Grade B 인데 +157 s/d): rate 절대값 기반 추가 penalty.
     /// 정상 시계는 ±50 s/d 이내. |rate| 큰 측정은 consistency 무관하게 grade 낮춤.
     static func from(confidence: Int, crossWindowDelta: Double?, rateSecondsPerDay: Double) -> ReliabilityGrade {
-        // Round 171 Phase B (사용자 실측: spread~40→A 과신, ±14 인데 A — 임계 강화).
-        // OLS 도입으로 sub-window rate 가 정밀(각 ~±1 fit) → cross-window spread 는 깨끗한 재현성 신호.
-        // 8 s/d 초과부터 점진(×1.0), cap 50: spread~20(±10) A 유지, ~28(±14) B, ~40 B/C, ~60+ C.
-        // confidence(창내부 자기일관성)가 높아도 강한 cross-window 불일치면 강등되도록 cap 큼.
+        // Round 171 Phase B → Round 173 강화 (감사 P0: σ7.4 garbage 가 −6점뿐이라 A 통과).
+        // crossWindowDelta = tgSigma×2 (simplified path). σ 가 ±s/d 재현성이므로 가파르게 강등.
+        // 5 초과부터 ×3.0, cap 60: delta4(σ2) 0, delta8(σ4) 9, delta10(σ5) 15, delta14.8(σ7.4) 29.
+        // confidence(창내부 자기일관성)가 높아도 강한 재현성 불일치면 강등되도록 cap 큼.
         let windowPenalty: Int = {
-            guard let d = crossWindowDelta, d > 8 else { return 0 }
-            return Int(min(50, (d - 8) * 1.0))
+            guard let d = crossWindowDelta, d > 5 else { return 0 }
+            return Int(min(60, (d - 5) * 3.0))
         }()
         let absRate = abs(rateSecondsPerDay)
         let ratePenalty: Int = {

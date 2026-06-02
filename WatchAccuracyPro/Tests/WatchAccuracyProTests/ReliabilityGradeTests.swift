@@ -35,25 +35,36 @@ final class ReliabilityGradeTests: XCTestCase {
     // MARK: - cross-window delta penalty
 
     func test_small_delta_below_threshold_no_penalty() {
-        // Round 171: delta 8 이하 → windowPenalty 0. confidence 75 유지 → .a
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 8), .a)
+        // Round 173: delta 5 이하 → windowPenalty 0. confidence 75 유지 → .a
         XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 5), .a)
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 4), .a)
     }
 
     func test_delta_penalty_drops_grade() {
-        // Round 171: delta 30 → penalty = (30-8)*1.0 = 22. 75 - 22 = 53 → .c
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 30), .c)
-        // delta 20(±10) 은 A 유지: (20-8)=12, 90-12=78 → .a
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 20), .a)
-        // delta 28(±14) 은 강등: (28-8)=20, 90-20=70 → .b
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 28), .b)
+        // Round 173 강화: (d-5)*3.0, cap 60.
+        // delta 30 → (30-5)*3=75→cap60. 75 - 60 = 15 → .f
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 75, crossWindowDelta: 30), .f)
+        // delta 8(σ4) → (8-5)*3=9. 90-9=81 → .a 유지 (괜찮은 측정).
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 8), .a)
+        // delta 14.8(σ7.4) → (14.8-5)*3=29.4→29. 90-29=61 → .b (confidence 높을 때).
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 14.8), .b)
+    }
+
+    /// Round 173 (감사 P0): σ7.4 garbage 는 TG 락 실패로 confidence 도 함께 떨어져(파이프라인 −30)
+    /// 두 레이어 결합 시 C/F 로 강등돼야 한다. 여기선 grade 레이어 단독 검증.
+    func test_high_sigma_with_lowered_confidence_downgrades() {
+        // σ7.4(delta 14.8) + TG실패로 낮아진 confidence 65 → 65-29=36 → .c
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 65, crossWindowDelta: 14.8), .c)
+        // 클린비율까지 나빠 confidence 45 → 45-29=16 → .f
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 45, crossWindowDelta: 14.8), .f)
     }
 
     func test_delta_penalty_is_capped() {
-        // Round 171: delta 매우 큼 → windowPenalty cap 50. 최고 confidence 100 - 50 = 50 → 최선 .c.
+        // Round 173: windowPenalty cap 60. 최고 confidence 100 - 60 = 40 → 최선 .c.
         XCTAssertEqual(ReliabilityGrade.from(confidence: 100, crossWindowDelta: 1000), .c)
-        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 1000), .c)
-        // 55 - 50 = 5 → .f
+        // 90 - 60 = 30 → .f
+        XCTAssertEqual(ReliabilityGrade.from(confidence: 90, crossWindowDelta: 1000), .f)
+        // 55 - 60 < 0 → .f
         XCTAssertEqual(ReliabilityGrade.from(confidence: 55, crossWindowDelta: 1000), .f)
     }
 
@@ -110,11 +121,11 @@ final class ReliabilityGradeTests: XCTestCase {
     // MARK: - 결합 penalty
 
     func test_window_and_rate_penalty_combine() {
-        // Round 171: delta 35 → windowPenalty (35-8)*1.0 = 27.
-        // rate 50 → ratePenalty 20. confidence 95 - 27 - 20 = 48 → .c
+        // Round 173: delta 35 → windowPenalty (35-5)*3=90→cap60.
+        // rate 50 → ratePenalty 20. confidence 95 - 60 - 20 = 15 → .f
         XCTAssertEqual(
             ReliabilityGrade.from(confidence: 95, crossWindowDelta: 35, rateSecondsPerDay: 50),
-            .c
+            .f
         )
     }
 
@@ -135,5 +146,30 @@ final class ReliabilityGradeTests: XCTestCase {
         XCTAssertEqual(ReliabilityGrade.b.rawValue, "b")
         XCTAssertEqual(ReliabilityGrade.c.rawValue, "c")
         XCTAssertEqual(ReliabilityGrade.f.rawValue, "f")
+    }
+
+    // MARK: - Round 173: confidence 보정 (DSPPipeline.adjustConfidence)
+
+    func test_adjustConfidence_tgFail_penalizes() {
+        // TG 락 실패 → −30. 클린비율 양호(1.0) → 추가 감점 없음.
+        XCTAssertEqual(DSPPipeline.adjustConfidence(base: 90, tgLocked: false, cleanedBeats: 200, onsetCount: 200), 60, accuracy: 0.001)
+    }
+
+    func test_adjustConfidence_lowCleanRatio_penalizes() {
+        // cleanRatio 0.45 (<0.5) → −20. TG 락 양호.
+        XCTAssertEqual(DSPPipeline.adjustConfidence(base: 90, tgLocked: true, cleanedBeats: 90, onsetCount: 200), 70, accuracy: 0.001)
+        // cleanRatio 0.6 (<0.7) → −10.
+        XCTAssertEqual(DSPPipeline.adjustConfidence(base: 90, tgLocked: true, cleanedBeats: 120, onsetCount: 200), 80, accuracy: 0.001)
+    }
+
+    func test_adjustConfidence_garbage_combinesPenalties_floorsAtZero() {
+        // σ7.4 garbage 전형: TG실패(−30) + cleanRatio 0.48(−20) → 90-50=40 (이후 grade 에서 추가 강등).
+        XCTAssertEqual(DSPPipeline.adjustConfidence(base: 90, tgLocked: false, cleanedBeats: 96, onsetCount: 200), 40, accuracy: 0.001)
+        // 음수 방지.
+        XCTAssertEqual(DSPPipeline.adjustConfidence(base: 20, tgLocked: false, cleanedBeats: 10, onsetCount: 200), 0, accuracy: 0.001)
+    }
+
+    func test_adjustConfidence_clean_noPenalty() {
+        XCTAssertEqual(DSPPipeline.adjustConfidence(base: 95, tgLocked: true, cleanedBeats: 230, onsetCount: 240), 95, accuracy: 0.001)
     }
 }

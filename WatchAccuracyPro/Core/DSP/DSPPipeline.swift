@@ -275,9 +275,10 @@ final class DSPPipeline {
                 let winStr = rates.map { String(format: "%+.0f", $0) }.joined(separator: ",")
                 let hw = AudioCapture.lastHardwareSampleRate
                 let hwStr = hw > 0 ? " hw\(Int(hw))" : ""
-                let driftPpm = (source.clockDriftFactor - 1.0) * 1e6   // AVAudioTime 오디오→mach 드리프트
+                let driftPpm = (source.clockDriftFactor - 1.0) * 1e6   // AVAudioTime 오디오→mach 드리프트(단기 안정)
                 let calPpm = ClockCalibrationService.shared.driftPpm    // NTP 누적 mach→진짜 (0=미수렴)
-                r.diagnostic = (r.diagnostic ?? "") + " | win[\(winStr)] drift\(String(format: "%+.0f", driftPpm)) cal\(String(format: "%+.0f", calPpm))\(hwStr)"
+                let calN = ClockCalibrationService.shared.pointCount    // 누적된 보정 점 수
+                r.diagnostic = (r.diagnostic ?? "") + " | win[\(winStr)] drift\(String(format: "%+.0f", driftPpm)) cal\(String(format: "%+.0f", calPpm))n\(calN)\(hwStr)"
                 print("🔁 spread=\(r.crossWindowRateDelta.map { String(format: "%.1f", $0) } ?? "—") rate=\(String(format: "%.1f", r.rateSecondsPerDay)) → grade=\(r.reliabilityGrade?.rawValue ?? "?")")
                 result = r
             }
@@ -798,7 +799,7 @@ final class DSPPipeline {
         let precise = preciseRate(beats: refined, bphEstimate: bphEst)
         // Round 172 (tg 분석): headline 은 envelope 자기상관+multi-cycle(TgRateEstimator) — onset jitter
         //   원천 제거로 고정 시계 변동 최소화. 실패 시 OLS fallback. (OLS/TM/AC 는 진단에 병기.)
-        // Round 172: 클록 보정 = 오디오→mach(AVAudioTime) × mach→진짜시간(NTP 누적). 둘 다 체인.
+        // Round 172: 클록 보정 = 오디오→mach(AVAudioTime, 단기 안정) × mach→진짜시간(NTP 누적 cal). 둘 다 체인.
         let totalClockFactor = source.clockDriftFactor * ClockCalibrationService.shared.correctionFactor
         let tgEst = TgRateEstimator.estimate(envelope: envSlice, sampleRate: source.sampleRate, nominalBph: nominalBph,
                                              clockDriftFactor: totalClockFactor)
@@ -858,6 +859,8 @@ final class DSPPipeline {
         }()
 
         // 9) Confidence — onsets 개수 + RMS + SNR 기반.
+        // Round 173: noisy 측정(σ7.4·garbage)이 "우수"로 통과하던 문제 — TG 락 실패와 낮은 클린비율을
+        //   confidence 에 직접 반영해 정직하게 강등. (감사 P0: confidence 가 tg/클린비율 미반영)
         let confidence: Int = {
             let tightRatio = Double(iois.count) / Double(max(1, onsets.count - 1))
             var score = 60.0
@@ -865,6 +868,10 @@ final class DSPPipeline {
             let rms = residualRMS ?? 0.001
             if rms < 0.0002 { score += 10 } else if rms < 0.0005 { score += 5 }
             if snr > 15 { score += 5 }
+            score = Self.adjustConfidence(base: score,
+                                          tgLocked: tgEst != nil,
+                                          cleanedBeats: precise.cleanedBeats.count,
+                                          onsetCount: onsets.count)
             return max(0, min(100, Int(score)))
         }()
 
@@ -900,6 +907,17 @@ final class DSPPipeline {
         result.diagnostic = "TG\(tgStr) | cl\(precise.cleanedBeats.count)/\(onsets.count) OLS\(String(format: "%+.1f", olsRate)) TM\(tmRateStr) AC\(String(format: "%+.1f", autocorrRate))"
         print("📈 simplified rate=\(String(format: "%.2f", rate)) (OLS) vs \(String(format: "%.2f", autocorrRate)) (autocorr) bph=\(bphEst.bph) onsets=\(onsets.count) cleaned=\(precise.cleanedBeats.count) RMS=\((precise.residualRMSSeconds ?? residualRMS).map { String(format: "%.0fμs", $0 * 1e6) } ?? "—") conf=\(confidence)")
         return result
+    }
+
+    /// Round 173: confidence 보정(순수·테스트 가능 — Hard Rule #1).
+    /// - tgLocked: TG(robust 추정기)가 락했는지. 실패(fallback)면 robust 신호 없음 → −30.
+    /// - cleanedBeats/onsetCount: IOI 필터 통과 비율. 낮으면 onset 거부 많음(약신호) → 감점.
+    static func adjustConfidence(base: Double, tgLocked: Bool, cleanedBeats: Int, onsetCount: Int) -> Double {
+        var score = base
+        if !tgLocked { score -= 30 }
+        let cleanRatio = Double(cleanedBeats) / Double(max(1, onsetCount))
+        if cleanRatio < 0.5 { score -= 20 } else if cleanRatio < 0.7 { score -= 10 }
+        return max(0, score)
     }
 
     private func analyzeInternal(windowSeconds: Double, tailTrimSeconds: Double, useTemplate: Bool) -> MeasurementResult? {

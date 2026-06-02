@@ -18,7 +18,8 @@ enum WeeklyCheckService {
         let now = Date()
         var needsCheck: [Watch] = []
         var never: [Watch] = []
-        for w in watches where w.movementType != .quartz {
+        // Round 173: 쿼츠 + 스마트워치(애플워치 등) 제외 — rate 측정 대상 아님(생활기록용).
+        for w in watches where w.movementType != .quartz && w.movementType.isMeasurable {
             guard let last = w.measurements.map(\.timestamp).max() else {
                 never.append(w)
                 continue

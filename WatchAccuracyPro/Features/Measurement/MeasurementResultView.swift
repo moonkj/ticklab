@@ -107,14 +107,39 @@ struct MeasurementResultView: View {
 
     // MARK: - Round 171 다회 측정 평균 (신뢰 대표값)
 
-    /// 이 시계 최근 측정(최신 5개)의 MAD outlier 제거 평균. 측정 3회 미만이면 nil.
-    /// 단일 측정의 물리적 변동(자세·커플링)을 평균으로 상쇄 — "매번 다른 숫자" 의 실질적 해법.
+    /// 이 시계 최근 측정의 MAD outlier 제거 평균. 측정 3회 미만이면 nil.
+    /// Round 173 (사용자 지적): **신뢰도 높은 측정만** 평균에 사용 — C/F(노이즈) 측정이 평균을 오염시키지 않도록.
+    /// grade 는 저장 안 되므로 confidence+|rate| 로 재계산(spread penalty 없는 상한 — 보수적으로 포함).
+    /// 신뢰도 A 가 3개 이상이면 A 만, 부족하면 A/B 로 완화(그래도 C/F 는 항상 제외). 둘 다 부족하면 nil.
     private var recentTrusted: RateAggregate.Trusted? {
-        let rates = watch.measurements
+        let recent = watch.measurements
             .sorted { $0.timestamp > $1.timestamp }
-            .prefix(5)
-            .map { $0.rateSecondsPerDay }
-        return RateAggregate.trusted(rates: Array(rates))
+            .prefix(8)
+        let gradeA = recent.filter { gradeOf($0) == .a }.prefix(5)
+        let chosen: [WatchMeasurement]
+        if gradeA.count >= 3 {
+            chosen = Array(gradeA)                                  // 사용자 요청: A 만
+        } else {
+            chosen = Array(recent.filter { let g = gradeOf($0); return g == .a || g == .b }.prefix(5))  // A 부족 → A/B (C/F 제외)
+        }
+        // Round 173 self-heal: 각 측정을 현재 클록 보정으로 환산해 epoch 혼재 제거(옛 cal+0 측정도 일관).
+        let rates = chosen.map { healedRate($0) }
+        return RateAggregate.trusted(rates: rates)
+    }
+
+    /// 저장된 측정 rate 를 **현재** 클록 보정 기준으로 환산. (현재ppm − 측정시점ppm)×0.0864 만큼 이동.
+    /// 측정시점 ppm 미저장(옛 측정)은 0(cal+0)으로 간주 — 정확.
+    private func healedRate(_ m: WatchMeasurement) -> Double {
+        let storedPpm = m.metadata.clockCalPpmAtMeasure ?? 0
+        let currentPpm = ClockCalibrationService.shared.driftPpm
+        return m.rateSecondsPerDay + (currentPpm - storedPpm) * 0.0864
+    }
+
+    /// 저장된 측정의 신뢰도 등급 재계산(grade 미저장 — confidence+|rate| 기반). cross-window penalty 는 미보유라
+    /// 실제 grade 의 상한(보수적 포함). C/F 만 확실히 걸러내는 용도.
+    private func gradeOf(_ m: WatchMeasurement) -> ReliabilityGrade {
+        ReliabilityGrade.from(confidence: m.confidenceScore, crossWindowDelta: nil,
+                              rateSecondsPerDay: m.rateSecondsPerDay)
     }
 
     private func recentAverageDetail(_ t: RateAggregate.Trusted) -> String {

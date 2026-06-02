@@ -44,12 +44,6 @@ struct AIDiagnosisCard: View {
     private var displayBody: String {
         serviceVerdict?.body ?? fallbackBody
     }
-    /// VoiceOver 용 신뢰도 등급. 색상으로만 전달되던 정보를 음성으로도 전달.
-    private var confidenceGradeLabel: String {
-        if confidence >= 80 { return String(localized: "aidiag.confidence.grade.high") }
-        if confidence >= 60 { return String(localized: "aidiag.confidence.grade.medium") }
-        return String(localized: "aidiag.confidence.grade.low")
-    }
     private var isAI: Bool {
         serviceVerdict?.source == .appleIntelligence
     }
@@ -79,35 +73,9 @@ struct AIDiagnosisCard: View {
                 .font(.system(size: 15))
                 .foregroundStyle(AppColors.ink2)
 
-            HStack(spacing: 8) {
-                Text(String(localized: isAI ? "aidiag.confidence.ai" : "aidiag.confidence.rule"))
-                    .font(.system(size: 13, weight: .semibold))
-                    .tracking(0.5)
-                    .foregroundStyle(AppColors.ink2)
-                // UX 감사: 5-segment 대신 단일 continuous bar (가로 공간 절약 + 직관적).
-                GeometryReader { geo in
-                    ZStack(alignment: .leading) {
-                        Capsule().fill(AppColors.rule).frame(height: 6)
-                        Capsule()
-                            .fill(LinearGradient(
-                                colors: [AppColors.warning, AppColors.success],
-                                startPoint: .leading, endPoint: .trailing
-                            ))
-                            .frame(width: geo.size.width * CGFloat(confidence) / 100, height: 6)
-                    }
-                }
-                .frame(width: 100, height: 6)
-                // Round 104 (A11y Critical): VoiceOver 가 bar 값 읽도록.
-                .accessibilityHidden(true)
-                Spacer()
-                Text("\(confidence)%")
-                    .font(.system(size: 13, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(AppColors.ink0)
-                    // 사용자 보고 fix: VoiceOver 가 신뢰도 등급(높음/중간/낮음) 발화 추가.
-                    .accessibilityLabel(String(format: String(localized: "aidiag.confidence.a11y"), confidence))
-                    .accessibilityValue(confidenceGradeLabel)
-            }
-            .padding(.top, 4)
+            // Round 173 (사용자 지적): 진단 카드의 "측정 신뢰도 %" 행 제거 — 상단 등급 배지(A/B/C/F)와
+            //   같은 "측정 신뢰도" 라벨·같은 confidence 를 중복 표시해 "A인데 75%?" 모순으로 보였음.
+            //   신뢰도는 상단 등급 배지 하나로 통일. 이 카드는 rate 해석(진단)에 집중.
 
             Button { withAnimation { expanded.toggle() } } label: {
                 HStack(spacing: 6) {

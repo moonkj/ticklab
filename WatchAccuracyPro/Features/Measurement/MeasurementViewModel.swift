@@ -99,10 +99,13 @@ final class MeasurementViewModel {
         // silicon escapement 는 동작상 swiss lever 와 동일하므로 통과 시킨다.
         let isQuartzByMovement = movement.map { $0.escapement == .quartz || $0.bph <= 0 } ?? false
         let isQuartzByWatch = watch.movementType == .quartz
-        if isQuartzByMovement || isQuartzByWatch {
+        // Round 173: 스마트워치(애플워치 등)도 rate 측정 무의미 — 방어적 차단(버튼은 이미 숨김).
+        if isQuartzByMovement || isQuartzByWatch || !watch.movementType.isMeasurable {
             state = .failed(.unsupportedMovement)
             return
         }
+        // Round 173: 측정 시작 시 클록 보정 점(mono↔wall) 누적 — 측정 ~3회면 baseline 충족해 수렴.
+        ClockCalibrationService.shared.recordPoint()
         do {
             // Round 170 (사용자 보고: 처음 측정 시작 시 1-2초 옛날 그래프 나옴):
             // 이전 측정의 waveformSamples 가 남아 있음 → 새 측정 시 초기화.
@@ -189,6 +192,8 @@ final class MeasurementViewModel {
     func stop(modelContext: ModelContext) {
         // Round 78: race guard — 30s wall-clock auto-stop 과 manual stop 동시 호출 방지.
         guard case .measuring = state else { return }
+        // Round 173: 측정 종료 시점 클록 보정 점 누적(시작점과 ~측정시간 간격 → baseline 기여).
+        ClockCalibrationService.shared.recordPoint()
         // Round 158 (사용자 보고: 30s 후에도 측정 계속하는 듯 보임):
         // state 를 .analyzing 으로 즉시 전환 → 타이머 멈춤, UI "분석 중" 표시 가능.
         state = .analyzing
@@ -332,7 +337,9 @@ final class MeasurementViewModel {
             snrDB: result.snrDB,
             deviceModel: deviceModelString(),
             microphoneType: AudioInputManager.shared.activeMicrophoneType,
-            ntpOffsetMs: ntpOffsetMs
+            ntpOffsetMs: ntpOffsetMs,
+            // Round 173 (self-heal): 이 측정에 적용된 클록 보정 ppm 저장 → 평균에서 현재 보정으로 환산.
+            clockCalPpmAtMeasure: ClockCalibrationService.shared.driftPpm
         )
         let measurement = WatchMeasurement(
             rateSecondsPerDay: result.rateSecondsPerDay,

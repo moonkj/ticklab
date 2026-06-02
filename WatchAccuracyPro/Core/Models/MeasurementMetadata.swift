@@ -30,6 +30,10 @@ struct MeasurementMetadata: Codable, Sendable, Equatable {
     /// Round 95: 측정 시작 시 NTP offset (ms). 디바이스 시계 - 서버 시계 차이.
     /// 측정값 자체는 audio sample rate 기반이라 영향 없지만, 추후 trend 분석 시 신뢰도 보강.
     var ntpOffsetMs: Double?
+    /// Round 173 (self-heal): 측정 시점 적용된 클록 보정 drift(ppm). 평균 계산 시 각 측정을 현재 보정으로
+    /// 환산하기 위함 — `보정rate = 저장rate + (현재ppm − 이값)×0.0864`. nil/0 = 보정 전(옛 측정, cal+0).
+    /// optional 이라 legacy JSON 디코딩 호환(missing → nil).
+    var clockCalPpmAtMeasure: Double?
 
     init(
         position: Position = .unknown,
@@ -39,7 +43,8 @@ struct MeasurementMetadata: Codable, Sendable, Equatable {
         powerReserveEstimate: Double? = nil,
         deviceModel: String = "",
         microphoneType: MicrophoneType = .builtin,
-        ntpOffsetMs: Double? = nil
+        ntpOffsetMs: Double? = nil,
+        clockCalPpmAtMeasure: Double? = nil
     ) {
         self.position = position
         self.temperatureCelsius = temperatureCelsius
@@ -49,5 +54,6 @@ struct MeasurementMetadata: Codable, Sendable, Equatable {
         self.deviceModel = deviceModel
         self.microphoneType = microphoneType
         self.ntpOffsetMs = ntpOffsetMs
+        self.clockCalPpmAtMeasure = clockCalPpmAtMeasure
     }
 }
