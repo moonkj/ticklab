@@ -1227,10 +1227,10 @@
 "badges.b31.name" = "Collectionneur des saisons"; "badges.b31.desc" = "Mesurée durant les quatre saisons de l'année"; "badges.b31.condition" = "Au moins 1 mesure pour chacune des 4 saisons";
 "badges.b32.name" = "Histoire du temps"; "badges.b32.desc" = "Collectionnées et mesurées : 5 montres vintage de plus de 25 ans"; "badges.b32.condition" = "5 montres antérieures à 2000, mesurées chacune au moins une fois";
 "badges.b33.name" = "Première publication"; "badges.b33.desc" = "Votre première publication dans la communauté"; "badges.b33.condition" = "Publier une fois dans la communauté";
-"badges.b34.name" = "Fée des J'aime"; "badges.b34.desc" = "Vous avez partagé de l'affection sur d'autres posts"; "badges.b34.condition" = "Donner 20 J'aime";
-"badges.b35.name" = "Publication populaire"; "badges.b35.desc" = "Vos publications ont été très appréciées"; "badges.b35.condition" = "Recevoir 20 J'aime sur vos posts";
-"badges.b36.name" = "Habitué de la communauté"; "badges.b36.desc" = "Vous avez partagé votre vie horlogère régulièrement"; "badges.b36.condition" = "Publier 10 fois dans la communauté";
-"badges.b37.name" = "Collectionneur social"; "badges.b37.desc" = "Vous vous êtes connecté à d'autres collectionneurs"; "badges.b37.condition" = "Suivre 10 personnes";
+"badges.b34.name" = "Fée des J'aime"; "badges.b34.desc" = "Vous avez partagé de l'affection sur d'autres posts"; "badges.b34.condition" = "Donner 100 J'aime";
+"badges.b35.name" = "Publication populaire"; "badges.b35.desc" = "Vos publications ont été très appréciées"; "badges.b35.condition" = "Recevoir 100 J'aime sur vos posts";
+"badges.b36.name" = "Habitué de la communauté"; "badges.b36.desc" = "Vous avez partagé votre vie horlogère régulièrement"; "badges.b36.condition" = "Publier 100 fois dans la communauté";
+"badges.b37.name" = "Collectionneur social"; "badges.b37.desc" = "Vous vous êtes connecté à d'autres collectionneurs"; "badges.b37.condition" = "Suivre 50 personnes";
 "badges.b38.name" = "Influenceur"; "badges.b38.desc" = "Beaucoup suivent votre vie horlogère"; "badges.b38.condition" = "100 abonnés";
 
 "league.loading" = "Chargement du classement global...";

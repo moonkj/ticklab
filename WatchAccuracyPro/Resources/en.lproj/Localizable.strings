@@ -1247,10 +1247,10 @@
 "badges.b31.name" = "Seasonal Collector"; "badges.b31.desc" = "Measured across all four seasons of the year"; "badges.b31.condition" = "At least 1 measurement in each of the 4 seasons";
 "badges.b32.name" = "History of Time"; "badges.b32.desc" = "Collected and measured 5 vintage watches over 25 years old"; "badges.b32.condition" = "5 pre-2000 watches each measured at least once";
 "badges.b33.name" = "First Post"; "badges.b33.desc" = "Your first post in the community"; "badges.b33.condition" = "Post once in the community";
-"badges.b34.name" = "Like Fairy"; "badges.b34.desc" = "Shared love on other collectors' posts"; "badges.b34.condition" = "Give 20 likes";
-"badges.b35.name" = "Popular Post"; "badges.b35.desc" = "Your posts earned lots of love"; "badges.b35.condition" = "Receive 20 likes on your posts";
-"badges.b36.name" = "Community Regular"; "badges.b36.desc" = "Consistently shared your watch life"; "badges.b36.condition" = "Post 10 times in the community";
-"badges.b37.name" = "Social Collector"; "badges.b37.desc" = "Connected with other collectors"; "badges.b37.condition" = "Follow 10 people";
+"badges.b34.name" = "Like Fairy"; "badges.b34.desc" = "Shared love on other collectors' posts"; "badges.b34.condition" = "Give 100 likes";
+"badges.b35.name" = "Popular Post"; "badges.b35.desc" = "Your posts earned lots of love"; "badges.b35.condition" = "Receive 100 likes on your posts";
+"badges.b36.name" = "Community Regular"; "badges.b36.desc" = "Consistently shared your watch life"; "badges.b36.condition" = "Post 100 times in the community";
+"badges.b37.name" = "Social Collector"; "badges.b37.desc" = "Connected with other collectors"; "badges.b37.condition" = "Follow 50 people";
 "badges.b38.name" = "Influencer"; "badges.b38.desc" = "Many people follow your watch life"; "badges.b38.condition" = "100 followers";
 
 "league.loading" = "Loading global rankings...";

@@ -1227,10 +1227,10 @@
 "badges.b31.name" = "シーズナルコレクター"; "badges.b31.desc" = "四季すべてで計測"; "badges.b31.condition" = "4つの季節それぞれで最低1回計測";
 "badges.b32.name" = "時の歴史"; "badges.b32.desc" = "25年以上のヴィンテージ時計を5本集めて計測"; "badges.b32.condition" = "2000年以前の時計5本それぞれを最低1回計測";
 "badges.b33.name" = "初投稿"; "badges.b33.desc" = "コミュニティに初めて投稿した瞬間"; "badges.b33.condition" = "コミュニティに1回投稿";
-"badges.b34.name" = "いいね妖精"; "badges.b34.desc" = "他のコレクターの投稿に共感を送りました"; "badges.b34.condition" = "いいねを20回";
-"badges.b35.name" = "人気投稿"; "badges.b35.desc" = "あなたの投稿が多くの共感を得ました"; "badges.b35.condition" = "投稿でいいね20件獲得";
-"badges.b36.name" = "コミュニティの常連"; "badges.b36.desc" = "時計の日常を継続的に共有"; "badges.b36.condition" = "コミュニティに10回投稿";
-"badges.b37.name" = "ソーシャルコレクター"; "badges.b37.desc" = "他のコレクターとつながりました"; "badges.b37.condition" = "10人をフォロー";
+"badges.b34.name" = "いいね妖精"; "badges.b34.desc" = "他のコレクターの投稿に共感を送りました"; "badges.b34.condition" = "いいねを100回";
+"badges.b35.name" = "人気投稿"; "badges.b35.desc" = "あなたの投稿が多くの共感を得ました"; "badges.b35.condition" = "投稿でいいね100件獲得";
+"badges.b36.name" = "コミュニティの常連"; "badges.b36.desc" = "時計の日常を継続的に共有"; "badges.b36.condition" = "コミュニティに100回投稿";
+"badges.b37.name" = "ソーシャルコレクター"; "badges.b37.desc" = "他のコレクターとつながりました"; "badges.b37.condition" = "50人をフォロー";
 "badges.b38.name" = "インフルエンサー"; "badges.b38.desc" = "多くの人があなたの時計ライフをフォロー"; "badges.b38.condition" = "フォロワー100人";
 
 "league.loading" = "グローバルランキングを読み込み中...";

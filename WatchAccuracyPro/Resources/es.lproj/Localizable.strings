@@ -1227,10 +1227,10 @@
 "badges.b31.name" = "Coleccionista de estaciones"; "badges.b31.desc" = "Medido en las cuatro estaciones del año"; "badges.b31.condition" = "Al menos 1 medición en cada una de las 4 estaciones";
 "badges.b32.name" = "Historia del tiempo"; "badges.b32.desc" = "Coleccionados y medidos 5 relojes vintage de más de 25 años"; "badges.b32.condition" = "5 relojes anteriores al año 2000, cada uno medido al menos una vez";
 "badges.b33.name" = "Primera publicación"; "badges.b33.desc" = "Tu primera publicación en la comunidad"; "badges.b33.condition" = "Publica una vez en la comunidad";
-"badges.b34.name" = "Hada de los Me gusta"; "badges.b34.desc" = "Compartiste cariño en publicaciones de otros"; "badges.b34.condition" = "Da 20 Me gusta";
-"badges.b35.name" = "Publicación popular"; "badges.b35.desc" = "Tus publicaciones recibieron mucho cariño"; "badges.b35.condition" = "Recibe 20 Me gusta en tus publicaciones";
-"badges.b36.name" = "Habitual de la comunidad"; "badges.b36.desc" = "Compartiste tu vida relojera con constancia"; "badges.b36.condition" = "Publica 10 veces en la comunidad";
-"badges.b37.name" = "Coleccionista social"; "badges.b37.desc" = "Conectaste con otros coleccionistas"; "badges.b37.condition" = "Sigue a 10 personas";
+"badges.b34.name" = "Hada de los Me gusta"; "badges.b34.desc" = "Compartiste cariño en publicaciones de otros"; "badges.b34.condition" = "Da 100 Me gusta";
+"badges.b35.name" = "Publicación popular"; "badges.b35.desc" = "Tus publicaciones recibieron mucho cariño"; "badges.b35.condition" = "Recibe 100 Me gusta en tus publicaciones";
+"badges.b36.name" = "Habitual de la comunidad"; "badges.b36.desc" = "Compartiste tu vida relojera con constancia"; "badges.b36.condition" = "Publica 100 veces en la comunidad";
+"badges.b37.name" = "Coleccionista social"; "badges.b37.desc" = "Conectaste con otros coleccionistas"; "badges.b37.condition" = "Sigue a 50 personas";
 "badges.b38.name" = "Influencer"; "badges.b38.desc" = "Muchos siguen tu vida relojera"; "badges.b38.condition" = "100 seguidores";
 
 "league.loading" = "Cargando rankings globales...";

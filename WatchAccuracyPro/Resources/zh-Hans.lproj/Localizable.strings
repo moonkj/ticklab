@@ -1227,10 +1227,10 @@
 "badges.b31.name" = "四季藏家"; "badges.b31.desc" = "四季皆有所测"; "badges.b31.condition" = "春夏秋冬各完成至少 1 次测量";
 "badges.b32.name" = "时间的历史"; "badges.b32.desc" = "收藏并测量 5 枚 25 年以上的古董腕表"; "badges.b32.condition" = "5 枚 2000 年前的腕表,各至少测量一次";
 "badges.b33.name" = "首次发帖"; "badges.b33.desc" = "在社区发布的第一条内容"; "badges.b33.condition" = "在社区发帖 1 次";
-"badges.b34.name" = "点赞精灵"; "badges.b34.desc" = "为其他藏家的帖子送上共鸣"; "badges.b34.condition" = "点赞 20 次";
-"badges.b35.name" = "人气帖子"; "badges.b35.desc" = "你的帖子获得了许多共鸣"; "badges.b35.condition" = "帖子获得 20 个赞";
-"badges.b36.name" = "社区常客"; "badges.b36.desc" = "持续分享你的腕表日常"; "badges.b36.condition" = "在社区发帖 10 次";
-"badges.b37.name" = "社交藏家"; "badges.b37.desc" = "与其他藏家建立了联系"; "badges.b37.condition" = "关注 10 人";
+"badges.b34.name" = "点赞精灵"; "badges.b34.desc" = "为其他藏家的帖子送上共鸣"; "badges.b34.condition" = "点赞 100 次";
+"badges.b35.name" = "人气帖子"; "badges.b35.desc" = "你的帖子获得了许多共鸣"; "badges.b35.condition" = "帖子获得 100 个赞";
+"badges.b36.name" = "社区常客"; "badges.b36.desc" = "持续分享你的腕表日常"; "badges.b36.condition" = "在社区发帖 100 次";
+"badges.b37.name" = "社交藏家"; "badges.b37.desc" = "与其他藏家建立了联系"; "badges.b37.condition" = "关注 50 人";
 "badges.b38.name" = "影响力达人"; "badges.b38.desc" = "许多人关注你的腕表生活"; "badges.b38.condition" = "100 位粉丝";
 
 "league.loading" = "正在加载全球榜单…";

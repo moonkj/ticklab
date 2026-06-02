@@ -1246,10 +1246,10 @@
 "badges.b31.name" = "계절의 수집가"; "badges.b31.desc" = "봄·여름·가을·겨울 모든 계절에 시계를 기록한 컬렉터"; "badges.b31.condition" = "4계절 각 1회 이상 측정";
 "badges.b32.name" = "시계의 역사"; "badges.b32.desc" = "25년 이상의 역사를 지닌 빈티지 시계 5점을 수집하고 측정"; "badges.b32.condition" = "2000년 이전 구매 시계 5개 각 측정";
 "badges.b33.name" = "첫 게시"; "badges.b33.desc" = "커뮤니티에 첫 글을 남긴 순간"; "badges.b33.condition" = "커뮤니티 글 1회 게시";
-"badges.b34.name" = "좋아요 요정"; "badges.b34.desc" = "다른 컬렉터의 글에 공감을 전했어요"; "badges.b34.condition" = "좋아요 20개 누르기";
-"badges.b35.name" = "인기 게시물"; "badges.b35.desc" = "내 글이 많은 공감을 받았어요"; "badges.b35.condition" = "내 글 좋아요 20개 받기";
-"badges.b36.name" = "커뮤니티 단골"; "badges.b36.desc" = "꾸준히 시계 일상을 나눴어요"; "badges.b36.condition" = "커뮤니티 10회 게시";
-"badges.b37.name" = "소셜 컬렉터"; "badges.b37.desc" = "다른 컬렉터들과 연결됐어요"; "badges.b37.condition" = "10명 팔로우";
+"badges.b34.name" = "좋아요 요정"; "badges.b34.desc" = "다른 컬렉터의 글에 공감을 전했어요"; "badges.b34.condition" = "좋아요 100개 누르기";
+"badges.b35.name" = "인기 게시물"; "badges.b35.desc" = "내 글이 많은 공감을 받았어요"; "badges.b35.condition" = "내 글 좋아요 100개 받기";
+"badges.b36.name" = "커뮤니티 단골"; "badges.b36.desc" = "꾸준히 시계 일상을 나눴어요"; "badges.b36.condition" = "커뮤니티 100회 게시";
+"badges.b37.name" = "소셜 컬렉터"; "badges.b37.desc" = "다른 컬렉터들과 연결됐어요"; "badges.b37.condition" = "50명 팔로우";
 "badges.b38.name" = "인플루언서"; "badges.b38.desc" = "많은 사람이 당신의 시계 생활을 팔로우해요"; "badges.b38.condition" = "팔로워 100명";
 
 "league.loading" = "글로벌 랭킹 불러오는 중...";

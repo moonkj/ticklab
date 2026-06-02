@@ -278,10 +278,10 @@ struct BadgesView: View {
             b("b32", "🏛️", .legendary, new.hasVintageHistory,                   min(new.vintageCount,5), 5),
             // ── 커뮤니티 b33-b38 (Round 172) ──────────────────────────────────
             b("b33", "🖼️", .common,    comm.postCount >= 1,        min(comm.postCount,1),     1),
-            b("b34", "👍", .common,    comm.likesGiven >= 20,      min(comm.likesGiven,20),   20),
-            b("b35", "🔥", .rare,      comm.likesReceived >= 20,   min(comm.likesReceived,20),20),
-            b("b36", "📷", .rare,      comm.postCount >= 10,       min(comm.postCount,10),    10),
-            b("b37", "🤝", .rare,      comm.following >= 10,       min(comm.following,10),    10),
+            b("b34", "👍", .common,    comm.likesGiven >= 100,     min(comm.likesGiven,100),  100),
+            b("b35", "🔥", .rare,      comm.likesReceived >= 100,  min(comm.likesReceived,100),100),
+            b("b36", "📷", .rare,      comm.postCount >= 100,      min(comm.postCount,100),   100),
+            b("b37", "🤝", .rare,      comm.following >= 50,       min(comm.following,50),    50),
             b("b38", "📣", .legendary, comm.followers >= 100,      min(comm.followers,100),   100),
         ]
     }

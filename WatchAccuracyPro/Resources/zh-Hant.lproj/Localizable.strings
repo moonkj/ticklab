@@ -1227,10 +1227,10 @@
 "badges.b31.name" = "四季藏家"; "badges.b31.desc" = "走過一年四季的測量"; "badges.b31.condition" = "四季各至少測量 1 次";
 "badges.b32.name" = "時光簡史"; "badges.b32.desc" = "收藏並測量 5 只 25 年以上的古董腕錶"; "badges.b32.condition" = "5 只 2000 年前出產的腕錶,各至少測量 1 次";
 "badges.b33.name" = "首次發文"; "badges.b33.desc" = "在社群發佈的第一則內容"; "badges.b33.condition" = "在社群發文 1 次";
-"badges.b34.name" = "按讚精靈"; "badges.b34.desc" = "為其他藏家的貼文送上共鳴"; "badges.b34.condition" = "按讚 20 次";
-"badges.b35.name" = "人氣貼文"; "badges.b35.desc" = "你的貼文獲得許多共鳴"; "badges.b35.condition" = "貼文獲得 20 個讚";
-"badges.b36.name" = "社群常客"; "badges.b36.desc" = "持續分享你的腕錶日常"; "badges.b36.condition" = "在社群發文 10 次";
-"badges.b37.name" = "社交藏家"; "badges.b37.desc" = "與其他藏家建立了連結"; "badges.b37.condition" = "追蹤 10 人";
+"badges.b34.name" = "按讚精靈"; "badges.b34.desc" = "為其他藏家的貼文送上共鳴"; "badges.b34.condition" = "按讚 100 次";
+"badges.b35.name" = "人氣貼文"; "badges.b35.desc" = "你的貼文獲得許多共鳴"; "badges.b35.condition" = "貼文獲得 100 個讚";
+"badges.b36.name" = "社群常客"; "badges.b36.desc" = "持續分享你的腕錶日常"; "badges.b36.condition" = "在社群發文 100 次";
+"badges.b37.name" = "社交藏家"; "badges.b37.desc" = "與其他藏家建立了連結"; "badges.b37.condition" = "追蹤 50 人";
 "badges.b38.name" = "影響力人物"; "badges.b38.desc" = "許多人追蹤你的腕錶生活"; "badges.b38.condition" = "100 位追蹤者";
 
 "league.loading" = "正在載入全球排名…";
