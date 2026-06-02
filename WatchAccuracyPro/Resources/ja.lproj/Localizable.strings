@@ -1261,6 +1261,7 @@
 "result.grade.f.gloss" = "信号が弱すぎるか、時計に問題がある可能性があります。";
 "share.save.success" = "写真に保存しました";
 "share.save.failed" = "保存に失敗しました";
+"share.render.failed" = "画像を作成できませんでした";
 "share.save.permission_denied" = "写真へのアクセスが必要です";
 "result.action.share" = "共有";
 

@@ -55,7 +55,7 @@ final class UserPreferences {
         didSet { defaults.set(useCoreMLBeatDetector, forKey: Keys.coreML) }
     }
 
-    /// Round 40 (Pivot Pro): Pro IAP unlock. 영구. one-time purchase.
+    /// Round 40 (Pivot Pro): Pro 구독 활성 여부. 월간/연간 자동갱신 구독 (StoreKit 엔타이틀먼트로 동기화).
     var isPro: Bool {
         didSet { defaults.set(isPro, forKey: Keys.isPro) }
     }

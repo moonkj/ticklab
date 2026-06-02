@@ -98,10 +98,10 @@ struct JournalFeedView: View {
         }
     }
 
-    /// 기록 삭제 — 첨부 사진 파일도 함께 정리(orphan 방지) 후 엔트리 삭제.
+    /// 기록 삭제 — 첨부 사진 파일 + JournalPhotoCache 까지 정리(orphan/stale 방지) 후 엔트리 삭제.
+    /// 감사 수정: 직접 deletePhoto+delete 대신 canonical deleteWithFiles 사용 (캐시 무효화 포함).
     private func deleteEntry(_ entry: JournalEntry) {
-        for stored in entry.photoPaths { EXIFStripper.deletePhoto(stored) }
-        modelContext.delete(entry)
+        entry.deleteWithFiles(in: modelContext)
         try? modelContext.save()
     }
 

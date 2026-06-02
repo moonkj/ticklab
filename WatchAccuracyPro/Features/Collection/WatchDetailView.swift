@@ -1860,7 +1860,9 @@ struct WatchDetailView: View {
 
     /// Round 170: 이 시계의 모든 측정 삭제.
     private func deleteAllMeasurements() {
-        for m in watch.measurements {
+        // 감사 수정: live relationship 을 그대로 순회하며 삭제하면 iOS17 SwiftData 에서 UB.
+        //   Array() 스냅샷 후 삭제 (WatchDeletion.deleteCascade 와 동일 패턴).
+        for m in Array(watch.measurements) {
             m.deleteWithJournalCleanup(in: modelContext)   // 감사 수정: JournalEntry.measurementId 댕글링 방지
         }
         try? modelContext.save()

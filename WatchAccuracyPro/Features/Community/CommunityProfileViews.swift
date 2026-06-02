@@ -8,6 +8,7 @@ struct UserPostsView: View {
     @ObservedObject private var service = CommunityService.shared
     @State private var posts: [Community.Post] = []
     @State private var loaded = false
+    @State private var showLogin = false
 
     private let cols = [GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2)]
 
@@ -21,7 +22,10 @@ struct UserPostsView: View {
                     Spacer()
                     if uid != service.myUID {
                         let following = service.isFollowing(uid)
-                        Button { Task { await service.toggleFollow(uid) } } label: {
+                        Button {
+                            guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 조용한 팔로우 실패 방지
+                            Task { await service.toggleFollow(uid) }
+                        } label: {
                             Text(String(localized: following ? "community.following" : "community.follow"))
                                 .font(.system(size: 13, weight: .semibold))
                                 .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
@@ -84,6 +88,7 @@ struct UserPostsView: View {
         .background(AppColors.paper0.ignoresSafeArea())
         .navigationTitle(displayName ?? String(localized: "community.anon_handle"))
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showLogin) { CommunityLoginView() }
         .task { posts = await service.fetchPostsByAuthor(uid: uid); loaded = true }
     }
 }
@@ -96,6 +101,7 @@ struct PostDetailView: View {
     @State private var likersTarget: Community.Post?
     @State private var shareItem: ShareCardItem?
     @State private var reportDone = false
+    @State private var showLogin = false
 
     var body: some View {
         ScrollView {
@@ -106,12 +112,15 @@ struct PostDetailView: View {
                 following: service.isFollowing(post.authorUID),
                 bookmarked: service.isBookmarked(post),
                 isMine: post.isMine(currentUID: service.myUID),
-                onLike: { Task { await service.toggleLike(post) } },
+                onLike: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleLike(post) } },
                 onUnlock: {},
-                onReport: { reason in Task { await service.report(post, reason: reason); reportDone = true } },
+                onReport: { reason in
+                    guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 거짓 "신고 완료" 방지
+                    Task { await service.report(post, reason: reason); reportDone = true }
+                },
                 onBlock: { Task { await service.block(authorOf: post) } },
-                onFollow: { Task { await service.toggleFollow(post.authorUID) } },
-                onBookmark: { Task { await service.toggleBookmark(post) } },
+                onFollow: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleFollow(post.authorUID) } },
+                onBookmark: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleBookmark(post) } },
                 onShare: { if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) } },
                 onComment: { commentTarget = post },
                 onLikers: { likersTarget = post },
@@ -124,6 +133,7 @@ struct PostDetailView: View {
         .sheet(item: $commentTarget) { CommentsView(post: $0) }
         .sheet(item: $likersTarget) { LikersView(post: $0) }
         .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
+        .sheet(isPresented: $showLogin) { CommunityLoginView() }
         .alert(String(localized: "community.report.done"), isPresented: $reportDone) {
             Button(String(localized: "common.done"), role: .cancel) {}
         }

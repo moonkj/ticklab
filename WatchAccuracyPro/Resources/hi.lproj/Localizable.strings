@@ -1261,6 +1261,7 @@
 "result.grade.f.gloss" = "सिग्नल बहुत कमज़ोर या घड़ी में समस्या हो सकती है।";
 "share.save.success" = "Photos में सहेजा गया";
 "share.save.failed" = "सहेजना विफल";
+"share.render.failed" = "छवि नहीं बना सके";
 "share.save.permission_denied" = "Photos एक्सेस आवश्यक";
 "result.action.share" = "साझा करें";
 

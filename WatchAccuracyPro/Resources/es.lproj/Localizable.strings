@@ -1261,6 +1261,7 @@
 "result.grade.f.gloss" = "La señal es demasiado débil o el reloj puede tener problemas.";
 "share.save.success" = "Guardado en Fotos";
 "share.save.failed" = "Error al guardar";
+"share.render.failed" = "No se pudo crear la imagen";
 "share.save.permission_denied" = "Se requiere acceso a Fotos";
 "result.action.share" = "Compartir";
 

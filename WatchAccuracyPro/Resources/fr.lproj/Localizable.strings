@@ -1261,6 +1261,7 @@
 "result.grade.f.gloss" = "Signal trop faible ou problème possible sur la montre.";
 "share.save.success" = "Enregistré dans Photos";
 "share.save.failed" = "Échec de l'enregistrement";
+"share.render.failed" = "Impossible de créer l'image";
 "share.save.permission_denied" = "Accès à Photos requis";
 "result.action.share" = "Partager";
 

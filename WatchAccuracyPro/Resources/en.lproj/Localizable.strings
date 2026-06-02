@@ -1275,6 +1275,7 @@
 "result.grade.f.gloss" = "Signal too weak or watch may have issues.";
 "share.save.success" = "Saved to Photos";
 "share.save.failed" = "Save failed";
+"share.render.failed" = "Couldn't create image";
 "share.save.permission_denied" = "Photos access required";
 "result.action.share" = "Share";
 

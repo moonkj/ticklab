@@ -1261,6 +1261,7 @@
 "result.grade.f.gloss" = "訊號過弱,或腕錶本身可能有問題。";
 "share.save.success" = "已儲存至照片";
 "share.save.failed" = "儲存失敗";
+"share.render.failed" = "無法產生圖片";
 "share.save.permission_denied" = "需要照片存取權";
 "result.action.share" = "分享";
 

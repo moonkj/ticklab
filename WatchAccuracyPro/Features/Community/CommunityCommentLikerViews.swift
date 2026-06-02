@@ -12,6 +12,7 @@ struct CommentsView: View {
     @State private var sending = false
     @State private var loaded = false
     @State private var blockMessage: String?
+    @State private var showLogin = false
     @FocusState private var focused: Bool
 
     var body: some View {
@@ -48,6 +49,7 @@ struct CommentsView: View {
                    isPresented: Binding(get: { blockMessage != nil }, set: { if !$0 { blockMessage = nil } })) {
                 Button(String(localized: "common.ok"), role: .cancel) {}
             } message: { Text(blockMessage ?? "") }
+            .sheet(isPresented: $showLogin) { CommunityLoginView() }
         }
     }
 
@@ -109,6 +111,7 @@ struct CommentsView: View {
     private func submit() {
         let text = input.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return }
+        guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 댓글 조용한 RLS 실패 방지
         switch CommunityTextModerator.screen(text) {
         case .allowed: break
         case .tooLong:  blockMessage = String(localized: "community.comment.too_long"); return
@@ -141,6 +144,7 @@ struct LikersView: View {
     @State private var likers: [Community.Liker] = []
     @State private var loaded = false
     @State private var profileTarget: Community.Liker?
+    @State private var showLogin = false
 
     var body: some View {
         NavigationStack {
@@ -174,6 +178,7 @@ struct LikersView: View {
             .navigationDestination(item: $profileTarget) { liker in
                 UserPostsView(uid: liker.uid, displayName: liker.authorName)
             }
+            .sheet(isPresented: $showLogin) { CommunityLoginView() }
             .task { likers = await service.fetchLikers(postID: post.id); loaded = true }
         }
     }
@@ -191,7 +196,10 @@ struct LikersView: View {
             .buttonStyle(.plain)
             Spacer(minLength: 8)
             if !isMe {
-                Button { Task { await service.toggleFollow(liker.uid) } } label: {
+                Button {
+                    guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 조용한 팔로우 실패 방지
+                    Task { await service.toggleFollow(liker.uid) }
+                } label: {
                     Text(String(localized: following ? "community.following" : "community.follow"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)

@@ -7,6 +7,7 @@ struct CommunitySavedView: View {
     @StateObject private var service = CommunityService.shared
     @State private var shareItem: ShareCardItem?
     @State private var loaded = false
+    @State private var showLogin = false
 
     var body: some View {
         NavigationStack {
@@ -33,12 +34,15 @@ struct CommunitySavedView: View {
                                     following: service.isFollowing(post.authorUID),
                                     bookmarked: service.isBookmarked(post),
                                     isMine: post.isMine(currentUID: service.myUID),
-                                    onLike: { Task { await service.toggleLike(post) } },
+                                    onLike: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleLike(post) } },
                                     onUnlock: {},
-                                    onReport: { reason in Task { await service.report(post, reason: reason) } },
+                                    onReport: { reason in
+                                        guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 거짓 "신고 완료" 방지
+                                        Task { await service.report(post, reason: reason) }
+                                    },
                                     onBlock: { Task { await service.block(authorOf: post) } },
-                                    onFollow: { Task { await service.toggleFollow(post.authorUID) } },
-                                    onBookmark: { Task { await service.toggleBookmark(post) } },
+                                    onFollow: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleFollow(post.authorUID) } },
+                                    onBookmark: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleBookmark(post) } },
                                     onShare: {
                                         if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) }
                                     },
@@ -61,6 +65,7 @@ struct CommunitySavedView: View {
             }
             .task { await service.loadSavedPosts(); loaded = true }
             .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
+            .sheet(isPresented: $showLogin) { CommunityLoginView() }
         }
     }
 }

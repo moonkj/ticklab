@@ -1261,6 +1261,7 @@
 "result.grade.f.gloss" = "信号过弱,或腕表可能存在问题。";
 "share.save.success" = "已存入照片";
 "share.save.failed" = "保存失败";
+"share.render.failed" = "无法生成图片";
 "share.save.permission_denied" = "需要照片访问权限";
 "result.action.share" = "分享";
 

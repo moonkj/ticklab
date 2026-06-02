@@ -332,7 +332,17 @@ struct ShareCardComposerView: View {
             content: cardContent.frame(width: aspect.size.width, height: aspect.size.height)
         )
         renderer.scale = 2
-        if let image = renderer.uiImage { completion(image) }
+        guard let image = renderer.uiImage else {
+            // 감사 수정: 렌더 실패(메모리압박/zero frame) 시 무반응 → 토스트 피드백.
+            UINotificationFeedbackGenerator().notificationOccurred(.error)
+            saveToastMessage = String(localized: "share.render.failed")
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 2_000_000_000)
+                saveToastMessage = nil
+            }
+            return
+        }
+        completion(image)
     }
 }
 

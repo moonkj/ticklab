@@ -41,6 +41,7 @@ struct SettingsView: View {
     @State private var communityCardPendingImage: UIImage?
     @State private var showCommunityCardEULA = false
     @State private var communityCardError: String?
+    @State private var showCommunityLogin = false
     /// Sprint 10 (P3-13): 사용자 프로필
     @State private var showingProfile: Bool = false
 
@@ -500,6 +501,7 @@ struct SettingsView: View {
                                 }
                             }
                         }
+                        .sheet(isPresented: $showCommunityLogin) { CommunityLoginView() }
                         .alert(String(localized: "community.upload.error"), isPresented: Binding(
                             get: { communityCardError != nil }, set: { if !$0 { communityCardError = nil } }
                         )) {
@@ -791,6 +793,7 @@ struct SettingsView: View {
 
     /// 컬렉션 공유카드를 생성해 EULA → 1:1 크롭 → 캡션 리뷰 → 업로드 흐름으로 진입.
     private func startCommunityCardPost() {
+        guard CommunityService.shared.isSignedIn else { showCommunityLogin = true; return }   // 감사 수정: 미로그인 시 끝에서 throw 대신 로그인 시트
         guard CommunityService.shared.canPostToday else {
             communityCardError = String(localized: "community.daily_limit.body"); return
         }

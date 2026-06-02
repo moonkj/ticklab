@@ -36,12 +36,15 @@ struct PurchaseView: View {
         }
     }
 
-    private var yearlyDiscountBadge: String {
-        let monthlyPrice = monthlyProduct.map { NSDecimalNumber(decimal: $0.price).doubleValue } ?? 1.99
-        let yearlyPrice  = yearlyProduct.map  { NSDecimalNumber(decimal: $0.price).doubleValue } ?? 9.99
-        let annualIfMonthly = monthlyPrice * 12
-        guard annualIfMonthly > 0 else { return "" }
+    /// 연간 결제 할인율 뱃지 — 두 제품 실가격이 모두 로드됐고 실제 할인(>0)이 있을 때만.
+    /// 감사 수정: 가짜 가격 폴백(1.99/9.99) 제거 + 토글 버튼에 실제 전달(이전엔 미사용 dead).
+    private var yearlyDiscountBadge: String? {
+        guard let monthly = monthlyProduct, let yearly = yearlyProduct else { return nil }
+        let annualIfMonthly = NSDecimalNumber(decimal: monthly.price).doubleValue * 12
+        let yearlyPrice  = NSDecimalNumber(decimal: yearly.price).doubleValue
+        guard annualIfMonthly > 0 else { return nil }
         let pct = Int(((annualIfMonthly - yearlyPrice) / annualIfMonthly * 100).rounded())
+        guard pct > 0 else { return nil }
         return String(format: String(localized: "purchase.plan.yearly.badge"), pct)
     }
 
@@ -202,7 +205,8 @@ struct PurchaseView: View {
                              price: monthlyProduct?.displayPrice ?? "")
             planToggleButton(.yearly,
                              label: String(localized: "purchase.plan.toggle.yearly"),
-                             price: yearlyProduct?.displayPrice ?? "")
+                             price: yearlyProduct?.displayPrice ?? "",
+                             badge: yearlyDiscountBadge)
         }
         .frame(maxWidth: .infinity)
         .background(AppColors.paper1)

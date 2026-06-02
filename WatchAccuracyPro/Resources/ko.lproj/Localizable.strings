@@ -1274,6 +1274,7 @@
 "result.grade.f.gloss" = "측정 신호가 너무 약하거나 시계 상태에 문제가 있을 수 있어요.";
 "share.save.success" = "사진에 저장되었습니다";
 "share.save.failed" = "저장에 실패했어요";
+"share.render.failed" = "이미지를 만들지 못했어요";
 "share.save.permission_denied" = "사진 접근 권한이 필요해요";
 "result.action.share" = "공유";
 
