@@ -1,3 +1,4 @@
+import AppIntents
 import SwiftUI
 import UIKit
 import WidgetKit
@@ -20,26 +21,37 @@ struct LatestMeasurementWidget: Widget {
 struct LatestMeasurementEntry: TimelineEntry {
     let date: Date
     let snapshot: LatestMeasurementSnapshot?
+    /// 위젯에서 착용 토글을 눌러 큐잉됐고 아직 앱이 처리 전인 상태 — 버튼 피드백용.
+    let wearPending: Bool
 }
 
 struct LatestMeasurementProvider: TimelineProvider {
+    /// 위젯 AppIntent 가 큐잉한 pending 착용 토글 존재 여부(App Group).
+    private static let pendingWearKey = "ticklab.pendingWearToggleAt"
+
+    private func makeEntry() -> LatestMeasurementEntry {
+        let pending = (SharedSnapshotStore.defaults?.double(forKey: Self.pendingWearKey) ?? 0) > 0
+        return LatestMeasurementEntry(date: Date(), snapshot: SharedSnapshotStore.read(), wearPending: pending)
+    }
+
     func placeholder(in context: Context) -> LatestMeasurementEntry {
-        LatestMeasurementEntry(date: Date(), snapshot: .placeholder)
+        LatestMeasurementEntry(date: Date(), snapshot: .placeholder, wearPending: false)
     }
     func getSnapshot(in context: Context, completion: @escaping (LatestMeasurementEntry) -> Void) {
-        completion(LatestMeasurementEntry(date: Date(), snapshot: SharedSnapshotStore.read()))
+        completion(makeEntry())
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<LatestMeasurementEntry>) -> Void) {
-        let entry = LatestMeasurementEntry(date: Date(), snapshot: SharedSnapshotStore.read())
-        // Round 17 (Sora): .after(30min) + reloadAllTimelines 가 동시 작동 → 중복 wake-up.
-        //   policy: .never 로 변경해 앱의 reloadAllTimelines (MeasurementViewModel save 시점) 만 trigger.
-        completion(Timeline(entries: [entry], policy: .never))
+        // Round 17 (Sora): policy .never — 앱의 reloadAllTimelines(측정 save·착용 토글) 만 trigger.
+        completion(Timeline(entries: [makeEntry()], policy: .never))
     }
 }
 
 struct LatestMeasurementWidgetView: View {
     @Environment(\.widgetFamily) var family
     let entry: LatestMeasurementEntry
+
+    /// 브랜드 골드(위젯 타깃은 AppColors 미접근 → 상수).
+    private let brand = Color(red: 0.72, green: 0.55, blue: 0.21)
 
     var body: some View {
         content
@@ -53,21 +65,106 @@ struct LatestMeasurementWidgetView: View {
         case .accessoryInline:
             Text(inlineText())
         case .accessoryRectangular:
-            VStack(alignment: .leading) {
-                Text(entry.snapshot?.watchName ?? "TickLab").font(.headline)
-                Text(rateText()).font(.caption.monospaced())
-            }
+            accessoryRectangular
+        case .systemMedium:
+            mediumLayout
         default:
-            VStack(alignment: .leading, spacing: 4) {
-                Text(entry.snapshot?.watchName ?? "—").font(.caption).lineLimit(1)
-                Text(rateText()).font(.title2.monospacedDigit())
-                if let amplitude = entry.snapshot?.amplitudeDegrees {
-                    Text("\(Int(amplitude))°").font(.caption2)
-                }
-                Text(timestampText()).font(.caption2).foregroundStyle(.secondary)
+            smallLayout
+        }
+    }
+
+    // MARK: - 홈화면 small
+
+    private var smallLayout: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(entry.snapshot?.watchName ?? "—")
+                .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+            Text(rateText())
+                .font(.system(.title2, design: .rounded).weight(.bold))
+                .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.6)
+            HStack(spacing: 10) {
+                metric("metronome", beatErrorText())
+                metric("gauge.medium", amplitudeText())
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-            .padding(8)
+            Spacer(minLength: 0)
+            wearButton
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .padding(12)
+    }
+
+    // MARK: - 홈화면 medium (풀 메트릭 + 착용 버튼)
+
+    private var mediumLayout: some View {
+        HStack(alignment: .top, spacing: 14) {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(entry.snapshot?.watchName ?? "—").font(.headline).lineLimit(1)
+                if let cal = entry.snapshot?.caliber, !cal.isEmpty {
+                    Text(cal).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                }
+                Spacer(minLength: 2)
+                Text(rateText())
+                    .font(.system(.title, design: .rounded).weight(.bold))
+                    .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.5)
+                Text(timestampText()).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(alignment: .leading, spacing: 7) {
+                metric("metronome", beatErrorText())
+                metric("gauge.medium", amplitudeText())
+                metric("timer", bphText())
+                metric("checkmark.seal", confidenceText())
+                Spacer(minLength: 2)
+                wearButton
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .padding(14)
+    }
+
+    // MARK: - 잠금화면 accessory (버튼 미지원 → 정보만)
+
+    private var accessoryRectangular: some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(entry.snapshot?.watchName ?? "TickLab").font(.headline).lineLimit(1)
+            HStack(spacing: 6) {
+                Text(rateText()).font(.caption.monospacedDigit())
+                Text("·").foregroundStyle(.secondary)
+                Text(beatErrorText()).font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
+                if entry.snapshot?.amplitudeDegrees != nil {
+                    Text(amplitudeText()).font(.caption2).foregroundStyle(.secondary)
+                }
+            }
+            Text("\(bphText()) · \(timestampText())")
+                .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+        }
+    }
+
+    // MARK: - 착용 버튼 (iOS 17 인터랙티브 — WearToggleIntent 큐잉, 앱 활성 시 반영)
+
+    private var wearButton: some View {
+        Button(intent: WearToggleIntent()) {
+            HStack(spacing: 4) {
+                Image(systemName: entry.wearPending ? "checkmark.circle.fill" : "plus.circle")
+                Image(systemName: "applewatch")
+            }
+            .font(.system(size: 13, weight: .semibold))
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 6)
+            .background((entry.wearPending ? Color.green : brand).opacity(0.16), in: Capsule())
+            .foregroundStyle(entry.wearPending ? Color.green : brand)
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func metric(_ icon: String, _ value: String) -> some View {
+        HStack(spacing: 4) {
+            Image(systemName: icon).font(.system(size: 10)).foregroundStyle(.secondary).frame(width: 14)
+            Text(value)
+                .font(.system(.caption2, design: .rounded).weight(.medium))
+                .foregroundStyle(.primary).lineLimit(1).minimumScaleFactor(0.7)
         }
     }
 
@@ -81,6 +178,8 @@ struct LatestMeasurementWidgetView: View {
         }
     }
 
+    // MARK: - 포맷터 (단위는 언어 중립)
+
     private func inlineText() -> String {
         guard let s = entry.snapshot else { return "TickLab" }
         return "\(s.watchName) · \(rateText())"
@@ -89,6 +188,35 @@ struct LatestMeasurementWidgetView: View {
     private func rateText() -> String {
         guard let s = entry.snapshot else { return "—" }
         return String(format: "%+.1f s/d", s.rateSecondsPerDay)
+    }
+
+    private func beatErrorText() -> String {
+        guard let s = entry.snapshot else { return "—" }
+        return String(format: "%.1f ms", s.beatErrorMs)
+    }
+
+    private func amplitudeText() -> String {
+        guard let a = entry.snapshot?.amplitudeDegrees else { return "—" }
+        return "\(Int(a))°"
+    }
+
+    private func bphText() -> String {
+        guard let s = entry.snapshot else { return "—" }
+        return "\(s.bph) bph"
+    }
+
+    private func confidenceText() -> String {
+        guard let s = entry.snapshot else { return "—" }
+        return "\(s.confidenceScore)%"
+    }
+
+    /// rate 정확도 색상 — 앱 공통 톤(±6 우수 / ±20 양호 / 그 외 주의).
+    private func rateColor() -> Color {
+        guard let s = entry.snapshot else { return .primary }
+        let a = abs(s.rateSecondsPerDay)
+        if a <= 6 { return .green }
+        if a <= 20 { return .orange }
+        return .red
     }
 
     private func timestampText() -> String {
