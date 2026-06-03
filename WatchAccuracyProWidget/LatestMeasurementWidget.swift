@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 import WidgetKit
 
 /// 가장 최근 측정 결과를 홈/잠금화면 위젯으로 노출.
@@ -41,6 +42,13 @@ struct LatestMeasurementWidgetView: View {
     let entry: LatestMeasurementEntry
 
     var body: some View {
+        content
+            // iOS 17 필수: 위젯은 containerBackground 를 채택해야 시스템이 내용을 렌더한다.
+            //   미채택 시 "Please adopt containerBackground API" placeholder 가 대신 표시됨(버그 원인).
+            .containerBackground(for: .widget) { background }
+    }
+
+    @ViewBuilder private var content: some View {
         switch family {
         case .accessoryInline:
             Text(inlineText())
@@ -58,7 +66,18 @@ struct LatestMeasurementWidgetView: View {
                 }
                 Text(timestampText()).font(.caption2).foregroundStyle(.secondary)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
             .padding(8)
+        }
+    }
+
+    /// 잠금화면 accessory 위젯은 투명(시스템 vibrancy), 홈화면 system 위젯은 불투명 배경.
+    @ViewBuilder private var background: some View {
+        switch family {
+        case .accessoryRectangular, .accessoryInline, .accessoryCircular:
+            Color.clear
+        default:
+            Color(.systemBackground)
         }
     }
 

@@ -1,5 +1,6 @@
 import ActivityKit
 import SwiftUI
+import UIKit
 import WidgetKit
 
 /// 측정 중 잠금화면/Dynamic Island 에 노출되는 Live Activity widget.
@@ -24,6 +25,8 @@ struct MeasurementLiveActivityWidget: Widget {
                 }
             }
             .padding(12)
+            // iOS 17: Live Activity 잠금화면 뷰도 containerBackground 채택 권장(미채택 시 기본 검정 배경).
+            .containerBackground(for: .widget) { Color(.systemBackground) }
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
