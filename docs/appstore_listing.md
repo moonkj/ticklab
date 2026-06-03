@@ -341,7 +341,7 @@ Communauté anonyme, 17 ans et plus
 Aimez, commentez et suivez sur un fil photo sans pseudo et collectionnez des badges. Sécurisée par le signalement, le blocage et le filtrage de contenu.
 
 Widget d'écran d'accueil et Activité en direct
-Consultez votre dernière mesure dans un widget et enregistrez le port du jour directement depuis lui. Pendant une mesure, elle s'affiche en direct sur l'écran verrouillé et l'Dynamic Island.
+Consultez votre dernière mesure dans un widget et enregistrez le port du jour directement depuis lui. Pendant une mesure, elle s'affiche en direct sur l'écran verrouillé et la Dynamic Island.
 
 Confidentialité
 Vos données de mesure, numéros de série et prix d'achat restent sur votre appareil et ne sont jamais transmis. Les photos de la communauté ne sont envoyées que lorsque vous appuyez sur Publier, après suppression des données de localisation.
