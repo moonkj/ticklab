@@ -434,11 +434,31 @@ final class CommunityService: ObservableObject {
 
     // MARK: - Curated YouTube Channels (운영자 큐레이션 — 영상 피드)
 
+    /// Edge Function(youtube-videos) — 서버가 curated_channels 를 YouTube Data API 로 조회·캐시한 최신 영상.
+    /// YouTube 공개 RSS(feeds/videos.xml) 차단(2026-06-03) 이후 영상 소스. 앱은 Supabase 도메인만 호출.
+    func fetchCuratedVideos() async -> [Community.CuratedVideo] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/functions/v1/youtube-videos") else { return [] }
+        guard let (data, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode),
+              let arr = try? Self.decoder.decode([Community.CuratedVideo].self, from: data) else { return [] }
+        return arr
+    }
+
     /// 활성 채널 — locale 매칭. 호출 측에서 비면 'en' 폴백. 모든 사용자 읽기.
     func fetchCuratedChannels(locale: String) async -> [Community.CuratedChannel] {
         await ensureSignedIn()
         guard let enc = locale.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let url = URL(string: "\(baseURL)/rest/v1/curated_channels?select=*&locale=eq.\(enc)&active=eq.true&order=sort_order.asc") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.CuratedChannel].self, from: data) else { return [] }
+        return arr
+    }
+
+    /// 언어 무관 — 활성 채널 전체. 호출 측 locale 폴백용(기기 언어 채널이 없을 때).
+    func fetchActiveCuratedChannels() async -> [Community.CuratedChannel] {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/curated_channels?select=*&active=eq.true&order=sort_order.asc") else { return [] }
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
               let arr = try? Self.decoder.decode([Community.CuratedChannel].self, from: data) else { return [] }
         return arr

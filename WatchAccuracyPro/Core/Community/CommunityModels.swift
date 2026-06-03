@@ -179,6 +179,21 @@ enum Community {
         }
     }
 
+    /// Edge Function(youtube-videos)이 반환하는 큐레이션 영상 한 건.
+    /// YouTube 공개 RSS 차단(2026-06-03) → Data API + 서버캐시 경유로 전환.
+    struct CuratedVideo: Codable, Identifiable {
+        let id: String              // videoId
+        let title: String
+        let channelTitle: String
+        let publishedAt: Date
+        let locale: String?
+        enum CodingKeys: String, CodingKey {
+            case id, title, locale
+            case channelTitle = "channel_title"
+            case publishedAt = "published_at"
+        }
+    }
+
     /// 신고 사유 — UGC 의무(Guideline 1.2).
     enum ReportReason: String, Codable, CaseIterable {
         case inappropriate   // 부적절/선정적

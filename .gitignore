@@ -53,6 +53,10 @@ TestResults/
 WatchAccuracyPro/Core/Security/AdminAccess.swift
 WatchAccuracyPro/Features/Settings/AdminPanelView.swift
 
+# Supabase CLI 로컬 캐시 (함수 소스만 커밋)
+supabase/.temp/
+supabase/.branches/
+
 # Claude Code local artifacts
 .claude/scheduled_tasks.lock
 .claude/settings.local.json
