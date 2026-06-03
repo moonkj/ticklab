@@ -93,4 +93,39 @@ final class WearLogServiceTests: XCTestCase {
         WearLogService.consumePendingWearToggle(in: context)
         XCTAssertFalse(WearLogService.isWornToday(watch, in: context))
     }
+
+    /// 감사 수정: consume 은 blind toggle 이 아니라 위젯이 낙관적으로 기록한 desired 상태로 맞춘다.
+    func test_consumePendingWearToggle_reconciles_to_desired_worn() {
+        let watch = Watch(brand: "Grand Seiko", model: "Snowflake")
+        context.insert(watch)
+        context.insert(WatchMeasurement(watch: watch, rateSecondsPerDay: 1.0, beatErrorMs: 0.2,
+                                        amplitudeDegrees: nil, bph: 28800, confidenceScore: 80, durationSeconds: 30))
+        try? context.save()
+        SharedSnapshotStore.writeWornToday(true)   // 위젯 낙관적 flip → worn
+        SharedSnapshotStore.defaults?.set(Date().timeIntervalSince1970, forKey: SharedSnapshotStore.pendingWearToggleKey)
+        defer {
+            SharedSnapshotStore.defaults?.removeObject(forKey: SharedSnapshotStore.pendingWearToggleKey)
+            SharedSnapshotStore.defaults?.removeObject(forKey: SharedSnapshotStore.wornTodayKey)
+        }
+        WearLogService.consumePendingWearToggle(in: context)
+        XCTAssertTrue(WearLogService.isWornToday(watch, in: context), "desired worn=true → 착용 기록 생성")
+    }
+
+    func test_consumePendingWearToggle_reconciles_to_desired_unworn() {
+        let watch = Watch(brand: "Zenith", model: "El Primero")
+        context.insert(watch)
+        context.insert(WatchMeasurement(watch: watch, rateSecondsPerDay: 1.0, beatErrorMs: 0.2,
+                                        amplitudeDegrees: nil, bph: 36000, confidenceScore: 80, durationSeconds: 30))
+        _ = WearLogService.toggleToday(watch, in: context)   // 이미 착용 상태
+        try? context.save()
+        XCTAssertTrue(WearLogService.isWornToday(watch, in: context))
+        SharedSnapshotStore.writeWornToday(false)   // 위젯 낙관적 flip → unworn
+        SharedSnapshotStore.defaults?.set(Date().timeIntervalSince1970, forKey: SharedSnapshotStore.pendingWearToggleKey)
+        defer {
+            SharedSnapshotStore.defaults?.removeObject(forKey: SharedSnapshotStore.pendingWearToggleKey)
+            SharedSnapshotStore.defaults?.removeObject(forKey: SharedSnapshotStore.wornTodayKey)
+        }
+        WearLogService.consumePendingWearToggle(in: context)
+        XCTAssertFalse(WearLogService.isWornToday(watch, in: context), "desired worn=false → 착용 해제")
+    }
 }

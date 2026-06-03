@@ -10,11 +10,11 @@ struct WearToggleIntent: AppIntent {
     static var description = IntentDescription("Mark the most recently measured watch as worn today.")
 
     func perform() async throws -> some IntentResult {
-        let appGroupID = "group.com.ticklab.watchaccuracypro"
-        let defaults = UserDefaults(suiteName: appGroupID)
-        // Sprint 2: 큐 패턴 — 메인 앱이 launch/active 시 read & clear.
-        let now = Date().timeIntervalSince1970
-        defaults?.set(now, forKey: "ticklab.pendingWearToggleAt")
+        // 낙관적: 현재 "오늘 착용" 상태를 뒤집어 즉시 위젯에 반영(앱 미실행 중에도 버튼이 바로 바뀜).
+        let current = SharedSnapshotStore.readWornToday()
+        SharedSnapshotStore.writeWornToday(!current)
+        // 앱이 launch/active 시 실제 WearLog 를 이 desired 상태로 reconcile 하도록 신호(큐).
+        SharedSnapshotStore.defaults?.set(Date().timeIntervalSince1970, forKey: SharedSnapshotStore.pendingWearToggleKey)
         WidgetCenter.shared.reloadAllTimelines()
         return .result()
     }

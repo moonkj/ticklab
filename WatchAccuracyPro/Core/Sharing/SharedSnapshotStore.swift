@@ -70,4 +70,14 @@ enum SharedSnapshotStore {
     static func clear() {
         defaults?.removeObject(forKey: key)
     }
+
+    // MARK: - 위젯 착용 버튼 상태 (App Group 공유)
+
+    /// 위젯에 표시되는 시계(=최근 측정)의 "오늘 착용" 상태. 앱이 권위값을 쓰고 위젯은 읽어 버튼 표시.
+    static let wornTodayKey = "ticklab.latestWatchWornToday"
+    /// 위젯 착용 버튼 탭 → 앱이 활성화 시 desired 상태로 reconcile 하도록 신호(큐).
+    static let pendingWearToggleKey = "ticklab.pendingWearToggleAt"
+
+    static func writeWornToday(_ worn: Bool) { defaults?.set(worn, forKey: wornTodayKey) }
+    static func readWornToday() -> Bool { defaults?.bool(forKey: wornTodayKey) ?? false }
 }

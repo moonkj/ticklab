@@ -13,7 +13,7 @@ struct LatestMeasurementWidget: Widget {
             LatestMeasurementWidgetView(entry: entry)
         }
         .configurationDisplayName("TickLab")
-        .description("Latest watch accuracy measurement")
+        .description("widget.config.desc")
         .supportedFamilies([.systemSmall, .systemMedium, .accessoryRectangular, .accessoryInline])
     }
 }
@@ -21,27 +21,23 @@ struct LatestMeasurementWidget: Widget {
 struct LatestMeasurementEntry: TimelineEntry {
     let date: Date
     let snapshot: LatestMeasurementSnapshot?
-    /// 위젯에서 착용 토글을 눌러 큐잉됐고 아직 앱이 처리 전인 상태 — 버튼 피드백용.
-    let wearPending: Bool
+    /// 위젯에 표시된 시계(=최근 측정)의 실제 "오늘 착용" 상태 — 버튼 on/off.
+    let wornToday: Bool
 }
 
 struct LatestMeasurementProvider: TimelineProvider {
-    /// 위젯 AppIntent 가 큐잉한 pending 착용 토글 존재 여부(App Group).
-    private static let pendingWearKey = "ticklab.pendingWearToggleAt"
-
     private func makeEntry() -> LatestMeasurementEntry {
-        let pending = (SharedSnapshotStore.defaults?.double(forKey: Self.pendingWearKey) ?? 0) > 0
-        return LatestMeasurementEntry(date: Date(), snapshot: SharedSnapshotStore.read(), wearPending: pending)
+        LatestMeasurementEntry(date: Date(), snapshot: SharedSnapshotStore.read(),
+                               wornToday: SharedSnapshotStore.readWornToday())
     }
-
     func placeholder(in context: Context) -> LatestMeasurementEntry {
-        LatestMeasurementEntry(date: Date(), snapshot: .placeholder, wearPending: false)
+        LatestMeasurementEntry(date: Date(), snapshot: .placeholder, wornToday: false)
     }
     func getSnapshot(in context: Context, completion: @escaping (LatestMeasurementEntry) -> Void) {
         completion(makeEntry())
     }
     func getTimeline(in context: Context, completion: @escaping (Timeline<LatestMeasurementEntry>) -> Void) {
-        // Round 17 (Sora): policy .never — 앱의 reloadAllTimelines(측정 save·착용 토글) 만 trigger.
+        // Round 17 (Sora): policy .never — 앱의 reloadAllTimelines(측정 save·착용 변경) 만 trigger.
         completion(Timeline(entries: [makeEntry()], policy: .never))
     }
 }
@@ -73,10 +69,25 @@ struct LatestMeasurementWidgetView: View {
         }
     }
 
+    // MARK: - 상단 브랜드 헤더 (앱 아이콘 + 이름)
+
+    private var header: some View {
+        HStack(spacing: 4) {
+            Image("WidgetLogo")
+                .resizable().scaledToFit()
+                .frame(width: 14, height: 14)
+                .clipShape(RoundedRectangle(cornerRadius: 3))
+            Text("TickLab")
+                .font(.system(size: 11, weight: .semibold)).foregroundStyle(brand)
+            Spacer(minLength: 0)
+        }
+    }
+
     // MARK: - 홈화면 small
 
     private var smallLayout: some View {
         VStack(alignment: .leading, spacing: 4) {
+            header
             Text(entry.snapshot?.watchName ?? "—")
                 .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
             Text(rateText())
@@ -93,32 +104,35 @@ struct LatestMeasurementWidgetView: View {
         .padding(12)
     }
 
-    // MARK: - 홈화면 medium (풀 메트릭 + 착용 버튼)
+    // MARK: - 홈화면 medium (헤더 + 풀 메트릭 + 착용 버튼)
 
     private var mediumLayout: some View {
-        HStack(alignment: .top, spacing: 14) {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(entry.snapshot?.watchName ?? "—").font(.headline).lineLimit(1)
-                if let cal = entry.snapshot?.caliber, !cal.isEmpty {
-                    Text(cal).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+        VStack(alignment: .leading, spacing: 6) {
+            header
+            HStack(alignment: .top, spacing: 14) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(entry.snapshot?.watchName ?? "—").font(.headline).lineLimit(1)
+                    if let cal = entry.snapshot?.caliber, !cal.isEmpty {
+                        Text(cal).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+                    }
+                    Spacer(minLength: 2)
+                    Text(rateText())
+                        .font(.system(.title, design: .rounded).weight(.bold))
+                        .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.5)
+                    Text(timestampText()).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
                 }
-                Spacer(minLength: 2)
-                Text(rateText())
-                    .font(.system(.title, design: .rounded).weight(.bold))
-                    .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.5)
-                Text(timestampText()).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
-            VStack(alignment: .leading, spacing: 7) {
-                metric("metronome", beatErrorText())
-                metric("gauge.medium", amplitudeText())
-                metric("timer", bphText())
-                metric("checkmark.seal", confidenceText())
-                Spacer(minLength: 2)
-                wearButton
+                VStack(alignment: .leading, spacing: 6) {
+                    metric("metronome", beatErrorText())
+                    metric("gauge.medium", amplitudeText())
+                    metric("timer", bphText())
+                    metric("checkmark.seal", confidenceText())
+                    Spacer(minLength: 2)
+                    wearButton
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
         .padding(14)
@@ -142,19 +156,21 @@ struct LatestMeasurementWidgetView: View {
         }
     }
 
-    // MARK: - 착용 버튼 (iOS 17 인터랙티브 — WearToggleIntent 큐잉, 앱 활성 시 반영)
+    // MARK: - 오늘 착용 버튼 (iOS 17 인터랙티브 — WearToggleIntent)
 
     private var wearButton: some View {
-        Button(intent: WearToggleIntent()) {
+        let worn = entry.wornToday
+        let label: LocalizedStringKey = worn ? "widget.wear.done" : "widget.wear.today"
+        return Button(intent: WearToggleIntent()) {
             HStack(spacing: 4) {
-                Image(systemName: entry.wearPending ? "checkmark.circle.fill" : "plus.circle")
-                Image(systemName: "applewatch")
+                Image(systemName: worn ? "checkmark.circle.fill" : "plus.circle")
+                Text(label).lineLimit(1).minimumScaleFactor(0.7)
             }
-            .font(.system(size: 13, weight: .semibold))
+            .font(.system(size: 12, weight: .semibold))
             .frame(maxWidth: .infinity)
             .padding(.vertical, 6)
-            .background((entry.wearPending ? Color.green : brand).opacity(0.16), in: Capsule())
-            .foregroundStyle(entry.wearPending ? Color.green : brand)
+            .background((worn ? Color.green : brand).opacity(0.16), in: Capsule())
+            .foregroundStyle(worn ? Color.green : brand)
         }
         .buttonStyle(.plain)
     }

@@ -361,6 +361,13 @@ final class MeasurementViewModel {
             confidenceScore: result.confidenceScore
         )
         SharedSnapshotStore.write(snapshot)
+        // 위젯 "오늘 착용" 버튼 상태 갱신 — 방금 측정한 시계 = 위젯이 표시할 latest watch.
+        //   (persist 는 nonisolated → @MainActor WearLogService 대신 로컬 context 로 직접 판정.)
+        let startOfToday = Calendar.current.startOfDay(for: Date())
+        let measuredWatchId = watch.id
+        let wornDescriptor = FetchDescriptor<WearLog>(
+            predicate: #Predicate { $0.watch?.id == measuredWatchId && $0.date == startOfToday })
+        SharedSnapshotStore.writeWornToday(((try? context.fetch(wornDescriptor))?.first) != nil)
         WidgetCenter.shared.reloadAllTimelines()
         return true
     }
