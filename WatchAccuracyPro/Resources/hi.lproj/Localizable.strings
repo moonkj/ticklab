@@ -1425,11 +1425,19 @@
 "addwatch.warranty.12m" = "1 साल (12 महीने)";
 "addwatch.warranty.24m" = "2 साल (24 महीने)";
 "addwatch.warranty.36m" = "3 साल (36 महीने)";
+"addwatch.warranty.48m" = "4 साल (48 महीने)";
 "addwatch.warranty.60m" = "5 साल (60 महीने)";
-"addwatch.warranty.reminder" = "समाप्ति से 3 महीने और 1 महीने पहले सूचित करें";
+"addwatch.warranty.72m" = "6 साल (72 महीने)";
+"addwatch.warranty.84m" = "7 साल (84 महीने)";
+"addwatch.warranty.96m" = "8 साल (96 महीने)";
+"addwatch.warranty.108m" = "9 साल (108 महीने)";
+"addwatch.warranty.120m" = "10 साल (120 महीने)";
+"addwatch.warranty.reminder" = "3 व 1 महीने पहले + समाप्ति पर सूचित करें";
 "notif.warranty.title" = "%@ की वारंटी समाप्त होने वाली है";
 "notif.warranty.body_3m" = "%@ तक। सर्विस चेकअप बुक करने पर विचार करें।";
 "notif.warranty.body_1m" = "%@ तक 1 महीना बचा। वारंटी सर्विस बुक करने की सलाह।";
+"notif.warranty.title_expired" = "%@ की वारंटी आज समाप्त हो रही है";
+"notif.warranty.body_expired" = "%@ को वारंटी समाप्त। एक अंतिम सर्विस जाँच पर विचार करें।";
 
 /* Sprint 2 — P0-2.2 ऑफ़लाइन बैनर */
 "network.offline.banner" = "ऑफ़लाइन — रिकॉर्ड सहेजे जाते हैं और बाद में सिंक होते हैं";

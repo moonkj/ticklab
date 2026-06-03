@@ -1421,11 +1421,19 @@
 "addwatch.warranty.12m" = "1 year (12 months)";
 "addwatch.warranty.24m" = "2 years (24 months)";
 "addwatch.warranty.36m" = "3 years (36 months)";
+"addwatch.warranty.48m" = "4 years (48 months)";
 "addwatch.warranty.60m" = "5 years (60 months)";
-"addwatch.warranty.reminder" = "Notify 3 months and 1 month before expiration";
+"addwatch.warranty.72m" = "6 years (72 months)";
+"addwatch.warranty.84m" = "7 years (84 months)";
+"addwatch.warranty.96m" = "8 years (96 months)";
+"addwatch.warranty.108m" = "9 years (108 months)";
+"addwatch.warranty.120m" = "10 years (120 months)";
+"addwatch.warranty.reminder" = "Notify 3 & 1 months before + on expiry";
 "notif.warranty.title" = "%@ warranty is about to expire";
 "notif.warranty.body_3m" = "Until %@. Consider booking a service check-up.";
 "notif.warranty.body_1m" = "1 month left until %@. We recommend booking a warranty service.";
+"notif.warranty.title_expired" = "%@ warranty expires today";
+"notif.warranty.body_expired" = "Warranty ends on %@. Consider a final service check.";
 
 /* Sprint 2 — P0-2.2 Offline banner */
 "network.offline.banner" = "Offline — your records save locally and sync later";

@@ -420,7 +420,13 @@ struct AddWatchView: View {
                         Text(String(localized: "addwatch.warranty.12m")).tag(12)
                         Text(String(localized: "addwatch.warranty.24m")).tag(24)
                         Text(String(localized: "addwatch.warranty.36m")).tag(36)
+                        Text(String(localized: "addwatch.warranty.48m")).tag(48)
                         Text(String(localized: "addwatch.warranty.60m")).tag(60)
+                        Text(String(localized: "addwatch.warranty.72m")).tag(72)
+                        Text(String(localized: "addwatch.warranty.84m")).tag(84)
+                        Text(String(localized: "addwatch.warranty.96m")).tag(96)
+                        Text(String(localized: "addwatch.warranty.108m")).tag(108)
+                        Text(String(localized: "addwatch.warranty.120m")).tag(120)
                     }
                     if warrantyMonths > 0 {
                         Toggle(String(localized: "addwatch.warranty.reminder"),

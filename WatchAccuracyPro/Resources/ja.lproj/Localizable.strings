@@ -1425,11 +1425,19 @@
 "addwatch.warranty.12m" = "1年 (12ヶ月)";
 "addwatch.warranty.24m" = "2年 (24ヶ月)";
 "addwatch.warranty.36m" = "3年 (36ヶ月)";
+"addwatch.warranty.48m" = "4年 (48ヶ月)";
 "addwatch.warranty.60m" = "5年 (60ヶ月)";
-"addwatch.warranty.reminder" = "期限切れ3ヶ月・1ヶ月前に通知";
+"addwatch.warranty.72m" = "6年 (72ヶ月)";
+"addwatch.warranty.84m" = "7年 (84ヶ月)";
+"addwatch.warranty.96m" = "8年 (96ヶ月)";
+"addwatch.warranty.108m" = "9年 (108ヶ月)";
+"addwatch.warranty.120m" = "10年 (120ヶ月)";
+"addwatch.warranty.reminder" = "期限切れ3・1ヶ月前 + 当日に通知";
 "notif.warranty.title" = "%@ の保証期限が近づいています";
 "notif.warranty.body_3m" = "%@ まで。点検・整備をご検討ください。";
 "notif.warranty.body_1m" = "%@ まで残り1ヶ月。保証点検の予約をお勧めします。";
+"notif.warranty.title_expired" = "%@ の保証が今日で終了します";
+"notif.warranty.body_expired" = "%@ で保証が終了します。最後の点検・整備をご検討ください。";
 
 /* Sprint 2 — P0-2.2 オフラインバナー */
 "network.offline.banner" = "オフライン — 記録は保存され、後で同期されます";

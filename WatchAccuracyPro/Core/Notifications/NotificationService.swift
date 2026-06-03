@@ -36,6 +36,8 @@ enum NotificationService {
     /// Sprint 2 (P2-9): 보증 알림 — 만료 3개월 전 / 1개월 전 2종.
     private static func warranty3mID(_ watch: Watch) -> String { "warranty-3m-\(watch.id.uuidString)" }
     private static func warranty1mID(_ watch: Watch) -> String { "warranty-1m-\(watch.id.uuidString)" }
+    /// 보증 만료 당일 알림.
+    private static func warranty0mID(_ watch: Watch) -> String { "warranty-0m-\(watch.id.uuidString)" }
     private static let randomPickID = "random-pick"
     private static let journalReminderID = "journal-reminder"
 
@@ -139,7 +141,7 @@ enum NotificationService {
 
     // MARK: - Warranty expiration (Sprint 2 P2-9)
 
-    /// 보증 만료 3개월 전 + 1개월 전 알림 예약. 이미 만료됐으면 cancel 만 호출.
+    /// 보증 만료 3개월 전 + 1개월 전 + **만료 당일** 알림 예약. 이미 만료됐으면 cancel 만 호출.
     /// purchaseDate + warrantyMonths 두 값 모두 있어야 동작.
     static func scheduleWarrantyReminder(for watch: Watch) {
         guard watch.warrantyReminderEnabled,
@@ -152,15 +154,22 @@ enum NotificationService {
             guard await requestAuthorizationIfNeeded() else { return }
             cancelWarrantyReminder(for: watch)
             await scheduleWarrantyFire(for: watch, monthsBefore: 3, identifier: warranty3mID(watch),
+                                       titleKey: "notif.warranty.title",
                                        bodyKey: "notif.warranty.body_3m", expiration: expiration)
             await scheduleWarrantyFire(for: watch, monthsBefore: 1, identifier: warranty1mID(watch),
+                                       titleKey: "notif.warranty.title",
                                        bodyKey: "notif.warranty.body_1m", expiration: expiration)
+            // 보증 만료 당일(만료일 오전 10시) 알림.
+            await scheduleWarrantyFire(for: watch, monthsBefore: 0, identifier: warranty0mID(watch),
+                                       titleKey: "notif.warranty.title_expired",
+                                       bodyKey: "notif.warranty.body_expired", expiration: expiration)
         }
     }
 
     private static func scheduleWarrantyFire(for watch: Watch,
                                              monthsBefore: Int,
                                              identifier: String,
+                                             titleKey: String,
                                              bodyKey: String,
                                              expiration: Date) async {
         let cal = Calendar.current
@@ -173,7 +182,7 @@ enum NotificationService {
         let trigComps = cal.dateComponents([.year, .month, .day, .hour, .minute], from: fire)
 
         let content = UNMutableNotificationContent()
-        content.title = String(format: NSLocalizedString("notif.warranty.title", comment: ""),
+        content.title = String(format: NSLocalizedString(titleKey, comment: ""),
                                watch.nickname ?? "\(watch.brand) \(watch.model)")
         content.body = String(format: NSLocalizedString(bodyKey, comment: ""), shortDate(expiration))
         content.sound = .default
@@ -186,7 +195,7 @@ enum NotificationService {
 
     static func cancelWarrantyReminder(for watch: Watch) {
         UNUserNotificationCenter.current().removePendingNotificationRequests(
-            withIdentifiers: [warranty3mID(watch), warranty1mID(watch)]
+            withIdentifiers: [warranty3mID(watch), warranty1mID(watch), warranty0mID(watch)]
         )
     }
 

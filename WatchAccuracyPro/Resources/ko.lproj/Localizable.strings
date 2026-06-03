@@ -1420,11 +1420,19 @@
 "addwatch.warranty.12m" = "1년 (12개월)";
 "addwatch.warranty.24m" = "2년 (24개월)";
 "addwatch.warranty.36m" = "3년 (36개월)";
+"addwatch.warranty.48m" = "4년 (48개월)";
 "addwatch.warranty.60m" = "5년 (60개월)";
-"addwatch.warranty.reminder" = "만료 3개월·1개월 전 알림";
+"addwatch.warranty.72m" = "6년 (72개월)";
+"addwatch.warranty.84m" = "7년 (84개월)";
+"addwatch.warranty.96m" = "8년 (96개월)";
+"addwatch.warranty.108m" = "9년 (108개월)";
+"addwatch.warranty.120m" = "10년 (120개월)";
+"addwatch.warranty.reminder" = "만료 3·1개월 전 + 만료일 알림";
 "notif.warranty.title" = "%@ 보증 만료가 다가와요";
 "notif.warranty.body_3m" = "%@ 까지. 점검·정비를 고려해 보세요.";
 "notif.warranty.body_1m" = "%@ 까지 1개월 남았어요. 보증 점검 예약을 권장합니다.";
+"notif.warranty.title_expired" = "%@ 보증이 오늘 만료돼요";
+"notif.warranty.body_expired" = "%@ 부로 보증이 종료됩니다. 마지막 점검·정비를 받아보세요.";
 
 /* Sprint 2 — P0-2.2 오프라인 배너 */
 "network.offline.banner" = "오프라인 — 기록은 저장되며 나중에 동기화됩니다";

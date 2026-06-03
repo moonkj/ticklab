@@ -1425,11 +1425,19 @@
 "addwatch.warranty.12m" = "1 año (12 meses)";
 "addwatch.warranty.24m" = "2 años (24 meses)";
 "addwatch.warranty.36m" = "3 años (36 meses)";
+"addwatch.warranty.48m" = "4 años (48 meses)";
 "addwatch.warranty.60m" = "5 años (60 meses)";
-"addwatch.warranty.reminder" = "Avisar 3 meses y 1 mes antes de la expiración";
+"addwatch.warranty.72m" = "6 años (72 meses)";
+"addwatch.warranty.84m" = "7 años (84 meses)";
+"addwatch.warranty.96m" = "8 años (96 meses)";
+"addwatch.warranty.108m" = "9 años (108 meses)";
+"addwatch.warranty.120m" = "10 años (120 meses)";
+"addwatch.warranty.reminder" = "Avisar 3 y 1 meses antes + al vencer";
 "notif.warranty.title" = "Garantía de %@ próxima a expirar";
 "notif.warranty.body_3m" = "Hasta %@. Considera reservar una revisión.";
 "notif.warranty.body_1m" = "1 mes restante hasta %@. Recomendamos reservar una revisión.";
+"notif.warranty.title_expired" = "La garantía de %@ vence hoy";
+"notif.warranty.body_expired" = "La garantía finaliza el %@. Considera una última revisión.";
 
 /* Sprint 2 — P0-2.2 Banner sin conexión */
 "network.offline.banner" = "Sin conexión — los registros se guardan y sincronizan después";

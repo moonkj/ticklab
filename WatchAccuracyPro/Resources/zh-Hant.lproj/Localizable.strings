@@ -1425,11 +1425,19 @@
 "addwatch.warranty.12m" = "1年 (12個月)";
 "addwatch.warranty.24m" = "2年 (24個月)";
 "addwatch.warranty.36m" = "3年 (36個月)";
+"addwatch.warranty.48m" = "4年 (48個月)";
 "addwatch.warranty.60m" = "5年 (60個月)";
-"addwatch.warranty.reminder" = "到期前3個月和1個月通知";
+"addwatch.warranty.72m" = "6年 (72個月)";
+"addwatch.warranty.84m" = "7年 (84個月)";
+"addwatch.warranty.96m" = "8年 (96個月)";
+"addwatch.warranty.108m" = "9年 (108個月)";
+"addwatch.warranty.120m" = "10年 (120個月)";
+"addwatch.warranty.reminder" = "到期前 3、1 個月 + 當天通知";
 "notif.warranty.title" = "%@ 保固即將到期";
 "notif.warranty.body_3m" = "至 %@。請考慮預約保養檢查。";
 "notif.warranty.body_1m" = "距 %@ 僅剩 1 個月。建議預約保固服務。";
+"notif.warranty.title_expired" = "%@ 的保固今天到期";
+"notif.warranty.body_expired" = "保固將於 %@ 結束。建議做最後一次保養檢查。";
 
 /* Sprint 2 — P0-2.2 離線橫幅 */
 "network.offline.banner" = "離線 — 記錄保存在本機,稍後同步";
