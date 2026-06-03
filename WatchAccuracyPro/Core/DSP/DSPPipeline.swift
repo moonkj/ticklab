@@ -48,6 +48,12 @@ final class DSPPipeline {
 
     /// Buffers 는 audio 콜백과 analyzer 가 동시 접근 → lock 으로 보호.
     private let bufferLock = NSLock()
+    /// 감사 P1: analyze()/computeLiveMetrics 가 만지는 비버퍼 공유 상태(liveOnsetTimes·
+    ///   bestLockedSnapshot·lastLockedSnapshot·lastAnalyzeFailReason)를 직렬화.
+    ///   stop() 이 cancel 직후 자기 analyze() 를 도는데, 취소된 analyzerTask 의 in-flight
+    ///   분석과 겹쳐 동시 쓰기(배열 realloc/struct tear) → 크래시 가능. 항상 top-level 에서만
+    ///   취득(bufferLock 과 중첩 시 analysisLock→bufferLock 순서 고정) → 데드락 없음.
+    private let analysisLock = NSLock()
     private var rawBuffer: [Float] = []
     private var envelopeBuffer: [Float] = []  // 48kHz, SNR/amplitude 계산용
     private var fluxBuffer: [Float] = []       // 200Hz, BPH/onset 검출용
@@ -157,7 +163,12 @@ final class DSPPipeline {
                 if Task.isCancelled { break }
                 let elapsed = Date().timeIntervalSince(self.startTime ?? Date())
                 // 라이브 분석은 짧은 윈도우 — autocorrelation 비용 통제.
-                if var metrics = self.computeLiveMetrics(elapsed: elapsed) {
+                // 감사 P1: computeLiveMetrics 가 공유 상태를 mutate → analysisLock 으로 직렬화
+                //   (stop()'s analyze() 와의 레이스 차단). 락은 분석 1사이클만 점유.
+                self.analysisLock.lock()
+                let liveMetrics = self.computeLiveMetrics(elapsed: elapsed)
+                self.analysisLock.unlock()
+                if var metrics = liveMetrics {
                     // Round 154 사용자 실측 보고 — coaching 임계 완화.
                     // micContactScore [-60, -20] → [0, 100] (이전 [-50,-20] 너무 strict, 0% 빈발).
                     if let db = metrics.rawRMSDB {
@@ -196,6 +207,11 @@ final class DSPPipeline {
     func stop() -> MeasurementResult? {
         analyzerTask?.cancel()
         analyzerTask = nil
+        // 감사 P1: 취소는 협조적이라 analyzerTask 가 in-flight computeLiveMetrics 중일 수 있음.
+        //   analysisLock 을 통과(drain)해 진행 중 분석이 끝난 뒤 진행 → 아래 analyze() 가
+        //   공유 상태를 단독 접근(취소된 task 는 더 이상 computeLiveMetrics 재진입 안 함).
+        analysisLock.lock()
+        analysisLock.unlock()
         source.stop()
         // Round 170 (사용자 보고: 분석 너무 오래 기다림):
         // simplified path 는 single window 분석으로 충분 (tail-trim retry 우회).
@@ -371,7 +387,8 @@ final class DSPPipeline {
         let fluxSlice = Array(fluxBuffer[fluxStartIdx..<fluxEndIdx])
         bufferLock.unlock()
 
-        let coarseBeats = BeatDetector.detectOnsets(envelope: fluxSlice, sampleRate: fluxRate)
+        let coarseBeats = BeatDetector.detectOnsets(envelope: fluxSlice, sampleRate: fluxRate,
+            refractoryMs: BeatDetector.adaptiveRefractoryMs(nominalBph: nominalBph))   // 감사 P1: 36000 BPH refractory
         guard coarseBeats.count >= 8 else { return nil }
         guard let bphEst = BPHEstimator.estimate(
             envelope: fluxSlice, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nominalBph
@@ -540,7 +557,8 @@ final class DSPPipeline {
         let p99 = sorted[min(sorted.count - 1, (sorted.count * 99) / 100)]
         let dynamicRange = p10 > 0 ? Double(p99 / p10) : 0
         // onset count (cheap)
-        let onsets = BeatDetector.detectOnsets(envelope: envCopy, sampleRate: source.sampleRate).count
+        let onsets = BeatDetector.detectOnsets(envelope: envCopy, sampleRate: source.sampleRate,
+            refractoryMs: BeatDetector.adaptiveRefractoryMs(nominalBph: nominalBph)).count   // 감사 P1
         return (snr, rawRMSDB, onsets, dynamicRange)
     }
 
@@ -620,7 +638,8 @@ final class DSPPipeline {
         }
 
         // 2) Onset 검출 (flux 위) — 추후 beatError/confidence 표시용. Rate 계산엔 영향 X.
-        let coarseBeats = BeatDetector.detectOnsets(envelope: fluxSlice, sampleRate: fluxRate)
+        let coarseBeats = BeatDetector.detectOnsets(envelope: fluxSlice, sampleRate: fluxRate,
+            refractoryMs: BeatDetector.adaptiveRefractoryMs(nominalBph: nominalBph))   // 감사 P1: 36000 BPH refractory
         guard coarseBeats.count >= 8 else {
             lastAnalyzeFailReason = "onsets<8(simplified, got=\(coarseBeats.count))"
             return nil
@@ -848,7 +867,8 @@ final class DSPPipeline {
 
         // Round 37: NoiseSuppressor 도 revert (정상 tic burst zero out 위험).
         // tickIQ 는 marginal 신호도 측정. 우리는 너무 strict → revert.
-        let rawOnsets = BeatDetector.detectOnsets(envelope: fluxSnapshot, sampleRate: fluxRate)
+        let rawOnsets = BeatDetector.detectOnsets(envelope: fluxSnapshot, sampleRate: fluxRate,
+            refractoryMs: BeatDetector.adaptiveRefractoryMs(nominalBph: nominalBph))   // 감사 P1
         // Round 158 (사용자 보고: 측정 간 ±30 s/d swing):
         // BandPass 6-15kHz + NoiseSuppressor 가 이미 sub-pulse 분리 충분.
         // Cluster 가 측정마다 다른 stage 선택해 centroid drift 야기 가능 → 비활성화.
@@ -867,7 +887,8 @@ final class DSPPipeline {
             envelopeDownsampled.append(localMax)
             idx += hop
         }
-        let envOnsets = BeatDetector.detectOnsets(envelope: envelopeDownsampled, sampleRate: envFluxRate)
+        let envOnsets = BeatDetector.detectOnsets(envelope: envelopeDownsampled, sampleRate: envFluxRate,
+            refractoryMs: BeatDetector.adaptiveRefractoryMs(nominalBph: nominalBph))   // 감사 P1
         // Round 158: cluster 비활성화 — envelope path 도 동일하게.
         let envCoarseBeats = envOnsets
         let envBphEstimate = BPHEstimator.estimate(

@@ -49,6 +49,17 @@ final class RateAccuracyFixtureTests: XCTestCase {
         XCTAssertEqual(r.rateSecondsPerDay, -42, accuracy: 8, "slow 진값 -42 근처")
     }
 
+    func test_36000bph_highBeat_recoversOnRate() throws {
+        // Zenith El Primero 등 36000 BPH(IOI 100ms). 감사 P1: 옛 refractory(100ms)가 IOI 와 같아
+        //   onset 누락 위험 → adaptiveRefractoryMs(80ms) 적용 후 정상 lock·rate 복원·onset 확보 가드.
+        let r = try measure(actualBph: 36_000, nominalBph: 36_000)
+        print("🎯 36000: bph=\(r.bph) rate=\(String(format: "%.2f", r.rateSecondsPerDay)) beats=\(r.beatCount)")
+        XCTAssertEqual(r.bph, 36_000, "고진동 BPH lock")
+        XCTAssertEqual(r.rateSecondsPerDay, 0, accuracy: 10, "on-rate 합성은 ≈0 s/d")
+        // 36000 BPH × 24s = 240 beats. refractory 로 onset 이 반토막 나면 안 됨.
+        XCTAssertGreaterThan(r.beatCount, 120, "고진동에서 refractory 가 onset 을 과도히 솎으면 안 됨")
+    }
+
     // MARK: - Phase B: 신뢰 게이트 (cross-window 일관성)
 
     func test_consistentMeasurement_smallSpread_gradeA() throws {

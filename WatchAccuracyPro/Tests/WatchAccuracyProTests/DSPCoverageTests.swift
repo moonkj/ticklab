@@ -236,3 +236,32 @@ final class DSPCoverageTests: XCTestCase {
         XCTAssertGreaterThanOrEqual(count, 1, "최소 한 waveform chunk emit")
     }
 }
+
+/// Round 176 (감사 P1) 회귀 가드 — adaptive refractory.
+/// 고진동(36000 BPH, IOI 100ms)에서 기본 refractory(100ms)가 IOI 와 같아 비트 누락 →
+///   nominalBph IOI×0.8 로 cap. 28800/21600/18000 은 100ms **무변**, 36000 만 80ms.
+final class BeatDetectorRefractoryTests: XCTestCase {
+
+    func test_common_bph_unchanged_at_100ms() {
+        // 28800(IOI125)·25200·21600·18000 은 IOI×0.8 ≥ 100 → cap 으로 100ms 유지(회귀 0).
+        for bph in [28_800, 25_200, 21_600, 19_800, 18_000] {
+            XCTAssertEqual(BeatDetector.adaptiveRefractoryMs(nominalBph: bph), 100.0, accuracy: 1e-9,
+                           "흔한 BPH(\(bph))는 refractory 100ms 유지")
+        }
+    }
+
+    func test_36000_high_beat_lowered_to_80ms() {
+        // IOI 100ms × 0.8 = 80ms — 핵심 수정.
+        XCTAssertEqual(BeatDetector.adaptiveRefractoryMs(nominalBph: 36_000), 80.0, accuracy: 1e-9)
+        XCTAssertLessThan(BeatDetector.adaptiveRefractoryMs(nominalBph: 36_000),
+                          BeatDetector.adaptiveRefractoryMs(nominalBph: 28_800),
+                          "36000 의 refractory 는 28800 보다 짧아야(누락 방지)")
+        XCTAssertLessThan(BeatDetector.adaptiveRefractoryMs(nominalBph: 36_000), 100.0,
+                          "refractory 가 IOI(100ms)보다 짧아야")
+    }
+
+    func test_zero_or_negative_bph_safe_default() {
+        XCTAssertEqual(BeatDetector.adaptiveRefractoryMs(nominalBph: 0), 100.0, "0 → 안전 기본값")
+        XCTAssertEqual(BeatDetector.adaptiveRefractoryMs(nominalBph: -1), 100.0, "음수 → 안전 기본값")
+    }
+}

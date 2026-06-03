@@ -21,6 +21,17 @@ enum BeatDetector {
     /// **0.55/1.8 로 완화** — marginal 신호도 수용. score-based BPH 가 노이즈 제거 담당.
     // Round 129 (실기기 피드백): 케이스백 닫힌 시계(IWC 등) onset 감지율 43% → 임계 0.45→0.35 완화.
     // 낮은 SNR 환경에서 더 많은 beat 감지. false positive는 BPH autocorr 단계에서 필터링.
+    /// 감사 P1: 고진동(36000 BPH, IOI 100ms) 에서 기본 refractory(100ms)가 IOI 와 **같아**
+    ///   다음 비트가 정확히 i+refractory 에 와야만 잡혀 1프레임(5ms@200Hz) 지터에도 누락 →
+    ///   onset 감소 → BPH lock·beat error 난항(Zenith El Primero 등).
+    ///   nominalBph IOI 의 0.8 배로 cap. 28800(125ms)/21600/18000 은 100ms 유지(무변),
+    ///   36000(100ms)만 80ms 로 낮춰 여유 확보.
+    static func adaptiveRefractoryMs(nominalBph: Int) -> Double {
+        guard nominalBph > 0 else { return 100.0 }
+        let nominalIOIms = 3_600.0 / Double(nominalBph) * 1_000.0
+        return min(100.0, nominalIOIms * 0.8)
+    }
+
     static func detectOnsets(
         envelope: [Float],
         sampleRate: Double = 48_000,
