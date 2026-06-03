@@ -81,6 +81,10 @@ struct MeasurementResult: Equatable, Hashable, Sendable {
     /// Round 170 (팀 토론): OLS residual RMS (seconds). rate 정밀도 직접 metric — internal gate 용.
     /// ±1 s/d 목표 시 240 beats 면 RMS ≤ 22μs, 96 beats 면 ≤ 35μs.
     var residualRMSSeconds: Double? = nil
+    /// Round 176 (감사): residualRMS 가 산출된 **실제 OLS fit beat 수** — ±s/d 불확도 공식의 N.
+    /// 감사 P1: 이전엔 N 에 beatCount(전체 onset)를 써서 fit 이 부분집합일 때 ± 과신(최대 6×).
+    ///   nil 이면 beatCount 로 폴백(legacy 경로 보존). 표시 전용·미persist.
+    var rateFitBeatCount: Int? = nil
     /// Round 172 (tg estimator): envelope 자기상관 cycle-to-cycle 일관성(s/d). 작을수록 신뢰.
     /// tg 가 headline 일 때 ±/grade 의 재현성 신호로 사용(노이즈 큰 10s-window spread 대체).
     var tgSigma: Double? = nil
@@ -89,6 +93,26 @@ struct MeasurementResult: Equatable, Hashable, Sendable {
 
     /// 후방 호환 — UI 가 String key 를 직접 다루는 코드가 있으면 이 프로퍼티 사용.
     var reliabilityNoteKey: String? { reliabilityNote?.rawValue }
+
+    /// ±s/d rate **fit 정밀도** 불확도 — OLS slope 이론 σ_slope = σ_resid × √12 / N^1.5.
+    /// 감사 P1 수정: N = rateFitBeatCount(실제 fit) 우선, 없으면 beatCount 폴백.
+    ///   residualRMS·bph 부족 시 nil. persist 게이트와 표시 ± 가 이 단일 소스를 공유한다.
+    var rateFitUncertaintySD: Double? {
+        Self.rateFitUncertaintySD(residualRMSSeconds: residualRMSSeconds,
+                                  fitBeatCount: rateFitBeatCount,
+                                  beatCount: beatCount,
+                                  bph: bph)
+    }
+
+    /// 순수 함수(테스트용) — 표시/게이트 양쪽이 동일 공식을 쓰도록 단일화.
+    static func rateFitUncertaintySD(residualRMSSeconds: Double?, fitBeatCount: Int?, beatCount: Int, bph: Int) -> Double? {
+        guard let rms = residualRMSSeconds, bph > 0 else { return nil }
+        let n = Double(fitBeatCount ?? beatCount)
+        guard n > 1 else { return nil }
+        let nominalPeriod = 3600.0 / Double(bph)
+        let sigmaSlope = rms * 12.0.squareRoot() / pow(n, 1.5)
+        return sigmaSlope / nominalPeriod * 86400.0
+    }
 }
 
 /// 진행 중 측정의 라이브 메트릭 — UI 갱신용 스트림 페이로드.

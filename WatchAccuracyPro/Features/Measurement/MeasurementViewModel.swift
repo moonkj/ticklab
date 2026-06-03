@@ -289,13 +289,8 @@ final class MeasurementViewModel {
         // OLS 이론: σ_slope = σ_resid × √12 / N^1.5  (균등 분포 index)
         // rate uncertainty (s/day) = σ_slope / nominalPeriod × 86400
         // 사용자 목표 ±1 s/d → 게이트 ≤ 2 s/d (안전마진 2×).
-        let rateUncertaintySD: Double = {
-            guard let rms = result.residualRMSSeconds, result.beatCount > 1 else { return .infinity }
-            let n = Double(result.beatCount)
-            let nominalPeriod = 3600.0 / Double(result.bph)
-            let sigmaSlope = rms * 12.0.squareRoot() / pow(n, 1.5)
-            return sigmaSlope / nominalPeriod * 86400.0
-        }()
+        // 감사 P1: N 은 실제 OLS fit beat 수(rateFitBeatCount) — 표시 ± 와 동일 단일 소스.
+        let rateUncertaintySD = result.rateFitUncertaintySD ?? .infinity
         var failedGates: [String] = []
         if absRate > 300 { failedGates.append("rate>300") }
         if result.confidenceScore < 10 { failedGates.append("conf<10") }

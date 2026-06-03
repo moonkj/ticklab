@@ -57,10 +57,8 @@ struct MeasurementResultView: View {
     /// 둘을 제곱합으로 결합 → sub-window 들이 흩어진(불안정) 측정은 ± 가 자동으로 넓어져
     /// "±0.2 인데 사실 30 틀림" 식 과신 표시를 차단한다.
     private var rateUncertaintyString: String? {
-        guard let rms = result.residualRMSSeconds, result.beatCount > 1 else { return nil }
-        let n = Double(result.beatCount)
-        let period = 3600.0 / Double(result.bph)
-        let fitUnc = rms * 12.0.squareRoot() / pow(n, 1.5) / period * 86400.0
+        // 감사 P1: fitUnc 의 N 은 실제 OLS fit beat 수(rateFitBeatCount) — persist 게이트와 단일 소스 공유.
+        guard let fitUnc = result.rateFitUncertaintySD else { return nil }
         let reproUnc = (result.crossWindowRateDelta ?? 0) / 2.0   // spread → σ 근사
         let uncertainty = (fitUnc * fitUnc + reproUnc * reproUnc).squareRoot()
         guard uncertainty.isFinite, uncertainty < 100 else { return nil }

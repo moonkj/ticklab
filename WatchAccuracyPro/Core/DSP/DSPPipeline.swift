@@ -769,6 +769,9 @@ final class DSPPipeline {
         // OLS residual RMS 우선 (rate 와 동일 estimator 의 정밀도) — 표시 ±s/d 가 추정기와 일치.
         // OLS 미engage(짧은 윈도우) 시에만 IOI-stddev fallback.
         result.residualRMSSeconds = precise.residualRMSSeconds ?? residualRMS
+        // 감사 P1: ±s/d 의 N 은 residualRMS 가 산출된 실제 fit 수와 일치해야 함.
+        //   OLS fit 채택 시 fitBeatCount, IOI-stddev fallback 시 tight iois 수.
+        result.rateFitBeatCount = (precise.residualRMSSeconds != nil) ? precise.fitBeatCount : iois.count
         result.tgSigma = tgEst?.sigma   // Round 172: tg 일관성 → ±/grade 신호.
         let autocorrRate = RateCalculator.secondsPerDay(measuredBph: bphEst.rawBph, nominalBph: nominalBph)
         // (DEBUG 진단) 추정기 구성요소 — 고정 시계 run-to-run 변동 원인 추적용.
@@ -1167,6 +1170,10 @@ final class DSPPipeline {
     private struct PreciseRate {
         let rawBph: Double
         let residualRMSSeconds: Double?
+        /// residualRMS 가 산출된 **최종 OLS(RANSAC) fit 의 beat 수** — ±s/d 불확도 공식의 N.
+        /// 감사 수정: 이전엔 호출부가 onsets.count(전체)로 N 을 써서 ± 과신(노이즈 측정 최대 6×).
+        ///   실제 fit beat 수로 정정. residualRMS 가 nil(짧은 윈도우 fallback)이면 0.
+        let fitBeatCount: Int
         /// IOI 정합(±1% 정수배) 필터를 통과한 beat — 표시 metric(beatError 등) 출처 일치용.
         let cleanedBeats: [BeatEvent]
         // (DEBUG 진단) 추정기 구성요소 — run-to-run 변동 추적용.
@@ -1218,14 +1225,14 @@ final class DSPPipeline {
         }()
 
         // OLS slope + RANSAC(2×MAD, 5회) + R²≥0.999. 실패 시 trimmed-mean/rawBph fallback.
-        let (preciseRawBph, residualRMS): (Double, Double?) = {
+        let (preciseRawBph, residualRMS, fitBeatCount): (Double, Double?, Int) = {
             guard cleanedBeats.count >= 30 else {
-                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), nil)
+                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), nil, 0)
             }
             let nominalPeriod = nominalPeriodForFilter
             let (slope, residuals) = ordinaryLeastSquaresPeriod(usable: cleanedBeats, nominalPeriod: nominalPeriod)
             guard let slope, !residuals.isEmpty else {
-                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), nil)
+                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), nil, 0)
             }
             var currentBeats = cleanedBeats
             var currentSlope = slope
@@ -1246,11 +1253,13 @@ final class DSPPipeline {
             }
             let sumSq = currentResiduals.reduce(0.0) { $0 + $1 * $1 }
             let rms: Double? = (currentResiduals.count > 0) ? (sumSq / Double(currentResiduals.count)).squareRoot() : nil
+            // 감사 수정: residualRMS 가 산출된 실제 fit beat 수(currentResiduals.count)를 함께 반환 → ±s/d 의 N.
+            let n = currentResiduals.count
             let r2 = Self.coefficientOfDetermination(beats: currentBeats, slope: currentSlope, nominalPeriod: nominalPeriod)
             guard r2 >= 0.999 else {
-                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), rms)
+                return (fallbackMedianRawBph(beats: beats, bphEstimate: bphEstimate), rms, n)
             }
-            return (3600.0 / currentSlope, rms)
+            return (3600.0 / currentSlope, rms, n)
         }()
 
         // OLS vs Trimmed mean: 차이 > 5 s/d → TM 채택 (OLS bias 의심).
@@ -1265,8 +1274,8 @@ final class DSPPipeline {
             return preciseRawBph
         }()
 
-        return PreciseRate(rawBph: finalRawBph, residualRMSSeconds: residualRMS, cleanedBeats: cleanedBeats,
-                           olsBph: preciseRawBph, tmBph: trimmedMeanBph)
+        return PreciseRate(rawBph: finalRawBph, residualRMSSeconds: residualRMS, fitBeatCount: fitBeatCount,
+                           cleanedBeats: cleanedBeats, olsBph: preciseRawBph, tmBph: trimmedMeanBph)
     }
 
     // MARK: - SNR / utilities

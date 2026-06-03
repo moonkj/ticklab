@@ -100,3 +100,68 @@ final class RateAccuracyFixtureTests: XCTestCase {
         XCTAssertNotEqual(r.reliabilityGrade, .a, "불안정 구간 → grade A 로 과신하면 안 됨")
     }
 }
+
+/// Round 176 (감사 P1) 회귀 가드 — ±s/d 불확도의 N 은 **실제 OLS fit beat 수**여야 한다.
+/// 버그: 이전엔 N=beatCount(전체 onset)를 써서 fit 이 부분집합(예: 240 중 60)일 때
+///   σ ∝ N^-1.5 이라 (240/60)^1.5 = 8× 과소평가 → ± 를 과신(좁게) 표시했다.
+/// 표시(MeasurementResultView)와 persist 게이트(MeasurementViewModel)가
+///   이제 동일한 순수 helper 를 공유하므로 양쪽 모두를 이 한 곳에서 가드한다.
+final class RateFitUncertaintyTests: XCTestCase {
+
+    private let rms = 40e-6          // 40μs residual
+    private let bph = 28_800
+
+    func test_uses_fitBeatCount_when_present_not_total_beatCount() throws {
+        // fit=60(실제 OLS 잔차 수) vs 옛 동작(N=beatCount=240)
+        let corrected = try XCTUnwrap(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: 60, beatCount: 240, bph: bph))
+        let naiveOld = try XCTUnwrap(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: nil, beatCount: 240, bph: bph))   // 폴백 N=240
+        // 과신 차단: fit beat 수가 적으면 ± 는 더 넓어져야(커져야) 한다.
+        XCTAssertGreaterThan(corrected, naiveOld, "fit beat 수가 적으면 불확도는 더 커야(과신 방지)")
+        // σ ∝ N^-1.5 → 비율 = (240/60)^1.5 = 8.0
+        XCTAssertEqual(corrected / naiveOld, pow(240.0 / 60.0, 1.5), accuracy: 1e-9,
+                       "비율은 (N_total/N_fit)^1.5 여야")
+    }
+
+    func test_fallback_to_beatCount_when_fitCount_nil_preserves_legacy() throws {
+        let fallback = try XCTUnwrap(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: nil, beatCount: 200, bph: bph))
+        let explicit = try XCTUnwrap(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: 200, beatCount: 999, bph: bph))
+        XCTAssertEqual(fallback, explicit, accuracy: 1e-12,
+                       "fitCount nil 이면 beatCount 로 폴백 — legacy 경로 보존")
+    }
+
+    func test_nil_when_inputs_insufficient() {
+        XCTAssertNil(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: nil, fitBeatCount: 100, beatCount: 200, bph: bph), "rms nil → nil")
+        XCTAssertNil(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: 1, beatCount: 1, bph: bph), "N≤1 → nil")
+        XCTAssertNil(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: 100, beatCount: 200, bph: 0), "bph 0 → nil")
+    }
+
+    func test_concrete_magnitude() throws {
+        // σ_slope = rms·√12 / N^1.5;  ±s/d = σ_slope / (3600/bph) · 86400
+        let n = 240.0
+        let expected = (rms * 12.0.squareRoot() / pow(n, 1.5)) / (3600.0 / Double(bph)) * 86400.0
+        let got = try XCTUnwrap(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: 240, beatCount: 240, bph: bph))
+        XCTAssertEqual(got, expected, accuracy: 1e-9)
+    }
+
+    /// 인스턴스 computed 가 static 과 동일 — 표시·게이트 단일 소스 보장.
+    func test_instance_property_matches_static() throws {
+        var r = MeasurementResult(bph: bph, rateSecondsPerDay: 0, beatErrorMs: 0,
+                                  amplitudeDegrees: nil, confidenceScore: 80,
+                                  durationSeconds: 30, snrDB: 20, beatCount: 240,
+                                  reliabilityNote: nil)
+        r.residualRMSSeconds = rms
+        r.rateFitBeatCount = 60
+        let viaInstance = try XCTUnwrap(r.rateFitUncertaintySD)
+        let viaStatic = try XCTUnwrap(MeasurementResult.rateFitUncertaintySD(
+            residualRMSSeconds: rms, fitBeatCount: 60, beatCount: 240, bph: bph))
+        XCTAssertEqual(viaInstance, viaStatic, accuracy: 1e-12)
+    }
+}
