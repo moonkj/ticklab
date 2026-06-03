@@ -62,6 +62,12 @@ targets:
         CFBundleLocalizations:
           - ko
           - en
+          - es
+          - fr
+          - hi
+          - ja
+          - zh-Hans
+          - zh-Hant
         ITSAppUsesNonExemptEncryption: false
     settings:
       base:
