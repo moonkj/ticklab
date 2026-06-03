@@ -34,12 +34,6 @@ TickLab은 내 시계와 함께하는 모든 순간을 기록하고 관리하고
 개인정보
 측정 데이터와 시리얼, 구매가는 기기 안에만 저장되며 외부로 전송되지 않습니다. 커뮤니티 사진은 위치정보를 제거한 뒤 사용자가 직접 게시 버튼을 눌렀을 때만 업로드됩니다.
 
-TickLab Pro
-무료로 시작하고 월간 또는 연간 구독으로 모든 기능을 사용하세요.
-TickLab Pro 월간은 1개월마다 자동 갱신됩니다.
-TickLab Pro 연간은 1년마다 자동 갱신됩니다.
-가격은 App Store에 표시된 지역별 금액을 따릅니다. 결제는 구매 확인 시 Apple ID로 청구되며 현재 구독 기간 종료 24시간 전까지 자동 갱신을 끄지 않으면 자동으로 갱신됩니다. 구독 관리와 해지는 기기 설정의 Apple ID 구독에서 할 수 있습니다.
-
 개인정보처리방침 https://moonkj.github.io/ticklab/privacy.html
 이용약관 https://moonkj.github.io/ticklab/terms.html
 지원 https://moonkj.github.io/ticklab/support.html
@@ -91,12 +85,6 @@ View your latest measurement in a widget and log today's wear right from it. Dur
 
 Privacy
 Your measurement data, serial numbers and purchase prices stay on your device and are never transmitted. Community photos are uploaded only after you tap Post, with location data removed.
-
-TickLab Pro
-Start free, and unlock everything with a monthly or yearly subscription.
-TickLab Pro Monthly renews every month.
-TickLab Pro Yearly renews every year.
-Prices follow the amounts shown on the App Store for your region. Payment is charged to your Apple ID at purchase confirmation. Subscriptions renew automatically unless turned off at least 24 hours before the end of the current period. Manage or cancel in Settings under your Apple ID Subscriptions.
 
 Privacy Policy https://moonkj.github.io/ticklab/privacy.html
 Terms of Use https://moonkj.github.io/ticklab/terms.html
@@ -150,12 +138,6 @@ TickLab は時計と過ごすすべての瞬間を記録し、管理し、分析
 プライバシー
 計測データ、シリアル、購入価格は端末内にのみ保存され外部に送信されません。コミュニティの写真は位置情報を取り除いたうえで、利用者が投稿ボタンを押したときだけアップロードされます。
 
-TickLab Pro
-無料で始めて、月額または年額の購読ですべての機能をご利用ください。
-TickLab Pro 月額は毎月自動更新されます。
-TickLab Pro 年額は毎年自動更新されます。
-価格は App Store に表示される地域ごとの金額に従います。購入確定時に Apple ID に課金され、現在の期間終了の24時間前までに自動更新をオフにしないと自動的に更新されます。購読の管理と解約は設定の Apple ID の購読から行えます。
-
 プライバシーポリシー https://moonkj.github.io/ticklab/privacy.html
 利用規約 https://moonkj.github.io/ticklab/terms.html
 サポート https://moonkj.github.io/ticklab/support.html
@@ -207,12 +189,6 @@ TickLab 是记录、管理、分析并分享你与腕表每一刻的腕表生活
 
 隐私
 你的测量数据、序列号与购入价仅保存在设备中，绝不外传。社区照片在去除位置信息后，只有当你点击发布时才会上传。
-
-TickLab Pro
-免费开始，并通过月度或年度订阅解锁全部功能。
-TickLab Pro 月度每月自动续订。
-TickLab Pro 年度每年自动续订。
-价格以 App Store 为你所在地区显示的金额为准。在确认购买时通过 Apple ID 收费，若未在当前周期结束前至少24小时关闭自动续订，将自动续订。可在设置的 Apple ID 订阅中管理或取消。
 
 隐私政策 https://moonkj.github.io/ticklab/privacy.html
 使用条款 https://moonkj.github.io/ticklab/terms.html
@@ -266,12 +242,6 @@ TickLab 是記錄、管理、分析並分享你與腕錶每一刻的腕錶生活
 隱私
 你的測量資料、序號與購入價僅保存在裝置中，絕不外傳。社群照片在移除位置資訊後，只有當你點擊發佈時才會上傳。
 
-TickLab Pro
-免費開始，並透過每月或每年訂閱解鎖全部功能。
-TickLab Pro 月訂每月自動續訂。
-TickLab Pro 年訂每年自動續訂。
-價格以 App Store 為你所在地區顯示的金額為準。在確認購買時透過 Apple ID 收費，若未在目前週期結束前至少24小時關閉自動續訂，將自動續訂。可在設定的 Apple ID 訂閱中管理或取消。
-
 隱私權政策 https://moonkj.github.io/ticklab/privacy.html
 使用條款 https://moonkj.github.io/ticklab/terms.html
 支援 https://moonkj.github.io/ticklab/support.html
@@ -323,12 +293,6 @@ Mira tu última medición en un widget y registra el uso de hoy desde él. Duran
 
 Privacidad
 Tus datos de medición, números de serie y precios de compra permanecen en tu dispositivo y nunca se transmiten. Las fotos de la comunidad se suben solo cuando pulsas Publicar, tras eliminar los datos de ubicación.
-
-TickLab Pro
-Empieza gratis y desbloquea todo con una suscripción mensual o anual.
-TickLab Pro Mensual se renueva cada mes.
-TickLab Pro Anual se renueva cada año.
-Los precios siguen los importes que muestra la App Store para tu región. El cargo se hace a tu Apple ID al confirmar la compra. Las suscripciones se renuevan automáticamente salvo que se desactiven al menos 24 horas antes del final del periodo actual. Gestiona o cancela en Ajustes, en tu Apple ID, Suscripciones.
 
 Política de privacidad https://moonkj.github.io/ticklab/privacy.html
 Términos de uso https://moonkj.github.io/ticklab/terms.html
@@ -382,12 +346,6 @@ Consultez votre dernière mesure dans un widget et enregistrez le port du jour d
 Confidentialité
 Vos données de mesure, numéros de série et prix d'achat restent sur votre appareil et ne sont jamais transmis. Les photos de la communauté ne sont envoyées que lorsque vous appuyez sur Publier, après suppression des données de localisation.
 
-TickLab Pro
-Commencez gratuitement et débloquez tout avec un abonnement mensuel ou annuel.
-TickLab Pro Mensuel se renouvelle chaque mois.
-TickLab Pro Annuel se renouvelle chaque année.
-Les prix suivent les montants affichés sur l'App Store pour votre région. Le paiement est débité de votre Apple ID à la confirmation de l'achat. Les abonnements se renouvellent automatiquement sauf désactivation au moins 24 heures avant la fin de la période en cours. Gérez ou résiliez dans Réglages, votre Apple ID, Abonnements.
-
 Politique de confidentialité https://moonkj.github.io/ticklab/privacy.html
 Conditions d'utilisation https://moonkj.github.io/ticklab/terms.html
 Assistance https://moonkj.github.io/ticklab/support.html
@@ -439,12 +397,6 @@ TickLab आपकी घड़ियों के साथ हर पल को
 
 गोपनीयता
 आपका मापन डेटा, सीरियल और खरीद मूल्य केवल आपके डिवाइस में रहता है और कभी बाहर नहीं भेजा जाता। समुदाय की फ़ोटो स्थान डेटा हटाने के बाद, केवल तभी अपलोड होती हैं जब आप पोस्ट दबाते हैं।
-
-TickLab Pro
-मुफ़्त शुरू करें, और मासिक या वार्षिक सदस्यता से सब कुछ अनलॉक करें।
-TickLab Pro मासिक हर महीने स्वतः नवीनीकृत होता है।
-TickLab Pro वार्षिक हर साल स्वतः नवीनीकृत होता है।
-कीमतें आपके क्षेत्र के लिए App Store पर दिखाई गई राशि के अनुसार होती हैं। खरीद की पुष्टि पर आपकी Apple ID से शुल्क लिया जाता है। मौजूदा अवधि समाप्त होने से कम से कम 24 घंटे पहले बंद न करने पर सदस्यता स्वतः नवीनीकृत होती है। प्रबंधन या रद्द करना सेटिंग्स में अपनी Apple ID सदस्यता में किया जा सकता है।
 
 गोपनीयता नीति https://moonkj.github.io/ticklab/privacy.html
 उपयोग की शर्तें https://moonkj.github.io/ticklab/terms.html
