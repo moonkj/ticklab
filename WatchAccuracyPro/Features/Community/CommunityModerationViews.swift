@@ -99,17 +99,26 @@ struct CommunityNotificationsView: View {
         }
     }
 
+    /// 알림 종류별 강조색 — like=하트(빨강), follow=악센트, comment=info(파랑).
+    private func tint(_ kind: Community.Notice.Kind) -> Color {
+        switch kind {
+        case .like:    return AppColors.danger
+        case .follow:  return AppColors.accent
+        case .comment: return AppColors.info
+        }
+    }
+
     private func row(_ n: Community.Notice) -> some View {
         HStack(spacing: 12) {
             ZStack {
-                Circle().fill((n.kind == .like ? AppColors.danger : AppColors.accent).opacity(0.14))
-                Image(systemName: n.kind == .like ? "heart.fill" : "person.fill.badge.plus")
+                Circle().fill(tint(n.kind).opacity(0.14))
+                Image(systemName: n.kind.iconName)
                     .font(.system(size: 15))
-                    .foregroundStyle(n.kind == .like ? AppColors.danger : AppColors.accent)
+                    .foregroundStyle(tint(n.kind))
             }
             .frame(width: 38, height: 38)
             VStack(alignment: .leading, spacing: 2) {
-                Text(String(localized: n.kind == .like ? "community.notif.like" : "community.notif.follow"))
+                Text(String(localized: String.LocalizationValue(n.kind.localizationKey)))
                     .font(.system(size: 14))
                     .foregroundStyle(AppColors.ink0)
                 Text(Self.relative.localizedString(for: n.createdAt, relativeTo: Date()))

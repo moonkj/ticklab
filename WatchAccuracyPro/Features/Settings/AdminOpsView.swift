@@ -16,6 +16,7 @@ private struct AdminOpsView: View {
     @State private var reportedPosts: [String: Community.Post] = [:]
     @State private var loaded = false
     @State private var composingAnnouncement = false
+    @State private var composingTheme = false
     @State private var announcements: [Community.Announcement] = []
     @State private var composingChannel = false
     @State private var channels: [Community.CuratedChannel] = []
@@ -62,6 +63,11 @@ private struct AdminOpsView: View {
                     composingAnnouncement = true
                 } label: {
                     Label(String(localized: "admin.notice.new"), systemImage: "megaphone")
+                }
+                Button {
+                    composingTheme = true
+                } label: {
+                    Label(String(localized: "admin.theme.new"), systemImage: "sparkles")
                 }
                 ForEach(announcements) { a in
                     NavigationLink {
@@ -189,6 +195,11 @@ private struct AdminOpsView: View {
         .sheet(isPresented: $composingAnnouncement) {
             NavigationStack {
                 AdminAnnouncementSheet(existing: nil) { await reloadAnnouncements() }
+            }
+        }
+        .sheet(isPresented: $composingTheme) {
+            NavigationStack {
+                AdminThemeSheet { await reloadAnnouncements() }
             }
         }
         .sheet(isPresented: $composingChannel) {
@@ -441,6 +452,45 @@ private struct AdminAnnouncementSheet: View {
                 active = e.active
             }
         }
+    }
+}
+
+/// 위클리 테마 발행 — 제목 + 노출 기간. kind='theme' 공지로 게시(postWeeklyTheme).
+private struct AdminThemeSheet: View {
+    let onSaved: () async -> Void
+    private let service = CommunityService.shared
+    @Environment(\.dismiss) private var dismiss
+    @State private var title = ""
+    @State private var startsAt = Date()
+    @State private var endsAt = Date().addingTimeInterval(7 * 86400)
+    @State private var saving = false
+    @State private var error: String?
+
+    var body: some View {
+        Form {
+            Section(String(localized: "admin.theme.title.label")) {
+                TextField(String(localized: "admin.theme.title.placeholder"), text: $title)
+            }
+            Section(String(localized: "admin.notice.period.section")) {
+                DatePicker(String(localized: "admin.notice.period.start"), selection: $startsAt)
+                DatePicker(String(localized: "admin.notice.period.end"), selection: $endsAt)
+            }
+            Section {
+                Button(String(localized: "admin.theme.publish")) {
+                    saving = true
+                    Task {
+                        let ok = await service.postWeeklyTheme(title: title, body: nil, startsAt: startsAt, endsAt: endsAt)
+                        saving = false
+                        if ok { await onSaved(); dismiss() } else { error = "발행 실패 (admin RLS 확인)" }
+                    }
+                }
+                .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || saving)
+                if let error { Text(error).font(.caption).foregroundStyle(.red) }
+            }
+        }
+        .navigationTitle(String(localized: "admin.theme.compose.title"))
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar { ToolbarItem(placement: .cancellationAction) { Button(String(localized: "common.cancel")) { dismiss() } } }
     }
 }
 
