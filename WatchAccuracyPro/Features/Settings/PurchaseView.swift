@@ -12,10 +12,19 @@ struct PurchaseView: View {
     @Environment(\.purchaseRouter) private var purchaseRouter
     /// Sprint 14 (S6): 개인화 — 최근 7일 측정 횟수.
     @Query private var allMeasurements: [WatchMeasurement]
+    /// 스트림B(2): watchLimit intent 프리뷰 — 등록 시계 수/썸네일.
+    @Query(sort: \Watch.createdAt, order: .reverse) private var watches: [Watch]
 
     private var recentMeasureCount: Int {
         let cutoff = Calendar.current.date(byAdding: .day, value: -7, to: Date()) ?? Date()
         return allMeasurements.filter { $0.timestamp >= cutoff }.count
+    }
+
+    /// 스트림B(2): dailyMeasurement 프리뷰용 — 최근 측정(시간순). rate 스파크라인 입력.
+    private var recentMeasurementsForSparkline: [WatchMeasurement] {
+        allMeasurements
+            .sorted { $0.timestamp < $1.timestamp }
+            .suffix(12)
     }
 
     @State private var monthlyProduct: Product?
@@ -36,6 +45,29 @@ struct PurchaseView: View {
         }
     }
 
+    /// 스트림B(1): 선택된 상품의 introductory offer 가 무료 체험(.freeTrial)일 때만 노출.
+    /// 실제 trial 설정은 개발자가 ASC 에서 하고, 코드는 offer 유무에 따라 표시만 한다(graceful).
+    private var selectedTrialOffer: Product.SubscriptionOffer? {
+        guard let offer = selectedProduct?.subscription?.introductoryOffer,
+              offer.paymentMode == .freeTrial else { return nil }
+        return offer
+    }
+
+    /// 무료 체험 기간을 사람이 읽는 문자열로(예: "7일"). period.unit + value 를 로컬라이즈.
+    /// 단위 문자열은 Foundation 의 ISO 기간 포맷 없이 단순 결합(ASC trial 은 보통 7일/1주).
+    private func trialPeriodText(_ offer: Product.SubscriptionOffer) -> String {
+        let value = offer.period.value
+        let unit: String
+        switch offer.period.unit {
+        case .day:   unit = String(localized: "paywall.trial.unit.day", defaultValue: "일")
+        case .week:  unit = String(localized: "paywall.trial.unit.week", defaultValue: "주")
+        case .month: unit = String(localized: "paywall.trial.unit.month", defaultValue: "개월")
+        case .year:  unit = String(localized: "paywall.trial.unit.year", defaultValue: "년")
+        @unknown default: unit = String(localized: "paywall.trial.unit.day", defaultValue: "일")
+        }
+        return "\(value)\(unit)"
+    }
+
     /// 연간 결제 할인율 뱃지 — 두 제품 실가격이 모두 로드됐고 실제 할인(>0)이 있을 때만.
     /// 감사 수정: 가짜 가격 폴백(1.99/9.99) 제거 + 토글 버튼에 실제 전달(이전엔 미사용 dead).
     private var yearlyDiscountBadge: String? {
@@ -53,6 +85,7 @@ struct PurchaseView: View {
             ScrollView {
                 VStack(spacing: 24) {
                     contextBanner
+                    dataPreview
                     hero
                     planToggle
                     benefitsList
@@ -120,6 +153,127 @@ struct PurchaseView: View {
             )
             .clipShape(RoundedRectangle(cornerRadius: 10))
         }
+    }
+
+    // MARK: - 스트림B(2): Paywall 데이터 미리보기
+
+    /// intent 별 사용자 본인 데이터 미니 프리뷰 — 손실회피 카피로 가치 환기.
+    /// watchLimit → 등록 시계 수/썸네일, dailyMeasurement → 최근 측정 수·rate 스파크라인.
+    @ViewBuilder
+    private var dataPreview: some View {
+        switch purchaseRouter?.lastIntent {
+        case .watchLimit:
+            if !watches.isEmpty { watchLimitPreview }
+        case .dailyMeasurement:
+            if !allMeasurements.isEmpty { measurementPreview }
+        default:
+            EmptyView()
+        }
+    }
+
+    private var watchLimitPreview: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            previewHeader(
+                icon: "rectangle.stack.fill",
+                title: String(localized: "paywall.preview.watch.title",
+                              defaultValue: "내 컬렉션")
+            )
+            HStack(spacing: -10) {
+                ForEach(watches.prefix(5)) { watch in
+                    previewThumb(for: watch)
+                }
+                if watches.count > 5 {
+                    Text("+\(watches.count - 5)")
+                        .font(.system(size: 12, weight: .bold, design: .monospaced))
+                        .foregroundStyle(AppColors.ink2)
+                        .frame(width: 36, height: 36)
+                        .background(AppColors.paper2)
+                        .clipShape(Circle())
+                        .overlay(Circle().stroke(AppColors.paper0, lineWidth: 2))
+                }
+                Spacer(minLength: 0)
+            }
+            // 손실회피: 더 등록하려면 잠금이 걸린다는 점을 사실 기반으로 환기(가짜 할인·강요 X).
+            Text(String(format: String(localized: "paywall.preview.watch.body",
+                                       defaultValue: "%d개의 시계를 기록 중이에요. 무료 등록 한도에 도달했어요."),
+                        watches.count))
+                .font(.system(size: 12))
+                .foregroundStyle(AppColors.ink2)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.paper1)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+    }
+
+    private var measurementPreview: some View {
+        let series = recentMeasurementsForSparkline
+        return VStack(alignment: .leading, spacing: 10) {
+            previewHeader(
+                icon: "waveform.path.ecg",
+                title: String(localized: "paywall.preview.measure.title",
+                              defaultValue: "내 측정 기록")
+            )
+            HStack(alignment: .center, spacing: 14) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("\(allMeasurements.count)")
+                        .font(.system(size: 26, weight: .bold, design: .monospaced))
+                        .foregroundStyle(AppColors.ink0)
+                    Text(String(localized: "paywall.preview.measure.count_label",
+                                defaultValue: "총 측정"))
+                        .font(.system(size: 10, weight: .semibold))
+                        .tracking(0.8)
+                        .foregroundStyle(AppColors.ink2)
+                }
+                if series.count >= 2 {
+                    Sparkline(values: series.map(\.rateSecondsPerDay), width: 140, height: 36)
+                    Spacer(minLength: 0)
+                }
+            }
+            Text(String(localized: "paywall.preview.measure.body",
+                        defaultValue: "오늘 무료 측정 한도에 도달했어요. 무제한으로 계속 추적해 보세요."))
+                .font(.system(size: 12))
+                .foregroundStyle(AppColors.ink2)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.paper1)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+    }
+
+    private func previewHeader(icon: String, title: String) -> some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(AppColors.accentDark)
+            Text(title)
+                .font(.system(size: 11, weight: .semibold))
+                .tracking(1.2)
+                .foregroundStyle(AppColors.ink2)
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func previewThumb(for watch: Watch) -> some View {
+        ZStack {
+            if let ui = PhotoCache.image(for: watch.id, data: watch.photoData) {
+                Image(uiImage: ui)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 36, height: 36)
+                    .clipShape(Circle())
+            } else {
+                Circle()
+                    .fill(AppColors.paper2)
+                    .frame(width: 36, height: 36)
+                    .overlay(WatchSilhouette(watch: watch, size: 24))
+            }
+        }
+        .overlay(Circle().stroke(AppColors.paper0, lineWidth: 2))
     }
 
     private var hero: some View {
@@ -268,6 +422,19 @@ struct PurchaseView: View {
                 .tracking(1.5)
                 .foregroundStyle(AppColors.accentDark)
 
+            // 스트림B(1): 무료 체험 offer 가 있으면 "N일 무료 체험 후 ₩X" 배지.
+            if let offer = selectedTrialOffer, let price = selectedProduct?.displayPrice {
+                Text(String(format: String(localized: "paywall.trial.badge",
+                                           defaultValue: "%1$@ 무료 체험 후 %2$@"),
+                            trialPeriodText(offer), price))
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundStyle(AppColors.primaryDeep)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 5)
+                    .background(AppColors.accentDark)
+                    .clipShape(Capsule())
+            }
+
             if isLoadingProduct {
                 ProgressView()
                     .tint(AppColors.accentDark)
@@ -305,6 +472,17 @@ struct PurchaseView: View {
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, 16)
                     .padding(.top, 2)
+                // 스트림B(1): 무료 체험 시 자동청구 전환 안내(법적 — 다크패턴 방지).
+                if let offer = selectedTrialOffer {
+                    Text(String(format: String(localized: "paywall.trial.legal",
+                                               defaultValue: "%@ 무료 체험이 끝나면 자동으로 유료 구독이 시작되며, 언제든 취소할 수 있어요."),
+                                trialPeriodText(offer)))
+                        .font(.system(size: 11))
+                        .foregroundStyle(AppColors.ink2)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 16)
+                        .padding(.top, 2)
+                }
             }
         }
         .padding(.vertical, 18)
@@ -324,9 +502,18 @@ struct PurchaseView: View {
 
     private var actionButtons: some View {
         VStack(spacing: 10) {
-            let ctaKey = isPurchasing ? "purchase.cta.processing" : "purchase.cta.subscribe"
+            // 스트림B(1): 무료 체험 offer 있으면 "무료 체험 시작" CTA, 없으면 기존 문구(graceful).
+            let ctaTitle: String = {
+                if isPurchasing {
+                    return String(localized: "purchase.cta.processing")
+                }
+                if selectedTrialOffer != nil {
+                    return String(localized: "paywall.trial.cta", defaultValue: "무료 체험 시작")
+                }
+                return String(localized: "purchase.cta.subscribe")
+            }()
             PrimaryButton(
-                String(localized: String.LocalizationValue(ctaKey)),
+                ctaTitle,
                 style: .accent,
                 isEnabled: !isPurchasing && !isRestoring && selectedProduct != nil
             ) {

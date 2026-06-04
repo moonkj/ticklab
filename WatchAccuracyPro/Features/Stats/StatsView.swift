@@ -51,6 +51,7 @@ struct StatsView: View {
                     funEntryCards
                     summaryCards
                     averageRateSection
+                    analysisSection
                     wearChartSection
                     cumulativeWearSection
                     moodDonut
@@ -632,5 +633,184 @@ struct StatsView: View {
         if a <= 6 { return AppColors.success }
         if a <= 20 { return AppColors.warning }
         return AppColors.danger
+    }
+
+    // MARK: - 스트림 D: 분석 (이상탐지 + AI 추세 요약)
+
+    /// 분석 대상 시계 — picker 로 고른 시계가 있으면 그것, 없으면 가장 최근 측정의 시계.
+    /// (averageRateSection 의 selectedWatchForPosition picker 와 자연스럽게 연동.)
+    private var analysisWatch: Watch? {
+        if let w = selectedWatchForPosition { return w }
+        return measurements.first?.watch   // @Query 가 timestamp 역순 → 최신.
+    }
+
+    /// 선택된 시계의 측정만 시간순 필터. 분석 입력.
+    private func measurements(for watch: Watch) -> [WatchMeasurement] {
+        measurements.filter { $0.watch?.id == watch.id }
+    }
+
+    @ViewBuilder
+    private var analysisSection: some View {
+        if let watch = analysisWatch {
+            let watchMeasurements = measurements(for: watch)
+            VStack(alignment: .leading, spacing: 12) {
+                if let anomaly = AnomalyDetector.detectLatest(measurements: watchMeasurements) {
+                    AnomalyAlertCard(anomaly: anomaly)
+                }
+                if let metrics = TrendDiagnosisService.metrics(watch: watch, measurements: watchMeasurements) {
+                    AITrendSummaryCard(watch: watch, metrics: metrics)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - AnomalyAlertCard (StatsView 전용)
+
+/// 단일 시계 이상탐지 결과 카드. 신규 측정이 과거 분포 대비 급변일 때만 표시.
+/// StatsView 한정(다른 측정 화면 금지). 측정 데이터 외부 전송 0.
+private struct AnomalyAlertCard: View {
+    let anomaly: AnomalyDetector.Anomaly
+
+    private var titleKey: String {
+        switch anomaly.reason {
+        case .suspectMagnetization:  return "anomaly.reason.magnetization.title"
+        case .suspectShock:          return "anomaly.reason.shock.title"
+        case .suspectBeatErrorSpike: return "anomaly.reason.beat_error.title"
+        }
+    }
+    private var bodyKey: String {
+        switch anomaly.reason {
+        case .suspectMagnetization:  return "anomaly.reason.magnetization.body"
+        case .suspectShock:          return "anomaly.reason.shock.body"
+        case .suspectBeatErrorSpike: return "anomaly.reason.beat_error.body"
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 15))
+                    .foregroundStyle(AppColors.warning)
+                Text(String(localized: "anomaly.eyebrow"))
+                    .font(.system(size: 10, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(AppColors.accentDark)
+                Spacer()
+            }
+            Text(String(localized: String.LocalizationValue(titleKey)))
+                .font(.system(size: 16, weight: .semibold, design: .serif))
+                .foregroundStyle(AppColors.ink0)
+                .fixedSize(horizontal: false, vertical: true)
+            Text(String(localized: String.LocalizationValue(bodyKey)))
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.ink1)
+                .lineSpacing(2)
+                .fixedSize(horizontal: false, vertical: true)
+            // 과거 평균 → 신규 측정 변화 요약 (사용자 friendly).
+            Text(String(format: NSLocalizedString("anomaly.delta", comment: ""),
+                        anomaly.baselineRate, anomaly.latestRate))
+                .font(.system(size: 11, weight: .medium, design: .monospaced))
+                .foregroundStyle(AppColors.ink2)
+            Text(String(localized: "anomaly.disclaimer"))
+                .font(.system(size: 10))
+                .foregroundStyle(AppColors.ink3)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.warning.opacity(0.07))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.warning.opacity(0.3), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
+}
+
+// MARK: - AITrendSummaryCard (StatsView 전용)
+
+/// on-device AI 추세 요약 카드. TrendDiagnosisService.TrendMetrics → 1문단 자연어.
+/// AppleIntelligenceVerdictService.trendVerdict 호출(가용 시), 불가/OFF 시 rule 폴백. 측정 데이터 외부 전송 0.
+private struct AITrendSummaryCard: View {
+    let watch: Watch
+    let metrics: TrendDiagnosisService.TrendMetrics
+
+    @Environment(UserPreferences.self) private var preferences
+    @State private var verdict: AppleIntelligenceVerdictService.Verdict?
+    @State private var isLoading = true
+
+    private var isAI: Bool { verdict?.source == .appleIntelligence }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                if isLoading {
+                    ProgressView().scaleEffect(0.6)
+                    Text(String(localized: "aitrend.source.loading"))
+                } else {
+                    Image(systemName: isAI ? "sparkles" : "chart.line.uptrend.xyaxis")
+                        .font(.system(size: 10))
+                    Text(String(localized: isAI ? "aitrend.source.ai" : "aitrend.source.rule"))
+                }
+                Spacer()
+            }
+            .font(.system(size: 10, weight: .semibold, design: .monospaced))
+            .tracking(1)
+            .foregroundStyle(isAI ? AppColors.accentDark : AppColors.ink2)
+
+            if let v = verdict {
+                Text(v.headline)
+                    .font(.system(size: 17, weight: .semibold, design: .serif))
+                    .foregroundStyle(AppColors.ink0)
+                    .fixedSize(horizontal: false, vertical: true)
+                if !v.body.isEmpty {
+                    Text(v.body)
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.ink1)
+                        .lineSpacing(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            } else if isLoading {
+                Text(String(localized: "aitrend.loading.body"))
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.ink3)
+            }
+            Text(String(localized: isAI ? "aitrend.disclaimer.ai" : "aitrend.disclaimer.rule"))
+                .font(.system(size: 10))
+                .foregroundStyle(AppColors.ink3)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.paper1)
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+        // metrics 또는 시계 변경 시 재로딩.
+        .task(id: metrics) { await load() }
+    }
+
+    @MainActor
+    private func load() async {
+        isLoading = true
+        let aiEnabled = preferences.aiVerdictEnabled
+        // 5초 timeout — 무한 로딩 방지(AIDiagnosisCard 패턴).
+        let verdictTask = Task { @MainActor in
+            await AppleIntelligenceVerdictService.shared.trendVerdict(
+                metrics: metrics, watch: watch, aiEnabled: aiEnabled
+            )
+        }
+        let timeoutTask = Task { @MainActor () -> AppleIntelligenceVerdictService.Verdict in
+            try? await Task.sleep(nanoseconds: 5_000_000_000)
+            return AppleIntelligenceVerdictService.shared.ruleBasedTrendVerdict(metrics: metrics)
+        }
+        let v = await withTaskGroup(of: AppleIntelligenceVerdictService.Verdict.self) { group in
+            group.addTask { await verdictTask.value }
+            group.addTask { await timeoutTask.value }
+            let first = await group.next()
+                ?? AppleIntelligenceVerdictService.shared.ruleBasedTrendVerdict(metrics: metrics)
+            group.cancelAll()
+            verdictTask.cancel()
+            timeoutTask.cancel()
+            return first
+        }
+        verdict = v
+        isLoading = false
     }
 }

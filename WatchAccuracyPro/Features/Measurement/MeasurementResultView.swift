@@ -278,14 +278,11 @@ struct MeasurementResultView: View {
             // Round 23 (Doyoon): 최초 1회만 haptic. share sheet 닫고 reentry 시 재발화 차단.
             guard !didFireHaptic else { return }
             didFireHaptic = true
-            // T-17: 햅틱 설정 토글 존중.
-            if HapticManager.isEnabled {
-                let gen = UINotificationFeedbackGenerator()
-                switch result.reliabilityGrade {
-                case .a, .b:    gen.notificationOccurred(.success)
-                case .c:        gen.notificationOccurred(.warning)
-                case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
-                }
+            // T-17 / 스트림A: 햅틱 토글 존중 — 인라인 generator 대신 HapticManager 경유.
+            // 고신뢰(A/B)는 성공 햅틱, 그 외(C/F/미상)는 경량 선택 햅틱으로 일관 처리.
+            switch result.reliabilityGrade {
+            case .a, .b:         HapticManager.trigger(.measurementComplete)
+            case .c, .f, .none:  HapticManager.trigger(.selection)
             }
             // Sprint 1 (P1-6): 골든 모멘트 — 신뢰도 A/B + confidence ≥80 일 때만 카운트.
             // 누적 3회 도달 + 60일 cooldown 통과 시 시스템 리뷰 prompt.
@@ -628,7 +625,8 @@ struct MeasurementResultView: View {
                 .fixedSize(horizontal: false, vertical: true)
             // 사용자 보고 fix: warning banner 의 retry CTA 가 약한 tertiary link 처럼 보였음 → 강한 filled 버튼으로 prominence ↑.
             Button {
-                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                // 스트림A: 인라인 generator → HapticManager (토글 존중).
+                HapticManager.trigger(.selection)
                 if let onRetry { onRetry() } else { dismiss() }
             } label: {
                 Label(String(localized: "result.suspicious.retry"), systemImage: "arrow.clockwise")
@@ -661,7 +659,8 @@ struct MeasurementResultView: View {
         VStack(spacing: 10) {
             if isHighConfidenceGrade {
                 PrimaryButton(String(localized: "result.action.done"), style: .accent, icon: "checkmark") {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    // 스트림A: 인라인 generator → HapticManager (토글 존중).
+                    HapticManager.trigger(.selection)
                     if let onRetry { onRetry() } else { dismiss() }
                 }
                 HStack(spacing: 10) {
@@ -675,7 +674,8 @@ struct MeasurementResultView: View {
             } else {
                 // Round 10: 낮은 신뢰도 — 재측정을 primary로.
                 PrimaryButton(String(localized: "result.action.again"), style: .accent, icon: "arrow.clockwise") {
-                    UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                    // 스트림A: 인라인 generator → HapticManager (토글 존중).
+                    HapticManager.trigger(.selection)
                     if let onRetry { onRetry() } else { dismiss() }
                 }
                 HStack(spacing: 10) {

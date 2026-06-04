@@ -246,6 +246,19 @@ final class CommunityService: ObservableObject {
         await heartbeat()
     }
 
+    /// 특정 브랜드 게시물만 — 브랜드 칩 탭 시(같은 브랜드 모아보기). 차단 작성자 제외.
+    /// 화이트리스트(내 컬렉션 브랜드)에서만 태깅되므로 입력은 안전한 메타 수준.
+    func fetchPostsByBrand(_ brand: String) async -> [Community.Post] {
+        await ensureSignedIn()
+        let trimmed = brand.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty,
+              let enc = trimmed.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=*&status=eq.approved&brand=eq.\(enc)&order=created_at.desc&limit=60") else { return [] }
+        guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let arr = try? Self.decoder.decode([Community.Post].self, from: data) else { return [] }
+        return arr.filter { !blockedUIDs.contains($0.authorUID) }
+    }
+
     // MARK: - Like (멱등 — PK(post_id, uid))
 
     func isLiked(_ post: Community.Post) -> Bool { likedPostIDs.contains(post.id) }
@@ -561,7 +574,7 @@ final class CommunityService: ObservableObject {
     /// 종 아이콘 탭(알림 열람) 시 호출 — 현재 시각으로 갱신해 배지 클리어.
     func markNotificationsSeen() { defaults.set(Date(), forKey: Keys.notifSeen) }
 
-    /// 내 게시물 좋아요(본인 제외) + 새 팔로워 이벤트를 최신순으로. 댓글은 미구현이라 제외.
+    /// 내 게시물 좋아요(본인 제외) + 내 글 댓글(본인 제외) + 새 팔로워 이벤트를 최신순으로.
     func fetchNotifications() async -> [Community.Notice] {
         await ensureSignedIn()
         guard let uid = myUID else { return [] }
@@ -584,6 +597,16 @@ final class CommunityService: ObservableObject {
                 for r in rows {
                     events.append(.init(id: "like-\(r.post_id)-\(Int(r.created_at.timeIntervalSince1970))",
                                         kind: .like, postImagePath: pathByID[r.post_id] ?? nil, createdAt: r.created_at))
+                }
+            }
+            // 2b) 내 글 댓글(본인 제외) — 참여 사다리 복구. community_comments 미배포 시 빈 결과로 안전.
+            struct CommentRow: Decodable { let id: String; let post_id: String; let uid: String; let created_at: Date }
+            if let url = URL(string: "\(baseURL)/rest/v1/community_comments?select=id,post_id,uid,created_at&post_id=in.(\(ids))&uid=neq.\(uid)&status=eq.visible&order=created_at.desc&limit=50"),
+               let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+               let rows = try? Self.decoder.decode([CommentRow].self, from: data) {
+                for r in rows where !blockedUIDs.contains(r.uid) {   // 차단 작성자 댓글 알림 제외
+                    events.append(.init(id: "comment-\(r.id)",
+                                        kind: .comment, postImagePath: pathByID[r.post_id] ?? nil, createdAt: r.created_at))
                 }
             }
         }
@@ -718,7 +741,9 @@ final class CommunityService: ObservableObject {
 
     /// 크롭·검열 통과한 JPEG 를 업로드. 성공 시 피드 갱신.
     /// 게시. imageData nil 이면 **글-전용 게시**(사진 없음, caption 필수). Round 171.
-    func uploadPost(imageData: Data?, brand: String?, caption: String? = nil) async throws {
+    /// `brand`: 내 컬렉션 브랜드 화이트리스트에서 선택된 메타(시세·모델명 금지). nil = 미선택.
+    /// `themeID`: 위클리 테마 귀속(선택). 신규 컬럼 미배포 시 안전하게 무시(서버 거절 대비 graceful).
+    func uploadPost(imageData: Data?, brand: String?, caption: String? = nil, themeID: String? = nil) async throws {
         lastError = nil
         guard canPostToday else { throw UploadError.dailyLimit }
         // 글-전용은 캡션이 반드시 있어야 (빈 게시 방지).
@@ -803,14 +828,28 @@ final class CommunityService: ObservableObject {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
         }
+        // 위클리 테마 귀속(선택) — theme_id 컬럼. 미배포 시 insert 가 거절될 수 있어 아래에서 1회 재시도.
+        if let themeID, !themeID.isEmpty { body["theme_id"] = themeID }
+
         ins.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        let (insData, insResp) = try await URLSession.shared.data(for: ins)
+        var (insData, insResp) = try await URLSession.shared.data(for: ins)
         // 서버 거절(하루1장 트리거·RLS·미존재 컬럼 등)을 더 이상 조용히 삼키지 않는다.
         if let http = insResp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
-            let msg = String(data: insData, encoding: .utf8) ?? ""
-            lastError = "insert \(http.statusCode): \(msg)"
-            if msg.contains("daily_post_limit") { throw UploadError.dailyLimit }
-            throw UploadError.storageFailed
+            var msg = String(data: insData, encoding: .utf8) ?? ""
+            // graceful degrade: theme_id 컬럼 미배포(weekly_theme.sql 전)면 그 컬럼만 빼고 1회 재시도.
+            // (PostgREST: 미존재 컬럼은 PGRST204 / "column ... does not exist".)
+            if themeID != nil, body["theme_id"] != nil,
+               (msg.contains("theme_id") || msg.contains("PGRST204")) {
+                body.removeValue(forKey: "theme_id")
+                ins.httpBody = try? JSONSerialization.data(withJSONObject: body)
+                (insData, insResp) = try await URLSession.shared.data(for: ins)
+                msg = String(data: insData, encoding: .utf8) ?? ""
+            }
+            if let http2 = insResp as? HTTPURLResponse, !(200...299).contains(http2.statusCode) {
+                lastError = "insert \(http2.statusCode): \(msg)"
+                if msg.contains("daily_post_limit") { throw UploadError.dailyLimit }
+                throw UploadError.storageFailed
+            }
         }
         markPostedToday()
         await loadFeed()
@@ -959,6 +998,45 @@ final class CommunityService: ObservableObject {
         guard let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
               let arr = try? Self.decoder.decode([Community.Announcement].self, from: data) else { return nil }
         return arr.first
+    }
+
+    // MARK: - Weekly Theme Challenge (위클리 테마)
+
+    /// 현재 활성 위클리 테마 1건 (active + 기간 내 + kind='theme'). 모든 사용자.
+    /// `theme_title` 컬럼/`kind` 컬럼 미배포 시 안전하게 nil (graceful degrade — 서버 SQL 미배포 환경).
+    func fetchActiveTheme() async -> Community.Theme? {
+        await ensureSignedIn()
+        let nowISO = ISO8601DateFormatter().string(from: Date())
+        // select 에 theme_title 명시 — 컬럼 없으면 PostgREST 가 400 → 빈 결과로 처리(아래 try? 가 흡수).
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements?select=id,theme_title,body,starts_at,ends_at&kind=eq.theme&active=eq.true&starts_at=lte.\(nowISO)&ends_at=gte.\(nowISO)&order=created_at.desc&limit=1") else { return nil }
+        guard let (data, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode),
+              let arr = try? Self.decoder.decode([Community.Theme].self, from: data) else { return nil }
+        // 빈 title 은 무효(테마로 취급 안 함).
+        return arr.first(where: { !$0.title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty })
+    }
+
+    /// 운영자: 위클리 테마 발행 (admin insert RLS). 기존 공지 테이블 재사용 — kind='theme'.
+    /// `weekly_theme.sql` 배포 전이면 신규 컬럼 거절로 실패할 수 있음(클라는 false 반환).
+    @discardableResult
+    func postWeeklyTheme(title: String, body: String?, startsAt: Date, endsAt: Date) async -> Bool {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_announcements") else { return false }
+        var req = authedRequest(url, method: "POST")
+        let iso = ISO8601DateFormatter()
+        var dict: [String: Any] = [
+            "kind": "theme",
+            "theme_title": title,
+            // body 는 NOT NULL 이므로 비어도 최소 title 을 채워 둠(스키마 호환).
+            "body": (body?.isEmpty == false ? body! : title),
+            "starts_at": iso.string(from: startsAt),
+            "ends_at": iso.string(from: endsAt),
+            "active": true
+        ]
+        if body == nil { dict["body"] = title }
+        req.httpBody = try? JSONSerialization.data(withJSONObject: dict)
+        guard let (_, resp) = try? await URLSession.shared.data(for: req), let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
     }
 
     /// 특정 사용자에게 경고 발송 (admin insert RLS 필요).

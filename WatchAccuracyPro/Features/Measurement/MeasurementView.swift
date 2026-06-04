@@ -750,6 +750,14 @@ struct MeasurementView: View {
                 body: NSLocalizedString(failureBodyKey(reason), comment: ""),
                 tone: .warning
             )
+            // 스트림A: 신호 계열 실패에는 마지막 진단 기반 복구 체크리스트를 함께 노출.
+            //   (permission/quartz 등 신호 무관 실패에는 표시 X — 점검 항목이 무의미)
+            if reason.showsSignalChecklist {
+                FailureChecklistCard(
+                    items: failureChecklistItems(),
+                    externalMicNotice: failureExternalMicNotice()
+                )
+            }
             // Round 57: permissionDenied 분기 시 "설정 열기" 를 prominent primary, 그 외엔 retry+cancel pair.
             if reason == .permissionDenied {
                 PrimaryButton(String(localized: "measurement.permission.openSettings")) {
@@ -801,6 +809,73 @@ struct MeasurementView: View {
         case .audioEngineFailure:   return "measurement.fail.engine.body"
         case .unsupportedMovement:  return "measurement.fail.unsupported.body"
         case .lockFailure:          return "measurement.fail.lock.body"
+        }
+    }
+
+    // MARK: - Failure recovery checklist (스트림A)
+
+    /// 마지막 측정의 LiveMetrics(마이크 dB·SNR·onset) 진단을 ✓/✗ 체크리스트로 환산.
+    /// 임계값은 diagnosticStrip 의 micTone/snrTone/onsetTone 과 일관되게 맞춘다.
+    private func failureChecklistItems() -> [FailureChecklistCard.Item] {
+        let lm = viewModel.liveMetrics
+        var items: [FailureChecklistCard.Item] = []
+
+        // 1) 마이크 입력 — raw RMS dB. -80 미만이면 사실상 무신호.
+        if let db = lm.rawRMSDB {
+            let micOK = db >= -80
+            items.append(.init(
+                ok: micOK,
+                label: String(localized: "meas.failhelp.mic.label"),
+                action: micOK ? nil : String(localized: "meas.failhelp.mic.action")
+            ))
+        }
+
+        // 2) 신호 세기 — onset 검출 수(=tic 감지). 5개 미만이면 케이스백 밀착 필요.
+        //    onset 정보가 없으면 SNR 로 대체 판정.
+        if let onsets = lm.onsetCount {
+            let signalOK = onsets >= 5
+            items.append(.init(
+                ok: signalOK,
+                label: String(localized: "meas.failhelp.signal.label"),
+                action: signalOK ? nil : String(localized: "meas.failhelp.signal.action")
+            ))
+        } else if let snr = lm.snrDB {
+            let signalOK = snr >= 12
+            items.append(.init(
+                ok: signalOK,
+                label: String(localized: "meas.failhelp.signal.label"),
+                action: signalOK ? nil : String(localized: "meas.failhelp.signal.action")
+            ))
+        }
+
+        // 3) 주변 소음 — 초당 onset 비율이 과도(>30/s)하면 주변이 시끄러움.
+        if let onsets = lm.onsetCount, lm.elapsedSeconds > 1 {
+            let perSec = Double(onsets) / lm.elapsedSeconds
+            let quietOK = perSec <= 30
+            items.append(.init(
+                ok: quietOK,
+                label: String(localized: "meas.failhelp.quiet.label"),
+                action: quietOK ? nil : String(localized: "meas.failhelp.quiet.action")
+            ))
+        }
+
+        // 진단 데이터가 전혀 없으면(엔진 실패 등) 일반 가이드 1줄.
+        if items.isEmpty {
+            items.append(.init(
+                ok: false,
+                label: String(localized: "meas.failhelp.generic.label"),
+                action: String(localized: "meas.failhelp.generic.action")
+            ))
+        }
+        return items
+    }
+
+    /// 블루투스/유선 마이크 사용 중이면 내장 마이크 전환 안내 문자열. 내장 마이크면 nil.
+    private func failureExternalMicNotice() -> String? {
+        switch AudioInputManager.shared.activeMicrophoneType {
+        case .bluetooth: return String(localized: "meas.failhelp.bluetooth")
+        case .wired, .external: return String(localized: "meas.failhelp.wired")
+        case .builtin: return nil
         }
     }
 

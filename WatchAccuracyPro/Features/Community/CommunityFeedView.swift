@@ -37,6 +37,10 @@ struct CommunityFeedView: View {
     /// 운영자 경고 — 내 미확인 경고.
     @State private var myWarnings: [Community.Warning] = []
     @State private var showWarning = false
+    /// 위클리 테마 챌린지 — 운영(TickLab)이 내린 주간 테마. nil = 진행 중 테마 없음.
+    @State private var activeTheme: Community.Theme?
+    /// 브랜드 칩 탭 → 같은 브랜드 모아보기 시트.
+    @State private var brandFilterTarget: String?
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -45,6 +49,9 @@ struct CommunityFeedView: View {
         NavigationStack {
             VStack(spacing: 0) {
                 editorialHeader
+                if service.hasAcceptedViewerTerms, let theme = activeTheme {
+                    themeBanner(theme)
+                }
                 if service.hasAcceptedViewerTerms && !service.feed.isEmpty {
                     feedScopePicker
                 }
@@ -71,6 +78,7 @@ struct CommunityFeedView: View {
                     myWarnings = await service.fetchMyWarnings()
                     if !myWarnings.isEmpty { showWarning = true }
                     notifCount = await service.unseenNotificationCount()
+                    activeTheme = await service.fetchActiveTheme()
                 } else {
                     showViewerGate = true
                 }
@@ -105,6 +113,10 @@ struct CommunityFeedView: View {
             }
             .sheet(isPresented: $showNotifications) {
                 CommunityNotificationsView()
+            }
+            .sheet(item: Binding(get: { brandFilterTarget.map { BrandFilter(brand: $0) } },
+                                 set: { brandFilterTarget = $0?.brand })) { item in
+                CommunityBrandFeedView(brand: item.brand)
             }
             .sheet(isPresented: $showEULA) {
                 CommunityEULAView { service.acceptEULA(); showEULA = false; presentComposerIfAllowed() }
@@ -157,6 +169,48 @@ struct CommunityFeedView: View {
         .overlay(alignment: .topTrailing) {
             headerButtons.padding(.trailing, 12).padding(.top, 2)
         }
+    }
+
+    /// 위클리 테마 배너 — 운영(TickLab)이 내린 주간 테마. 탭 시 작성기로(테마 게시 유도).
+    private func themeBanner(_ theme: Community.Theme) -> some View {
+        Button {
+            startCompose()
+        } label: {
+            HStack(spacing: 10) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundStyle(AppColors.accentDark)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text(String(localized: "community.theme.eyebrow"))
+                        .font(.system(size: 10, weight: .bold))
+                        .foregroundStyle(AppColors.accentDark)
+                        .textCase(.uppercase)
+                    Text(theme.title)
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(AppColors.ink0)
+                        .lineLimit(1)
+                    if let body = theme.body, !body.isEmpty {
+                        Text(body)
+                            .font(.system(size: 11))
+                            .foregroundStyle(AppColors.ink2)
+                            .lineLimit(1)
+                    }
+                }
+                Spacer()
+                Text(String(localized: "community.theme.participate"))
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(AppColors.paper0)
+                    .padding(.horizontal, 10).padding(.vertical, 5)
+                    .background(AppColors.accentDark)
+                    .clipShape(Capsule())
+            }
+            .padding(.horizontal, 14).padding(.vertical, 10)
+            .background(AppColors.accent50)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 20)
+        .padding(.bottom, 8)
     }
 
     /// 우상단 버튼 — 저장됨 · 계정 · 작성. (제목과 같은 줄/영역)
@@ -279,6 +333,7 @@ struct CommunityFeedView: View {
                         onShare: { sharePost(post) },
                         onComment: { commentTarget = post },
                         onLikers: { likersTarget = post },
+                        onBrandTap: { brand in brandFilterTarget = brand },
                         onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
                         onEdit: post.isMine(currentUID: service.myUID) ? { editTarget = post } : nil,
                         onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
@@ -393,6 +448,87 @@ struct CommunityFeedView: View {
         service.markNotificationsSeen()
         notifCount = 0
         showNotifications = true
+    }
+}
+
+/// 브랜드 칩 탭 → 같은 브랜드 모아보기 시트용 Identifiable 래퍼.
+private struct BrandFilter: Identifiable {
+    let brand: String
+    var id: String { brand }
+}
+
+/// 같은 브랜드 게시물 모아보기 — 브랜드 칩 탭 시 모달. 서버 `?brand=eq.` 필터(읽기 전용 그리드).
+struct CommunityBrandFeedView: View {
+    let brand: String
+    @Environment(\.dismiss) private var dismiss
+    @StateObject private var service = CommunityService.shared
+    @State private var posts: [Community.Post] = []
+    @State private var loaded = false
+
+    private let columns = [GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2),
+                           GridItem(.flexible(), spacing: 2)]
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if !loaded {
+                    ProgressView().controlSize(.large).tint(AppColors.ink1)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if posts.isEmpty {
+                    VStack(spacing: 12) {
+                        Image(systemName: "tag.slash").font(.system(size: 40)).foregroundStyle(AppColors.ink3)
+                        Text(String(localized: "community.brand.feed.empty"))
+                            .font(AppTypography.bodySmall).foregroundStyle(AppColors.ink2)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    ScrollView {
+                        LazyVGrid(columns: columns, spacing: 2) {
+                            ForEach(posts) { post in
+                                gridCell(post)
+                            }
+                        }
+                        .padding(.top, 2)
+                    }
+                }
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(AppColors.paper0)
+            .navigationTitle(brand)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(String(localized: "common.done")) { dismiss() }
+                }
+            }
+            .task {
+                posts = await service.fetchPostsByBrand(brand)
+                loaded = true
+            }
+        }
+    }
+
+    @ViewBuilder private func gridCell(_ post: Community.Post) -> some View {
+        if let url = service.imageURL(for: post.imagePath) {
+            Color.clear
+                .aspectRatio(1, contentMode: .fit)
+                .overlay {
+                    AsyncImage(url: url) { img in img.resizable().scaledToFill() }
+                        placeholder: { Color(AppColors.paper2) }
+                }
+                .clipped()
+        } else {
+            // 글-전용(사진 없음) — 캡션 일부를 텍스트 타일로.
+            Color(AppColors.paper1)
+                .aspectRatio(1, contentMode: .fit)
+                .overlay {
+                    Text(post.caption ?? "")
+                        .font(.system(size: 11))
+                        .foregroundStyle(AppColors.ink1)
+                        .lineLimit(4)
+                        .padding(8)
+                }
+        }
     }
 }
 

@@ -103,13 +103,53 @@ enum Community {
         enum CodingKeys: String, CodingKey { case id; case message; case createdAt = "created_at" }
     }
 
-    /// 인앱 활동 알림(컬렉션 종 배지) — 내 글 좋아요 · 새 팔로워. 댓글 미구현이라 제외.
+    /// 인앱 활동 알림(컬렉션 종 배지) — 내 글 좋아요 · 새 팔로워 · 내 글 댓글.
     struct Notice: Identifiable {
-        enum Kind { case like, follow }
+        enum Kind {
+            case like, follow, comment
+
+            /// 알림 행 아이콘(SF Symbol). 렌더러가 inline 분기 대신 이걸 써도 됨.
+            var iconName: String {
+                switch self {
+                case .like:    return "heart.fill"
+                case .follow:  return "person.fill.badge.plus"
+                case .comment: return "bubble.right.fill"
+                }
+            }
+
+            /// 알림 문구 l10n 키 (Localizable.strings — 인라인 문자열 금지).
+            var localizationKey: String {
+                switch self {
+                case .like:    return "community.notif.like"
+                case .follow:  return "community.notif.follow"
+                case .comment: return "community.notif.comment"
+                }
+            }
+        }
         let id: String
         let kind: Kind
         let postImagePath: String?
         let createdAt: Date
+    }
+
+    /// 위클리 테마 챌린지 — 운영(TickLab)이 내리는 주간 테마(예 "이번 주는 다이버").
+    /// 서버는 `community_announcements` 를 `kind='theme'` 로 확장(docs/community/weekly_theme.sql).
+    /// 신규 컬럼 미배포 시에도 안전하게 빈/없음으로 graceful degrade.
+    struct Theme: Codable, Identifiable, Equatable {
+        let id: String
+        /// 테마 표시 문구(예 "다이버 워치"). 사용자 노출은 운영자가 입력한 자유 텍스트.
+        let title: String
+        /// 부가 설명(선택).
+        let body: String?
+        let startsAt: Date?
+        let endsAt: Date?
+        enum CodingKeys: String, CodingKey {
+            case id
+            case title = "theme_title"
+            case body
+            case startsAt = "starts_at"
+            case endsAt = "ends_at"
+        }
     }
 
     /// 좋아요 라이커(인스타 "누가 좋아요"). 익명 닉네임 표시 + 팔로우용 uid.

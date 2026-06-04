@@ -248,6 +248,8 @@ struct TodayView: View {
                 statPill(value: "\(watches.count)", label: String(localized: "today.stat.watches"))
                 statPill(value: "\(weekMeasurements.count)", label: String(localized: "today.stat.this_week"))
             }
+            // 스트림B(3): 측정 streak chip — current >= 1 일 때만 노출(리텐션 표면화).
+            streakChip
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
@@ -268,6 +270,38 @@ struct TodayView: View {
                 .font(.system(size: 10, weight: .semibold))
                 .tracking(1.2)
                 .foregroundStyle(AppColors.ink2)
+        }
+    }
+
+    // MARK: - 스트림B(3): 측정 Streak
+
+    /// 현재 연속 측정일 chip. 0 이면 숨김(빈 칩 노출 안 함).
+    @ViewBuilder
+    private var streakChip: some View {
+        let result = StreakService.currentStreak(in: modelContext)
+        if result.current >= 1 {
+            HStack(spacing: 6) {
+                Text("🔥")
+                    .font(.system(size: 13))
+                Text(String(format: String(localized: "streak.chip.label",
+                                           defaultValue: "%d일 연속 측정"),
+                            result.current))
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(AppColors.ink0)
+                if result.longest > result.current {
+                    Text(String(format: String(localized: "streak.chip.best",
+                                               defaultValue: "최고 %d일"),
+                                result.longest))
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(AppColors.ink2)
+                }
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(AppColors.accent.opacity(0.16))
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(AppColors.accent.opacity(0.30), lineWidth: 1))
+            .padding(.top, 2)
         }
     }
 

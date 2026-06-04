@@ -29,6 +29,17 @@ final class MeasurementViewModel {
         case unsupportedMovement
         /// Round 98 (DSP Critical): BPH lock 은 잡혔으나 rate/beatError 가 anomaly 범위 — 망가진 시계 OR lock 실패.
         case lockFailure
+
+        /// 스트림A: 신호 진단 기반 복구 체크리스트를 보여줄 실패인가.
+        /// 권한 거부·미지원 무브먼트는 신호 점검이 무의미 → 제외.
+        var showsSignalChecklist: Bool {
+            switch self {
+            case .tooShort, .noSignal, .audioEngineFailure, .lockFailure:
+                return true
+            case .permissionDenied, .unsupportedMovement:
+                return false
+            }
+        }
     }
 
     private(set) var state: State = .idle
@@ -92,6 +103,8 @@ final class MeasurementViewModel {
         let granted = await requestMicrophonePermission()
         guard granted else {
             state = .failed(.permissionDenied)
+            HapticManager.trigger(.measurementFailed)
+            announce(.failed)
             return
         }
         // Round 98 (QA Critical C2): quartz / bph=0 무브먼트는 마이크 BPH 측정 불가 — 즉시 거부.
@@ -102,6 +115,8 @@ final class MeasurementViewModel {
         // Round 173: 스마트워치(애플워치 등)도 rate 측정 무의미 — 방어적 차단(버튼은 이미 숨김).
         if isQuartzByMovement || isQuartzByWatch || !watch.movementType.isMeasurable {
             state = .failed(.unsupportedMovement)
+            HapticManager.trigger(.measurementFailed)
+            announce(.failed)
             return
         }
         // Round 173: 측정 시작 시 클록 보정 점(mono↔wall) 누적 — 측정 ~3회면 baseline 충족해 수렴.
@@ -159,6 +174,9 @@ final class MeasurementViewModel {
             try pipeline.start()
             measurementStartedAt = Date()
             state = .measuring
+            // 스트림A: 측정 시작 햅틱(hapticsEnabled 토글 존중) + VoiceOver 진행 안내.
+            HapticManager.trigger(.measurementStart)
+            announce(.measuring)
             // Round 140 (H1): 측정 진행 중 notification — RootTabView 가 epoch reset 차단.
             NotificationCenter.default.post(name: .ticklabMeasurementDidStart, object: nil)
 
@@ -172,7 +190,49 @@ final class MeasurementViewModel {
             }
         } catch {
             state = .failed(.audioEngineFailure)
+            HapticManager.trigger(.measurementFailed)
+            announce(.failed)
         }
+    }
+
+    // MARK: - VoiceOver announcements (스트림A)
+
+    /// 측정 라이프사이클 단계별 VoiceOver 음성 안내.
+    /// 현재 코드베이스에 `UIAccessibility.post` 호출이 0건이라 VoiceOver 사용자는
+    /// 측정 진행/완료/실패를 인지하지 못했음 → 상태 전환 지점마다 announcement 게시.
+    private enum Announcement {
+        case measuring, analyzing, failed
+        var localizedString: String {
+            switch self {
+            case .measuring:  return String(localized: "meas.a11y.measuring")
+            case .analyzing:  return String(localized: "meas.a11y.analyzing")
+            case .failed:     return String(localized: "meas.a11y.failed")
+            }
+        }
+    }
+
+    @MainActor
+    private func announce(_ announcement: Announcement) {
+        postVoiceOver(announcement.localizedString)
+    }
+
+    /// 측정 완료 — 신뢰도 등급을 함께 읽어준다. 등급 미상이면 등급 없이 "측정 완료"만.
+    @MainActor
+    private func announceCompletion(grade: ReliabilityGrade?) {
+        let message: String
+        if let grade {
+            message = String(format: String(localized: "meas.a11y.completed_grade"), grade.rawValue.uppercased())
+        } else {
+            message = String(localized: "meas.a11y.completed")
+        }
+        postVoiceOver(message)
+    }
+
+    /// VoiceOver 실행 중일 때만 announcement 게시(미실행 시 no-op).
+    @MainActor
+    private func postVoiceOver(_ message: String) {
+        guard UIAccessibility.isVoiceOverRunning else { return }
+        UIAccessibility.post(notification: .announcement, argument: message)
     }
 
     /// 새 chunk 의 다운샘플 결과를 ring 처럼 누적해 항상 200개 길이를 유지.
@@ -197,6 +257,8 @@ final class MeasurementViewModel {
         // Round 158 (사용자 보고: 30s 후에도 측정 계속하는 듯 보임):
         // state 를 .analyzing 으로 즉시 전환 → 타이머 멈춤, UI "분석 중" 표시 가능.
         state = .analyzing
+        // 스트림A: VoiceOver 사용자에게 분석 단계 진입 안내(시각 스피너 보완).
+        announce(.analyzing)
         // Stop UX 수정 (사용자 보고): UI 가 즉시 반응하도록 background 로 분석 분리.
         // 1) 즉시 task 취소 + audio 정지
         metricsTask?.cancel()
@@ -233,12 +295,19 @@ final class MeasurementViewModel {
                     // Round 100: anomaly trip 은 .lockFailure 로 분기 (BPH lock 잡혔으나 신뢰 X).
                     if self.persist(result: result, in: modelContext) {
                         self.state = .completed(result)
+                        // 스트림A: 측정 완료 햅틱 + VoiceOver 등급 안내.
+                        HapticManager.trigger(.measurementComplete)
+                        self.announceCompletion(grade: result.reliabilityGrade)
                     } else {
                         self.state = .failed(.lockFailure)
+                        HapticManager.trigger(.measurementFailed)
+                        self.announce(.failed)
                     }
                 } else {
                     // Round 89 (김재철 Critical): tooShort 임계 1.0→0.5 — 실 4-5초 측정 SNR 약한 신호 진단 정보 손실 방지.
                     self.state = .failed(elapsed < 0.5 ? .tooShort : .noSignal)
+                    HapticManager.trigger(.measurementFailed)
+                    self.announce(.failed)
                 }
                 // Round 141 (Hyemi H7): 결과 표시 state 설정 후 RootTabView 보호 해제.
                 NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
