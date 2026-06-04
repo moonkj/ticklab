@@ -1884,3 +1884,25 @@
 "report.kv.rate" = "दर";
 "report.kv.beat_error" = "बीट त्रुटि";
 "analytics.period" = "अवधि";
+
+/* v1.1.1 보관함 표시 설정 */
+"settings.section.watchbox" = "वॉच बॉक्स प्रदर्शन";
+"settings.watchbox.slots" = "स्लॉट";
+"settings.watchbox.slots.value" = "%d स्लॉट";
+"settings.watchbox.color" = "रंग";
+"settings.watchbox.hint" = "वॉच बॉक्स में दिखने वाले स्लॉट की संख्या और रंग सेट करें।";
+"watchbox.color.navy" = "नेवी";
+"watchbox.color.burgundy" = "बरगंडी";
+"watchbox.color.forest" = "फ़ॉरेस्ट";
+"watchbox.color.graphite" = "ग्रेफ़ाइट";
+
+/* v1.1.1 결과 평이표현 — 하루 기준 */
+"result.plain.day_sec" = "हर दिन लगभग %d सेकंड %@";
+
+/* v1.1.1 커뮤니티 글 수정 */
+"community.edit.title" = "पोस्ट संपादित करें";
+"community.edit.photo_kept" = "फ़ोटो वैसी ही रहेगी।";
+
+/* v1.1.1 공유카드 → 커뮤니티 등록 */
+"share.post_community" = "समुदाय में पोस्ट करें";
+"share.community.posted" = "समुदाय में पोस्ट किया गया।";

@@ -71,6 +71,7 @@ struct TodayView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
                 .padding(.bottom, 80)
+                .readableContentWidth()   // iPad 가로폭 제한(아이폰 무영향)
                 }
             }
             .background(AppColors.paper0.ignoresSafeArea())

@@ -103,7 +103,11 @@ struct PhotoCropView: View {
     @MainActor
     private func exportCurrent() {
         let img = upright ?? image
-        let w = cropSize.width > 0 ? cropSize.width : UIScreen.main.bounds.width
+        // iPad split view 에서 UIScreen.main 은 전체화면 폭을 줘 어긋남 → 현재 윈도우 폭으로.
+        let fallbackW = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first?.keyWindow?.bounds.width ?? 390
+        let w = cropSize.width > 0 ? cropSize.width : fallbackW
         export(img: img, cropW: w, cropH: w / aspect)
     }
 

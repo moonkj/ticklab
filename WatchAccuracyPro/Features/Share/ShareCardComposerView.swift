@@ -64,6 +64,14 @@ struct ShareCardComposerView: View {
     @State private var renderedImage: UIImage?
     @State private var showingShareSheet = false
     @State private var saveToastMessage: String?
+    // 커뮤니티 등록 — 공유카드를 그대로(측정값 포함) 커뮤니티 게시 흐름으로.
+    @State private var communityPending: PendingPost?
+    @State private var showCommunityEULA = false
+    @State private var communityDailyLimit = false
+    @State private var communityModerationBlocked = false
+    @State private var isUploadingCommunity = false
+    @State private var communityUploadError: String?
+    @State private var communityPosted = false
 
     enum AspectRatio: String, CaseIterable {
         case square = "1:1", portrait = "4:5", story = "9:16"
@@ -103,6 +111,46 @@ struct ShareCardComposerView: View {
             }
             .sheet(isPresented: $showingShareSheet) {
                 if let image = renderedImage { ShareSheet(items: [image]) }
+            }
+            .fullScreenCover(item: $communityPending) { pending in
+                CommunityReviewView(
+                    imageData: pending.data,
+                    onPost: { caption in
+                        let data = pending.data
+                        communityPending = nil   // 즉시 리뷰 닫기 — 중복 게시 방지(정상 컴포저와 동일).
+                        performCommunityUpload(data: data, caption: caption)
+                    },
+                    onCancel: { communityPending = nil }
+                )
+            }
+            .sheet(isPresented: $showCommunityEULA) {
+                CommunityEULAView {
+                    CommunityService.shared.acceptEULA()
+                    showCommunityEULA = false
+                    renderForCommunity()
+                }
+            }
+            .overlay {
+                if isUploadingCommunity {
+                    ZStack {
+                        Color.black.opacity(0.3).ignoresSafeArea()
+                        AnimatedEmptyIcon(icon: "paperplane.fill")   // 가운데 아이콘 + 회전 링(앱 공통 로딩).
+                    }
+                }
+            }
+            .alert(String(localized: "community.daily_limit.title"), isPresented: $communityDailyLimit) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: { Text(String(localized: "community.daily_limit.body")) }
+            .alert(String(localized: "community.moderation.blocked.title"), isPresented: $communityModerationBlocked) {
+                Button(String(localized: "common.ok"), role: .cancel) {}
+            } message: { Text(String(localized: "community.moderation.blocked.body")) }
+            .alert(String(localized: "community.upload.error"), isPresented: Binding(
+                get: { communityUploadError != nil }, set: { if !$0 { communityUploadError = nil } }
+            )) {
+                Button(String(localized: "common.ok"), role: .cancel) { communityUploadError = nil }
+            } message: { Text(communityUploadError ?? "") }
+            .alert(String(localized: "share.community.posted"), isPresented: $communityPosted) {
+                Button(String(localized: "common.ok"), role: .cancel) { dismiss() }
             }
         }
     }
@@ -270,6 +318,19 @@ struct ShareCardComposerView: View {
 
     @MainActor private var actionButtons: some View {
         VStack(spacing: 8) {
+            // 커뮤니티에 등록 — 본 카드(측정값 토글 그대로)를 커뮤니티 게시 흐름(검열·EXIF·하루1장·EULA)으로.
+            Button {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                postToCommunity()
+            } label: {
+                Label(String(localized: "share.post_community"), systemImage: "person.2.fill")
+                    .frame(maxWidth: .infinity).padding(14)
+                    .background(AppColors.accent)
+                    .foregroundStyle(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+            }
+            .buttonStyle(.plain)
+
             Button {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 render { image in renderedImage = image; showingShareSheet = true }
@@ -324,6 +385,51 @@ struct ShareCardComposerView: View {
             }
         }
         .animation(.easeOut(duration: 0.2), value: saveToastMessage)
+    }
+
+    // MARK: - 커뮤니티 등록
+
+    /// 게이트(하루1장·EULA) 확인 후 카드 렌더 → 검열 → 리뷰.
+    @MainActor private func postToCommunity() {
+        let service = CommunityService.shared
+        guard service.canPostToday else { communityDailyLimit = true; return }
+        guard service.hasAcceptedEULA else { showCommunityEULA = true; return }
+        renderForCommunity()
+    }
+
+    /// 공유카드를 렌더(측정값 토글 그대로) → 온디바이스 이미지 검열 → EXIF strip → 리뷰 단계.
+    @MainActor private func renderForCommunity() {
+        render { image in
+            let img = image
+            Task {
+                if await CommunityModerationService.screen(img) == .blocked {
+                    await MainActor.run { communityModerationBlocked = true }
+                    return
+                }
+                guard let data = img.jpegData(compressionQuality: 0.9) else { return }
+                let clean = EXIFStripper.strippedJPEG(from: data) ?? data
+                await MainActor.run { communityPending = PendingPost(data: clean) }
+            }
+        }
+    }
+
+    /// 리뷰 통과(캡션 검열 완료) → 커뮤니티 업로드. 브랜드 태그는 시계에서.
+    @MainActor private func performCommunityUpload(data: Data, caption: String) {
+        guard !isUploadingCommunity else { return }   // 재진입 가드 — 동시 업로드 방지.
+        Task {
+            isUploadingCommunity = true
+            do {
+                try await CommunityService.shared.uploadPost(imageData: data, brand: effectiveWatch?.brand, caption: caption)
+                isUploadingCommunity = false
+                communityPosted = true
+            } catch CommunityService.UploadError.dailyLimit {
+                isUploadingCommunity = false
+                communityUploadError = String(localized: "community.daily_limit.body")
+            } catch {
+                isUploadingCommunity = false
+                communityUploadError = CommunityService.shared.lastError ?? error.localizedDescription
+            }
+        }
     }
 
     @MainActor

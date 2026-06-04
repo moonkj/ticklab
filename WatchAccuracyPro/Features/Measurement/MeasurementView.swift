@@ -137,6 +137,7 @@ struct MeasurementView: View {
             .padding(.horizontal, 20)
             .padding(.top, 12)
             .padding(.bottom, 32)
+            .readableContentWidth(680)   // iPad 가로폭 제한(아이폰 무영향)
         }
         .background(AppColors.paper0.ignoresSafeArea())
         // Round 175 (사용자 보고: "측정시작 버튼 터치 잘 안됨"): controls 를 ScrollView 밖

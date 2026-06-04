@@ -397,22 +397,18 @@ struct MeasurementResultView: View {
         .padding(.top, 4)
     }
 
-    /// Sprint 12 (UX5): ±s/d → "일주일에 약 X초 / 한 달에 약 Y초" 평이한 표현.
+    /// ±s/d → "하루에 약 X초" 평이한 표현.
+    /// (사용자 요청: 주/월 합산 표현은 하루 오차가 작아도 크게 보여 과장 — 하루 기준으로만 표시.)
     private var plainLanguageRate: String {
         let perDay = result.rateSecondsPerDay
         let absDay = abs(perDay)
-        let week = absDay * 7
         let direction = perDay >= 0
             ? String(localized: "result.plain.fast")
             : String(localized: "result.plain.slow")
-        if absDay < 0.1 {
+        if absDay < 0.5 {
             return String(localized: "result.plain.perfect")
         }
-        if week < 60 {
-            return String(format: NSLocalizedString("result.plain.week_sec", comment: ""), Int(week.rounded()), direction)
-        }
-        let month = absDay * 30
-        return String(format: NSLocalizedString("result.plain.month_min", comment: ""), month / 60, direction)
+        return String(format: NSLocalizedString("result.plain.day_sec", comment: ""), Int(absDay.rounded()), direction)
     }
 
     // MARK: - Rate dial card

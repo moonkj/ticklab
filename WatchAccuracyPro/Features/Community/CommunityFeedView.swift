@@ -15,6 +15,7 @@ struct CommunityFeedView: View {
     @State private var reportDone = false
     @State private var commentTarget: Community.Post?
     @State private var likersTarget: Community.Post?
+    @State private var editTarget: Community.Post?
     @State private var showViewerGate = false
     /// 신원 전환: 게시·좋아요 등 액션 전 Apple 로그인 게이트.
     @State private var showLogin = false
@@ -98,6 +99,9 @@ struct CommunityFeedView: View {
             }
             .sheet(item: $likersTarget) { post in
                 LikersView(post: post)
+            }
+            .sheet(item: $editTarget) { post in
+                CommunityEditView(post: post)
             }
             .sheet(isPresented: $showNotifications) {
                 CommunityNotificationsView()
@@ -276,6 +280,7 @@ struct CommunityFeedView: View {
                         onComment: { commentTarget = post },
                         onLikers: { likersTarget = post },
                         onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
+                        onEdit: post.isMine(currentUID: service.myUID) ? { editTarget = post } : nil,
                         onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
                     )
                     // 인스타 스타일 게시물 구분선.

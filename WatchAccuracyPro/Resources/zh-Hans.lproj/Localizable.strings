@@ -1884,3 +1884,25 @@
 "report.kv.rate" = "日差";
 "report.kv.beat_error" = "摆频误差";
 "analytics.period" = "时段";
+
+/* v1.1.1 보관함 표시 설정 */
+"settings.section.watchbox" = "表盒显示";
+"settings.watchbox.slots" = "格数";
+"settings.watchbox.slots.value" = "%d格";
+"settings.watchbox.color" = "颜色";
+"settings.watchbox.hint" = "设置表盒显示的格数与颜色。";
+"watchbox.color.navy" = "藏青";
+"watchbox.color.burgundy" = "酒红";
+"watchbox.color.forest" = "森绿";
+"watchbox.color.graphite" = "石墨灰";
+
+/* v1.1.1 결과 평이표현 — 하루 기준 */
+"result.plain.day_sec" = "每天约 %d 秒%@";
+
+/* v1.1.1 커뮤니티 글 수정 */
+"community.edit.title" = "编辑帖子";
+"community.edit.photo_kept" = "照片保持不变。";
+
+/* v1.1.1 공유카드 → 커뮤니티 등록 */
+"share.post_community" = "发布到社区";
+"share.community.posted" = "已发布到社区。";

@@ -46,6 +46,25 @@ enum EXIFStripper {
         return normalized.jpegData(compressionQuality: PhotoQuality.current.jpegQuality)
     }
 
+    /// 업로드용 최적화 — 긴 변을 maxDimension 으로 다운스케일(업스케일 X) 후 JPEG 재인코딩.
+    /// 서버 스토리지·대역폭 절약(커뮤니티 등). 이미 충분히 작으면 **원본 그대로 반환**(재압축 누적손실 방지).
+    /// 다운스케일 경로는 fresh redraw 라 EXIF 도 자동 제거됨.
+    static func optimizedForUpload(_ data: Data, maxDimension: CGFloat = 1080, quality: CGFloat = 0.82) -> Data {
+        guard let img = UIImage(data: data) else { return data }
+        let longSide = max(img.size.width, img.size.height) * img.scale   // 픽셀 기준
+        if longSide <= maxDimension { return data }   // 이미 작음 → 그대로(재압축 X)
+        let ratio = maxDimension / longSide
+        let newSize = CGSize(width: (img.size.width * img.scale * ratio).rounded(),
+                             height: (img.size.height * img.scale * ratio).rounded())
+        let upright = img.imageOrientation == .up ? img : normalizedImage(img)
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = 1            // 1x — 픽셀=포인트, 정확한 다운스케일.
+        format.opaque = true
+        let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
+        let resized = renderer.image { _ in upright.draw(in: CGRect(origin: .zero, size: newSize)) }
+        return resized.jpegData(compressionQuality: quality) ?? data
+    }
+
     /// 회전 적용된 픽셀로 redraw — UIImage.normalizedOrientation.
     private static func normalizedImage(_ image: UIImage) -> UIImage {
         let format = UIGraphicsImageRendererFormat()

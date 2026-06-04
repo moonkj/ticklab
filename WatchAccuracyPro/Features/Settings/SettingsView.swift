@@ -378,6 +378,39 @@ struct SettingsView: View {
                     Text(String(localized: "settings.section.photo"))
                 }
 
+                // v1.1.1: 보관함 표시 — 구수(3/6/12) + 색상 팔레트. 보관함 화면 전역 적용.
+                Section {
+                    Picker(String(localized: "settings.watchbox.slots"),
+                           selection: Binding(
+                            get: { preferences.watchBoxSlotCount },
+                            set: { preferences.watchBoxSlotCount = $0 }
+                           )) {
+                        ForEach([3, 6, 12], id: \.self) { n in
+                            Text(String(format: NSLocalizedString("settings.watchbox.slots.value", comment: ""), n))
+                                .tag(n)
+                        }
+                    }
+                    Picker(String(localized: "settings.watchbox.color"),
+                           selection: Binding(
+                            get: { preferences.watchBoxColor },
+                            set: { preferences.watchBoxColor = $0 }
+                           )) {
+                        ForEach(WatchBoxColor.allCases) { c in
+                            Label {
+                                Text(c.label)
+                            } icon: {
+                                Image(systemName: "circle.fill").foregroundStyle(c.swatch)
+                            }
+                            .tag(c.rawValue)
+                        }
+                    }
+                    Text(String(localized: "settings.watchbox.hint"))
+                        .font(.system(size: 12))
+                        .foregroundStyle(AppColors.ink3)
+                } header: {
+                    Text(String(localized: "settings.section.watchbox"))
+                }
+
                 Section {
                     let csvPayload = DataExportService.export(watches: allWatches, format: .csv)
                     if let url = csvPayload.tempURL {

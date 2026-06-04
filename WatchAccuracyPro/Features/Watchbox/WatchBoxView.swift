@@ -7,13 +7,16 @@ import UniformTypeIdentifiers
 /// 3/6/12 슬롯 × 4 마감재 (walnut/ebony/leather/linen) — pillow shape 받침대 + 시계 silhouette + brass nameplate.
 struct WatchBoxView: View {
     @Query(sort: \Watch.id) private var watches: [Watch]
-    @State private var slotCount: Int = 6
-    @State private var material: Material = .walnut
+    @Environment(UserPreferences.self) private var preferences
     @State private var editing: Bool = false
     @State private var draggingWatch: Watch?
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// v1.1.1: 보관함 표시는 설정(UserPreferences)에서 구동 — 구수·색상 영속.
+    private var slotCount: Int { preferences.watchBoxSlotCount }
+    private var material: WatchBoxColor { WatchBoxColor.resolve(preferences.watchBoxColor) }
 
     /// 사용자 정의 순서(sortOrder) 기준 — 컬렉션과 일관. 편집 시 드래그로 재정렬.
     private var orderedWatches: [Watch] {
@@ -23,52 +26,6 @@ struct WatchBoxView: View {
             case (_?, nil): return true
             case (nil, _?): return false
             case (nil, nil): return $0.createdAt < $1.createdAt
-            }
-        }
-    }
-
-    enum Material: String, CaseIterable, Identifiable {
-        case walnut, ebony, leather, linen
-        var id: String { rawValue }
-        var label: String {
-            switch self {
-            case .walnut: return String(localized: "watchbox.material.walnut")
-            case .ebony: return String(localized: "watchbox.material.ebony")
-            case .leather: return String(localized: "watchbox.material.leather")
-            case .linen: return String(localized: "watchbox.material.linen")
-            }
-        }
-        /// 외함 색상.
-        var outerColors: [Color] {
-            switch self {
-            case .walnut:  return [Color(red: 0.36, green: 0.23, blue: 0.12),
-                                    Color(red: 0.55, green: 0.35, blue: 0.17),
-                                    Color(red: 0.29, green: 0.17, blue: 0.09)]
-            case .ebony:   return [Color(red: 0.102, green: 0.106, blue: 0.180),
-                                    Color(red: 0.165, green: 0.133, blue: 0.200),
-                                    Color(red: 0.059, green: 0.059, blue: 0.102)]
-            case .leather: return [Color(red: 0.227, green: 0.122, blue: 0.071),
-                                    Color(red: 0.361, green: 0.180, blue: 0.102),
-                                    Color(red: 0.165, green: 0.071, blue: 0.031)]
-            case .linen:   return [Color(red: 0.910, green: 0.863, blue: 0.753),
-                                    Color(red: 0.949, green: 0.922, blue: 0.851),
-                                    Color(red: 0.788, green: 0.725, blue: 0.549)]
-            }
-        }
-        /// pillow (받침대) 색상.
-        var pillowColors: (top: Color, bottom: Color) {
-            switch self {
-            case .walnut:  return (Color(red: 0.165, green: 0.129, blue: 0.102), Color(red: 0.059, green: 0.039, blue: 0.024))
-            case .ebony:   return (Color(red: 0.122, green: 0.137, blue: 0.188), Color(red: 0.031, green: 0.039, blue: 0.063))
-            case .leather: return (Color(red: 0.231, green: 0.141, blue: 0.094), Color(red: 0.078, green: 0.039, blue: 0.020))
-            case .linen:   return (Color(red: 0.545, green: 0.498, blue: 0.361), Color(red: 0.290, green: 0.255, blue: 0.192))
-            }
-        }
-        var fgColor: Color {
-            switch self {
-            case .walnut, .leather: return Color(red: 0.949, green: 0.902, blue: 0.800)
-            case .ebony: return Color(red: 0.788, green: 0.663, blue: 0.380)  // gold
-            case .linen: return Color(red: 0.290, green: 0.263, blue: 0.216)
             }
         }
     }
@@ -105,12 +62,12 @@ struct WatchBoxView: View {
         NavigationStack {
             ScrollView {
                 VStack(spacing: 16) {
-                    pickers
                     box
                     statsRow
                 }
                 .padding(.horizontal, 16)
                 .padding(.vertical, 12)
+                .readableContentWidth(620)   // iPad: 보관함 비율 유지(아이폰 무영향)
             }
             .background(AppColors.paper0.ignoresSafeArea())
             .navigationTitle(String(localized: "menu.watchbox"))
@@ -129,76 +86,6 @@ struct WatchBoxView: View {
                 }
             }
         }
-    }
-
-    private var pickers: some View {
-        VStack(spacing: 12) {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(String(localized: "watchbox.slots"))
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.5)
-                    .foregroundStyle(AppColors.ink2)
-                HStack(spacing: 6) {
-                    ForEach([3, 6, 12], id: \.self) { n in
-                        Button {
-                            UISelectionFeedbackGenerator().selectionChanged()
-                            withAnimation(.easeOut(duration: 0.2)) { slotCount = n }
-                        } label: {
-                            Text(String(format: NSLocalizedString("watchbox.slot_count", comment: ""), n))
-                                .font(.system(size: 14, weight: .semibold))
-                                .frame(maxWidth: .infinity, minHeight: 44)
-                                .background(slotCount == n ? AppColors.primaryDeep : AppColors.paper2)
-                                .foregroundStyle(slotCount == n ? .white : AppColors.ink0)
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityAddTraits(slotCount == n ? .isSelected : [])
-                    }
-                }
-            }
-            VStack(alignment: .leading, spacing: 8) {
-                Text(String(localized: "watchbox.material"))
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.5)
-                    .foregroundStyle(AppColors.ink2)
-                HStack(spacing: 8) {
-                    ForEach(Material.allCases) { m in
-                        Button {
-                            UISelectionFeedbackGenerator().selectionChanged()
-                            withAnimation(.easeOut(duration: 0.25)) { material = m }
-                        } label: {
-                            ZStack {
-                                LinearGradient(
-                                    colors: m.outerColors,
-                                    startPoint: .topLeading, endPoint: .bottomTrailing
-                                )
-                                VStack {
-                                    Spacer()
-                                    Text(m.label)
-                                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
-                                        .tracking(1.5)
-                                        .foregroundStyle(m.fgColor)
-                                        .padding(.bottom, 4)
-                                }
-                            }
-                            .frame(height: 44)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .strokeBorder(material == m ? AppColors.accent : .clear, lineWidth: 2)
-                            )
-                        }
-                        .buttonStyle(.plain)
-                        .accessibilityLabel(m.label)
-                        .accessibilityAddTraits(material == m ? .isSelected : [])
-                    }
-                }
-            }
-        }
-        .padding(14)
-        .background(AppColors.paper1)
-        .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.rule, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
     }
 
     private var box: some View {

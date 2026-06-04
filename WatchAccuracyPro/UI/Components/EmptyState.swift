@@ -93,6 +93,28 @@ struct AnimatedEmptyIcon: View {
     }
 }
 
+/// 인라인 로딩 링 — AnimatedEmptyIcon 과 동일한 회전 accent 링 스타일(작게).
+/// 툴바/버튼/오버레이 등 좁은 자리의 로딩 표시용(기본 ProgressView 대체).
+struct LoadingRing: View {
+    var size: CGFloat = 22
+    var color: Color = AppColors.accent
+    var lineWidth: CGFloat = 2.5
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var angle: Double = 0
+
+    var body: some View {
+        Circle()
+            .trim(from: 0, to: 0.28)
+            .stroke(color, style: StrokeStyle(lineWidth: lineWidth, lineCap: .round))
+            .frame(width: size, height: size)
+            .rotationEffect(.degrees(angle))
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.linear(duration: 0.9).repeatForever(autoreverses: false)) { angle = 360 }
+            }
+    }
+}
+
 /// 인라인 (카드 내부) 빈 상태 — 작은 SF symbol + 한 줄 텍스트.
 struct InlineEmptyState: View {
     let icon: String

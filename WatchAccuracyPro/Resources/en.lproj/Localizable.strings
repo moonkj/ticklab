@@ -1947,3 +1947,25 @@
 "report.kv.rate" = "Rate";
 "report.kv.beat_error" = "Beat Error";
 "analytics.period" = "Period";
+
+/* v1.1.1 보관함 표시 설정 */
+"settings.section.watchbox" = "Watch Box Display";
+"settings.watchbox.slots" = "Slots";
+"settings.watchbox.slots.value" = "%d slots";
+"settings.watchbox.color" = "Color";
+"settings.watchbox.hint" = "Set the number of slots and color shown in your watch box.";
+"watchbox.color.navy" = "Navy";
+"watchbox.color.burgundy" = "Burgundy";
+"watchbox.color.forest" = "Forest";
+"watchbox.color.graphite" = "Graphite";
+
+/* v1.1.1 결과 평이표현 — 하루 기준 */
+"result.plain.day_sec" = "about %d sec %@ per day";
+
+/* v1.1.1 커뮤니티 글 수정 */
+"community.edit.title" = "Edit Post";
+"community.edit.photo_kept" = "The photo stays unchanged.";
+
+/* v1.1.1 공유카드 → 커뮤니티 등록 */
+"share.post_community" = "Post to Community";
+"share.community.posted" = "Posted to the community.";

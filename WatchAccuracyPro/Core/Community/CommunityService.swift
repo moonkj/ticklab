@@ -736,6 +736,7 @@ final class CommunityService: ObservableObject {
         // 1) Storage 업로드 — 사진 있을 때만. 글-전용이면 path nil.
         var path: String? = nil
         if let imageData {
+            let optimized = EXIFStripper.optimizedForUpload(imageData)   // 긴 변 1080px 상한(이미 작으면 원본) — 서버 용량 절약
             let p = "\(uid)/\(UUID().uuidString).jpg"
             guard let storageURL = URL(string: "\(baseURL)/storage/v1/object/community/\(p)") else {
                 throw UploadError.storageFailed
@@ -746,7 +747,7 @@ final class CommunityService: ObservableObject {
             up.setValue(anonKey, forHTTPHeaderField: "apikey")
             up.setValue("Bearer \(accessToken ?? anonKey)", forHTTPHeaderField: "Authorization")
             // upload(for:from:) 가 body 를 from: 으로 보냄 — httpBody 중복 설정 제거.
-            let (upData, resp) = try await URLSession.shared.upload(for: up, from: imageData)
+            let (upData, resp) = try await URLSession.shared.upload(for: up, from: optimized)
             if let http = resp as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
                 lastError = "storage \(http.statusCode): \(String(data: upData, encoding: .utf8) ?? "")"
                 throw UploadError.storageFailed
@@ -784,6 +785,20 @@ final class CommunityService: ObservableObject {
             .split(separator: ",").first?.trimmingCharacters(in: .whitespaces) ?? ""
         let repBrand = explicitRep.isEmpty ? firstFav : explicitRep
         if !repBrand.isEmpty { body["author_rep_brand"] = repBrand }
+        // 대표사진(프로필 아바타) — EXIF strip 된 photoData 를 내용 고유 경로로 1회 업로드 후 첨부.
+        // 이게 없으면 피드 헤더에 본인 사진이 안 뜨고 이니셜만 보임(v1.1.0 버그 수정).
+        if let raw = defaults.data(forKey: "ticklab.profile.photoData"), !raw.isEmpty {
+            let avatarData = EXIFStripper.optimizedForUpload(raw, maxDimension: 320)   // 아바타는 32pt 표시 → 320px면 충분
+            let checksum = avatarData.prefix(512).reduce(UInt32(2166136261)) { ($0 ^ UInt32($1)) &* 16777619 }
+            let avatarPath = "\(uid)/avatar-\(avatarData.count)-\(checksum).jpg"
+            var uploaded = (defaults.string(forKey: "ticklab.profile.avatarPath") == avatarPath)
+            if !uploaded {
+                uploaded = await uploadAvatar(data: avatarData, path: avatarPath)
+                if uploaded { defaults.set(avatarPath, forKey: "ticklab.profile.avatarPath") }
+            }
+            // 업로드 확정된 경우에만 첨부(실패 시 깨진 URL 대신 이니셜 폴백 유지).
+            if uploaded { body["author_avatar_path"] = avatarPath }
+        }
         if let caption {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
@@ -799,6 +814,40 @@ final class CommunityService: ObservableObject {
         }
         markPostedToday()
         await loadFeed()
+    }
+
+    /// 프로필 대표사진을 community 스토리지에 업로드(내용 고유 경로 → INSERT). 409(이미 존재)는 정상.
+    /// 별도 UPDATE 정책 불필요 — 경로가 내용 해시라 같은 사진은 같은 경로(재업로드 안 함).
+    private func uploadAvatar(data: Data, path: String) async -> Bool {
+        guard let url = URL(string: "\(baseURL)/storage/v1/object/community/\(path)") else { return false }
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("image/jpeg", forHTTPHeaderField: "Content-Type")
+        req.setValue(anonKey, forHTTPHeaderField: "apikey")
+        req.setValue("Bearer \(accessToken ?? anonKey)", forHTTPHeaderField: "Authorization")
+        guard let (_, resp) = try? await URLSession.shared.upload(for: req, from: data),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode) || http.statusCode == 409
+    }
+
+    /// 본인 글 캡션 수정 — posts_update_own RLS(author_uid = auth.uid()) 필요.
+    /// 검열은 호출 측(편집 화면)에서 선통과시킴.
+    @discardableResult
+    func updateMyPost(_ post: Community.Post, caption: String) async -> Bool {
+        await ensureSignedIn()
+        guard let uid = myUID, post.authorUID == uid else { lastError = "not owner"; return false }
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?id=eq.\(post.id)") else { return false }
+        var req = authedRequest(url, method: "PATCH")
+        let capped = String(caption.trimmingCharacters(in: .whitespacesAndNewlines).prefix(CommunityTextModerator.maxLength))
+        req.httpBody = try? JSONSerialization.data(withJSONObject: ["caption": (capped.isEmpty ? NSNull() : capped) as Any])
+        guard let (data, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse else { lastError = String(localized: "community.error.network"); return false }
+        if !(200...299).contains(http.statusCode) {
+            lastError = "update \(http.statusCode): \(String(data: data, encoding: .utf8)?.prefix(120) ?? "")"
+            return false
+        }
+        await loadFeed()
+        return true
     }
 
     // MARK: - 운영 대시보드 (관리자)

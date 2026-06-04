@@ -136,7 +136,7 @@ struct CommunityComposerView: View {
     private var uploadingOverlay: some View {
         ZStack {
             Color.black.opacity(0.3).ignoresSafeArea()
-            ProgressView().tint(.white).scaleEffect(1.4)
+            AnimatedEmptyIcon(icon: "paperplane.fill")   // 가운데 아이콘 + 회전 링(앱 공통 로딩).
         }
     }
 
@@ -192,6 +192,7 @@ struct CommunityReviewView: View {
     @State private var caption = ""
     @State private var textBlocked = false
     @State private var blockMessage = ""
+    @State private var submitted = false   // 중복 게시 방지 — 1회 제출 후 잠금.
     @FocusState private var captionFocused: Bool
 
     var body: some View {
@@ -223,8 +224,12 @@ struct CommunityReviewView: View {
                     Button(String(localized: "common.cancel")) { onCancel() }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button(String(localized: "community.review.post")) { submit() }
-                        .fontWeight(.semibold)
+                    if submitted {
+                        LoadingRing(size: 20)   // 누르면 즉시 로딩 링 — "멈춘 줄 알고 재탭" 방지.
+                    } else {
+                        Button(String(localized: "community.review.post")) { submit() }
+                            .fontWeight(.semibold)
+                    }
                 }
             }
             .alert(String(localized: "community.moderation.text.blocked.title"), isPresented: $textBlocked) {
@@ -256,6 +261,7 @@ struct CommunityReviewView: View {
     }
 
     private func submit() {
+        guard !submitted else { return }   // 중복 게시 방지 — 멈춘 줄 알고 재탭해도 1회만.
         // Round 171 글-전용: 사진이 없으면 내용이 비어 있으면 안 됨.
         if imageData == nil, caption.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             blockMessage = String(localized: "community.compose.text_only.empty")
@@ -264,6 +270,7 @@ struct CommunityReviewView: View {
         }
         switch CommunityTextModerator.screen(caption) {
         case .allowed:
+            submitted = true
             onPost(caption)
         case .tradeBan:
             blockMessage = String(localized: "community.moderation.trade.blocked.body")

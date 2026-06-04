@@ -18,6 +18,8 @@ struct CommunityPostCard: View {
     var onComment: () -> Void = {}
     var onLikers: () -> Void = {}
     let onDelete: (() -> Void)?
+    /// 본인 글 — 캡션(내용) 수정. nil 이면 미노출.
+    var onEdit: (() -> Void)? = nil
     /// 관리자(운영 ID) 전용 — 모든 글 삭제. nil 이면 미노출.
     var onAdminDelete: (() -> Void)? = nil
 
@@ -244,6 +246,11 @@ struct CommunityPostCard: View {
                 }
                 Button(role: .destructive, action: onBlock) {
                     Label(String(localized: "community.block"), systemImage: "hand.raised")
+                }
+            }
+            if let onEdit {
+                Button(action: onEdit) {
+                    Label(String(localized: "common.edit"), systemImage: "pencil")
                 }
             }
             if let onDelete {
