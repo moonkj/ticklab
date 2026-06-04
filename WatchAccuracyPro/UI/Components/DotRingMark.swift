@@ -9,6 +9,8 @@ struct DotRingMark: View {
     var size: CGFloat = 80
     var rotating: Bool = false
     var goldTopDot: Bool = true
+    /// 12시부터 시계방향으로 점등된 dot 개수(nil = 전체 점등). 스플래시 순차 점등용.
+    var litCount: Int? = nil
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var angle: Double = 0
@@ -45,6 +47,7 @@ struct DotRingMark: View {
         let x = CGFloat(CoreGraphics.cos(theta)) * ringRadius
         let y = CGFloat(CoreGraphics.sin(theta)) * ringRadius
         let isTop = index == 0
+        let lit = litCount.map { index < $0 } ?? true
 
         Circle()
             .fill(isTop && goldTopDot
@@ -52,6 +55,7 @@ struct DotRingMark: View {
                   : AnyShapeStyle(AppColors.ink3.opacity(0.45)))
             .frame(width: isTop && goldTopDot ? dotDiameter * 1.25 : dotDiameter,
                    height: isTop && goldTopDot ? dotDiameter * 1.25 : dotDiameter)
+            .opacity(lit ? 1 : 0.12)
             .offset(x: x, y: y)
     }
 }

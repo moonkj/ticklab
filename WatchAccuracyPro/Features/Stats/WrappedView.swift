@@ -391,8 +391,8 @@ struct WrappedView: View {
     private func bigNumber(_ value: Int) -> some View {
         CounterText(
             value: Double(value),
+            format: "%.0f",
             duration: 1.1,
-            format: { String(Int($0.rounded())) },
             font: .system(size: 76, weight: .black, design: .monospaced)
         )
         .foregroundStyle(.white)
