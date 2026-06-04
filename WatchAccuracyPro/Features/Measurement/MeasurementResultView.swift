@@ -8,6 +8,7 @@ struct MeasurementResultView: View {
     var onRetry: (() -> Void)? = nil
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @ScaledMetric(relativeTo: .largeTitle) private var gradeTileSize: CGFloat = 64
     @ScaledMetric(relativeTo: .largeTitle) private var gradeTileFont: CGFloat = 44
     /// 사용자 보고 fix: verdict headline/body Dynamic Type 대응 — 노안 사용자가 XL 글자 크기 사용 시도.
@@ -16,13 +17,20 @@ struct MeasurementResultView: View {
     @ScaledMetric(relativeTo: .body) private var scaledBodySize: CGFloat = 14
     @ScaledMetric(relativeTo: .body) private var scaledBodySizeLow: CGFloat = 15
     /// 핵심 readout(rate 값+단위) Dynamic Type 대응 — 기준값=기존 크기 → 기본 설정에선 변화 없음, 큰글씨에서만 확대.
-    @ScaledMetric(relativeTo: .largeTitle) private var rateValueSizeHigh: CGFloat = 60
+    /// 웨이브2-B(hero readout 격상): 고신뢰 시 hero 숫자를 ~88pt 로 확대(linen 위 floating, borderless).
+    @ScaledMetric(relativeTo: .largeTitle) private var rateValueSizeHigh: CGFloat = 88
     @ScaledMetric(relativeTo: .largeTitle) private var rateValueSizeLow: CGFloat = 28
     @ScaledMetric(relativeTo: .title3) private var rateUnitSize: CGFloat = 16
+    /// 웨이브2-B: hero verdict(세리프) — rate 숫자 바로 아래.
+    @ScaledMetric(relativeTo: .title3) private var heroVerdictSize: CGFloat = 19
     /// Round 23 (Doyoon): onAppear haptic 가 매 reentry (share sheet dismiss 등) 마다 fire 하던 버그.
     @State private var didFireHaptic = false
     /// Sprint 12 (UX2): 용어 설명 바텀시트.
     @State private var glossaryEntry: GlossaryEntryID?
+    /// 웨이브2-B reveal 상태.
+    @State private var didReveal = false       // reveal 1회만(reentry 재발 방지)
+    @State private var heroRateTarget: Double = 0  // CounterText 카운트업 목표(0→실제값)
+    @State private var showGoldSeal = false     // A등급 도착 후 0.4s 인장 fade-in
 
     private var movement: Movement? {
         watch.caliber.flatMap { MovementDatabase.shared.movement(id: $0) }
@@ -278,20 +286,65 @@ struct MeasurementResultView: View {
             // Round 23 (Doyoon): 최초 1회만 haptic. share sheet 닫고 reentry 시 재발화 차단.
             guard !didFireHaptic else { return }
             didFireHaptic = true
-            // T-17: 햅틱 설정 토글 존중.
-            if HapticManager.isEnabled {
-                let gen = UINotificationFeedbackGenerator()
-                switch result.reliabilityGrade {
-                case .a, .b:    gen.notificationOccurred(.success)
-                case .c:        gen.notificationOccurred(.warning)
-                case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
-                }
-            }
+            runReveal()
             // Sprint 1 (P1-6): 골든 모멘트 — 신뢰도 A/B + confidence ≥80 일 때만 카운트.
             // 누적 3회 도달 + 60일 cooldown 통과 시 시스템 리뷰 prompt.
             if let g = result.reliabilityGrade, (g == .a || g == .b), result.confidenceScore >= 80 {
                 ReviewRequestService.qualifyingMomentReached()
             }
+        }
+    }
+
+    // MARK: - Reveal sequence (웨이브2-B)
+
+    /// "다이얼 영접" reveal: 다이얼 스윕 + hero 숫자 카운트업 + 햅틱 크레센도 + (A등급) 골드 인장.
+    /// Reduce Motion 이면 모든 연출 즉시 최종 상태. 햅틱은 `HapticManager.isEnabled` 토글 존중.
+    private func runReveal() {
+        guard !didReveal else { return }
+        didReveal = true
+
+        // 고신뢰가 아니면 hero 카운트업/스윕/인장 없음 — 기존 한 번 햅틱만.
+        guard isHighConfidenceGrade else {
+            fireGradeHaptic()
+            return
+        }
+
+        if reduceMotion {
+            // 연출 생략 — 즉시 최종 상태(숫자·인장 바로 표시), 단발 햅틱만.
+            heroRateTarget = result.rateSecondsPerDay
+            if result.reliabilityGrade == .a { showGoldSeal = true }
+            fireGradeHaptic()
+            return
+        }
+
+        // ⓒ 햅틱 크레센도(스윕 중 lightTap×2 → 도착 measurementComplete). 내부에서 isEnabled 가드.
+        HapticManager.playRevealCrescendo()
+
+        // ⓑ hero 숫자 0.0 → 실제값 카운트업(다이얼 스윕과 동조, 약간 더 긴 ease).
+        heroRateTarget = 0
+        withAnimation(.easeOut(duration: 1.1)) {
+            heroRateTarget = result.rateSecondsPerDay
+        }
+
+        // ⓓ A등급일 때만 도착(~0.85s) 후 0.4s 뒤 골드 인장 fade-in + stamp 햅틱.
+        if result.reliabilityGrade == .a {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.85 + 0.4) {
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
+                    showGoldSeal = true
+                }
+                HapticManager.trigger(.sealStamped)
+            }
+        }
+    }
+
+    /// 등급별 단발 햅틱(기존 동작 보존 — reveal 연출이 없는 경로용).
+    private func fireGradeHaptic() {
+        guard HapticManager.isEnabled else { return }
+        let gen = UINotificationFeedbackGenerator()
+        switch result.reliabilityGrade {
+        case .a, .b:    gen.notificationOccurred(.success)
+        case .c:        gen.notificationOccurred(.warning)
+        case .f, .none: UISelectionFeedbackGenerator().selectionChanged()
         }
     }
 
@@ -372,13 +425,15 @@ struct MeasurementResultView: View {
             // 사용자 보고 fix: .system(size:) 는 Dynamic Type scaling 안 됨 → @ScaledMetric 으로 노안 사용자 대응.
             // 사용자 보고 fix: 일부 verdict.headline 이 이미 종결어미/마침표/이모지 포함 → 중복 마침표 방지.
             //   trailing 마침표/물음표/느낌표가 이미 있으면 추가 X.
-            Text("\u{201C}\(verdict.headline)\(needsTrailingDot(verdict.headline) ? "." : "")\u{201D}")
-                .font(.system(size: isHighConfidenceGrade ? scaledHeadlineSize : scaledHeadlineSizeLow,
-                              weight: .semibold, design: .serif))
-                .foregroundStyle(verdict.toneColor)
-                .lineSpacing(2)
-                .lineLimit(3)
-                .minimumScaleFactor(0.8)
+            // 웨이브2-B: 고신뢰면 hero readout(숫자 바로 아래)에서 이미 headline 노출 → 여기선 중복 방지로 생략.
+            if !isHighConfidenceGrade {
+                Text("\u{201C}\(verdict.headline)\(needsTrailingDot(verdict.headline) ? "." : "")\u{201D}")
+                    .font(.system(size: scaledHeadlineSizeLow, weight: .semibold, design: .serif))
+                    .foregroundStyle(verdict.toneColor)
+                    .lineSpacing(2)
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.8)
+            }
             Text(verdict.body)
                 .font(.system(size: isHighConfidenceGrade ? scaledBodySize : scaledBodySizeLow,
                               weight: isHighConfidenceGrade ? .regular : .medium))
@@ -427,17 +482,21 @@ struct MeasurementResultView: View {
     }
 
     private var rateDialCard: some View {
+        // 웨이브2-B(hero readout 격상): 고신뢰는 borderless·hero 숫자 확대(~88pt)·세리프 verdict 를 숫자 바로 아래로.
+        // 저신뢰(C/F·COSC 밖)는 기존 억제 레이아웃(작은 참고용 숫자·테두리 카드) 유지.
         let bigFont: CGFloat = isHighConfidenceGrade ? rateValueSizeHigh : rateValueSizeLow
         let bigColor: Color = isHighConfidenceGrade ? verdict.toneColor : AppColors.ink3
         let dialSize: CGFloat = isHighConfidenceGrade ? 220 : 160
         let dialOpacity: Double = isHighConfidenceGrade ? 1.0 : 0.55
+        // 카운트업 표시값: 고신뢰는 reveal 동안 0→실제값(reduce motion·정적 모드면 즉시 실제값).
+        let heroDisplayRate = isHighConfidenceGrade ? heroRateTarget : result.rateSecondsPerDay
         return VStack(spacing: 6) {
             Text(String(localized: "watch.label.rate").uppercased())
                 .font(.system(size: 10, weight: .semibold))
                 .tracking(2.2)
                 .foregroundStyle(AppColors.ink2)
             HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(formatRate(result.rateSecondsPerDay))
+                RevealCountingNumber(value: heroDisplayRate, format: formatRate)
                     .font(.system(size: bigFont, weight: .medium, design: .monospaced))
                     .monospacedDigit()
                     .tracking(-1.5)
@@ -451,6 +510,16 @@ struct MeasurementResultView: View {
             }
             .accessibilityElement(children: .ignore)
             .accessibilityLabel(String(format: NSLocalizedString("a11y.rate_value", comment: ""), formatRate(result.rateSecondsPerDay), String(localized: "unit.seconds_per_day")))
+            // 웨이브2-B: 고신뢰일 때 세리프 verdict headline 을 hero 숫자 바로 아래로(스크린 디자이너 제안).
+            if isHighConfidenceGrade {
+                Text("\u{201C}\(verdict.headline)\(needsTrailingDot(verdict.headline) ? "." : "")\u{201D}")
+                    .font(.system(size: heroVerdictSize, weight: .semibold, design: .serif))
+                    .foregroundStyle(verdict.toneColor)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+                    .padding(.top, 2)
+            }
             // 낮은 신뢰도 등급일 때 "참고용 수치" 캡션
             if !isHighConfidenceGrade {
                 Text(String(localized: "result.rate.reference_only").uppercased())
@@ -463,12 +532,24 @@ struct MeasurementResultView: View {
                 Chip(rateUncertainty, tone: .neutral, small: true)
                     .accessibilityLabel(String(format: String(localized: "a11y.rate_uncertainty"), rateUncertainty))
             }
-            RateDial(rate: result.rateSecondsPerDay, size: dialSize)
-                .opacity(dialOpacity)
-                .padding(.top, 4)
-                .transition(.scale.combined(with: .opacity))
-                // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
-                .accessibilityHidden(true)
+            // 다이얼: 고신뢰 reveal 시 바늘 스윕(0→rate). 저신뢰/정적은 즉시 표시.
+            ZStack {
+                RateDial(rate: result.rateSecondsPerDay, size: dialSize,
+                         animatedRate: isHighConfidenceGrade)
+                    .opacity(dialOpacity)
+                    // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
+                    .accessibilityHidden(true)
+                // A등급(고신뢰)일 때만 도착 후 0.4s 뒤 골드 인장 fade-in.
+                if isHighConfidenceGrade && result.reliabilityGrade == .a {
+                    RevealGoldSeal()
+                        .frame(width: dialSize * 0.34, height: dialSize * 0.34)
+                        .opacity(showGoldSeal ? 1 : 0)
+                        .scaleEffect(showGoldSeal ? 1 : (reduceMotion ? 1 : 0.6))
+                        .offset(y: dialSize * 0.14)
+                        .accessibilityHidden(true)
+                }
+            }
+            .padding(.top, 4)
             HStack(spacing: 8) {
                 let inCosc = result.rateSecondsPerDay >= -4 && result.rateSecondsPerDay <= 6
                 Chip(
@@ -482,8 +563,13 @@ struct MeasurementResultView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(18)
-        .background(AppColors.paper0)
-        .overlay(RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1))
+        // 웨이브2-B: 고신뢰 hero readout 은 borderless(linen 위 floating), 저신뢰는 기존 테두리 카드.
+        .background(isHighConfidenceGrade ? Color.clear : AppColors.paper0)
+        .overlay {
+            if !isHighConfidenceGrade {
+                RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1)
+            }
+        }
         .clipShape(RoundedRectangle(cornerRadius: 18))
     }
 
@@ -726,6 +812,60 @@ extension DateFormatter {
         f.timeStyle = .short
         return f
     }()
+}
+
+// MARK: - Reveal helpers (웨이브2-B)
+//
+// 기반 컴포넌트 CounterText / GoldSealView 가 이 worktree HEAD 에 아직 병합되지 않아
+// 빌드 자립을 위해 파일 로컬(private) 등가물로 구현. 향후 기반층 병합 시 충돌 회피용 별도 네이밍.
+
+/// CounterText 등가 — value 변화에 맞춰 보간되는 숫자 텍스트(monospacedDigit 은 호출 측 .monospacedDigit() 로).
+/// `value` 가 withAnimation 으로 바뀌면 매 프레임 보간된 값을 format 으로 렌더.
+private struct RevealCountingNumber: View, Animatable {
+    var value: Double
+    let format: (Double) -> String
+
+    var animatableData: Double {
+        get { value }
+        set { value = newValue }
+    }
+
+    var body: some View {
+        Text(format(value))
+    }
+}
+
+/// GoldSealView 등가 — 골드 원형 인장 + 체크마크(draw-on). 결과 A등급 reveal 의 시그니처 마크.
+/// Low Power / Reduce Motion 가드는 호출 측(opacity·scale)에서 처리 — 본체는 정적 draw.
+private struct RevealGoldSeal: View {
+    var body: some View {
+        ZStack {
+            // 골드 폴리시 원판.
+            Circle()
+                .fill(
+                    LinearGradient(
+                        colors: [AppColors.accentLight, AppColors.accent, AppColors.accentDark],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    )
+                )
+                .overlay(
+                    Circle().stroke(AppColors.accentDark.opacity(0.6), lineWidth: 1.5)
+                )
+                .cardShadow(.mid)
+            // 톱니(scallop) 느낌 — 가는 inner ring.
+            Circle()
+                .strokeBorder(AppColors.paper0.opacity(0.55),
+                              style: StrokeStyle(lineWidth: 1.5, dash: [2, 3]))
+                .padding(5)
+            // 인장 마크.
+            Image(systemName: "checkmark.seal.fill")
+                .resizable()
+                .scaledToFit()
+                .padding(7)
+                .foregroundStyle(AppColors.paper0)
+                .shadow(color: AppColors.accentDark.opacity(0.4), radius: 1, y: 1)
+        }
+    }
 }
 
 #Preview {
