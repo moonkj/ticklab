@@ -54,9 +54,34 @@ struct TrendChartView: View {
     let measurements: [WatchMeasurement]
     /// range = nil 이면 데이터 범위에 맞춤 (ALL 케이스 호환).
     var range: WatchDetailTrendRange?
+    /// 스트림 D: Rate Drift 예측 ghost 선 표시 여부. 기본 ON.
+    var showForecast: Bool = true
 
     private var sorted: [WatchMeasurement] {
         measurements.sorted(by: { $0.timestamp < $1.timestamp })
+    }
+
+    /// 스트림 D: rate 추세 외삽. minCount 미달이면 nil → ghost 선 미표시(graceful degrade).
+    /// 예측선은 마지막 측정 시각 → +horizon 일 까지 점선으로 그린다.
+    private var forecast: RateForecastService.Forecast? {
+        guard showForecast else { return nil }
+        return RateForecastService.forecast(measurements: measurements)
+    }
+
+    /// ghost 예측선의 (시작점, 끝점). 마지막 측정 = anchor, +horizon 일 = projected.
+    /// 끝점이 보이는 domain 밖이면 domain upperBound 로 clamp(그 지점 rate 로 재계산) — 어떤 range 든 점선이 보이게.
+    private var forecastSegment: (start: (Date, Double), end: (Date, Double))? {
+        guard let f = forecast, let lastDate = sorted.last?.timestamp else { return nil }
+        let fullEndDate = lastDate.addingTimeInterval(Double(f.horizonDays) * 86_400)
+        let domainEnd = xDomain.upperBound
+        // 점선이 도메인을 넘으면 가시 영역 끝까지만 그리되, slope 로 그 지점 rate 를 보간.
+        if fullEndDate <= domainEnd {
+            return (start: (lastDate, f.currentRate), end: (fullEndDate, f.projectedRate))
+        }
+        guard domainEnd > lastDate else { return nil }
+        let elapsedDays = domainEnd.timeIntervalSince(lastDate) / 86_400
+        let clampedRate = f.currentRate + f.slopePerDay * elapsedDays
+        return (start: (lastDate, f.currentRate), end: (domainEnd, clampedRate))
     }
 
     private var xDomain: ClosedRange<Date> {
@@ -117,6 +142,21 @@ struct TrendChartView: View {
                         .interpolationMethod(.catmullRom)
                     }
                 }
+                // 스트림 D: ghost 예측선 — 마지막 측정에서 추세를 점선으로 외삽.
+                if let seg = forecastSegment {
+                    LineMark(x: .value("date", seg.start.0), y: .value("rate", seg.start.1),
+                             series: .value("series", "forecast"))
+                        .foregroundStyle(AppColors.accent.opacity(0.7))
+                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+                    LineMark(x: .value("date", seg.end.0), y: .value("rate", seg.end.1),
+                             series: .value("series", "forecast"))
+                        .foregroundStyle(AppColors.accent.opacity(0.7))
+                        .lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 4]))
+                    PointMark(x: .value("date", seg.end.0), y: .value("rate", seg.end.1))
+                        .foregroundStyle(AppColors.accent.opacity(0.7))
+                        .symbolSize(40)
+                        .symbol(.diamond)
+                }
             }
             RuleMark(y: .value("zero", 0)).foregroundStyle(AppColors.border)
         }
@@ -133,6 +173,26 @@ struct TrendChartView: View {
                 Text(String(localized: "trend.empty"))
                     .font(AppTypography.caption)
                     .foregroundStyle(AppColors.textSecondary)
+            }
+        }
+        .overlay(alignment: .topTrailing) {
+            // 스트림 D: ghost 예측선 범례 + 90일 외삽 요약. 예측이 있을 때만.
+            if let f = forecast {
+                HStack(spacing: 4) {
+                    Image(systemName: "chart.line.uptrend.xyaxis")
+                        .font(.system(size: 8))
+                    Text(String(format: NSLocalizedString("forecast.legend.projected", comment: ""),
+                                f.horizonDays, f.projectedRate))
+                        .font(.system(size: 8, weight: .medium, design: .monospaced))
+                }
+                .foregroundStyle(AppColors.accent.opacity(0.9))
+                .padding(.horizontal, 5)
+                .padding(.vertical, 2)
+                .background(AppColors.accent.opacity(0.1))
+                .clipShape(Capsule())
+                .padding(4)
+                .accessibilityLabel(Text(String(format: NSLocalizedString("forecast.legend.a11y", comment: ""),
+                                                f.horizonDays, f.projectedRate, f.confidenceMargin)))
             }
         }
     }

@@ -14,6 +14,64 @@ enum TrendDiagnosisService {
 
     enum Severity { case good, watch, service }
 
+    /// 스트림 D: AI 추세 요약(`AppleIntelligenceVerdictService.trendVerdict`) 입력용 구조화 추세지표.
+    /// 룰 진단(`diagnose`)과 동일 계산을 노출해, 자연어 요약 LLM 이 일관된 숫자를 받도록 한다.
+    /// amplitude 미포함(Hard Rule 9 무관) — rate/자세편차/beat error 추세만.
+    struct TrendMetrics: Equatable {
+        /// 최근 측정 구간의 rate 드리프트 (s/d). +면 점점 빨라짐.
+        let drift: Double
+        /// 최근 rate 평균(절댓값 아님, s/d).
+        let avgRate: Double
+        /// 자세 간 rate 편차 δ (s/d). 2자세 미만이면 nil.
+        let positionalDelta: Double?
+        /// 최근 beat error 평균 (ms).
+        let avgBeatError: Double
+        /// 판정 심각도.
+        let severity: Severity
+        /// 회귀/추세에 사용된 측정 수.
+        let sampleCount: Int
+    }
+
+    /// 구조화 추세지표만 산출(자연어 없음). `diagnose` 와 동일 입력 게이트(≥2회).
+    static func metrics(watch: Watch, measurements: [WatchMeasurement]) -> TrendMetrics? {
+        let sorted = measurements.sorted { $0.timestamp < $1.timestamp }
+        guard sorted.count >= 2 else { return nil }
+
+        let rates = sorted.map(\.rateSecondsPerDay)
+        let recent = Array(rates.suffix(5))
+        let drift = (recent.last ?? 0) - (recent.first ?? 0)
+        let avgRate = recent.reduce(0, +) / Double(recent.count)
+        let absAvg = abs(avgRate)
+
+        var posRates: [Position: [Double]] = [:]
+        for m in sorted {
+            let p = m.metadata.position
+            guard p != .unknown else { continue }
+            posRates[p, default: []].append(m.rateSecondsPerDay)
+        }
+        let posAvgs = posRates.values.compactMap { $0.isEmpty ? nil : $0.reduce(0, +) / Double($0.count) }
+        let posDelta: Double? = posAvgs.count >= 2 ? (posAvgs.max()! - posAvgs.min()!) : nil
+
+        let recentBeatError = sorted.suffix(3).map(\.beatErrorMs)
+        let avgBeatError = recentBeatError.reduce(0, +) / Double(max(recentBeatError.count, 1))
+
+        let severity: Severity = {
+            if let d = posDelta, d >= 15 { return .service }
+            if absAvg > 30 || avgBeatError > 1.0 { return .service }
+            if abs(drift) > 8 || absAvg > 15 || avgBeatError > 0.5 { return .watch }
+            return .good
+        }()
+
+        return TrendMetrics(
+            drift: drift,
+            avgRate: avgRate,
+            positionalDelta: posDelta,
+            avgBeatError: avgBeatError,
+            severity: severity,
+            sampleCount: sorted.count
+        )
+    }
+
     /// 측정 2회 이상이어야 추세 의미. 미만이면 nil.
     static func diagnose(watch: Watch, measurements: [WatchMeasurement]) -> Diagnosis? {
         let sorted = measurements.sorted { $0.timestamp < $1.timestamp }

@@ -43,6 +43,15 @@ struct WrappedReportData {
     /// 태그별 착용 횟수 — 상위 비중 시각화용. 내림차순 정렬.
     let tagBreakdown: [(tag: String, count: Int)]
 
+    // MARK: - 스트림 D: 측정 품질 (읽기 전용 집계)
+
+    /// 올해 측정품질 점수(0~100). confidence 평균과 COSC 통과율을 가중 합산.
+    /// 측정이 없으면 nil. (measurementQualityScore = 0.6·avgConfidence + 0.4·(coscPass%))
+    let measurementQualityScore: Int?
+    /// 연간 정확도 개선(s/d) — 전반기 평균 |rate| − 후반기 평균 |rate|. +면 개선(오차 감소).
+    /// 양쪽 반기 모두 측정이 있어야 산출, 아니면 nil.
+    let accuracyImprovement: Double?
+
     static func generate(year: Int, context: ModelContext) -> WrappedReportData {
         let cal = Calendar.current
         guard let start = cal.date(from: DateComponents(year: year, month: 1, day: 1)),
@@ -138,6 +147,30 @@ struct WrappedReportData {
         // COSC 밴드(-4 ~ +6 s/d) 통과 측정 건수. (UI/Components/COSCBar SSOT 와 동일 범위.)
         let coscPassCount = meas.filter { $0.rateSecondsPerDay >= -4 && $0.rateSecondsPerDay <= 6 }.count
 
+        // MARK: - 스트림 D: 측정 품질 점수 + 연간 정확도 개선
+
+        // 품질 점수: confidence 평균(0~100) 60% + COSC 통과율(0~100) 40%. 측정 없으면 nil.
+        let qualityScore: Int? = {
+            guard !meas.isEmpty else { return nil }
+            let avgConfidence = Double(meas.map(\.confidenceScore).reduce(0, +)) / Double(meas.count)
+            let coscRate = Double(coscPassCount) / Double(meas.count) * 100.0
+            let score = 0.6 * avgConfidence + 0.4 * coscRate
+            return Int(min(100, max(0, score.rounded())))
+        }()
+
+        // 정확도 개선: 올해를 시간순 정렬해 전반/후반 반으로 나눠 평균 |rate| 차이.
+        let accuracyImprovement: Double? = {
+            let sortedMeas = meas.sorted { $0.timestamp < $1.timestamp }
+            guard sortedMeas.count >= 4 else { return nil }
+            let mid = sortedMeas.count / 2
+            let firstHalf = sortedMeas.prefix(mid)
+            let secondHalf = sortedMeas.suffix(sortedMeas.count - mid)
+            guard !firstHalf.isEmpty, !secondHalf.isEmpty else { return nil }
+            let firstAbs = firstHalf.map { abs($0.rateSecondsPerDay) }.reduce(0, +) / Double(firstHalf.count)
+            let secondAbs = secondHalf.map { abs($0.rateSecondsPerDay) }.reduce(0, +) / Double(secondHalf.count)
+            return firstAbs - secondAbs   // + 면 오차 감소 = 개선.
+        }()
+
         return WrappedReportData(
             year: year,
             totalWears: totalWears,
@@ -156,7 +189,9 @@ struct WrappedReportData {
             longestStreak: longestStreak,
             bestAccuracyWatch: bestAccuracy,
             coscPassCount: coscPassCount,
-            tagBreakdown: tagBreakdown
+            tagBreakdown: tagBreakdown,
+            measurementQualityScore: qualityScore,
+            accuracyImprovement: accuracyImprovement
         )
     }
 
@@ -187,7 +222,8 @@ struct WrappedReportData {
             newWatchesAdded: 0, topTag: nil, highlightCount: 0,
             totalWearDays: 0, topBrand: nil, brandCount: 0,
             topWeekday: nil, busiestMonth: nil, longestStreak: 0,
-            bestAccuracyWatch: nil, coscPassCount: 0, tagBreakdown: []
+            bestAccuracyWatch: nil, coscPassCount: 0, tagBreakdown: [],
+            measurementQualityScore: nil, accuracyImprovement: nil
         )
     }
 }
