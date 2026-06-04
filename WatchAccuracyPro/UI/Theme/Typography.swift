@@ -32,6 +32,21 @@ enum AppTypography {
 
     // 기존 호환
     static let largeTitle: Font  = display
+
+    // MARK: - Display tracking
+    /// 디스플레이/헤드라인 글자 사이를 살짝 좁혀 에디토리얼 무게감을 준다.
+    /// (serif display 헤드라인은 음수 트래킹이 더 고급스럽게 읽힌다.)
+    static let displayTracking: CGFloat = -0.5
+    /// 큰 메트릭(카운터 등) 자릿수 트래킹 — 0(중립). 자리 점프 방지는 monospacedDigit 으로.
+    static let metricTracking: CGFloat  = 0
+}
+
+extension View {
+    /// 디스플레이/헤드라인용 음수 트래킹을 적용한다.
+    /// 사용처: 스플래시·온보딩·결과 헤드라인·공유카드 타이틀.
+    func displayTracking() -> some View {
+        tracking(AppTypography.displayTracking)
+    }
 }
 
 /// "EYEBROW · 18px label" 자주 쓰는 모티프 — 작은 회색 대문자.
