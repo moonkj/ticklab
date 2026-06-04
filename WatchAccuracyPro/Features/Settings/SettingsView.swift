@@ -132,11 +132,11 @@ struct SettingsView: View {
                 // Round 133 사용자 요청: 사용자 모드 선택 메뉴 제거 — 항상 pro 모드 고정 (전문 분석).
 
                 Section {
-                    Toggle(String(localized: "settings.silent_mode_default"), isOn: $preferences.silentModeDefault)
+                    LiquidToggle(String(localized: "settings.silent_mode_default"), isOn: $preferences.silentModeDefault)
                     // Round 133: 측정 중 항상 화면 켜기 — 기본 ON.
-                    Toggle(String(localized: "settings.keep_screen_on"), isOn: $preferences.keepScreenOnDuringMeasurement)
+                    LiquidToggle(String(localized: "settings.keep_screen_on"), isOn: $preferences.keepScreenOnDuringMeasurement)
                     // T-17: 햅틱 피드백 전역 토글.
-                    Toggle(String(localized: "settings.haptics"), isOn: $preferences.hapticsEnabled)
+                    LiquidToggle(String(localized: "settings.haptics"), isOn: $preferences.hapticsEnabled)
                     audioInputPicker
                     // Round 138 사용자 요청: CoreML beat detector 토글 제거 — 일반 사용자에게 의미 없는 옵션.
                 } header: {
@@ -150,7 +150,7 @@ struct SettingsView: View {
 
                 // Round 80: Apple Intelligence 진단 토글 + 시스템 가용성 안내.
                 Section {
-                    Toggle(String(localized: "settings.ai.toggle"), isOn: $preferences.aiVerdictEnabled)
+                    LiquidToggle(String(localized: "settings.ai.toggle"), isOn: $preferences.aiVerdictEnabled)
                     if preferences.aiVerdictEnabled && !aiAvailable {
                         Button {
                             // Round 97 (이형준 #9): App-Prefs: 는 iOS 14+ 차단됨 → openSettingsURLString.
@@ -185,7 +185,7 @@ struct SettingsView: View {
                 // Round 133 사용자 요청: '리마인드' 메뉴로 일기 알림 + 랜덤 시계 추천 통합.
                 Section {
                     // 일기 알림 — Round 145 (Jay 4 P0): 권한 거부 시 토글 자동 revert.
-                    Toggle(String(localized: "settings.journal_reminder"), isOn: Binding(
+                    LiquidToggle(String(localized: "settings.journal_reminder"), isOn: Binding(
                         get: { preferences.journalReminderEnabled },
                         set: { newValue in
                             preferences.journalReminderEnabled = newValue
@@ -237,7 +237,7 @@ struct SettingsView: View {
                         )
                     }
                     // 랜덤 시계 추천 — Round 145 (Jay 4 P0): 권한 거부 시 자동 revert.
-                    Toggle(String(localized: "settings.random_pick.toggle"), isOn: Binding(
+                    LiquidToggle(String(localized: "settings.random_pick.toggle"), isOn: Binding(
                         get: { preferences.randomPickEnabled },
                         set: { newValue in
                             preferences.randomPickEnabled = newValue
@@ -275,7 +275,7 @@ struct SettingsView: View {
                         ), displayedComponents: .hourAndMinute)
                     }
                     // 사용자 요청: 오버홀 정비 리마인더 — 기본 ON, 주기 사용자 설정 (2~7년).
-                    Toggle(String(localized: "settings.overhaul_reminder"), isOn: Binding(
+                    LiquidToggle(String(localized: "settings.overhaul_reminder"), isOn: Binding(
                         get: { preferences.overhaulReminderEnabled },
                         set: { newValue in
                             preferences.overhaulReminderEnabled = newValue
@@ -298,7 +298,7 @@ struct SettingsView: View {
                         }
                     }
                     // Sprint 7 (P2-14): 로테이션 넛지
-                    Toggle(String(localized: "settings.rotation_nudge"), isOn: Binding(
+                    LiquidToggle(String(localized: "settings.rotation_nudge"), isOn: Binding(
                         get: { preferences.rotationNudgeEnabled },
                         set: { preferences.rotationNudgeEnabled = $0 }
                     ))
@@ -320,18 +320,18 @@ struct SettingsView: View {
                 }
                 // Apple guideline 5.1.1/5.1.2 fix: Brand League 데이터 전송 옵트인 명시.
                 Section {
-                    Toggle(String(localized: "settings.brandleague.optin"),
-                           isOn: $preferences.brandLeagueOptIn)
+                    LiquidToggle(String(localized: "settings.brandleague.optin"),
+                                 isOn: $preferences.brandLeagueOptIn)
                 } header: {
                     Text(String(localized: "settings.section.privacy"))
                 } footer: {
                     Text(String(localized: "settings.brandleague.optin.footer"))
                 }
                 Section(String(localized: "settings.section.security")) {
-                    Toggle(String(localized: "settings.applock"), isOn: $preferences.appLockEnabled)
+                    LiquidToggle(String(localized: "settings.applock"), isOn: $preferences.appLockEnabled)
                     if preferences.appLockEnabled {
                         // Round 140 (Min H7/H8): PIN 토글 OFF 시 Keychain hash 도 함께 삭제 → 다시 켰을 때 옛 PIN 부활 방지.
-                        Toggle(String(localized: "settings.applock.pin_enabled"), isOn: Binding(
+                        LiquidToggle(String(localized: "settings.applock.pin_enabled"), isOn: Binding(
                             get: { preferences.pinEnabled },
                             set: { newValue in
                                 preferences.pinEnabled = newValue

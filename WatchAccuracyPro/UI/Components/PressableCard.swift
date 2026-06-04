@@ -10,6 +10,10 @@ import SwiftUI
 ///     아주 짧게(~0.09s) 지연해 action 을 호출한다. 스크롤은 .plain 버튼이라 그대로 동작하고,
 ///     탭할 때마다 스케일 펄스가 확실히 보인다.
 /// - Reduce Motion 활성 시 펄스 생략(즉시 action), 햅틱만.
+///
+/// 웨이브2-A JellySquash: 균일 scale 0.95 대신 **비등방 스쿼시&스트레치** —
+///   누르면 `scaleY:0.93, scaleX:1.03`, 떼면 `.bouncy(extraBounce:0.25)` 오버슈트 복귀.
+///   transform-only(셰이더 0). Reduce Motion 가드 유지.
 struct PressableCard<Content: View>: View {
     let action: () -> Void
     @ViewBuilder let content: () -> Content
@@ -23,12 +27,14 @@ struct PressableCard<Content: View>: View {
             guard !reduceMotion else { action(); return }
             withAnimation(.easeOut(duration: 0.07)) { pressed = true }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.09) {
-                withAnimation(.spring(response: 0.32, dampingFraction: 0.6)) { pressed = false }
+                // 떼면 bouncy — 오버슈트 후 정착(젤리 복원).
+                withAnimation(.bouncy(duration: 0.4, extraBounce: 0.25)) { pressed = false }
                 action()
             }
         } label: {
             content()
-                .scaleEffect(pressed ? 0.95 : 1.0)
+                // 비등방 스쿼시 — 누르면 가로로 퍼지고 세로로 납작.
+                .scaleEffect(x: pressed ? 1.03 : 1.0, y: pressed ? 0.93 : 1.0, anchor: .center)
                 .brightness(pressed ? -0.05 : 0)
                 .contentShape(Rectangle())
         }
