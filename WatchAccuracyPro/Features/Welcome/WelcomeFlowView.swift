@@ -55,6 +55,11 @@ struct WelcomeFlowView: View {
 // MARK: - Step 1: Hero (디자인 SSOT screens-onboarding.jsx WelcomeView)
 private struct WelcomeHero: View {
     let onNext: () -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    // 웨이브2-D: hero 등장 연출(로고→tagline 순차 fade-up).
+    @State private var breathe = false
+    @State private var logoIn = false
+    @State private var taglineIn = false
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -73,11 +78,26 @@ private struct WelcomeHero: View {
                 Spacer()
                 logoMark
                     .padding(.bottom, 36)
+                    .opacity(reduceMotion ? 1 : (logoIn ? 1 : 0))
+                    .offset(y: reduceMotion ? 0 : (logoIn ? 0 : 12))
                 tagline
+                    .opacity(reduceMotion ? 1 : (taglineIn ? 1 : 0))
+                    .offset(y: reduceMotion ? 0 : (taglineIn ? 0 : 12))
                 Spacer()
                 Spacer()
                 ctaSection
             }
+        }
+        .onAppear { runEntrance() }
+    }
+
+    private func runEntrance() {
+        guard !reduceMotion else { return }
+        withAnimation(.easeOut(duration: 0.5)) { logoIn = true }
+        withAnimation(.easeOut(duration: 0.5).delay(0.18)) { taglineIn = true }
+        // 미묘한 호흡 글로우 — 아주 느리게 반복.
+        withAnimation(.easeInOut(duration: 2.8).repeatForever(autoreverses: true)) {
+            breathe = true
         }
     }
 
@@ -85,13 +105,14 @@ private struct WelcomeHero: View {
     /// jsx 명세: 140×140 rounded 32 primary-900 / radial glow inset -20 / SVG 100×100 viewBox
     /// dots r=2.6(12시 gold) r=1.6(나머지 white 70%) / TL SF Pro Display 28px 600 letter -0.04em
     /// Round 58: outer frame 180×180 (= jsx 140 + inset -20 area) 명시 고정.
+    /// 웨이브2-D: 인라인 12-dot 루프 → DotRingMark(미묘한 호흡 글로우).
     private var logoMark: some View {
         ZStack {
-            // Outer ambient glow — radial gold (inset -20 → 180×180).
+            // Outer ambient glow — radial gold (inset -20 → 180×180). 호흡으로 세기 변조.
             Circle()
                 .fill(
                     RadialGradient(
-                        colors: [AppColors.accent.opacity(0.35), .clear],
+                        colors: [AppColors.accent.opacity(breathe ? 0.45 : 0.30), .clear],
                         center: .center, startRadius: 0, endRadius: 90
                     )
                 )
@@ -101,18 +122,9 @@ private struct WelcomeHero: View {
                 .fill(AppColors.primaryDeep)
                 .frame(width: 140, height: 140)
                 .shadow(color: AppColors.primaryDeep.opacity(0.35), radius: 20, x: 0, y: 18)
-            // 12-dot ring (viewBox 100×100, r=38, dot r=2.6/1.6).
-            // SwiftUI 좌표: 100pt 안에 그림. radius 38pt.
+            // 12-dot ring (viewBox 100×100, r=38, dot r=5.2/3.2) — DotRingMark 로 통일.
             ZStack {
-                ForEach(0..<12, id: \.self) { i in
-                    let angle = Double(i) * 30 - 90
-                    let radians = angle * .pi / 180
-                    let r: Double = 38
-                    Circle()
-                        .fill(i == 0 ? AppColors.accent : Color.white.opacity(0.7))
-                        .frame(width: i == 0 ? 5.2 : 3.2, height: i == 0 ? 5.2 : 3.2)
-                        .offset(x: r * cos(radians), y: r * sin(radians))
-                }
+                DotRingMark(size: 100, rotating: false, goldTopDot: true)
                 // TL — SF Pro Display 28pt semibold (sans-serif 강조).
                 Text("TL")
                     .font(.system(size: 28, weight: .semibold))

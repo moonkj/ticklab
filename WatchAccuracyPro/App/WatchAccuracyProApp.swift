@@ -157,6 +157,12 @@ struct WatchAccuracyProApp: App {
     }
 }
 
+/// 콜드스타트 스플래시 1회 게이트(in-memory). process lifetime 동안 단 한 번만 true.
+/// 웜 재진입(scenePhase active 복귀)에서는 이미 false → 스플래시 skip.
+private enum LaunchGate {
+    static var shouldShowSplash = true
+}
+
 private struct RootView: View {
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.modelContext) private var modelContext
@@ -164,6 +170,8 @@ private struct RootView: View {
     @State private var showFallbackAlert = UserDefaults.standard.bool(forKey: "ticklab.lastLaunchUsedInMemoryFallback")
     @State private var isUnlocked: Bool = false
     @State private var lastBackgroundedAt: Date?
+    // 콜드스타트 1회 스플래시 — LaunchGate 의 process-wide flag 를 view 진입 시 1회 캡처.
+    @State private var showSplash = LaunchGate.shouldShowSplash
     @Query(sort: \Watch.createdAt, order: .reverse) private var allWatches: [Watch]
 
     private var needsLock: Bool {
@@ -171,6 +179,21 @@ private struct RootView: View {
     }
 
     var body: some View {
+        mainContent
+            .overlay {
+                if showSplash {
+                    LaunchBridgeView {
+                        LaunchGate.shouldShowSplash = false
+                        showSplash = false
+                    }
+                    .transition(.opacity)
+                    .zIndex(10)
+                }
+            }
+    }
+
+    @ViewBuilder
+    private var mainContent: some View {
         Group {
             if needsLock {
                 // Round 157: 와이어프레임 W_LOCK — cold-start / background 복귀 시 표시.

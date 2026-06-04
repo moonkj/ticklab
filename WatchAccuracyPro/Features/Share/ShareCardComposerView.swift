@@ -180,14 +180,20 @@ struct ShareCardComposerView: View {
                 // 텍스트 overlay
                 VStack(alignment: .leading, spacing: 4) {
                     if showMetrics {
-                        HStack(alignment: .firstTextBaseline, spacing: 4) {
-                            Text(rateString)
-                                .font(.system(size: w * 0.14, weight: .bold, design: .monospaced))
-                                .foregroundStyle(.white)
-                                .shadow(color: .black.opacity(0.4), radius: 4, x: 0, y: 2)
-                            Text(String(localized: "unit.seconds_per_day_short"))
-                                .font(.system(size: w * 0.045, design: .monospaced))
-                                .foregroundStyle(.white.opacity(0.75))
+                        VStack(alignment: .leading, spacing: w * 0.012) {
+                            HStack(alignment: .firstTextBaseline, spacing: 4) {
+                                Text(rateString)
+                                    .font(.system(size: w * 0.14, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(.white)
+                                    .shadow(color: .black.opacity(0.4), radius: 4, x: 0, y: 2)
+                                Text(String(localized: "unit.seconds_per_day_short"))
+                                    .font(.system(size: w * 0.045, design: .monospaced))
+                                    .foregroundStyle(.white.opacity(0.75))
+                            }
+                            // engraving 느낌 — readout 아래 얇은 골드 hairline.
+                            AppGradients.goldFoil
+                                .frame(width: w * 0.30, height: max(1, w * 0.004))
+                                .opacity(0.85)
                         }
                     }
                     Text((effectiveWatch?.brand ?? "").uppercased())
@@ -204,12 +210,13 @@ struct ShareCardComposerView: View {
                             .lineLimit(2)
                             .padding(.top, 2)
                     }
-                    // watermark
-                    HStack {
-                        Text("ticklab")
-                            .font(.system(size: w * 0.02, weight: .semibold))
-                            .tracking(2)
-                            .foregroundStyle(.white.opacity(0.5))
+                    // 브랜드 인장 — DotRingMark 미니 + 자간확대 "TICKLAB" (우하단, 흰 60%).
+                    HStack(spacing: w * 0.018) {
+                        DotRingMark(size: w * 0.04, rotating: false, goldTopDot: true)
+                        Text("TICKLAB")
+                            .font(.system(size: w * 0.022, weight: .semibold))
+                            .tracking(w * 0.01)
+                            .foregroundStyle(.white.opacity(0.6))
                         Spacer()
                         if showDate {
                             Text(dateString)

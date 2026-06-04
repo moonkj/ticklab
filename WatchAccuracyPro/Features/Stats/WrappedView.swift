@@ -68,7 +68,7 @@ struct WrappedView: View {
 
     /// 표지 — 다이얼 글로우 + 연도.
     private func coverPage(_ d: WrappedReportData) -> some View {
-        wrappedCard(glow: AppColors.accent) {
+        wrappedCard(glow: AppColors.accent, particles: true) {
             VStack(spacing: 18) {
                 Text("⌚")
                     .font(.system(size: 72))
@@ -96,7 +96,7 @@ struct WrappedView: View {
         wrappedCard(glow: AppColors.info) {
             VStack(spacing: 14) {
                 statLabel(String(localized: "wrapped.wears.label"))
-                bigNumber("\(d.totalWears)")
+                bigNumber(d.totalWears)
                 Text(String(localized: "wrapped.wears.unit"))
                     .font(.system(size: 18))
                     .foregroundStyle(.white.opacity(0.8))
@@ -124,7 +124,7 @@ struct WrappedView: View {
                         .font(.system(size: 28, weight: .bold, design: .serif))
                         .foregroundStyle(.white)
                         .multilineTextAlignment(.center)
-                    bigNumber("\(most.count)")
+                    bigNumber(most.count)
                     Text(String(localized: "wrapped.wears.unit"))
                         .font(.system(size: 16))
                         .foregroundStyle(.white.opacity(0.7))
@@ -147,7 +147,7 @@ struct WrappedView: View {
         wrappedCard(glow: AppColors.accentDark) {
             VStack(spacing: 14) {
                 statLabel(String(localized: "wrapped.brands.label"))
-                bigNumber("\(d.brandCount)")
+                bigNumber(d.brandCount)
                 Text(String(localized: "wrapped.brands.unit"))
                     .font(.system(size: 18))
                     .foregroundStyle(.white.opacity(0.8))
@@ -198,7 +198,7 @@ struct WrappedView: View {
         wrappedCard(glow: AppColors.success) {
             VStack(spacing: 14) {
                 statLabel(String(localized: "wrapped.measurements.label"))
-                bigNumber("\(d.totalMeasurements)")
+                bigNumber(d.totalMeasurements)
                 if let best = d.bestAccuracyWatch {
                     Divider().background(.white.opacity(0.25)).padding(.vertical, 4)
                     statLabel(String(localized: "wrapped.bestaccuracy.label"))
@@ -237,7 +237,7 @@ struct WrappedView: View {
                 Text("✨").font(.system(size: 44))
                 if d.highlightCount > 0 {
                     statLabel(String(localized: "wrapped.highlights.label"))
-                    bigNumber("\(d.highlightCount)")
+                    bigNumber(d.highlightCount)
                     Text(String(localized: "wrapped.highlights.unit"))
                         .font(.system(size: 16))
                         .foregroundStyle(.white.opacity(0.75))
@@ -254,7 +254,7 @@ struct WrappedView: View {
 
     /// 마무리 — 내년 기대 + 공유 유도.
     private func closingPage(_ d: WrappedReportData) -> some View {
-        wrappedCard(glow: AppColors.accent) {
+        wrappedCard(glow: AppColors.accent, particles: true) {
             VStack(spacing: 16) {
                 Text("🎉").font(.system(size: 56))
                 Text(String(format: NSLocalizedString("wrapped.closing.title", comment: ""), d.year + 1))
@@ -358,13 +358,22 @@ struct WrappedView: View {
     // MARK: - Helpers
 
     /// 페이지 카드 — 상단에 은은한 radial glow 로 페이지별 색 personality 부여.
-    private func wrappedCard<Content: View>(glow: Color, @ViewBuilder _ content: () -> Content) -> some View {
+    /// `particles: true` 면 절제된 느린 금색 입자 소수(표지·클로징). Reduce Motion 시 입자 생략.
+    private func wrappedCard<Content: View>(
+        glow: Color,
+        particles: Bool = false,
+        @ViewBuilder _ content: () -> Content
+    ) -> some View {
         ZStack {
             RadialGradient(
                 colors: [glow.opacity(0.35), .clear],
                 center: .top, startRadius: 0, endRadius: 380
             )
             .ignoresSafeArea()
+            if particles {
+                GoldParticlesView()
+                    .allowsHitTesting(false)
+            }
             VStack {
                 Spacer()
                 content()
@@ -377,6 +386,22 @@ struct WrappedView: View {
         }
     }
 
+    /// 웨이브2-D: big number 를 0→값 카운트업(CounterText). Reduce Motion 시 즉시 최종.
+    /// `.id(page)` 로 해당 페이지로 진입할 때마다 카운트업 재생.
+    private func bigNumber(_ value: Int) -> some View {
+        CounterText(
+            value: Double(value),
+            duration: 1.1,
+            format: { String(Int($0.rounded())) },
+            font: .system(size: 76, weight: .black, design: .monospaced)
+        )
+        .foregroundStyle(.white)
+        .minimumScaleFactor(0.5)
+        .lineLimit(1)
+        .id(page)
+    }
+
+    /// 비숫자(또는 카운트업 부적합) big number — 정적 표시.
     private func bigNumber(_ text: String) -> some View {
         Text(text)
             // 타이포 SSOT: 숫자=monospaced 통일.
@@ -413,6 +438,49 @@ struct WrappedView: View {
                     .tracking(2.5)
                     .foregroundStyle(.white.opacity(0.75))
                 Rectangle().fill(AppColors.accent).frame(width: 18, height: 1)
+            }
+        }
+    }
+
+    /// 웨이브2-D: 절제된 느린 금색 입자(표지·클로징). 소수 개수, 천천히 부유.
+    /// Reduce Motion / Low Power 시 전부 생략(과한 confetti 금지).
+    private struct GoldParticlesView: View {
+        @Environment(\.accessibilityReduceMotion) private var reduceMotion
+        @State private var animate = false
+
+        // 입자 시드 — 위치(0~1)·크기·시작 딜레이.
+        private let seeds: [(x: CGFloat, size: CGFloat, delay: Double, drift: CGFloat)] = [
+            (0.16, 5, 0.0, 22), (0.34, 3, 0.8, -16), (0.52, 6, 0.3, 14),
+            (0.70, 3.5, 1.2, -20), (0.84, 4.5, 0.6, 18), (0.26, 4, 1.6, -12),
+            (0.62, 3, 2.0, 16), (0.78, 5, 1.0, -18),
+        ]
+
+        var body: some View {
+            if reduceMotion || ProcessInfo.processInfo.isLowPowerModeEnabled {
+                EmptyView()
+            } else {
+                GeometryReader { geo in
+                    ZStack {
+                        ForEach(Array(seeds.enumerated()), id: \.offset) { _, s in
+                            Circle()
+                                .fill(AppColors.accent.opacity(0.5))
+                                .frame(width: s.size, height: s.size)
+                                .position(
+                                    x: geo.size.width * s.x + (animate ? s.drift : -s.drift),
+                                    y: animate ? geo.size.height * 0.12 : geo.size.height * 0.92
+                                )
+                                .opacity(animate ? 0.0 : 0.7)
+                                .animation(
+                                    .easeInOut(duration: 6.5)
+                                        .repeatForever(autoreverses: true)
+                                        .delay(s.delay),
+                                    value: animate
+                                )
+                        }
+                    }
+                    .onAppear { animate = true }
+                }
+                .ignoresSafeArea()
             }
         }
     }
