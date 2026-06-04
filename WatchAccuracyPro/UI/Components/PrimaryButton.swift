@@ -76,28 +76,35 @@ struct PrimaryButton: View {
     }
 }
 
-/// Round 170 + Sprint 8 (UX): 모든 버튼에 scale-on-tap + spring 복귀 + haptic.
-/// Reduce Motion 활성 시 scale 없이 haptic만.
+/// Round 170 + Sprint 8 (UX): 모든 버튼에 press 피드백 + spring 복귀 + haptic.
+/// 웨이브2-A JellySquash: 균일 scale 대신 **비등방 스쿼시&스트레치** —
+///   누르면 `scaleY:0.93, scaleX:1.03`(눌려 납작), 떼면 `.bouncy(extraBounce:0.25)` 로
+///   오버슈트 후 복귀. transform-only(셰이더 0, 사실상 공짜).
+/// Reduce Motion 활성 시 scale 없이 opacity dim + haptic만(가드 유지).
 struct PressableButtonStyle: ButtonStyle {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     func makeBody(configuration: Configuration) -> some View {
-        configuration.label
+        let pressed = configuration.isPressed
+        let squashY: CGFloat = (!reduceMotion && pressed) ? 0.93 : 1.0
+        let squashX: CGFloat = (!reduceMotion && pressed) ? 1.03 : 1.0
+        return configuration.label
             .contentShape(Rectangle())
-            .scaleEffect((!reduceMotion && configuration.isPressed) ? 0.94 : 1.0)
-            // Round 175 (사용자 보고: "측정시작 버튼 누름효과 약함 — 컬렉션 측정 버튼과 동일하게"):
+            // 비등방 스쿼시 — 누르면 가로로 퍼지고 세로로 납작해진다(젤리).
+            .scaleEffect(x: squashX, y: squashY, anchor: .center)
+            // Round 175 (사용자 보고: "측정시작 버튼 누름효과 약함"):
             //   scale 은 Reduce Motion 시 사라지므로 opacity dim 으로 항상 보이는 누름 피드백.
-            //   dim 을 더 뚜렷하게(0.6) + 햅틱을 컬렉션 측정 버튼과 동일한 selection tick 으로 통일.
-            .opacity(configuration.isPressed ? 0.6 : 1.0)
-            .brightness(configuration.isPressed ? -0.04 : 0)
+            .opacity(pressed ? 0.6 : 1.0)
+            .brightness(pressed ? -0.04 : 0)
             .animation(
-                configuration.isPressed
+                pressed
                     ? .easeIn(duration: 0.06)
-                    : .spring(response: 0.28, dampingFraction: 0.65, blendDuration: 0),
-                value: configuration.isPressed
+                    // 떼면 bouncy — 오버슈트 후 정착(젤리 복원).
+                    : .bouncy(duration: 0.4, extraBounce: 0.25),
+                value: pressed
             )
-            .onChange(of: configuration.isPressed) { _, pressed in
-                if pressed {
+            .onChange(of: pressed) { _, isPressed in
+                if isPressed {
                     // 컬렉션 측정 버튼(CollectionView)과 동일한 햅틱 — crisp selection tick.
                     UISelectionFeedbackGenerator().selectionChanged()
                 }
