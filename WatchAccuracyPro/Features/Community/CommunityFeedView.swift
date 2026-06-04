@@ -283,11 +283,11 @@ struct CommunityFeedView: View {
                         onEdit: post.isMine(currentUID: service.myUID) ? { editTarget = post } : nil,
                         onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
                     )
-                    // 인스타 스타일 게시물 구분선.
-                    Rectangle().fill(AppColors.rule).frame(height: 0.5)
+                    // 웨이브2-C: 하드 0.5px divider → 갤러리 여백(포스트 간 호흡 확대).
+                    Color.clear.frame(height: 18)
                 }
             }
-            .padding(.top, 2)
+            .padding(.top, 8)
         }
     }
 

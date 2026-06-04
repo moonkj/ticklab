@@ -79,14 +79,15 @@ struct CommunityPostCard: View {
             // Round 174 (사용자 요청): 아바타 하단에 대표 시계 메이커 칩(참고 디자인의 '주주' 위치).
             .overlay(alignment: .bottom) {
                 if let rep = post.authorRepBrand, !rep.isEmpty {
+                    // 웨이브2-C: info 파랑 채움 → 골드 아웃라인 pill.
                     Text(rep)
                         .font(.system(size: 8, weight: .bold))
-                        .foregroundStyle(.white)
+                        .foregroundStyle(AppColors.accentDark)
                         .lineLimit(1)
-                        .padding(.horizontal, 5).padding(.vertical, 1.5)
-                        .background(AppColors.info)
+                        .padding(.horizontal, 6).padding(.vertical, 2)
+                        .background(AppColors.paper0)
                         .clipShape(Capsule())
-                        .overlay(Capsule().stroke(AppColors.paper0, lineWidth: 1.5))
+                        .overlay(Capsule().strokeBorder(AppGradients.goldFoil, lineWidth: 1))
                         .fixedSize()
                         .offset(y: 7)
                 }
@@ -180,7 +181,7 @@ struct CommunityPostCard: View {
             HStack(spacing: 6) {
                 Button(action: onLike) {
                     Image(systemName: liked ? "heart.fill" : "heart")
-                        .font(.system(size: 23))
+                        .font(.system(size: 23, weight: .light))
                         .foregroundStyle(liked ? AppColors.danger : AppColors.ink0)
                 }
                 .buttonStyle(.plain)
@@ -197,7 +198,7 @@ struct CommunityPostCard: View {
             // 댓글 — 아이콘 + 숫자, 탭 시 댓글창.
             Button(action: onComment) {
                 HStack(spacing: 6) {
-                    Image(systemName: "bubble.right").font(.system(size: 21))
+                    Image(systemName: "bubble.right").font(.system(size: 21, weight: .light))
                     if let c = post.commentCount, c > 0 {
                         Text("\(c)").font(.system(size: 15, weight: .semibold))
                     }
@@ -208,7 +209,7 @@ struct CommunityPostCard: View {
             .accessibilityLabel(String(localized: "community.comment.title"))
             Button(action: onShare) {
                 Image(systemName: "paperplane")
-                    .font(.system(size: 21))
+                    .font(.system(size: 21, weight: .light))
                     .foregroundStyle(AppColors.ink0)
             }
             .buttonStyle(.plain)
@@ -217,7 +218,7 @@ struct CommunityPostCard: View {
             // 스크랩(저장).
             Button(action: onBookmark) {
                 Image(systemName: bookmarked ? "bookmark.fill" : "bookmark")
-                    .font(.system(size: 21))
+                    .font(.system(size: 21, weight: .light))
                     .foregroundStyle(bookmarked ? AppColors.accentDark : AppColors.ink0)
             }
             .buttonStyle(.plain)
