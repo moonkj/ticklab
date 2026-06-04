@@ -17,6 +17,8 @@ struct CommunityPostCard: View {
     let onShare: () -> Void
     var onComment: () -> Void = {}
     var onLikers: () -> Void = {}
+    /// 브랜드 칩 탭 → 같은 브랜드 모아보기. nil/미전달이면 칩은 비탭(표시만).
+    var onBrandTap: ((String) -> Void)? = nil
     let onDelete: (() -> Void)?
     /// 본인 글 — 캡션(내용) 수정. nil 이면 미노출.
     var onEdit: (() -> Void)? = nil
@@ -107,6 +109,10 @@ struct CommunityPostCard: View {
                             .background(AppColors.accent50)
                             .clipShape(Capsule())
                     }
+                    // 스트림C: 브랜드 태그 칩 — 탭 시 같은 브랜드 모아보기. 핸들이 이미 브랜드면(구 익명글) 생략.
+                    if let brand = post.brand, !brand.isEmpty, brand != handle {
+                        brandChip(brand)
+                    }
                 }
                 Text(timeAgo)
                     .font(.system(size: 11))
@@ -130,6 +136,25 @@ struct CommunityPostCard: View {
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 9)
+    }
+
+    /// 브랜드 태그 칩 — 탭 시 같은 브랜드 모아보기(onBrandTap). 화이트리스트(내 컬렉션) 메타 수준.
+    @ViewBuilder private func brandChip(_ brand: String) -> some View {
+        let label = HStack(spacing: 3) {
+            Image(systemName: "tag.fill").font(.system(size: 8, weight: .bold))
+            Text(brand).font(.system(size: 10, weight: .semibold)).lineLimit(1)
+        }
+        .foregroundStyle(AppColors.info)
+        .padding(.horizontal, 7).padding(.vertical, 2.5)
+        .overlay(Capsule().stroke(AppColors.info.opacity(0.5), lineWidth: 1))
+        .clipShape(Capsule())
+        if let onBrandTap {
+            Button { onBrandTap(brand) } label: { label }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(brand))
+        } else {
+            label
+        }
     }
 
     /// Round 171 글-전용 게시 본문 — 이미지 없이 캡션을 카드로 표시.
