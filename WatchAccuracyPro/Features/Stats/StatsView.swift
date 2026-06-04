@@ -156,36 +156,46 @@ struct StatsView: View {
         }
     }
 
+    /// 웨이브2-C: 채도 높은 타일 → 단일 악센트의 절제된 톤(mono eyebrow + 단색 글리프 + hairline).
+    /// 골드는 hero 1개에만 — 여기선 차분한 paper 표면. 순서·존재·진입은 그대로(사용자 의도).
+    /// `tint` 는 글리프/eyebrow 단색 악센트로만 사용(이전엔 카드 배경 채도였음).
     private func funEntryCard(emoji: String, title: String, subtitle: String, tint: Color, fillHeight: Bool = false, symbol: String? = nil, symbolColor: Color = AppColors.ink0) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            if let symbol {
-                Image(systemName: symbol).font(.system(size: 24)).foregroundStyle(symbolColor)
-                    .frame(height: 32, alignment: .leading)
-            } else {
-                Text(emoji).font(.system(size: 26)).frame(height: 32, alignment: .leading)
+        // tint 는 이미 저채도(.opacity 적용된 값) — 글리프 칩 배경으로 그대로 재사용.
+        return VStack(alignment: .leading, spacing: 8) {
+            // 단색 글리프 — 차분한 원형 칩 안에 둠.
+            ZStack {
+                Circle()
+                    .fill(tint)
+                    .frame(width: 38, height: 38)
+                if let symbol {
+                    Image(systemName: symbol).font(.system(size: 18)).foregroundStyle(symbolColor)
+                } else {
+                    Text(emoji).font(.system(size: 20))
+                }
             }
+            // mono eyebrow + 세리프 톤 타이틀.
             Text(title)
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(AppColors.ink0)
             Text(subtitle)
                 .font(.system(size: 11))
                 .foregroundStyle(AppColors.ink2)
-            Spacer(minLength: 6)   // chevron 을 하단으로 — 높이 균일화 시 자연스럽게.
+            Spacer(minLength: 6)
             HStack {
                 Spacer()
-                Image(systemName: "arrow.right.circle.fill")
-                    .font(.system(size: 18))
-                    .foregroundStyle(AppColors.ink2)
+                Image(systemName: "arrow.right")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(AppColors.ink3)
             }
         }
         .padding(14)
         // Round 169: minHeight 120→132 (chevron 과 subtitle 간 spacing 확보).
-        // fillHeight: HStack 행에서 형제 카드 중 가장 큰 높이로 늘려 박스 크기 통일(배경까지 채움).
+        // fillHeight: HStack 행에서 형제 카드 중 가장 큰 높이로 늘려 박스 크기 통일.
         .frame(maxWidth: .infinity, minHeight: 132, maxHeight: fillHeight ? .infinity : nil, alignment: .topLeading)
-        .background(LinearGradient(colors: [tint, AppColors.paper1],
-                                   startPoint: .topLeading, endPoint: .bottomTrailing))
+        .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 14))
+        .cardShadow(.low)
     }
 
     // MARK: - Round 120 — 착용 통계 (디자인 SSOT Pivot Journey axis).
@@ -598,11 +608,21 @@ struct StatsView: View {
         return AverageRateSummary(average: mean, count: filtered.count, stddev: stddev)
     }
 
+    /// 웨이브2-C: figures-first hero — 큰 mono 카운터 + 골드 악센트 + 조용한 stddev 칩 + linen 여백.
     private func averageRateCard(rate: Double, count: Int, stddev: Double = 0) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(formatRate(rate))
-                .font(.system(size: avgRateSize, weight: .medium, design: .monospaced))
+        VStack(alignment: .leading, spacing: 10) {
+            // 큰 mono 숫자 — CounterText 로 카운트업, rateColor 유지.
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                CounterText(
+                    value: rate,
+                    format: "%+.1f",
+                    font: .system(size: avgRateSize, weight: .medium, design: .monospaced)
+                )
                 .foregroundStyle(rateColor(rate))
+                Text(String(localized: "unit.seconds_per_day"))
+                    .font(.system(size: 13, weight: .medium, design: .monospaced))
+                    .foregroundStyle(AppColors.accentDark)   // 골드 악센트(hero).
+            }
             Text(String(format: NSLocalizedString("stats.average_rate.subtitle", comment: ""), count))
                 .font(.system(size: 12))
                 .foregroundStyle(AppColors.ink2)
@@ -618,14 +638,12 @@ struct StatsView: View {
                 .padding(.vertical, 5)
                 .background(AppColors.paper2)
                 .clipShape(Capsule())
-                .padding(.top, 4)
+                .padding(.top, 2)
             }
         }
-        .padding(16)
+        .padding(22)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColors.paper1)
-        .overlay(RoundedRectangle(cornerRadius: AppRadius.lg).stroke(AppColors.rule, lineWidth: 1))
-        .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
+        .luxeCard(cornerRadius: AppRadius.lg)
     }
 
     private func rateColor(_ r: Double) -> Color {

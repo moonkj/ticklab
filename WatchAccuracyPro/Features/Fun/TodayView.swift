@@ -100,66 +100,85 @@ struct TodayView: View {
         }
     }
 
+    /// 웨이브2-C: 대표 시계 photo-forward 와이드 hero — 사진 배경 + scrim + 세리프 이름 + 오늘 착용상태.
     private func primaryFilledCard(for watch: Watch) -> some View {
         let worn = WearLogService.isWornToday(watch, in: modelContext)
-        return HStack(spacing: 14) {
+        return ZStack(alignment: .bottomLeading) {
+            // 사진 배경 — PhotoCache 재사용. 없으면 paper-cool linen + silhouette.
             ZStack {
                 if let ui = PhotoCache.image(for: watch.id, data: watch.photoData) {
                     Image(uiImage: ui)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 64, height: 64)
-                        .clipShape(Circle())
                 } else {
-                    Circle()
-                        .fill(AppColors.paper2)
-                        .frame(width: 64, height: 64)
-                        .overlay(WatchSilhouette(watch: watch, size: 44))
+                    LinearGradient(
+                        colors: [AppColors.accent50, AppColors.paper2],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    )
+                    WatchSilhouette(watch: watch, size: 120)
                 }
-                Circle()
-                    .stroke(AppColors.accent, lineWidth: 2)
-                    .frame(width: 68, height: 68)
             }
-            VStack(alignment: .leading, spacing: 4) {
-                HStack(spacing: 6) {
-                    Image(systemName: "star.fill")
-                        .font(.system(size: 10))
-                        .foregroundStyle(AppColors.accent)
-                    Text(String(localized: "watch.is_primary").uppercased())
-                        .font(.system(size: 10, weight: .semibold))
-                        .tracking(1.5)
-                        .foregroundStyle(AppColors.accent)
+            .frame(maxWidth: .infinity)
+            .frame(height: 200)
+            .clipped()
+            // scrim — 하단에서 위로 어두워짐(세리프 이름 가독성).
+            .overlay {
+                LinearGradient(
+                    colors: [.black.opacity(0.0), .black.opacity(0.15), .black.opacity(0.62)],
+                    startPoint: .top, endPoint: .bottom
+                )
+            }
+
+            // 상단 — 대표 골드 eyebrow + 착용 토글.
+            VStack(alignment: .leading, spacing: 0) {
+                HStack {
+                    HStack(spacing: 6) {
+                        Image(systemName: "star.fill")
+                            .font(.system(size: 10))
+                        Text(String(localized: "watch.is_primary").uppercased())
+                            .font(.system(size: 10, weight: .semibold))
+                            .tracking(1.5)
+                    }
+                    .foregroundStyle(AppColors.primaryDeep)
+                    .padding(.horizontal, 9)
+                    .padding(.vertical, 5)
+                    .background(AppGradients.goldFoil)
+                    .clipShape(Capsule())
+                    Spacer()
+                    // 오늘 착용 토글 (탭 가능) — 사진 위라 글래스 배경.
+                    Button {
+                        UISelectionFeedbackGenerator().selectionChanged()
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
+                            WearLogService.toggleToday(watch, in: modelContext)
+                        }
+                    } label: {
+                        Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
+                            .font(.system(size: 20, weight: worn ? .semibold : .regular))
+                            .foregroundStyle(worn ? AppColors.accentLight : .white)
+                            .frame(width: 44, height: 44)
+                            .background(.ultraThinMaterial, in: Circle())
+                            .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(String(localized: worn ? "wear.toggle.on" : "wear.toggle.off"))
                 }
+                Spacer()
+                // 하단 — 세리프 이름 + 브랜드(scrim 위).
                 Text(watch.nickname?.isEmpty == false ? watch.nickname! : watch.model)
-                    .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(AppColors.ink0)
+                    .font(.system(size: 24, weight: .medium, design: .serif))
+                    .foregroundStyle(.white)
                     .lineLimit(1)
-                Text(watch.brand)
-                    .font(.system(size: 12))
-                    .foregroundStyle(AppColors.ink2)
-                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .shadow(color: .black.opacity(0.35), radius: 4, y: 1)
+                Text(watch.brand.uppercased())
+                    .font(.system(size: 11, weight: .semibold))
+                    .tracking(2)
+                    .foregroundStyle(.white.opacity(0.82))
             }
-            Spacer()
-            // 오늘 착용 토글 (탭 가능)
-            Button {
-                UISelectionFeedbackGenerator().selectionChanged()
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.85)) {
-                    WearLogService.toggleToday(watch, in: modelContext)
-                }
-            } label: {
-                Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
-                    .font(.system(size: 22, weight: worn ? .semibold : .regular))
-                    .foregroundStyle(worn ? AppColors.accent : AppColors.ink3)
-                    .frame(width: 44, height: 44)
-                    .contentShape(Rectangle())
-            }
-            .buttonStyle(.plain)
+            .padding(16)
         }
-        .padding(16)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(AppColors.paper1)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.accentLight, lineWidth: 1.5))
+        .frame(maxWidth: .infinity)
+        .luxeCard(cornerRadius: 16)
     }
 
     /// 시계는 있는데 대표 미설정 — 빈 상태 안내 + 첫 시계 상세로 진입 CTA.
@@ -236,15 +255,19 @@ struct TodayView: View {
         let cal = Calendar.current
         let weekStart = cal.date(from: cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) ?? today
         let weekMeasurements = watches.flatMap { $0.measurements }.filter { $0.timestamp >= weekStart }
-        return VStack(alignment: .leading, spacing: 8) {
-            Text(dateStr)
-                .font(.system(size: 11, weight: .semibold, design: .monospaced))
-                .tracking(2)
-                .foregroundStyle(AppColors.ink2)
-            Text(String(localized: "today.greeting"))
-                .font(.system(size: 26, weight: .medium, design: .serif))
-                .foregroundStyle(AppColors.ink0)
-            HStack(spacing: 14) {
+        // 웨이브2-C: greeting 을 더 차분히 — 세리프 크게 + 여백 확대, luxeCard 머티리얼.
+        return VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(dateStr)
+                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                    .tracking(2.4)
+                    .foregroundStyle(AppColors.ink3)
+                Text(String(localized: "today.greeting"))
+                    .font(.system(size: 30, weight: .medium, design: .serif))
+                    .foregroundStyle(AppColors.ink0)
+                    .displayTracking()
+            }
+            HStack(spacing: 18) {
                 statPill(value: "\(watches.count)", label: String(localized: "today.stat.watches"))
                 statPill(value: "\(weekMeasurements.count)", label: String(localized: "today.stat.this_week"))
             }
@@ -252,13 +275,8 @@ struct TodayView: View {
             streakChip
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(18)
-        .background(LinearGradient(
-            colors: [AppColors.accent50, AppColors.paper1],
-            startPoint: .topLeading, endPoint: .bottomTrailing
-        ))
-        .clipShape(RoundedRectangle(cornerRadius: 16))
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.rule, lineWidth: 1))
+        .padding(22)
+        .luxeCard(cornerRadius: 16)
     }
 
     private func statPill(value: String, label: String) -> some View {

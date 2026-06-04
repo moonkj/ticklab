@@ -786,9 +786,34 @@ struct HeroWatchCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Round 72: 디자인 SSOT screens-detail.jsx WatchDetailView hero — paper-cool linen bg + WatchSilhouette 180pt.
-            // Round 151: photoData 있으면 사진, 없으면 silhouette (WatchListRow 와 동일 우선순위).
-            ZStack(alignment: .topTrailing) {
+            // 웨이브2-C: 사진을 주인공으로 — 하단 에디토리얼 캡션 바를 사진 위 scrim 으로 합침.
+            heroPhoto
+            // 단일 primary 메트릭 라인(rate readout + 스파크라인).
+            primaryMetricLine
+                .padding(.horizontal, 18)
+                .padding(.top, 18)
+            // mood / wear / measure 컨트롤 — 더 조용한 secondary 행(여백 확대).
+            secondaryControlRow
+                .padding(.horizontal, 18)
+                .padding(.top, 18)
+                .padding(.bottom, 18)
+        }
+        // 웨이브2-C: hero 카드만 luxeCard + .high 로 띄움.
+        .luxeCard(cornerRadius: 22, elevated: true)
+        .sheet(isPresented: $showingTagPicker) {
+            if let log = recentWearLog {
+                WearTagPickerView(wearLog: log)
+            }
+        }
+    }
+
+    // MARK: - Hero photo + editorial caption
+
+    /// 사진 + 하단 에디토리얼 캡션 바(브랜드 eyebrow + 세리프 모델명 + 약한 scrim).
+    private var heroPhoto: some View {
+        ZStack(alignment: .topTrailing) {
+            // Round 72/151: photoData 있으면 사진, 없으면 silhouette.
+            ZStack {
                 Rectangle()
                     .fill(
                         LinearGradient(
@@ -807,6 +832,15 @@ struct HeroWatchCard: View {
                     WatchSilhouette(watch: watch, size: 180)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
+            }
+            // 사용자 결정: 대표 사진 4:3 전체 표시(잘림 없음) — 업로드 크롭과 동일 비율 → WYSIWYG.
+            .aspectRatio(4.0 / 3.0, contentMode: .fit)
+            .frame(maxWidth: .infinity)
+            .overlay(alignment: .bottom) { captionBar }
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 22, topTrailingRadius: 22))
+
+            // 우상단 — 대표 배지 / 신뢰도 배지.
+            VStack(alignment: .trailing, spacing: 8) {
                 if watch.isPrimary {
                     HStack(spacing: 4) {
                         Image(systemName: "star.fill")
@@ -816,155 +850,165 @@ struct HeroWatchCard: View {
                             .font(.system(size: 9, weight: .semibold))
                             .tracking(1.5)
                     }
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 8)
+                    .foregroundStyle(AppColors.primaryDeep)
+                    .padding(.horizontal, 9)
                     .padding(.vertical, 4)
-                    .background(AppColors.accent)
+                    .background(AppGradients.goldFoil)
                     .clipShape(Capsule())
-                    .padding(.top, 14)
-                    .padding(.leading, 14)
-                    .frame(maxWidth: .infinity, alignment: .topLeading)
                 }
                 if let last = lastMeasurement {
                     ConfidenceBadge(score: last.confidenceScore)
-                        .padding(14)
                 }
             }
-            // 사용자 결정: 대표 사진 4:3 전체 표시(잘림 없음) — 업로드 크롭과 동일 비율 → WYSIWYG.
-            .aspectRatio(4.0 / 3.0, contentMode: .fit)
-            .frame(maxWidth: .infinity)
-            .clipShape(RoundedRectangle(cornerRadius: 20))
+            .padding(14)
+        }
+    }
 
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(watch.brand.uppercased())
-                            .font(.system(size: 10, weight: .semibold))
-                            .tracking(2.2)
+    /// 사진 하단 scrim + 에디토리얼 캡션(브랜드 eyebrow + 세리프 모델명).
+    private var captionBar: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            Text(watch.brand.uppercased())
+                .font(.system(size: 10, weight: .semibold))
+                .tracking(2.6)
+                .foregroundStyle(.white.opacity(0.82))
+            Text(watch.model)
+                .font(.system(size: 22, weight: .medium, design: .serif))
+                .foregroundStyle(.white)
+                .lineLimit(2)
+                .minimumScaleFactor(0.8)
+                .shadow(color: .black.opacity(0.35), radius: 4, y: 1)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 18)
+        .padding(.top, 36)
+        .padding(.bottom, 16)
+        .background(
+            // 약한 scrim — 하단에서 위로 옅게 어두워짐(사진 가독성, 사진은 그대로 주인공).
+            LinearGradient(
+                colors: [.black.opacity(0.0), .black.opacity(0.55)],
+                startPoint: .top, endPoint: .bottom
+            )
+        )
+    }
+
+    // MARK: - Primary metric line
+
+    /// 단일 primary 메트릭 라인 — rate readout + 스파크라인 + run/recency.
+    @ViewBuilder
+    private var primaryMetricLine: some View {
+        if let last = lastMeasurement {
+            HStack(alignment: .center, spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(String(localized: "collection.last_rate").uppercased())
+                        .font(.system(size: 9, weight: .semibold))
+                        .tracking(2)
+                        .foregroundStyle(AppColors.ink2)
+                    HStack(alignment: .firstTextBaseline, spacing: 4) {
+                        Text(formatRate(last.rateSecondsPerDay))
+                            .font(.system(size: 26, weight: .medium, design: .monospaced))
+                            .monospacedDigit()
+                            .foregroundStyle(rateColor(last.rateSecondsPerDay))
+                        Text(String(localized: "unit.seconds_per_day"))
+                            .font(.system(size: 11))
                             .foregroundStyle(AppColors.ink2)
-                        Text(watch.model)
-                            .font(.system(size: 20, weight: .medium, design: .serif))
-                            .foregroundStyle(AppColors.ink0)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.85)
                     }
-                    Spacer()
-                    // Round 152/70: 다마고치 mood emoji — Hero/List 동일 16pt.
-                    let mood = WatchMoodService.status(of: watch, in: modelContext).mood
-                    Text(mood.emoji)
-                        .font(.system(size: 16))
-                    // Round 151: hero card 에도 wear toggle.
-                    let worn = WearLogService.isWornToday(watch, in: modelContext)
-                    Button {
-                        UISelectionFeedbackGenerator().selectionChanged()
-                        // 사용자 보고: 대표 시계도 착용 시 태그 피커("어떤 자리") 표시 — 다른 카드와 동일.
-                        let added = WearLogService.toggleToday(watch, in: modelContext)
-                        if added {
-                            let today = Calendar.current.startOfDay(for: Date())
-                            let watchID = watch.id
-                            let desc = FetchDescriptor<WearLog>(
-                                predicate: #Predicate { $0.watch?.id == watchID && $0.date == today }
-                            )
-                            recentWearLog = (try? modelContext.fetch(desc))?.first
-                            if recentWearLog != nil {
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                                    showingTagPicker = true
-                                }
+                }
+                Spacer()
+                Sparkline(values: rates, width: 100, height: 28)
+                Spacer()
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(String(format: NSLocalizedString("collection.runs", comment: ""), watch.measurements.count).uppercased())
+                        .font(.system(size: 9, weight: .semibold))
+                        .tracking(1.8)
+                        .foregroundStyle(AppColors.ink2)
+                    Text(timeAgo(last.timestamp))
+                        .font(.system(size: 11, design: .monospaced))
+                        .foregroundStyle(AppColors.ink2)
+                }
+            }
+        } else {
+            Text(String(localized: "collection.no_measurements"))
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.ink2)
+                .padding(.vertical, 8)
+        }
+    }
+
+    // MARK: - Secondary controls
+
+    /// 더 조용한 secondary 행 — mood emoji + 착용 토글 + 측정/배터리. hairline 으로 metric 과 분리.
+    private var secondaryControlRow: some View {
+        let mood = WatchMoodService.status(of: watch, in: modelContext).mood
+        let worn = WearLogService.isWornToday(watch, in: modelContext)
+        return VStack(spacing: 14) {
+            Rectangle()
+                .fill(AppColors.rule)
+                .frame(height: 0.5)
+                .accessibilityHidden(true)
+            HStack(spacing: 10) {
+                // Round 152/70: 다마고치 mood emoji.
+                Text(mood.emoji)
+                    .font(.system(size: 16))
+                Spacer()
+                // Round 151: hero card 에도 wear toggle.
+                Button {
+                    UISelectionFeedbackGenerator().selectionChanged()
+                    // 사용자 보고: 대표 시계도 착용 시 태그 피커("어떤 자리") 표시 — 다른 카드와 동일.
+                    let added = WearLogService.toggleToday(watch, in: modelContext)
+                    if added {
+                        let today = Calendar.current.startOfDay(for: Date())
+                        let watchID = watch.id
+                        let desc = FetchDescriptor<WearLog>(
+                            predicate: #Predicate { $0.watch?.id == watchID && $0.date == today }
+                        )
+                        recentWearLog = (try? modelContext.fetch(desc))?.first
+                        if recentWearLog != nil {
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                                showingTagPicker = true
                             }
                         }
+                    }
+                } label: {
+                    HStack(spacing: 5) {
+                        Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
+                            .font(.system(size: 14))
+                        Text(String(localized: worn ? "wear.toggle.on" : "wear.toggle.off"))
+                            .font(.system(size: 11, weight: .semibold))
+                    }
+                    .foregroundStyle(worn ? AppColors.accent : AppColors.ink2)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 10)
+                    .background(worn ? AppColors.accent50 : AppColors.paper2)
+                    .overlay(Capsule().stroke(worn ? AppColors.accentLight : AppColors.rule, lineWidth: 1))
+                    .clipShape(Capsule())
+                    .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                // 스마트워치: 측정 대신 배터리 잔량 배지(완충 N일 기준).
+                if watch.isSmartwatch {
+                    SmartwatchBatteryBadge(percent: watch.batteryPercent)
+                } else if let onMeasure, watch.movementType != .quartz {
+                    // Sprint 12 (UX1): 측정 단축 — 기계식만, 콜백 있을 때.
+                    Button {
+                        UISelectionFeedbackGenerator().selectionChanged()
+                        onMeasure()
                     } label: {
                         HStack(spacing: 5) {
-                            Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
-                                .font(.system(size: 14))
-                            Text(String(localized: worn ? "wear.toggle.on" : "wear.toggle.off"))
+                            Image(systemName: "mic.fill").font(.system(size: 14))
+                                .accessibilityHidden(true)  // 접근성: 옆 "측정" 텍스트가 의미 전달 — 장식용
+                            Text(String(localized: "measurement.button.start_short"))
                                 .font(.system(size: 11, weight: .semibold))
                         }
-                        .foregroundStyle(worn ? AppColors.accent : AppColors.ink2)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 10)
-                        .background(worn ? AppColors.accent50 : AppColors.paper2)
-                        .overlay(Capsule().stroke(worn ? AppColors.accentLight : AppColors.rule, lineWidth: 1))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12).padding(.vertical, 10)
+                        .background(AppColors.accentDark)
                         .clipShape(Capsule())
                         .contentShape(Capsule())
                     }
                     .buttonStyle(.plain)
-                    .sheet(isPresented: $showingTagPicker) {
-                        if let log = recentWearLog {
-                            WearTagPickerView(wearLog: log)
-                        }
-                    }
-                    // 스마트워치: 측정 대신 배터리 잔량 배지(완충 N일 기준).
-                    if watch.isSmartwatch {
-                        SmartwatchBatteryBadge(percent: watch.batteryPercent)
-                    } else if let onMeasure, watch.movementType != .quartz {
-                        // Sprint 12 (UX1): 측정 단축 — 기계식만, 콜백 있을 때.
-                        Button {
-                            UISelectionFeedbackGenerator().selectionChanged()
-                            onMeasure()
-                        } label: {
-                            HStack(spacing: 5) {
-                                Image(systemName: "mic.fill").font(.system(size: 14))
-                                    .accessibilityHidden(true)  // 접근성: 옆 "측정" 텍스트가 의미 전달 — 장식용
-                                Text(String(localized: "measurement.button.start_short"))
-                                    .font(.system(size: 11, weight: .semibold))
-                            }
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 12).padding(.vertical, 10)
-                            .background(AppColors.accentDark)
-                            .clipShape(Capsule())
-                            .contentShape(Capsule())
-                        }
-                        .buttonStyle(.plain)
-                    }
-                }
-
-                if let last = lastMeasurement {
-                    HStack(alignment: .center, spacing: 12) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(String(localized: "collection.last_rate").uppercased())
-                                .font(.system(size: 9, weight: .semibold))
-                                .tracking(2)
-                                .foregroundStyle(AppColors.ink2)
-                            HStack(alignment: .firstTextBaseline, spacing: 4) {
-                                Text(formatRate(last.rateSecondsPerDay))
-                                    .font(.system(size: 22, weight: .medium, design: .monospaced))
-                                    .monospacedDigit()
-                                    .foregroundStyle(rateColor(last.rateSecondsPerDay))
-                                Text(String(localized: "unit.seconds_per_day"))
-                                    .font(.system(size: 11))
-                                    .foregroundStyle(AppColors.ink2)
-                            }
-                        }
-                        Spacer()
-                        Sparkline(values: rates, width: 100, height: 28)
-                        Spacer()
-                        VStack(alignment: .trailing, spacing: 4) {
-                            Text(String(format: NSLocalizedString("collection.runs", comment: ""), watch.measurements.count).uppercased())
-                                .font(.system(size: 9, weight: .semibold))
-                                .tracking(1.8)
-                                .foregroundStyle(AppColors.ink2)
-                            Text(timeAgo(last.timestamp))
-                                .font(.system(size: 11, design: .monospaced))
-                                .foregroundStyle(AppColors.ink2)
-                        }
-                    }
-                } else {
-                    Text(String(localized: "collection.no_measurements"))
-                        .font(.system(size: 13))
-                        .foregroundStyle(AppColors.ink2)
-                        .padding(.vertical, 8)
                 }
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 16)
-            .padding(.bottom, 14)
         }
-        .background(AppColors.paper0)
-        .overlay(
-            RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 18))
-        .cardShadow(.mid)  // Sprint 9 UX
     }
 }
 
