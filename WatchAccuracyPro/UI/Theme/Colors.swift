@@ -66,17 +66,28 @@ enum AppColors {
 
 import SwiftUI
 
+/// 2겹 그림자(contact + ambient)로 깊이감을 부여하는 카드 그림자.
+/// - **API 호환**: `level` / `Level(.low/.mid/.high)` 와 `cardShadow(_:)` 시그니처는
+///   기존과 동일. 내부만 단겹 → 2겹(가까운 contact + 먼 ambient)으로 승급해
+///   기존 모든 호출부가 무수정으로 더 깊고 부드러운 그림자를 받는다.
 struct CardShadow: ViewModifier {
     var level: Level
     enum Level { case low, mid, high }
+
     func body(content: Content) -> some View {
         switch level {
         case .low:
-            content.shadow(color: .black.opacity(0.04), radius: 4, x: 0, y: 2)
+            content
+                .shadow(color: .black.opacity(0.05), radius: 3,  x: 0, y: 1)   // contact
+                .shadow(color: .black.opacity(0.05), radius: 12, x: 0, y: 6)   // ambient
         case .mid:
-            content.shadow(color: .black.opacity(0.07), radius: 10, x: 0, y: 4)
+            content
+                .shadow(color: .black.opacity(0.06), radius: 3,  x: 0, y: 1)   // contact
+                .shadow(color: .black.opacity(0.07), radius: 16, x: 0, y: 10)  // ambient
         case .high:
-            content.shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
+            content
+                .shadow(color: .black.opacity(0.08), radius: 4,  x: 0, y: 2)   // contact
+                .shadow(color: .black.opacity(0.12), radius: 28, x: 0, y: 16)  // ambient
         }
     }
 }
