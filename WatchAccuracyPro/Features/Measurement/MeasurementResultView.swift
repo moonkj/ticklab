@@ -36,6 +36,8 @@ struct MeasurementResultView: View {
     @ScaledMetric(relativeTo: .title3) private var heroVerdictSize: CGFloat = 19
     /// Round 23 (Doyoon): onAppear haptic 가 매 reentry (share sheet dismiss 등) 마다 fire 하던 버그.
     @State private var didFireHaptic = false
+    /// 결과 화면이 아직 보이는 중인지 — 지연된 리뷰 prompt 를 떠난 화면에 띄우지 않기 위함.
+    @State private var isResultVisible = true
     /// Sprint 12 (UX2): 용어 설명 바텀시트.
     @State private var glossaryEntry: GlossaryEntryID?
     /// 웨이브2-B reveal 상태.
@@ -359,10 +361,18 @@ struct MeasurementResultView: View {
             runReveal()
             // Sprint 1 (P1-6): 골든 모멘트 — 신뢰도 A/B + confidence ≥80 일 때만 카운트.
             // 누적 3회 도달 + 60일 cooldown 통과 시 시스템 리뷰 prompt.
+            // 사용자 보고(앱 멈춤): reveal 애니메이션/화면 전환과 동시에 시스템 리뷰 시트를 띄우면
+            //   드물게 UI 가 멈춤(Apple 권고도 '전환 중 요청 금지'). reveal·전환이 끝나 화면이 안정된
+            //   뒤(2.5s)로 지연하고, 그 사이 화면을 떠났으면 띄우지 않는다.
             if let g = result.reliabilityGrade, (g == .a || g == .b), result.confidenceScore >= 80 {
-                ReviewRequestService.qualifyingMomentReached()
+                Task { @MainActor in
+                    try? await Task.sleep(nanoseconds: 2_500_000_000)
+                    guard isResultVisible else { return }
+                    ReviewRequestService.qualifyingMomentReached()
+                }
             }
         }
+        .onDisappear { isResultVisible = false }
     }
 
     // MARK: - Reveal sequence (웨이브2-B)
