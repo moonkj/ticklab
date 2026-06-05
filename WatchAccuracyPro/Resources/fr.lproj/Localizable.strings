@@ -22,18 +22,18 @@
 "welcome.cta_start" = "Commencer";
 "welcome.skip" = "Passer";
 "welcome.pick_watch" = "Choisir une montre";
-"feature.measure.title" = "Mesurer";
-"feature.measure.body" = "Écoutez les tic-tac de votre montre avec le micro du téléphone.\nObtenez la marche quotidienne et l'erreur de battement.";
+"feature.measure.title" = "Mesure et verdict";
+"feature.measure.body" = "Écoutez le battement au micro pour mesurer la marche et l'erreur de battement —\nl'IA résume en une ligne.";
 "feature.collect.title" = "Archive quotidienne";
 "feature.collect.body" = "Photos, notes et mesures en un seul endroit.\nUn journal de votre vie horlogère.";
 "feature.journal.title" = "Verdict en langage clair";
 "feature.journal.body" = "Des chiffres complexes résumés en une ligne.\nApple Intelligence explique le résultat lorsqu'il est disponible.";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
-"welcome.subtitle" = "La précision à chaque battement.";
+"welcome.subtitle" = "Enregistrez, analysez et partagez votre vie horlogère.";
 "watch.primary.set" = "Mettre en avant";
 "watch.primary.unset" = "Retirer de la une";
 "stats.mood.this_month" = "Ce mois-ci";
-"welcome.footer" = "Collection · Aujourd'hui · Journal · Analyse";
+"welcome.footer" = "Collection · Journal · Analyses · Communauté";
 "welcome.pick_watch.subtitle" = "Vous pourrez compléter les détails plus tard. Envie de commencer rapidement ?";
 
 /* Journal */
@@ -130,7 +130,7 @@
 "collection.card.measured_today" = "Mesuré aujourd'hui";
 "collection.card.measured_days_ago" = "Mesuré il y a %dj";
 "collection.card.measure_prompt" = "Toucher pour mesurer";
-"collection.empty.subtitle" = "Ajoutez une montre → 30 s de mesure → consultez la précision. Chaque lecture écrit un nouveau chapitre de l'histoire de votre garde-temps.";
+"collection.empty.subtitle" = "Ajoutez votre montre et commencez photos, journal, analyses et communauté.";
 "collection.search.placeholder" = "Rechercher dans la collection";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
 "collection.section.recent" = "Mesurées récemment";
@@ -653,12 +653,12 @@
 "stats.entry.league.subtitle" = "Votre équipe face au monde";
 "welcome.firstresult.cta" = "Aller à la Collection";
 "welcome.firstresult.ready" = "Prêt";
-"welcome.firstresult.body" = "Choisissez maintenant une montre dans la Collection et mesurez-la.";
+"welcome.firstresult.body" = "Enregistrez, analysez et partagez vos montres dans Collection. La mesure n'est qu'une option.";
 "welcome.firstresult.tip.title" = "Conseil pour la première mesure";
 "welcome.firstresult.tip.body" = "Posez le fond de boîte directement sur le micro inférieur du téléphone dans un endroit calme — 30 secondes.";
 "quickwatch.cta.pick" = "Choisir une montre";
 "quickwatch.cta.custom" = "Saisie personnalisée → suite";
-"quickwatch.cta.next" = "Suivant → première mesure";
+"quickwatch.cta.next" = "Suivant";
 "shake.title" = "Montre du jour";
 "shake.cta.shaking" = "Secouage…";
 "shake.cta.idle" = "Secouez pour choisir";
@@ -1986,3 +1986,22 @@
 "result.transient.body" = "Les résultats de la mesure rapide ne sont pas enregistrés. Enregistrez une montre pour continuer à constituer votre historique de mesures, vos tendances et vos moyennes.";
 
 "result.transient.cta" = "Enregistrer une montre";
+
+// --- onboarding 5축 재구성(분석·커뮤니티 추가) ---
+"feature.analyze.title" = "Analyses";
+"feature.analyze.body" = "Tendances hebdomadaires et mensuelles, votre rétro\nde l'année et les ligues de marques, en un coup d'œil.";
+"feature.community.title" = "Communauté";
+"feature.community.body" = "Partagez votre poignet du jour anonymement\net découvrez les montres d'autres collectionneurs.";
+"welcome.illustration.trend" = "📈 Tendance hebdo";
+"welcome.illustration.community" = "❤️ 24 j'aime";
+"settings.account.promo_body" = "Promo — tout gratuit jusqu'au %@";
+
+// --- 출시 프로모 공지 ---
+"promo.announce.eyebrow" = "Promotion de lancement";
+"promo.announce.title" = "Tout gratuit\njusqu'au %@";
+"promo.announce.body" = "Profitez de toutes les fonctions TickLab Pro gratuitement, sans abonnement.";
+"promo.announce.period" = "Jusqu'au %@";
+"promo.announce.cta" = "Compris";
+"promo.perk.unlimited" = "Montres, mesures et journaux illimités";
+"promo.perk.ai" = "Diagnostic IA illimité";
+"promo.perk.share" = "Cartes premium et export de données";

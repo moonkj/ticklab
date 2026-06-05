@@ -109,6 +109,35 @@ struct WatchDetailView: View {
                     .opacity(heroVisible ? 1 : 0)
                     .animation(.easeIn(duration: 0.18), value: heroVisible)
                 actionsSection
+                // 무브먼트 미확정(인기목록 자동배정) — 측정 정확도를 위해 확인 유도. 탭 → 등록 폼 편집(확인 시 확정).
+                if !watch.movementConfirmed, watch.movementType == .automatic || watch.movementType == .manual {
+                    Button { editing = true } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: "exclamationmark.circle.fill")
+                                .foregroundStyle(AppColors.warning)
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text(String(localized: "watch.movement.unconfirmed.title",
+                                            defaultValue: "무브먼트 확인이 필요해요"))
+                                    .font(.system(size: 14, weight: .semibold))
+                                    .foregroundStyle(AppColors.ink0)
+                                Text(String(localized: "watch.movement.unconfirmed.body",
+                                            defaultValue: "자동 배정된 무브먼트예요. 측정 정확도를 위해 캘리버·진동수를 확인하세요."))
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(AppColors.ink2)
+                            }
+                            Spacer(minLength: 8)
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 12, weight: .semibold)).foregroundStyle(AppColors.ink3)
+                        }
+                        .padding(14)
+                        .background(AppColors.warningTint)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                        .contentShape(Rectangle())
+                    }
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
+                }
                 // Sprint 1 (P1-4): 등록 후 다음 단계 가이드 — 모든 단계 완료 또는 닫기 시 영구 숨김.
                 NextStepsGuideCard(watch: watch)
                     .padding(.horizontal, 20)
@@ -1436,8 +1465,7 @@ struct WatchDetailView: View {
     private var windReminderCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: "arrow.triangle.2.circlepath")
-                    .foregroundStyle(AppColors.ink0)
+                MainspringIcon(size: 18, color: AppColors.ink0)
                 Text(String(localized: "watch.wind.title"))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)

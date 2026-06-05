@@ -22,18 +22,18 @@
 "welcome.cta_start" = "立即开始";
 "welcome.skip" = "跳过";
 "welcome.pick_watch" = "选择一枚腕表";
-"feature.measure.title" = "测量";
-"feature.measure.body" = "用手机麦克风聆听腕表的滴答声。\n获取日差走时与摆轮误差。";
+"feature.measure.title" = "测量与结论";
+"feature.measure.body" = "用麦克风聆听摆动，测量每日误差与同步误差，\nAI 一句话总结。";
 "feature.collect.title" = "日常档案";
 "feature.collect.body" = "照片、笔记与测量数据汇于一处。\n记录你与腕表共度的每一天。";
 "feature.journal.title" = "通俗易懂的结论";
 "feature.journal.body" = "复杂的数据化为一句话。\n支持的设备由 Apple Intelligence 解读测量结果。";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
-"welcome.subtitle" = "精准,源自每一次跳动。";
+"welcome.subtitle" = "记录、分析并分享你的腕表生活。";
 "watch.primary.set" = "设为主表";
 "watch.primary.unset" = "取消主表";
 "stats.mood.this_month" = "本月";
-"welcome.footer" = "收藏 · 今日 · 日志 · 分析";
+"welcome.footer" = "收藏 · 记录 · 分析 · 社区";
 "welcome.pick_watch.subtitle" = "细节可稍后补充。想要快速开始吗?";
 
 /* Journal */
@@ -130,7 +130,7 @@
 "collection.card.measured_today" = "今天测量";
 "collection.card.measured_days_ago" = "%d天前测量";
 "collection.card.measure_prompt" = "点击测量";
-"collection.empty.subtitle" = "添加腕表 → 30 秒测量 → 查看精度。每一次读数,都是腕表故事的新篇章。";
+"collection.empty.subtitle" = "添加你的手表，开启照片、记录、分析与社区。";
 "collection.search.placeholder" = "搜索藏品";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
 "collection.section.recent" = "近期测量";
@@ -653,12 +653,12 @@
 "stats.entry.league.subtitle" = "你的阵营 vs 全球";
 "welcome.firstresult.cta" = "前往藏品";
 "welcome.firstresult.ready" = "准备就绪";
-"welcome.firstresult.body" = "现在从“藏品”中挑选一枚腕表开始测量。";
+"welcome.firstresult.body" = "现在在收藏中记录、分析并分享你的腕表。测量只是其中之一。";
 "welcome.firstresult.tip.title" = "首次测量小贴士";
 "welcome.firstresult.tip.body" = "在安静处,将腕表底盖直接贴于手机底部麦克风 — 持续 30 秒。";
 "quickwatch.cta.pick" = "选择一枚腕表";
 "quickwatch.cta.custom" = "自定义录入 → 下一步";
-"quickwatch.cta.next" = "下一步 → 首次测量";
+"quickwatch.cta.next" = "下一步";
 "shake.title" = "今日腕表";
 "shake.cta.shaking" = "摇晃中…";
 "shake.cta.idle" = "摇一摇挑选";
@@ -1986,3 +1986,22 @@
 "result.transient.body" = "快速测量的结果不会被保存。注册手表即可持续积累您的测量记录、趋势和平均值。";
 
 "result.transient.cta" = "注册手表";
+
+// --- onboarding 5축 재구성(분석·커뮤니티 추가) ---
+"feature.analyze.title" = "分析";
+"feature.analyze.body" = "周度、月度趋势，年度总结，\n以及品牌联赛，一目了然。";
+"feature.community.title" = "社区";
+"feature.community.body" = "匿名分享你今天的腕上时光，\n发现其他藏家的腕表。";
+"welcome.illustration.trend" = "📈 周趋势";
+"welcome.illustration.community" = "❤️ 24 个赞";
+"settings.account.promo_body" = "促销 — %@ 前所有功能免费";
+
+// --- 출시 프로모 공지 ---
+"promo.announce.eyebrow" = "上线纪念促销";
+"promo.announce.title" = "%@ 前\n所有功能免费";
+"promo.announce.body" = "无需订阅，免费畅享 TickLab Pro 的全部功能。";
+"promo.announce.period" = "至 %@";
+"promo.announce.cta" = "知道了";
+"promo.perk.unlimited" = "无限手表、测量与记录";
+"promo.perk.ai" = "无限 AI 诊断";
+"promo.perk.share" = "高级分享卡与数据导出";

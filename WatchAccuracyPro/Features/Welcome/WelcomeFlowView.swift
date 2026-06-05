@@ -2,13 +2,12 @@ import SwiftData
 import SwiftUI
 import UIKit
 
-/// TickLab v3 — 5단계 welcome flow (Pivot Addendum 명세).
+/// TickLab — 4스텝 온보딩. 측정 단독이 아닌 '시계 라이프 플랫폼' 5축을 균형 있게 소개([[project_app_identity]]).
 ///
-/// 1) WelcomeView — hero
-/// 2) FeatureCarouselView — 3-step
-/// 3) QuickWatchAddView — 12 그리드, skip OK
-/// 4) FirstMeasurementView — placeholder (실 측정은 측정탭에서)
-/// 5) FirstResultView + Mode inline — 초보자/전문가 선택
+/// 0) WelcomeHero — 로고 + 태그라인 + 시작 CTA (skip = 끝으로)
+/// 1) FeatureCarousel — 3p: 측정·진단 / 컬렉션·기록 / 분석
+/// 2) QuickWatchAdd — 인기 시계 그리드(skip OK)
+/// 3) FirstResultPlaceholder — 첫 사용 안내 + 컬렉션으로 이동
 struct WelcomeFlowView: View {
     let onComplete: () -> Void
     @Environment(UserPreferences.self) private var preferences
@@ -19,7 +18,7 @@ struct WelcomeFlowView: View {
             AppColors.paper0.ignoresSafeArea()
             Group {
                 switch step {
-                case 0: WelcomeHero(onNext: next)
+                case 0: WelcomeHero(onNext: next, onSkip: skipToEnd)
                 case 1: FeatureCarousel(onNext: next, onSkip: skipToEnd)
                 case 2: QuickWatchAdd(onNext: next, onSkip: next)
                 // Round 113 fix (사용자 보고: "측정 못함"): mock FirstMeasurement step 제거.
@@ -55,6 +54,7 @@ struct WelcomeFlowView: View {
 // MARK: - Step 1: Hero (디자인 SSOT screens-onboarding.jsx WelcomeView)
 private struct WelcomeHero: View {
     let onNext: () -> Void
+    let onSkip: () -> Void
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     // 웨이브2-D: hero 등장 연출(로고→tagline 순차 fade-up).
     @State private var breathe = false
@@ -66,7 +66,7 @@ private struct WelcomeHero: View {
             VStack(spacing: 0) {
                 HStack {
                     Spacer()
-                    Button(String(localized: "welcome.skip"), action: onNext)
+                    Button(String(localized: "welcome.skip"), action: onSkip)
                         .font(.system(size: 15))
                         .foregroundStyle(AppColors.ink2)
                         .frame(minWidth: 44, minHeight: 44)
@@ -190,11 +190,35 @@ private struct FeatureCarousel: View {
     let onSkip: () -> Void
     @State private var page: Int = 0
 
-    private let pages: [(titleKey: String, bodyKey: String)] = [
-        ("feature.measure.title", "feature.measure.body"),
-        ("feature.collect.title", "feature.collect.body"),
-        ("feature.journal.title", "feature.journal.body"),
-    ]
+    /// 온보딩 기능 페이지 — '시계 라이프 플랫폼' 축들([[project_app_identity]]).
+    /// 측정은 가장 중요한 기능이 아니라 마지막 '일부'로. 리드는 컬렉션·기록.
+    private enum Feature {
+        case collect, analyze, community, measure
+        var titleKey: String {
+            switch self {
+            case .collect:   return "feature.collect.title"
+            case .analyze:   return "feature.analyze.title"
+            case .community: return "feature.community.title"
+            case .measure:   return "feature.measure.title"
+            }
+        }
+        var bodyKey: String {
+            switch self {
+            case .collect:   return "feature.collect.body"
+            case .analyze:   return "feature.analyze.body"
+            case .community: return "feature.community.body"
+            case .measure:   return "feature.measure.body"
+            }
+        }
+    }
+
+    /// 컬렉션·기록 → 분석 → (커뮤니티) → 측정. 커뮤니티는 활성 시에만 노출(게이트와 정합).
+    private var pages: [Feature] {
+        var p: [Feature] = [.collect, .analyze]
+        if FeatureFlags.shared.communityEnabled { p.append(.community) }
+        p.append(.measure)
+        return p
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -225,9 +249,9 @@ private struct FeatureCarousel: View {
 
             // Carousel pages with abstract illustration.
             TabView(selection: $page) {
-                pageView(0, illustration: illustration0).tag(0)
-                pageView(1, illustration: illustration1).tag(1)
-                pageView(2, illustration: illustration2).tag(2)
+                ForEach(Array(pages.enumerated()), id: \.offset) { idx, feature in
+                    pageView(feature).tag(idx)
+                }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
 
@@ -266,24 +290,24 @@ private struct FeatureCarousel: View {
         }
     }
 
-    private func pageView(_ idx: Int, illustration: some View) -> some View {
+    private func pageView(_ feature: Feature) -> some View {
         VStack(spacing: 32) {
             Spacer()
             // 240×240 illustration container — accent50 (paper2 너무 옅음).
             ZStack {
                 RoundedRectangle(cornerRadius: 36)
                     .fill(AppColors.accent50)
-                illustration
+                illustration(for: feature)
                     .frame(width: 200, height: 200)
             }
             .frame(width: 240, height: 240)
             VStack(spacing: 12) {
-                Text(String(localized: String.LocalizationValue(pages[idx].titleKey)))
+                Text(String(localized: String.LocalizationValue(feature.titleKey)))
                     .font(.system(size: 32, weight: .semibold))
                     .tracking(-0.6)
                     .foregroundStyle(AppColors.ink0)
                     .multilineTextAlignment(.center)
-                Text(String(localized: String.LocalizationValue(pages[idx].bodyKey)))
+                Text(String(localized: String.LocalizationValue(feature.bodyKey)))
                     .font(.system(size: 17))
                     .foregroundStyle(AppColors.ink2)
                     .lineSpacing(3)
@@ -294,9 +318,18 @@ private struct FeatureCarousel: View {
         }
     }
 
+    @ViewBuilder private func illustration(for feature: Feature) -> some View {
+        switch feature {
+        case .measure:   illustrationMeasure
+        case .collect:   illustrationCollect
+        case .analyze:   illustrationAnalyze
+        case .community: illustrationCommunity
+        }
+    }
+
     // Page 0 — waveform + dots + "+5.2 s/d". Round 158: 시각 무게 중심 (100,100) 으로 재정렬.
     // Round 19 (Sora): TabView swipe 중 매 frame Canvas re-draw 비용 회피 — .drawingGroup 으로 Metal-backed offscreen.
-    private var illustration0: some View {
+    private var illustrationMeasure: some View {
         Canvas { ctx, size in
             let s = size.width / 200.0
             // radial gold gradient — center 를 정중앙으로.
@@ -339,7 +372,7 @@ private struct FeatureCarousel: View {
 
     // Page 1 — journal card with photo placeholder (jsx 200×200 viewBox port).
     // Round 19 (Sora): .drawingGroup 으로 TabView transform 비용 절감.
-    private var illustration1: some View {
+    private var illustrationCollect: some View {
         Canvas { ctx, size in
             let s = size.width / 200.0
             // White card 120×140 at (40,30) radius 6, border #E5E5E5.
@@ -381,51 +414,92 @@ private struct FeatureCarousel: View {
         .drawingGroup()
     }
 
-    // Page 2 — gauge dial + sparkles + verdict (jsx 200×200 viewBox port).
+    // Page 2 — 분석: 상승 트렌드 라인 + 막대 + 별. (측정 게이지 대신 '분석' 축 표현 — 정체성 균형)
     // Round 19 (Sora): .drawingGroup 으로 TabView transform 비용 절감.
-    private var illustration2: some View {
+    private var illustrationAnalyze: some View {
         Canvas { ctx, size in
             let s = size.width / 200.0
-            // Outer gauge circle r=60 fill primary-50.
-            let outer = CGRect(
-                x: (100 - 60) * s, y: (100 - 60) * s,
-                width: 120 * s, height: 120 * s
-            )
-            ctx.fill(Path(ellipseIn: outer), with: .color(AppColors.primary500.opacity(0.15)))
-            // Inner dial r=42 fill white, stroke primary-700.
-            let inner = CGRect(
-                x: (100 - 42) * s, y: (100 - 42) * s,
-                width: 84 * s, height: 84 * s
-            )
-            ctx.fill(Path(ellipseIn: inner), with: .color(.white))
-            ctx.stroke(Path(ellipseIn: inner), with: .color(AppColors.primary700), lineWidth: 1.5 * s)
-            // Hands path: M100 70 → L100 100 → L120 110.
-            var hands = Path()
-            hands.move(to: CGPoint(x: 100 * s, y: 70 * s))
-            hands.addLine(to: CGPoint(x: 100 * s, y: 100 * s))
-            hands.addLine(to: CGPoint(x: 120 * s, y: 110 * s))
-            ctx.stroke(
-                hands,
-                with: .color(AppColors.ink0),
-                style: StrokeStyle(lineWidth: 2 * s, lineCap: .round, lineJoin: .round)
-            )
-            // Center pin r=3 gold.
-            let pin = CGRect(
-                x: (100 - 3) * s, y: (100 - 3) * s,
-                width: 6 * s, height: 6 * s
-            )
-            ctx.fill(Path(ellipseIn: pin), with: .color(AppColors.accent))
-            // Sparkle 1 — 4-point star at (160, 60).
-            ctx.fill(starPath(center: CGPoint(x: 160 * s, y: 60 * s), radius: 11 * s), with: .color(AppColors.accent))
-            // Sparkle 2 — smaller at (40, 140).
-            ctx.fill(starPath(center: CGPoint(x: 40 * s, y: 140 * s), radius: 7 * s), with: .color(AppColors.accent))
-            // Verdict text at y=180.
-            let verdict = Text(String(localized: "welcome.illustration.verdict"))
+            let baseY = 150.0
+            let xs: [Double] = [50, 85, 120, 155]
+            let barH: [Double] = [38, 64, 52, 92]
+            // 막대 — 마지막(최고)만 골드, 나머지는 옅은 indigo.
+            for (i, x) in xs.enumerated() {
+                let h = barH[i] * s
+                let rect = CGRect(x: (x - 13) * s, y: baseY * s - h, width: 26 * s, height: h)
+                let col = i == xs.count - 1 ? AppColors.accent : AppColors.primary500.opacity(0.45)
+                ctx.fill(Path(roundedRect: rect, cornerRadius: 5 * s), with: .color(col))
+            }
+            // baseline.
+            var base = Path()
+            base.move(to: CGPoint(x: 36 * s, y: baseY * s))
+            base.addLine(to: CGPoint(x: 168 * s, y: baseY * s))
+            ctx.stroke(base, with: .color(AppColors.rule), lineWidth: 1)
+            // 트렌드 라인(상승) + 노드.
+            let pts: [(Double, Double)] = [(50, 112), (85, 84), (120, 96), (155, 52)]
+            var line = Path()
+            for (i, pt) in pts.enumerated() {
+                let p = CGPoint(x: pt.0 * s, y: pt.1 * s)
+                if i == 0 { line.move(to: p) } else { line.addLine(to: p) }
+            }
+            ctx.stroke(line, with: .color(AppColors.primaryDeep),
+                       style: StrokeStyle(lineWidth: 2.5 * s, lineCap: .round, lineJoin: .round))
+            for pt in pts {
+                ctx.fill(Path(ellipseIn: CGRect(x: (pt.0 - 3) * s, y: (pt.1 - 3) * s, width: 6 * s, height: 6 * s)),
+                         with: .color(AppColors.accent))
+            }
+            // sparkle.
+            ctx.fill(starPath(center: CGPoint(x: 168 * s, y: 42 * s), radius: 9 * s), with: .color(AppColors.accent))
+            // 라벨.
+            let label = Text(String(localized: "welcome.illustration.trend"))
                 .font(.system(size: 12 * s, weight: .medium))
                 .foregroundColor(AppColors.ink0)
-            ctx.draw(verdict, at: CGPoint(x: 100 * s, y: 180 * s), anchor: .center)
+            ctx.draw(label, at: CGPoint(x: 100 * s, y: 180 * s), anchor: .center)
         }
         .drawingGroup()
+    }
+
+    // Page — 커뮤니티: 겹쳐진 사진 카드 + 하트(좋아요) + 떠다니는 하트. 익명 사진 피드 축 표현.
+    private var illustrationCommunity: some View {
+        Canvas { ctx, size in
+            let s = size.width / 200.0
+            // 뒤 카드(살짝 어긋난 두 번째 게시물).
+            ctx.fill(Path(roundedRect: CGRect(x: 62 * s, y: 40 * s, width: 88 * s, height: 108 * s), cornerRadius: 10 * s),
+                     with: .color(AppColors.accent100))
+            // 앞 카드(흰 배경 + 테두리).
+            let front = CGRect(x: 48 * s, y: 54 * s, width: 96 * s, height: 116 * s)
+            ctx.fill(Path(roundedRect: front, cornerRadius: 10 * s), with: .color(.white))
+            ctx.stroke(Path(roundedRect: front, cornerRadius: 10 * s), with: .color(AppColors.rule), lineWidth: 1)
+            // 사진 영역(상단) + 시계 실루엣 느낌 원.
+            ctx.fill(Path(roundedRect: CGRect(x: 48 * s, y: 54 * s, width: 96 * s, height: 72 * s), cornerRadius: 10 * s),
+                     with: .color(AppColors.primary500.opacity(0.16)))
+            ctx.fill(Path(ellipseIn: CGRect(x: (96 - 17) * s, y: (90 - 17) * s, width: 34 * s, height: 34 * s)),
+                     with: .color(AppColors.accent.opacity(0.55)))
+            // 하단 — 하트(좋아요) + 캡션 라인.
+            ctx.fill(heartPath(center: CGPoint(x: 64 * s, y: 144 * s), size: 12 * s), with: .color(AppColors.danger))
+            var caption = Path()
+            caption.move(to: CGPoint(x: 84 * s, y: 144 * s)); caption.addLine(to: CGPoint(x: 130 * s, y: 144 * s))
+            ctx.stroke(caption, with: .color(AppColors.rule), lineWidth: 2.5 * s)
+            // 떠다니는 작은 하트(골드).
+            ctx.fill(heartPath(center: CGPoint(x: 150 * s, y: 58 * s), size: 9 * s), with: .color(AppColors.accent))
+            // 라벨.
+            let label = Text(String(localized: "welcome.illustration.community"))
+                .font(.system(size: 12 * s, weight: .medium))
+                .foregroundColor(AppColors.ink0)
+            ctx.draw(label, at: CGPoint(x: 100 * s, y: 184 * s), anchor: .center)
+        }
+        .drawingGroup()
+    }
+
+    /// 하트 path — 두 원(위) + 삼각(아래). 작은 일러스트용 근사.
+    private func heartPath(center c: CGPoint, size r: CGFloat) -> Path {
+        var p = Path()
+        p.addEllipse(in: CGRect(x: c.x - r, y: c.y - r * 0.62, width: r, height: r))
+        p.addEllipse(in: CGRect(x: c.x, y: c.y - r * 0.62, width: r, height: r))
+        p.move(to: CGPoint(x: c.x - r * 0.92, y: c.y + r * 0.02))
+        p.addLine(to: CGPoint(x: c.x + r * 0.92, y: c.y + r * 0.02))
+        p.addLine(to: CGPoint(x: c.x, y: c.y + r * 1.08))
+        p.closeSubpath()
+        return p
     }
 
     /// 4-point star path (sparkle).
@@ -457,6 +531,9 @@ private struct QuickWatchAdd: View {
     let onSkip: () -> Void
     @Environment(\.modelContext) private var modelContext
     @State private var selected: Int? = nil
+    /// 인기시계 선택 → 등록폼(무브먼트 확인)으로 연결. 폼이 닫히면 다음 단계.
+    @State private var pendingWatch: Watch?
+    @State private var showEdit = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -541,9 +618,13 @@ private struct QuickWatchAdd: View {
                     UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                     if let s = selected, s >= 0 {
                         let item = PopularWatches.all[s]
-                        add(brand: item.brand, model: item.modelName, caliber: item.caliber)
+                        // 등록 직후 등록폼(무브먼트 섹션 포함)을 띄워 확인 → 폼이 닫히면 다음 단계.
+                        pendingWatch = add(brand: item.brand, model: item.modelName,
+                                           caliber: item.caliber, movementType: item.movementType)
+                        showEdit = true
+                    } else {
+                        onNext()   // 직접입력/스킵은 컬렉션에서 추가
                     }
-                    onNext()
                 } label: {
                     Text(String(localized: selected == nil ? "quickwatch.cta.pick"
                                           : selected == -1 ? "quickwatch.cta.custom"
@@ -561,6 +642,11 @@ private struct QuickWatchAdd: View {
                 .padding(.horizontal, 16)
                 .padding(.bottom, 28)
                 .background(AppColors.paper0)
+            }
+        }
+        .sheet(isPresented: $showEdit, onDismiss: { onNext() }) {
+            if let w = pendingWatch {
+                NavigationStack { AddWatchView(existing: w, emphasizeMovement: true) }
             }
         }
     }
@@ -599,10 +685,15 @@ private struct QuickWatchAdd: View {
         .buttonStyle(.plain)
     }
 
-    private func add(brand: String, model: String, caliber: String) {
-        let watch = Watch(brand: brand, model: model, caliber: caliber)
+    @discardableResult
+    private func add(brand: String, model: String, caliber: String, movementType: WatchMovementType) -> Watch {
+        // 인기목록 자동배정 캘리버는 추정치 — 무브먼트 미확정(false). 측정 시 자동감지로 실제 BPH 사용,
+        //   등록폼에서 사용자가 확인하면 confirmed=true 로 전환.
+        let watch = Watch(brand: brand, model: model, caliber: caliber,
+                          movementType: movementType, movementConfirmed: false)
         modelContext.insert(watch)
         try? modelContext.save()
+        return watch
     }
 }
 // MARK: - Step 5: 사용 톤 선택 + 첫 측정 안내 (Round 128: mock 결과 제거).
@@ -689,59 +780,4 @@ private struct FirstResultPlaceholder: View {
     // Round 148 (Doyoon 4 #2): modeSelectInline / modeCard dead — UserMode 분기 제거 후 잔재. 통째 제거.
 }
 
-// MARK: - COSC bar + Confidence chip helpers (이 file scope)
-
-private struct COSCBarView: View {
-    let rate: Double
-    var body: some View {
-        VStack(spacing: 6) {
-            GeometryReader { geo in
-                let w = geo.size.width
-                let minR = -12.0, maxR = 12.0
-                let pct = (rate - minR) / (maxR - minR)
-                let lo = (-4.0 - minR) / (maxR - minR)
-                let hi = (6.0 - minR) / (maxR - minR)
-                ZStack(alignment: .leading) {
-                    Capsule().fill(AppColors.paper2).frame(height: 8)
-                    Rectangle()
-                        .fill(AppColors.success.opacity(0.24))
-                        .frame(width: w * (hi - lo), height: 8)
-                        .offset(x: w * lo)
-                    Rectangle()
-                        .fill(AppColors.primaryDeep)
-                        .frame(width: 4, height: 14)
-                        .offset(x: w * pct - 2, y: -3)
-                }
-            }
-            .frame(height: 14)
-            // 사용자 보고 fix: 하드코딩 라벨 → l10n 키로. Hard Rule 3 준수.
-            HStack {
-                Text(String(localized: "cosc.bar.min")).font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink2)
-                Spacer()
-                Text(String(localized: "cosc.bar.range"))
-                    .font(.system(size: 11, design: .monospaced))
-                    .foregroundStyle(AppColors.success)
-                Spacer()
-                Text(String(localized: "cosc.bar.max")).font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink2)
-            }
-        }
-    }
-}
-
-private struct ConfidenceChip: View {
-    let value: Int
-    private var color: Color {
-        if value >= 90 { return AppColors.success }
-        if value >= 70 { return AppColors.warning }
-        if value >= 50 { return AppColors.danger }
-        return AppColors.ink2
-    }
-    var body: some View {
-        HStack(spacing: 6) {
-            Circle().fill(color).frame(width: 8, height: 8)
-            Text("\(value)%")
-                .font(.system(size: 13, weight: .semibold, design: .monospaced))
-                .foregroundStyle(color)
-        }
-    }
-}
+// 측정 mock 결과(Round 128) 제거 후 잔재였던 COSCBarView / ConfidenceChip 삭제 — 온보딩에서 미사용.

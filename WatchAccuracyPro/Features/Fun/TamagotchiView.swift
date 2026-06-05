@@ -228,9 +228,9 @@ struct TamagotchiView: View {
     private func actionRow(watch: Watch) -> some View {
         let worn = WearLogService.isWornToday(watch, in: modelContext)
         return HStack(spacing: 8) {
-            // 태엽 감기 — 감는 중이면 회전 + 라벨 변경.
+            // 태엽 감기 — 커스텀 메인스프링(나선 코일) 아이콘. 감는 중이면 라벨 변경.
             petAction(
-                icon: isWinding ? "🌀" : "🔧",
+                icon: "mainspring",
                 label: isWinding
                     ? String(localized: "tamagotchi.winding")
                     : String(localized: "tamagotchi.wind"),
@@ -302,7 +302,12 @@ struct TamagotchiView: View {
         let strokeWidth: CGFloat = (state == .active) ? 1.5 : 1
         let shadowOpacity: Double = (state == .primary) ? 0.2 : 0.04
         VStack(spacing: 4) {
-            Text(icon).font(.system(size: 22))
+            if icon == "mainspring" {
+                MainspringIcon(size: 24, color: fgColor)
+                    .rotationEffect(.degrees(isWinding ? windRotation : 0))
+            } else {
+                Text(icon).font(.system(size: 22))
+            }
             Text(label).font(.system(size: 12, weight: .semibold))
         }
         .foregroundStyle(fgColor)

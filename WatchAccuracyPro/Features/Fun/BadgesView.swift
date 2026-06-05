@@ -127,7 +127,8 @@ struct BadgesView: View {
                 Calendar.current.startOfDay(for: $0.timestamp)
             }).sorted()
             var maxStreak = 0; var streak = 1
-            for i in 1..<days.count {
+            // 버그 수정: 저널 0개면 days 가 빈 배열 → 1..<0 잘못된 범위로 크래시. indices.dropFirst 로 안전화.
+            for i in days.indices.dropFirst() {
                 if Calendar.current.dateComponents([.day], from: days[i-1], to: days[i]).day == 1 {
                     streak += 1; maxStreak = max(maxStreak, streak)
                 } else { streak = 1 }

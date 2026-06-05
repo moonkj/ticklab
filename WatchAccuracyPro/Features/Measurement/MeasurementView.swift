@@ -480,7 +480,7 @@ struct MeasurementView: View {
                 ),
                 MetricBadge(
                     label: String(localized: "measurement.metric.bph"),
-                    value: lm.bph.map { "\($0)" } ?? "\(viewModel.movement?.bph ?? 28_800)"
+                    value: lm.bph.map { "\($0)" } ?? "\(viewModel.nominalBph)"
                 )
             ])
         }
@@ -587,7 +587,7 @@ struct MeasurementView: View {
                 diagnosticCell(
                     label: String(localized: "measurement.diagnostic.bph"),
                     // Round 158: nominalBph echo (lock 잡힐 때까지 nominal 표시).
-                    value: lm.bph.map { "\($0)" } ?? "\(viewModel.movement?.bph ?? 28_800)",
+                    value: lm.bph.map { "\($0)" } ?? "\(viewModel.nominalBph)",
                     tone: lm.bph != nil ? .success : .neutral
                 )
             }

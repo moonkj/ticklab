@@ -22,18 +22,18 @@
 "welcome.cta_start" = "Get started";
 "welcome.skip" = "Skip";
 "welcome.pick_watch" = "Pick a watch";
-"feature.measure.title" = "Measure";
-"feature.measure.body" = "Listen to your watch's tics with the phone mic.\nGet daily rate and beat error.";
+"feature.measure.title" = "Measure & verdict";
+"feature.measure.body" = "Hear the beat through your mic to measure daily rate and beat error —\nAI sums it up in one line.";
 "feature.collect.title" = "Daily archive";
 "feature.collect.body" = "Photos, notes, and measurements in one place.\nA diary of life with your watches.";
 "feature.journal.title" = "Plain-language verdict";
 "feature.journal.body" = "Complex numbers turned into one line.\nApple Intelligence explains the result when available.";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
-"welcome.subtitle" = "Precision in every tick.";
+"welcome.subtitle" = "Record, analyze, and share your watch life.";
 "watch.primary.set" = "Set as featured";
 "watch.primary.unset" = "Unfeature";
 "stats.mood.this_month" = "This month";
-"welcome.footer" = "Collection · Today · Journal · Analysis";
+"welcome.footer" = "Collection · Journal · Insights · Community";
 "welcome.pick_watch.subtitle" = "You can add details later. Want to start quickly?";
 
 /* Journal */
@@ -130,7 +130,7 @@
 "collection.card.measured_today" = "Measured today";
 "collection.card.measured_days_ago" = "Measured %dd ago";
 "collection.card.measure_prompt" = "Tap to measure";
-"collection.empty.subtitle" = "Add a watch → 30-sec measurement → see accuracy. Each reading writes a new chapter in your watch's story.";
+"collection.empty.subtitle" = "Add your watch and start photos, journals, insights, and community.";
 "collection.search.placeholder" = "Search collection";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
 "collection.section.recent" = "Recently measured";
@@ -661,12 +661,12 @@
 "stats.entry.league.subtitle" = "Your team vs global";
 "welcome.firstresult.cta" = "Go to Collection";
 "welcome.firstresult.ready" = "Ready";
-"welcome.firstresult.body" = "Now pick a watch from Collection and measure.";
+"welcome.firstresult.body" = "Now record, analyze, and share your watches in Collection. Measuring is just one of them.";
 "welcome.firstresult.tip.title" = "First measurement tip";
 "welcome.firstresult.tip.body" = "Place your watch caseback directly on the phone's bottom mic in a quiet spot — 30 seconds.";
 "quickwatch.cta.pick" = "Pick a watch";
 "quickwatch.cta.custom" = "Custom entry → next";
-"quickwatch.cta.next" = "Next → first measurement";
+"quickwatch.cta.next" = "Next";
 "shake.title" = "Today's watch";
 "shake.cta.shaking" = "Shaking…";
 "shake.cta.idle" = "Shake to pick";
@@ -2046,3 +2046,22 @@
 "admin.theme.title.label" = "Theme title";
 "admin.theme.title.placeholder" = "e.g., This week: divers";
 "admin.theme.publish" = "Publish";
+
+// --- onboarding 5축 재구성(분석·커뮤니티 추가) ---
+"feature.analyze.title" = "Insights";
+"feature.analyze.body" = "Weekly and monthly trends, your year in review,\nand brand leagues — all at a glance.";
+"feature.community.title" = "Community";
+"feature.community.body" = "Share today on your wrist anonymously,\nand explore other collectors' watches.";
+"welcome.illustration.trend" = "📈 Weekly trend";
+"welcome.illustration.community" = "❤️ 24 likes";
+"settings.account.promo_body" = "Promo — all features free until %@";
+
+// --- 출시 프로모 공지 ---
+"promo.announce.eyebrow" = "Launch promotion";
+"promo.announce.title" = "All features free\nuntil %@";
+"promo.announce.body" = "Enjoy every TickLab Pro feature free — no subscription needed.";
+"promo.announce.period" = "Through %@";
+"promo.announce.cta" = "Got it";
+"promo.perk.unlimited" = "Unlimited watches, measurements & journals";
+"promo.perk.ai" = "Unlimited AI diagnosis";
+"promo.perk.share" = "Premium share cards & data export";

@@ -22,18 +22,18 @@
 "welcome.cta_start" = "はじめる";
 "welcome.skip" = "スキップ";
 "welcome.pick_watch" = "時計を選ぶ";
-"feature.measure.title" = "計測";
-"feature.measure.body" = "iPhoneのマイクで時計の鼓動を聴き、\n歩度とビートエラーをお届けします。";
+"feature.measure.title" = "測定・診断";
+"feature.measure.body" = "マイクで拍を聴き、日差・ビートエラーを測定。\nAIが一行で解説します。";
 "feature.collect.title" = "毎日のアーカイブ";
 "feature.collect.body" = "写真・メモ・計測値をひとつの場所に。\n時計と過ごす日々の日記。";
 "feature.journal.title" = "ひと言の診断";
 "feature.journal.body" = "複雑な数値を一行に要約。\nApple Intelligence が結果を分かりやすく解説します。";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
-"welcome.subtitle" = "すべての鼓動に、正確さを。";
+"welcome.subtitle" = "記録して、分析して、シェアする時計ライフ。";
 "watch.primary.set" = "メインに設定";
 "watch.primary.unset" = "メインを解除";
 "stats.mood.this_month" = "今月";
-"welcome.footer" = "コレクション · 今日 · ジャーナル · 分析";
+"welcome.footer" = "コレクション · 記録 · 分析 · コミュニティ";
 "welcome.pick_watch.subtitle" = "詳細はあとで追加できます。まずは気軽にはじめましょう。";
 
 /* Journal */
@@ -130,7 +130,7 @@
 "collection.card.measured_today" = "今日測定";
 "collection.card.measured_days_ago" = "%d日前に測定";
 "collection.card.measure_prompt" = "タップして測定";
-"collection.empty.subtitle" = "時計を追加 → 30秒の計測 → 精度を確認。一回ごとの計測が、あなたの時計の物語に新しい章を刻みます。";
+"collection.empty.subtitle" = "時計を登録して、写真・記録・分析・コミュニティを始めましょう。";
 "collection.search.placeholder" = "コレクションを検索";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
 "collection.section.recent" = "最近計測";
@@ -653,12 +653,12 @@
 "stats.entry.league.subtitle" = "あなたのチーム vs グローバル";
 "welcome.firstresult.cta" = "コレクションへ";
 "welcome.firstresult.ready" = "準備完了";
-"welcome.firstresult.body" = "コレクションから時計を選んで計測しましょう。";
+"welcome.firstresult.body" = "コレクションで時計を記録・分析・シェアしましょう。測定もそのひとつです。";
 "welcome.firstresult.tip.title" = "最初の計測のヒント";
 "welcome.firstresult.tip.body" = "静かな場所で、時計の裏蓋を iPhone の下部マイクに直接当てて30秒。";
 "quickwatch.cta.pick" = "時計を選ぶ";
 "quickwatch.cta.custom" = "カスタム入力 → 次へ";
-"quickwatch.cta.next" = "次へ → 最初の計測";
+"quickwatch.cta.next" = "次へ";
 "shake.title" = "今日の時計";
 "shake.cta.shaking" = "シェイク中…";
 "shake.cta.idle" = "シェイクで選ぶ";
@@ -1986,3 +1986,22 @@
 "result.transient.body" = "クイック測定の結果は保存されません。時計を登録すると、測定履歴・トレンド・平均を蓄積できます。";
 
 "result.transient.cta" = "時計を登録";
+
+// --- onboarding 5축 재구성(분석·커뮤니티 추가) ---
+"feature.analyze.title" = "分析";
+"feature.analyze.body" = "週間・月間トレンド、年末まとめ、\nブランドリーグまで一目で。";
+"feature.community.title" = "コミュニティ";
+"feature.community.body" = "今日の手元を匿名でシェアし、\n他のコレクターの時計をのぞいてみよう。";
+"welcome.illustration.trend" = "📈 週間トレンド";
+"welcome.illustration.community" = "❤️ いいね 24";
+"settings.account.promo_body" = "プロモ — %@まで全機能無料";
+
+// --- 출시 프로모 공지 ---
+"promo.announce.eyebrow" = "リリース記念プロモーション";
+"promo.announce.title" = "%@まで\n全機能無料";
+"promo.announce.body" = "TickLab Proの全機能を、サブスクなしで無料でお楽しみください。";
+"promo.announce.period" = "%@まで";
+"promo.announce.cta" = "確認";
+"promo.perk.unlimited" = "時計・測定・記録すべて無制限";
+"promo.perk.ai" = "AI診断が無制限";
+"promo.perk.share" = "高度な共有カード・データ書き出し";

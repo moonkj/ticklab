@@ -117,12 +117,23 @@ struct SpecCardView: View {
         .padding(20)
     }
 
-    /// 팀 토론 기획: 빈 행 숨김 + 캘리버→무브먼트 DB 자동채움(BPH·lift) + 내 측정 평균(참고).
-    private var specTable: some View {
-        let dbMovement = card.watch?.caliber.flatMap {
+    /// 캘리버 → 무브먼트 DB 매칭(수동입력 sentinel 제외).
+    private var dbMovement: Movement? {
+        card.watch?.caliber.flatMap {
             $0 == Watch.manualCaliberTag ? nil : MovementDatabase.shared.movement(id: $0)
         }
-        return VStack(spacing: 0) {
+    }
+
+    /// 팀 토론 기획: 빈 행 숨김 + 시계(card.watch)에서 스펙 풍부화(구동방식·캘리버·BPH·레퍼런스·측정통계).
+    private var specTable: some View {
+        VStack(spacing: 0) {
+            // 시계 기본 스펙 — 거의 항상 채워짐.
+            if let w = card.watch {
+                specRow(String(localized: "speccard.spec.movement_type", defaultValue: "구동 방식"), w.movementType.displayName)
+                if let cal = w.caliber, !cal.isEmpty, !w.isCaliberManualEntry {
+                    specRow(String(localized: "speccard.spec.caliber", defaultValue: "캘리버"), cal)
+                }
+            }
             // 사용자 입력 (있는 것만).
             if !card.movement.isEmpty {
                 specRow(String(localized: "speccard.spec.movement"), card.movement)
@@ -151,15 +162,41 @@ struct SpecCardView: View {
             if let pr = card.powerReserveHours {
                 specRow(String(localized: "speccard.spec.power_reserve"), String(format: "%.0f h", pr))
             }
-            // 자동채움 — 무브먼트 DB(캘리버 기준). 사용자 입력 없이 정확.
+            // 진동수 — DB / 직접입력 / 측정값 순.
+            if let bph = bphValue {
+                specRow(String(localized: "speccard.spec.bph"), "\(bph)")
+            }
             if let m = dbMovement {
-                specRow(String(localized: "speccard.spec.bph"), "\(m.bph)")
                 specRow(String(localized: "speccard.spec.lift_angle"), "\(Int(m.liftAngleDegrees.rounded()))°")
             }
-            // 내 개체 실측 평균(참고) — 측정 데이터 있을 때.
+            if let w = card.watch {
+                if let ref = w.referenceNumber, !ref.isEmpty {
+                    specRow(String(localized: "speccard.spec.reference", defaultValue: "레퍼런스"), ref)
+                }
+                if let py = w.productionYear {
+                    specRow(String(localized: "speccard.spec.production_year", defaultValue: "생산 연도"), "\(py)")
+                }
+            }
+            // 측정 통계 — 내 개체 실측(신뢰도 25+).
+            if measureCount > 0 {
+                specRow(String(localized: "speccard.spec.measure_count", defaultValue: "측정 횟수"), "\(measureCount)")
+            }
+            if let best = bestRate {
+                specRow(String(localized: "speccard.spec.best_rate", defaultValue: "최고 정확도"),
+                        String(format: "±%.1f s/d", best))
+            }
             if let avg = avgMeasuredRate {
                 specRow(String(localized: "speccard.spec.measured_rate"),
                         String(format: "%@%.1f s/d", avg >= 0 ? "+" : "", avg))
+            }
+            // 진폭 — Hard Rule #9: high/veryHigh 신뢰 무브먼트만(DB 매칭 + 표시 가능 등급).
+            if dbMovement?.shouldDisplayAmplitude == true, let amp = avgAmplitude {
+                specRow(String(localized: "speccard.spec.amplitude", defaultValue: "평균 진폭"),
+                        String(format: "%.0f°", amp))
+            }
+            if let be = avgBeatError {
+                specRow(String(localized: "speccard.spec.beat_error", defaultValue: "평균 비트에러"),
+                        String(format: "%.1f ms", be))
             }
             specRow(String(localized: "speccard.spec.registered"), AppDateFormat.fullDate(card.createdAt))
         }
@@ -168,12 +205,35 @@ struct SpecCardView: View {
         .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
     }
 
-    /// 내 개체 실측 평균 rate — 신뢰도 25+ 측정만. 없으면 nil.
+    // MARK: - 측정 통계 (신뢰도 25+ 만)
+    private var validMeasurements: [WatchMeasurement] {
+        (card.watch?.measurements ?? []).filter { $0.confidenceScore >= 25 }
+    }
+    private var measureCount: Int { card.watch?.measurements.count ?? 0 }
+    /// 내 개체 실측 평균 rate.
     private var avgMeasuredRate: Double? {
-        guard let ms = card.watch?.measurements else { return nil }
-        let valid = ms.filter { $0.confidenceScore >= 25 }
-        guard !valid.isEmpty else { return nil }
-        return valid.map(\.rateSecondsPerDay).reduce(0, +) / Double(valid.count)
+        guard !validMeasurements.isEmpty else { return nil }
+        return validMeasurements.map(\.rateSecondsPerDay).reduce(0, +) / Double(validMeasurements.count)
+    }
+    /// 최고 정확도 — |rate| 최소.
+    private var bestRate: Double? {
+        validMeasurements.map { abs($0.rateSecondsPerDay) }.min()
+    }
+    private var avgAmplitude: Double? {
+        let amps = validMeasurements.compactMap(\.amplitudeDegrees)
+        guard !amps.isEmpty else { return nil }
+        return amps.reduce(0, +) / Double(amps.count)
+    }
+    private var avgBeatError: Double? {
+        guard !validMeasurements.isEmpty else { return nil }
+        return validMeasurements.map(\.beatErrorMs).reduce(0, +) / Double(validMeasurements.count)
+    }
+    /// 진동수 — DB → 직접입력 → 측정값(최빈/최댓값) 순.
+    private var bphValue: Int? {
+        if let m = dbMovement { return m.bph }
+        if let c = card.watch?.customBph, c > 0 { return c }
+        let bphs = (card.watch?.measurements ?? []).map(\.bph).filter { $0 > 0 }
+        return bphs.max()
     }
 
     private func specRow(_ label: String, _ value: String?) -> some View {

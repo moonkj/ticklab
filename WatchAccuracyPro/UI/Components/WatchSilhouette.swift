@@ -228,6 +228,8 @@ struct PopularWatchSeed: Identifiable {
     let model: String   // silhouette key
     let tone: String    // silhouette tone
     let caliber: String
+    /// 구동 방식 — 등록 시 그대로 반영. 기본 automatic. (쿼츠/솔라/스마트워치가 automatic 로 잘못 등록되던 버그 대응)
+    var movementType: WatchMovementType = .automatic
 }
 
 enum PopularWatches {
@@ -239,8 +241,8 @@ enum PopularWatches {
         // Swatch Sistem51 은 자동(mechanical) — Sellita_SW200 으로 교정.
         // caliber 를 nil 이 아닌 올바른 값 or Unknown 로 명시.
         .init(brand: "Seiko",   modelName: "5 Sports",     model: "sub",         tone: "black",  caliber: "Seiko_7S26"),
-        .init(brand: "Casio",   modelName: "G-Shock",      model: "sub",         tone: "black",  caliber: ""),
-        .init(brand: "Citizen", modelName: "Eco-Drive",    model: "datejust",    tone: "silver", caliber: ""),
+        .init(brand: "Casio",   modelName: "G-Shock",      model: "sub",         tone: "black",  caliber: "", movementType: .quartz),
+        .init(brand: "Citizen", modelName: "Eco-Drive",    model: "datejust",    tone: "silver", caliber: "", movementType: .solar),
         .init(brand: "Swatch",  modelName: "Sistem51",     model: "datejust",    tone: "blue",   caliber: "Sellita_SW200"),
         .init(brand: "Hamilton", modelName: "Khaki Field", model: "datejust",    tone: "black",  caliber: "ETA_2824"),
         .init(brand: "Tissot",  modelName: "PRX",          model: "datejust",    tone: "blue",   caliber: "ETA_2824"),
@@ -266,8 +268,17 @@ enum PopularWatches {
         .init(brand: "Breitling", modelName: "Navitimer",     model: "speedmaster", tone: "silver", caliber: "ETA_7750"),
         .init(brand: "TAG Heuer", modelName: "Carrera",       model: "speedmaster", tone: "silver", caliber: "ETA_7750"),
         .init(brand: "Hermès",   modelName: "H08",            model: "tank",    tone: "silver",  caliber: "ETA_2824"),
-        .init(brand: "Chanel",   modelName: "J12",            model: "datejust", tone: "black",  caliber: "ETA_2824"),
+        .init(brand: "Chanel",   modelName: "J12",            model: "datejust", tone: "black",  caliber: "", movementType: .quartz),
         .init(brand: "Piaget",   modelName: "Polo",           model: "datejust", tone: "gold",   caliber: "ETA_2824"),
         .init(brand: "Longines", modelName: "Master",         model: "datejust", tone: "silver", caliber: "ETA_2824"),
+        // 쿼츠 · 전자(디지털) · 솔라 · 스마트워치 — 기계식 외 타입도 등록 가능(측정은 기계식 전용, 나머지는 생활기록).
+        .init(brand: "Casio",   modelName: "F-91W",          model: "datejust",    tone: "black",  caliber: "", movementType: .quartz),
+        .init(brand: "Casio",   modelName: "Edifice",        model: "speedmaster", tone: "silver", caliber: "", movementType: .quartz),
+        .init(brand: "Seiko",   modelName: "Prospex Solar",  model: "sub",         tone: "blue",   caliber: "", movementType: .solar),
+        .init(brand: "Timex",   modelName: "Weekender",      model: "datejust",    tone: "black",  caliber: "", movementType: .quartz),
+        .init(brand: "Bulova",  modelName: "Precisionist",   model: "speedmaster", tone: "silver", caliber: "", movementType: .quartz),
+        .init(brand: "Apple",   modelName: "Apple Watch",    model: "tank",        tone: "black",  caliber: "", movementType: .smartwatch),
+        .init(brand: "Samsung", modelName: "Galaxy Watch",   model: "sub",         tone: "black",  caliber: "", movementType: .smartwatch),
+        .init(brand: "Garmin",  modelName: "Fenix",          model: "sub",         tone: "black",  caliber: "", movementType: .smartwatch),
     ]
 }

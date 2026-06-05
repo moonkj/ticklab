@@ -9,11 +9,13 @@ final class ProEntitlementTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        LaunchPromo.overrideActive = false   // 프로모 off → isPro 가 실제 entitlement 반영(초기 false 검증)
         UserDefaults.standard.removeObject(forKey: "ticklab.isPro")
     }
 
     override func tearDown() {
         UserDefaults.standard.removeObject(forKey: "ticklab.isPro")
+        LaunchPromo.overrideActive = nil
         super.tearDown()
     }
 

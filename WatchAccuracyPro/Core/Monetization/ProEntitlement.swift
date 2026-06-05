@@ -9,6 +9,26 @@ import StoreKit
 /// - 일기 월 5개
 /// - AI Diagnosis trial 3회/시계
 /// Pro: 모든 제한 해제 + Share Card 고급 스타일 + Service log 무제한.
+/// 출시 프로모 — 이 시점 전까지 전원 Pro 전체 기능 무료(구독 불필요). 이후 정상 구독 게이트로 복귀.
+/// 2026-06-05 출시 기준 약 3개월. 전역 고정 종료일(설치일 무관) — 날짜만 바꾸면 연장/종료.
+enum LaunchPromo {
+    static let proFreeUntil: Date = {
+        var c = DateComponents()
+        c.year = 2026; c.month = 9; c.day = 30
+        c.hour = 23; c.minute = 59; c.second = 59
+        return Calendar.current.date(from: c) ?? .distantPast
+    }()
+    /// 테스트/디버그 강제값 — nil 이면 날짜 기준. (엔타이틀먼트 단위테스트가 프로모를 끄고 realPro 검증)
+    static var overrideActive: Bool?
+    /// 프로모 진행 중 여부 — Pro 게이트(isPro)가 OR 로 참조.
+    static var isActive: Bool { overrideActive ?? (Date() < proFreeUntil) }
+
+    /// 앱 내장 프로모 공지 식별자(백엔드 불필요 — 하루 1회 dismiss 키로도 사용).
+    static let announcementID = "ticklab.promo.launch.2026q3"
+    /// 종료일 현지화 표기(예: 2026. 9. 30.).
+    static var endDateText: String { proFreeUntil.formatted(date: .abbreviated, time: .omitted) }
+}
+
 @MainActor
 final class ProEntitlement: ObservableObject {
     static let shared = ProEntitlement()
@@ -21,15 +41,18 @@ final class ProEntitlement: ObservableObject {
     static let freeJournalMonthLimit = 5
     static let freeAITrialPerWatch = 3
 
-    @Published private(set) var isPro: Bool = false
+    /// StoreKit 실제 구독 상태(검증된 entitlement). 게이트는 아래 computed `isPro` 사용.
+    @Published private(set) var realPro: Bool = false
+    /// 게이트가 참조하는 Pro 접근권 — 출시 프로모 기간엔 전원 true.
+    var isPro: Bool { LaunchPromo.isActive || realPro }
 
     /// Round 15 (Jay): 중복 listener 방지. iPad multi-window scene rebuild 시
     ///   startTransactionListener 가 두 번 호출되면 double-finish 위험.
     private var listenerTask: Task<Void, Never>?
 
     private init() {
-        // UserDefaults 에서 빠른 lookup (UserPreferences.isPro 와 sync).
-        self.isPro = UserDefaults.standard.bool(forKey: "ticklab.isPro")
+        // UserDefaults 에서 빠른 lookup (UserPreferences 와 sync).
+        self.realPro = UserDefaults.standard.bool(forKey: "ticklab.isPro")
     }
 
     /// StoreKit 2 transaction listener — app launch 시 한 번 시작. 중복 호출은 no-op.
@@ -104,8 +127,8 @@ final class ProEntitlement: ObservableObject {
     private func storeKitMarkPro(_ on: Bool) {
         // 사용자 보고 fix: 같은 상태 중복 set 방지 — Transaction.updates 와 purchase() 가 같은 tx 를
         //   모두 처리해 중복 notification post 되던 race 차단.
-        guard isPro != on else { return }
-        isPro = on
+        guard realPro != on else { return }
+        realPro = on
         UserDefaults.standard.set(on, forKey: "ticklab.isPro")
         // Round 149 (Hyemi 7 H1): UserPreferences 인스턴스 갱신 — observer 들이 즉시 반응.
         NotificationCenter.default.post(name: .ticklabProEntitlementChanged, object: nil, userInfo: ["isPro": on])

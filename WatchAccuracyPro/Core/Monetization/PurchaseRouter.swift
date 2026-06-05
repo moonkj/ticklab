@@ -32,6 +32,9 @@ final class PurchaseRouter {
     var isPresenting: Bool = false
 
     func intend(_ intent: Intent) {
+        // 출시 프로모 기간엔 구독 판매(페이월) 비활성화 — 어차피 전체 기능 무료라 청구 발생 안 함.
+        //   9/30 프로모 종료 후 자동으로 다시 활성화(별도 작업 불필요).
+        guard !LaunchPromo.isActive else { return }
         lastIntent = intent
         isPresenting = true
     }

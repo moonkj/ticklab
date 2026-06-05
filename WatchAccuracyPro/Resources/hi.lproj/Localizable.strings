@@ -22,18 +22,18 @@
 "welcome.cta_start" = "शुरू करें";
 "welcome.skip" = "छोड़ें";
 "welcome.pick_watch" = "एक घड़ी चुनें";
-"feature.measure.title" = "मापें";
-"feature.measure.body" = "फ़ोन के माइक से अपनी घड़ी की टिक सुनें।\nदैनिक रेट और बीट एरर पाएँ।";
+"feature.measure.title" = "माप और नतीजा";
+"feature.measure.body" = "माइक से धड़कन सुनकर दैनिक दर और बीट एरर मापें —\nAI एक लाइन में बता देता है।";
 "feature.collect.title" = "रोज़ाना आर्काइव";
 "feature.collect.body" = "तस्वीरें, नोट्स और माप — सब एक जगह।\nअपनी घड़ियों के साथ जीवन की डायरी।";
 "feature.journal.title" = "सरल भाषा में निष्कर्ष";
 "feature.journal.body" = "जटिल आँकड़े एक पंक्ति में।\nउपलब्ध होने पर Apple Intelligence परिणाम समझाएगा।";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
-"welcome.subtitle" = "हर टिक में परिशुद्धता।";
+"welcome.subtitle" = "अपनी घड़ी की दुनिया को रिकॉर्ड, विश्लेषण और साझा करें।";
 "watch.primary.set" = "फ़ीचर्ड बनाएँ";
 "watch.primary.unset" = "फ़ीचर्ड हटाएँ";
 "stats.mood.this_month" = "इस महीने";
-"welcome.footer" = "संग्रह · आज · जर्नल · विश्लेषण";
+"welcome.footer" = "कलेक्शन · जर्नल · विश्लेषण · समुदाय";
 "welcome.pick_watch.subtitle" = "विवरण बाद में जोड़ सकते हैं। जल्दी शुरू करना चाहेंगे?";
 
 /* Journal */
@@ -130,7 +130,7 @@
 "collection.card.measured_today" = "आज मापा गया";
 "collection.card.measured_days_ago" = "%d दिन पहले मापा गया";
 "collection.card.measure_prompt" = "मापने के लिए टैप करें";
-"collection.empty.subtitle" = "घड़ी जोड़ें → 30-सेकंड का माप → एक्यूरेसी देखें। हर रीडिंग आपकी घड़ी की कहानी में एक नया अध्याय लिखती है।";
+"collection.empty.subtitle" = "अपनी घड़ी जोड़ें और फ़ोटो, जर्नल, विश्लेषण और समुदाय शुरू करें।";
 "collection.search.placeholder" = "संग्रह में खोजें";
 /* Round (3-2 잔여): collection.tab.* dead — favoritesOnly 토글로 대체됨. */
 "collection.section.recent" = "हाल ही में मापे गए";
@@ -653,12 +653,12 @@
 "stats.entry.league.subtitle" = "आपकी टीम बनाम वैश्विक";
 "welcome.firstresult.cta" = "संग्रह पर जाएँ";
 "welcome.firstresult.ready" = "तैयार";
-"welcome.firstresult.body" = "अब संग्रह से एक घड़ी चुनें और मापें।";
+"welcome.firstresult.body" = "अब कलेक्शन में अपनी घड़ियाँ रिकॉर्ड करें, विश्लेषण करें और साझा करें। मापना उनमें से सिर्फ़ एक है।";
 "welcome.firstresult.tip.title" = "पहली माप का सुझाव";
 "welcome.firstresult.tip.body" = "एक शांत जगह में अपनी घड़ी के केसबैक को सीधे फ़ोन के नीचे वाले माइक पर रखें — 30 सेकंड।";
 "quickwatch.cta.pick" = "एक घड़ी चुनें";
 "quickwatch.cta.custom" = "कस्टम प्रविष्टि → आगे";
-"quickwatch.cta.next" = "आगे → पहली माप";
+"quickwatch.cta.next" = "आगे";
 "shake.title" = "आज की घड़ी";
 "shake.cta.shaking" = "हिल रहा है…";
 "shake.cta.idle" = "चुनने के लिए हिलाएँ";
@@ -1986,3 +1986,22 @@
 "result.transient.body" = "त्वरित माप के परिणाम सहेजे नहीं जाते। अपना माप इतिहास, रुझान और औसत बनाते रहने के लिए एक घड़ी पंजीकृत करें।";
 
 "result.transient.cta" = "घड़ी पंजीकृत करें";
+
+// --- onboarding 5축 재구성(분석·커뮤니티 추가) ---
+"feature.analyze.title" = "विश्लेषण";
+"feature.analyze.body" = "साप्ताहिक और मासिक रुझान, साल का सारांश\nऔर ब्रांड लीग — एक नज़र में।";
+"feature.community.title" = "समुदाय";
+"feature.community.body" = "अपनी कलाई का आज गुमनाम रूप से साझा करें\nऔर दूसरे संग्राहकों की घड़ियाँ देखें।";
+"welcome.illustration.trend" = "📈 साप्ताहिक रुझान";
+"welcome.illustration.community" = "❤️ 24 लाइक";
+"settings.account.promo_body" = "प्रोमो — %@ तक सभी फ़ीचर मुफ़्त";
+
+// --- 출시 프로모 공지 ---
+"promo.announce.eyebrow" = "लॉन्च प्रोमोशन";
+"promo.announce.title" = "%@ तक\nसभी फ़ीचर मुफ़्त";
+"promo.announce.body" = "TickLab Pro की सभी सुविधाएँ बिना सब्सक्रिप्शन के मुफ़्त में पाएँ।";
+"promo.announce.period" = "%@ तक";
+"promo.announce.cta" = "ठीक है";
+"promo.perk.unlimited" = "असीमित घड़ियाँ, माप और जर्नल";
+"promo.perk.ai" = "असीमित AI निदान";
+"promo.perk.share" = "प्रीमियम शेयर कार्ड और डेटा निर्यात";

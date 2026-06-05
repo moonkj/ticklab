@@ -16,10 +16,16 @@ struct NextStepsGuideCard: View {
     private var hasWear: Bool {
         WearLogService.wearCount(for: watch, in: context) > 0
     }
-    private var completedCount: Int {
-        [hasPhoto, hasMeasurement, hasWear].filter { $0 }.count
+    /// 스마트워치는 정확도 측정 대상이 아니므로 '측정' 단계를 제외(애플워치에 "첫 정확도 측정" 안 뜨게).
+    private var isMeasurable: Bool { !watch.isSmartwatch }
+    private var steps: [(done: Bool, title: LocalizedStringResource)] {
+        var s: [(Bool, LocalizedStringResource)] = [(hasPhoto, "watch.nextsteps.photo")]
+        if isMeasurable { s.append((hasMeasurement, "watch.nextsteps.measure")) }
+        s.append((hasWear, "watch.nextsteps.wear"))
+        return s
     }
-    private var allCompleted: Bool { completedCount == 3 }
+    private var completedCount: Int { steps.filter { $0.done }.count }
+    private var allCompleted: Bool { completedCount == steps.count }
 
     private var isHidden: Bool {
         dismissed
@@ -36,7 +42,7 @@ struct NextStepsGuideCard: View {
                         .tracking(1.2)
                         .foregroundStyle(AppColors.accentDark)
                     Spacer()
-                    Text("\(completedCount)/3")
+                    Text("\(completedCount)/\(steps.count)")
                         .font(.system(size: 11, weight: .semibold, design: .monospaced))
                         .foregroundStyle(AppColors.ink2)
                     Button {
@@ -50,9 +56,9 @@ struct NextStepsGuideCard: View {
                     .buttonStyle(.plain)
                     .accessibilityLabel(String(localized: "common.close"))
                 }
-                step(done: hasPhoto, title: "watch.nextsteps.photo")
-                step(done: hasMeasurement, title: "watch.nextsteps.measure")
-                step(done: hasWear, title: "watch.nextsteps.wear")
+                ForEach(Array(steps.enumerated()), id: \.offset) { _, s in
+                    step(done: s.done, title: s.title)
+                }
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -296,8 +296,11 @@ struct CommunityFeedView: View {
             }
             .accessibilityLabel(String(localized: "community.compose"))
             Menu {
-                Button { showProfile = true } label: {
-                    Label(String(localized: "community.menu.profile"), systemImage: "person.crop.circle")
+                // 프로필 편집은 로그인(Apple) 했을 때만 — 익명 편집은 재설치 시 유실되므로.
+                if service.isSignedIn {
+                    Button { showProfile = true } label: {
+                        Label(String(localized: "community.menu.profile"), systemImage: "person.crop.circle")
+                    }
                 }
                 Button { showBlocked = true } label: {
                     Label(String(localized: "community.blocked.manage"), systemImage: "hand.raised.slash")

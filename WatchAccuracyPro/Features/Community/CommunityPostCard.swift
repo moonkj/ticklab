@@ -70,7 +70,9 @@ struct CommunityPostCard: View {
                 } else {
                     Circle().fill(avatarColor)
                     if let path = post.authorAvatarPath, let url = CommunityService.shared.imageURL(for: path) {
-                        AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { Color.clear }
+                        RetryAsyncImage(url: url) { img in
+                            img.resizable().scaledToFill()
+                        } placeholder: { Color.clear } failure: { Color.clear }
                             .clipShape(Circle())
                     } else {
                         Text(initial)
@@ -178,12 +180,13 @@ struct CommunityPostCard: View {
 
     @ViewBuilder private var imageView: some View {
         if let url = CommunityService.shared.imageURL(for: post.imagePath) {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .success(let img): img.resizable().scaledToFill()
-                case .failure: missingImagePlaceholder   // 삭제·만료 등으로 사진 소실
-                default: ZStack { Color(AppColors.paper2); ProgressView() }
-                }
+            // 공개 URL(만료 없음)이라 일시적 실패는 재요청으로 복구됨 → 자동 재시도(앱 재시작 없이도 로드).
+            RetryAsyncImage(url: url) { img in
+                img.resizable().scaledToFill()
+            } placeholder: {
+                ZStack { Color(AppColors.paper2); ProgressView() }
+            } failure: {
+                missingImagePlaceholder   // 재시도 소진(삭제·실제 소실 등) 시에만 안내
             }
         } else {
             missingImagePlaceholder
@@ -344,6 +347,52 @@ struct CommunityPostCard: View {
             }
             .buttonStyle(.plain)
         }
+    }
+}
+
+/// AsyncImage 가 일시적 네트워크 실패 시 `.failure` 로 고정되는 문제 대응 래퍼.
+/// 커뮤니티 사진은 만료 없는 공개 URL이므로, 실패 시 backoff 로 자동 재요청하면 대부분 복구된다
+/// ("가끔 사진이 안 뜨고 앱을 껐다 켜면 다시 뜸" 버그 해소). 재시도 소진 시에만 failure 표시.
+struct RetryAsyncImage<Content: View, Placeholder: View, Failure: View>: View {
+    let url: URL
+    let maxRetries: Int
+    @ViewBuilder let content: (Image) -> Content
+    @ViewBuilder let placeholder: () -> Placeholder
+    @ViewBuilder let failure: () -> Failure
+    @State private var attempt = 0
+
+    init(url: URL,
+         maxRetries: Int = 3,
+         @ViewBuilder content: @escaping (Image) -> Content,
+         @ViewBuilder placeholder: @escaping () -> Placeholder,
+         @ViewBuilder failure: @escaping () -> Failure) {
+        self.url = url
+        self.maxRetries = maxRetries
+        self.content = content
+        self.placeholder = placeholder
+        self.failure = failure
+    }
+
+    var body: some View {
+        AsyncImage(url: url, transaction: Transaction(animation: .easeIn(duration: 0.2))) { phase in
+            switch phase {
+            case .success(let img):
+                content(img)
+            case .failure:
+                if attempt < maxRetries {
+                    // 실패 → backoff 후 .id 변경으로 AsyncImage 재생성(재요청).
+                    placeholder().onAppear {
+                        let delay = 0.6 * Double(attempt + 1)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + delay) { attempt += 1 }
+                    }
+                } else {
+                    failure()
+                }
+            default:
+                placeholder()
+            }
+        }
+        .id(attempt)
     }
 }
 

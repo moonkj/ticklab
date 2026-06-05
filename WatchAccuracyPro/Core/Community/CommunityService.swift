@@ -192,7 +192,11 @@ final class CommunityService: ObservableObject {
                 lastError = "apple signin \(http.statusCode): \(String(data: data, encoding: .utf8) ?? "")"
                 return false
             }
-            return applyAuth(data)
+            let ok = applyAuth(data)
+            // 로그인 = 계정 동기화: 로컬에 프로필이 있으면 이 Apple 계정으로 업로드(편집 내용을 Apple 신원에 고정),
+            //   비어있으면(재설치 직후) 서버에서 복원. 익명 세션에서 편집한 프로필이 Apple 로그인 시 유실되는 문제 대응.
+            if ok { await syncOrRestoreProfileOnLogin() }
+            return ok
         } catch {
             lastError = error.localizedDescription
             return false
@@ -575,6 +579,144 @@ final class CommunityService: ObservableObject {
         guard let (_, resp) = try? await URLSession.shared.data(for: req),
               let http = resp as? HTTPURLResponse else { return false }
         return (200...299).contains(http.statusCode)
+    }
+
+    // MARK: - Profile sync (서버 동기화 + 로그인 복원)
+    // 프로필(이름·사진·소개 등)은 로컬 UserDefaults 가 1차 저장소지만, 재설치/기기변경 후
+    //   로그인하면 복원되도록 community_profiles(uid PK)에 동기화하고 로그인 시 되읽는다.
+
+    struct ProfileSnapshot {
+        var displayName: String?; var avatarPath: String?; var bio: String?
+        var startYear: String?; var favBrands: String?; var repBrand: String?; var isDealer: Bool?
+    }
+
+    /// 로컬 프로필 사진을 Storage 에 업로드하고 avatarPath 반환·저장. 게시 안 해도 아바타가 서버에 남게 한다.
+    @discardableResult
+    func uploadProfileAvatarIfNeeded() async -> String? {
+        await ensureSignedIn()
+        guard let uid = myUID,
+              let raw = defaults.data(forKey: "ticklab.profile.photoData"), !raw.isEmpty else {
+            return defaults.string(forKey: "ticklab.profile.avatarPath")
+        }
+        let avatarData = EXIFStripper.optimizedForUpload(raw, maxDimension: 320)
+        let checksum = avatarData.prefix(512).reduce(UInt32(2166136261)) { ($0 ^ UInt32($1)) &* 16777619 }
+        let avatarPath = "\(uid)/avatar-\(avatarData.count)-\(checksum).jpg"
+        if defaults.string(forKey: "ticklab.profile.avatarPath") == avatarPath { return avatarPath }
+        if await uploadAvatar(data: avatarData, path: avatarPath) {
+            defaults.set(avatarPath, forKey: "ticklab.profile.avatarPath")
+            return avatarPath
+        }
+        return defaults.string(forKey: "ticklab.profile.avatarPath")
+    }
+
+    /// 프로필 전체를 community_profiles(uid PK)에 upsert. 미배포 컬럼은 graceful 제거 재시도(profile_sync.sql).
+    @discardableResult
+    func syncProfile() async -> Bool {
+        await ensureSignedIn()
+        guard myUID != nil,
+              let url = URL(string: "\(baseURL)/rest/v1/community_profiles?on_conflict=uid") else { return false }
+        let avatarPath = await uploadProfileAvatarIfNeeded()
+        let name = (defaults.string(forKey: "ticklab.profile.name") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        var full: [String: Any] = ["display_name": name.isEmpty ? "Collector" : name,
+                                    "is_dealer": defaults.bool(forKey: "ticklab.profile.isDealer")]
+        if let p = avatarPath, !p.isEmpty { full["avatar_path"] = p }
+        func add(_ col: String, _ defKey: String) {
+            let v = (defaults.string(forKey: defKey) ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !v.isEmpty { full[col] = v }
+        }
+        add("bio", "ticklab.profile.bio")
+        add("start_year", "ticklab.profile.startYear")
+        add("fav_brands", "ticklab.profile.brands")
+        add("rep_brand", "ticklab.profile.repBrand")
+        if await postProfileRow(url, full) { return true }
+        // 확장 컬럼 미배포(PGRST204) 시 스키마 기본(display_name/avatar_path/bio)만 재시도.
+        return await postProfileRow(url, full.filter { ["display_name", "avatar_path", "bio"].contains($0.key) })
+    }
+
+    private func postProfileRow(_ url: URL, _ body: [String: Any]) async -> Bool {
+        var req = authedRequest(url, method: "POST")
+        req.setValue("resolution=merge-duplicates", forHTTPHeaderField: "Prefer")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        guard let (_, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
+    }
+
+    /// 서버에서 내 프로필 조회 — community_profiles 우선, 빈 필드는 최근 내 게시물에서 보강.
+    func fetchMyProfile() async -> ProfileSnapshot? {
+        await ensureSignedIn()
+        guard let uid = myUID else { return nil }
+        var s = ProfileSnapshot()
+        if let url = URL(string: "\(baseURL)/rest/v1/community_profiles?select=*&uid=eq.\(uid)&limit=1"),
+           let (d, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+           let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode),
+           let arr = try? JSONSerialization.jsonObject(with: d) as? [[String: Any]], let row = arr.first {
+            s.displayName = row["display_name"] as? String
+            s.avatarPath = row["avatar_path"] as? String
+            s.bio = row["bio"] as? String
+            s.startYear = row["start_year"] as? String
+            s.favBrands = row["fav_brands"] as? String
+            s.repBrand = row["rep_brand"] as? String
+            s.isDealer = row["is_dealer"] as? Bool
+        }
+        // 프로필 행에 없는 필드 보강 — 내 최근 게시물 스냅샷(author_*).
+        if let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=author_name,author_avatar_path,author_bio,author_start_year,author_fav_brands,author_rep_brand&author_uid=eq.\(uid)&order=created_at.desc&limit=1"),
+           let (d, resp) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+           let http = resp as? HTTPURLResponse, (200...299).contains(http.statusCode),
+           let arr = try? JSONSerialization.jsonObject(with: d) as? [[String: Any]], let row = arr.first {
+            func coalesce(_ cur: String?, _ key: String) -> String? {
+                if let c = cur, !c.isEmpty { return c }
+                let v = row[key] as? String
+                return (v?.isEmpty == false) ? v : cur
+            }
+            s.displayName = coalesce(s.displayName, "author_name")
+            s.avatarPath = coalesce(s.avatarPath, "author_avatar_path")
+            s.bio = coalesce(s.bio, "author_bio")
+            s.startYear = coalesce(s.startYear, "author_start_year")
+            s.favBrands = coalesce(s.favBrands, "author_fav_brands")
+            s.repBrand = coalesce(s.repBrand, "author_rep_brand")
+        }
+        let empty = (s.displayName ?? "").isEmpty && (s.avatarPath ?? "").isEmpty && (s.bio ?? "").isEmpty
+        return empty ? nil : s
+    }
+
+    /// Apple 로그인 직후 — 로컬 프로필이 있으면 이 계정에 업로드(최신 편집 보존), 없으면 서버에서 복원.
+    /// 익명 세션에서 편집 → Apple 로그인 시 다른 uid 의 옛 프로필로 덮이던 문제 대응.
+    func syncOrRestoreProfileOnLogin() async {
+        let hasLocalName = !((defaults.string(forKey: "ticklab.profile.name") ?? "")
+                                .trimmingCharacters(in: .whitespaces).isEmpty)
+        let hasLocalPhoto = defaults.data(forKey: "ticklab.profile.photoData") != nil
+        if hasLocalName || hasLocalPhoto {
+            await syncProfile()            // 로컬(최신)을 이 Apple 계정에 업로드
+        } else {
+            await restoreProfileIfNeeded() // 비어있으면 서버에서 복원(다운로드)
+        }
+    }
+
+    /// 로그인/실행 시 — 로컬 프로필의 빈 필드를 서버에서 복원(+아바타 다운로드). 로컬에 있으면 보존(덮어쓰지 않음).
+    func restoreProfileIfNeeded() async {
+        let d = defaults
+        func emptyLocal(_ k: String) -> Bool { (d.string(forKey: k) ?? "").isEmpty }
+        let needName = emptyLocal("ticklab.profile.name")
+        let needPhoto = d.data(forKey: "ticklab.profile.photoData") == nil
+        if !needName && !needPhoto { return }   // 이미 충분 — 네트워크 호출 생략
+        guard let p = await fetchMyProfile() else { return }
+        if needName, let n = p.displayName, !n.isEmpty { d.set(n, forKey: "ticklab.profile.name") }
+        if let v = p.bio, !v.isEmpty, emptyLocal("ticklab.profile.bio") { d.set(v, forKey: "ticklab.profile.bio") }
+        if let v = p.startYear, !v.isEmpty, emptyLocal("ticklab.profile.startYear") { d.set(v, forKey: "ticklab.profile.startYear") }
+        if let v = p.favBrands, !v.isEmpty, emptyLocal("ticklab.profile.brands") { d.set(v, forKey: "ticklab.profile.brands") }
+        if let v = p.repBrand, !v.isEmpty, emptyLocal("ticklab.profile.repBrand") { d.set(v, forKey: "ticklab.profile.repBrand") }
+        if let dealer = p.isDealer, dealer, !d.bool(forKey: "ticklab.profile.isDealer") { d.set(true, forKey: "ticklab.profile.isDealer") }
+        if let path = p.avatarPath, !path.isEmpty {
+            d.set(path, forKey: "ticklab.profile.avatarPath")
+            if needPhoto, let img = await downloadStorageData(path: path) { d.set(img, forKey: "ticklab.profile.photoData") }
+        }
+    }
+
+    /// Storage 공개 URL 에서 바이트 다운로드(아바타 복원용).
+    private func downloadStorageData(path: String) async -> Data? {
+        guard let url = imageURL(for: path) else { return nil }
+        return try? await URLSession.shared.data(from: url).0
     }
 
     // MARK: - Activity Notifications (인앱 — 내 글 좋아요 · 새 팔로워)

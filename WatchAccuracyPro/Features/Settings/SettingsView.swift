@@ -76,7 +76,11 @@ struct SettingsView: View {
             Form {
                 // Sprint 11 (사용자 요청): 내 프로필을 별도 행으로 분리 — 구독 hero에 숨지 않게.
                 Section {
-                    Button { showingProfile = true } label: {
+                    Button {
+                        // 로그인(Apple) 해야 프로필 편집 가능 — 익명 편집은 다른 uid 라 재설치 시 유실됨.
+                        if CommunityService.shared.isSignedIn { showingProfile = true }
+                        else { showCommunityLogin = true }
+                    } label: {
                         HStack(spacing: 14) {
                             ZStack {
                                 if let data = UserProfile.photoData, let img = UIImage(data: data) {
@@ -98,7 +102,12 @@ struct SettingsView: View {
                                         DealerBadge()
                                     }
                                 }
-                                if let summary = profileSummaryLine {
+                                if !CommunityService.shared.isSignedIn {
+                                    Text(String(localized: "settings.profile.login_hint",
+                                                defaultValue: "로그인하면 프로필을 설정할 수 있어요"))
+                                        .font(.system(size: 12))
+                                        .foregroundStyle(AppColors.ink2)
+                                } else if let summary = profileSummaryLine {
                                     Text(summary)
                                         .font(.system(size: 12))
                                         .foregroundStyle(AppColors.ink2)
@@ -467,7 +476,7 @@ struct SettingsView: View {
                             }
                         }
                     }
-                    let jsonPayload = DataExportService.export(watches: allWatches, format: .json)
+                    let jsonPayload = DataExportService.export(watches: allWatches, format: .json, context: modelContext)
                     if let url = jsonPayload.tempURL {
                         ShareLink(item: url) {
                             HStack {
@@ -771,8 +780,8 @@ struct SettingsView: View {
         Button {
             UIImpactFeedbackGenerator(style: .light).impactOccurred()
             // 사용자 보고 fix: Pro 면 paywall 대신 StoreKit 구독 관리 sheet 열기 (이전엔 no-op UX dead end).
-            // Sprint 2 (P1-7): Pro 면 offboarding retention sheet 먼저 — 사용자가 manage 선택 시에만 진입.
-            if preferences.isPro {
+            // Sprint 2 (P1-7): 실제 구독자(realPro)만 offboarding(구독 관리) — 프로모 전용/Free 는 구매 안내.
+            if ProEntitlement.shared.realPro {
                 showingOffboarding = true
             } else {
                 purchaseRouter?.intend(.settings)
@@ -790,7 +799,11 @@ struct SettingsView: View {
     }
 
     private var heroContent: some View {
-        HStack(spacing: 14) {
+        // 3-상태: 실제 구독자(realPro) / 프로모 기간 무료(비구독) / Free. 프로모 종료 시 자동 복귀.
+        let realPro = ProEntitlement.shared.realPro
+        let promoOnly = LaunchPromo.isActive && !realPro
+        let promoEnd = LaunchPromo.proFreeUntil.formatted(date: .abbreviated, time: .omitted)
+        return HStack(spacing: 14) {
             // 구독 hero — 프로필과 분리 (Sprint 11). 항상 sparkles 아이콘.
             ZStack {
                 Circle().fill(AppColors.accent.opacity(0.6)).frame(width: 70, height: 70).blur(radius: 14)
@@ -800,17 +813,22 @@ struct SettingsView: View {
                 BalanceWheelIcon(size: 30, color: AppColors.primaryDeep, holeColor: AppColors.accent)
             }
             VStack(alignment: .leading, spacing: 2) {
-                Text(String(localized: preferences.isPro ? "settings.account.pro_name" : "settings.account.free_name"))
+                Text(String(localized: (realPro || promoOnly) ? "settings.account.pro_name" : "settings.account.free_name"))
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(.white)
-                Text(String(localized: preferences.isPro ? "settings.account.pro_body" : "settings.account.free_body"))
+                Text(promoOnly
+                     ? String(format: String(localized: "settings.account.promo_body"), promoEnd)
+                     : String(localized: realPro ? "settings.account.pro_body" : "settings.account.free_body"))
                     .font(.system(size: 12))
                     .foregroundStyle(.white.opacity(0.7))
             }
             Spacer()
-            Image(systemName: "chevron.right")
-                .font(.system(size: 16, weight: .medium))
-                .foregroundStyle(.white.opacity(0.6))
+            // 프로모 전용(비구독) 상태에선 구매/관리 목적지가 없으므로 chevron 숨김(탭은 무동작).
+            if !promoOnly {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(.white.opacity(0.6))
+            }
         }
         .padding(18)
         .background(

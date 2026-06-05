@@ -267,10 +267,13 @@ struct UserProfileView: View {
         let nameChanged = newName != originalName.trimmingCharacters(in: .whitespacesAndNewlines)
 
         if nameChanged {
-            // ⓑ 30일 변경 제한 — 마지막 변경 후 30일 경과해야 변경 가능.
-            if let changedAt = d.object(forKey: nameChangedKey) as? Date {
+            // ⓑ 30일 변경 제한 — 마지막 변경 후 30일. 단 방금 잘못 설정한 경우를 위해
+            //   '48h 교정 창'(직후 재수정 허용) + 운영(관리자) 모드는 예외.
+            let correctionWindow: TimeInterval = 48 * 3600
+            let isAdminBypass = d.bool(forKey: "ticklab.admin.actingAsTickLab")
+            if !isAdminBypass, let changedAt = d.object(forKey: nameChangedKey) as? Date {
                 let elapsed = Date().timeIntervalSince(changedAt)
-                if elapsed < nameCooldown {
+                if elapsed > correctionWindow && elapsed < nameCooldown {
                     cooldownDaysRemaining = max(1, Int(ceil((nameCooldown - elapsed) / 86_400)))
                     showCooldownAlert = true
                     return false
@@ -301,6 +304,8 @@ struct UserProfileView: View {
             originalName = newName
             if !newName.isEmpty { await CommunityService.shared.registerNickname(newName) }
         }
+        // 재설치/기기변경 후 로그인 복원을 위해 프로필 전체를 서버에 동기화(아바타 업로드 포함, best-effort).
+        await CommunityService.shared.syncProfile()
         return true
     }
 }

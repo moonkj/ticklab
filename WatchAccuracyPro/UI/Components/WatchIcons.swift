@@ -16,28 +16,28 @@ struct BalanceWheelIcon: View {
 
     var body: some View {
         ZStack {
-            // 림(바깥 링).
+            // 림(바깥 링) — 가늘고 깔끔하게.
             Circle()
-                .stroke(color, lineWidth: size * 0.085)
-                .frame(width: size * 0.92, height: size * 0.92)
-            // 타이밍 스크루 4개 — 림 위 대각 위치.
-            ForEach(0..<4, id: \.self) { i in
-                Circle()
-                    .fill(color)
-                    .frame(width: size * 0.12, height: size * 0.12)
-                    .offset(y: -size * 0.46)
-                    .rotationEffect(.degrees(Double(i) * 90 + 45))
-            }
-            // 스포크 3개(0/60/120°) → 6갈래 크로스바.
+                .stroke(color, lineWidth: size * 0.07)
+                .frame(width: size * 0.9, height: size * 0.9)
+            // 6 스포크 — 3 크로스바(0/60/120°), 얇게. (기존 굵은 별표 → 얇게 + 큰 허브로 정돈)
             ForEach(0..<3, id: \.self) { i in
                 Capsule()
                     .fill(color)
-                    .frame(width: size * 0.075, height: size * 0.74)
+                    .frame(width: size * 0.055, height: size * 0.84)
                     .rotationEffect(.degrees(Double(i) * 60))
             }
-            // 허브(스태프).
-            Circle().fill(color).frame(width: size * 0.20, height: size * 0.20)
-            Circle().fill(holeColor).frame(width: size * 0.08, height: size * 0.08)
+            // 타이밍 스크루 6개 — 각 스포크 끝(림 위) 작은 균형추. 작게 해서 핸들 아닌 밸런스휠 느낌.
+            ForEach(0..<6, id: \.self) { i in
+                Circle()
+                    .fill(color)
+                    .frame(width: size * 0.085, height: size * 0.085)
+                    .offset(y: -size * 0.45)
+                    .rotationEffect(.degrees(Double(i) * 60))
+            }
+            // 허브(스태프) — 크게 해서 중앙 교차를 가림(별표 방지) + 보석홀.
+            Circle().fill(color).frame(width: size * 0.27, height: size * 0.27)
+            Circle().fill(holeColor).frame(width: size * 0.12, height: size * 0.12)
         }
         .frame(width: size, height: size)
         .accessibilityHidden(true)
@@ -200,4 +200,46 @@ struct BalanceWheelLoader: View {
     }
     .padding(40)
     .background(AppColors.paper0)
+}
+
+/// 메인스프링(태엽) — 배럴 안에 감긴 나선 코일. '태엽 감기' 액션/알림 아이콘.
+/// 아르키메데스 나선(3바퀴) + 중심 아버(arbor). 회전시키면 감기는 느낌.
+struct MainspringIcon: View {
+    var size: CGFloat = 22
+    var color: Color = AppColors.ink0
+    /// 코일을 감싸는 배럴(통) 테두리 표시 여부.
+    var showsBarrel: Bool = true
+
+    var body: some View {
+        Canvas { ctx, canvasSize in
+            let s = canvasSize.width
+            let c = CGPoint(x: s / 2, y: s / 2)
+            let lw = s * 0.085
+
+            if showsBarrel {
+                // 배럴 — 옅은 바깥 원.
+                ctx.stroke(Path(ellipseIn: CGRect(x: lw, y: lw, width: s - 2 * lw, height: s - 2 * lw)),
+                           with: .color(color.opacity(0.28)), lineWidth: lw * 0.9)
+            }
+            // 나선 코일 — 안에서 바깥으로.
+            var spiral = Path()
+            let turns = 3.0
+            let maxR = s * (showsBarrel ? 0.36 : 0.42)
+            let minR = s * 0.05
+            let steps = 200
+            for i in 0...steps {
+                let t = Double(i) / Double(steps)
+                let angle = t * turns * 2 * .pi - .pi / 2
+                let r = minR + (maxR - minR) * t
+                let p = CGPoint(x: c.x + CGFloat(cos(angle)) * r, y: c.y + CGFloat(sin(angle)) * r)
+                if i == 0 { spiral.move(to: p) } else { spiral.addLine(to: p) }
+            }
+            ctx.stroke(spiral, with: .color(color), style: StrokeStyle(lineWidth: lw, lineCap: .round, lineJoin: .round))
+            // 중심 아버.
+            let ar = s * 0.07
+            ctx.fill(Path(ellipseIn: CGRect(x: c.x - ar, y: c.y - ar, width: 2 * ar, height: 2 * ar)), with: .color(color))
+        }
+        .frame(width: size, height: size)
+        .accessibilityHidden(true)
+    }
 }

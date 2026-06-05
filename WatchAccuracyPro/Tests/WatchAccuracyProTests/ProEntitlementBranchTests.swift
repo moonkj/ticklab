@@ -11,6 +11,7 @@ final class ProEntitlementBranchTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        LaunchPromo.overrideActive = false   // 프로모 off → isPro 가 realPro(StoreKit 상태) 그대로 반영
         UserDefaults.standard.removeObject(forKey: "ticklab.isPro")
         ProEntitlement.shared.markPro(false)
     }
@@ -18,6 +19,7 @@ final class ProEntitlementBranchTests: XCTestCase {
     override func tearDown() {
         ProEntitlement.shared.markPro(false)
         UserDefaults.standard.removeObject(forKey: "ticklab.isPro")
+        LaunchPromo.overrideActive = nil
         super.tearDown()
     }
 

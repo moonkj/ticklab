@@ -5,6 +5,8 @@ import PhotosUI
 struct AddWatchView: View {
     /// Round 173: 기존 시계 수정 지원. nil 이면 신규 추가, 값 있으면 편집 모드.
     var existing: Watch? = nil
+    /// 첫 등록(온보딩)에서만 무브먼트/BPH 확인을 강조 — 펄스 테두리 + 하단 플로팅 알림.
+    var emphasizeMovement: Bool = false
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -60,8 +62,15 @@ struct AddWatchView: View {
     @State private var showingMovementPicker: Bool = false
     /// Round 2-3: sentinel 은 Watch.manualCaliberTag 로 통일. local alias 만 유지 (가독성).
     private var isManualEntry: Bool { caliber == Watch.manualCaliberTag }
+    /// 무브먼트 강조 표시 여부 — 첫 등록 + 미탭 + 기계식(쿼츠/솔라/스마트워치는 BPH 확인 대상 아님).
+    private var showMovementEmphasis: Bool {
+        emphasizeMovement && !movementTouched && (movementType == .automatic || movementType == .manual)
+    }
     /// 무브먼트 타입 — automatic / manual / quartz.
     @State private var movementType: WatchMovementType = .automatic
+    /// 무브먼트 강조 — 사용자가 무브먼트 행을 탭하면 해제. 펄스 애니메이션 토글.
+    @State private var movementTouched = false
+    @State private var movementPulse = false
     /// 수동감기: 매일 알림 활성화 + 시각.
     @State private var windReminderEnabled: Bool = false
     @State private var windReminderTime: Date = {
@@ -275,6 +284,7 @@ struct AddWatchView: View {
                     // Round (1-3): 200+ ForEach Picker → searchable sheet 로 교체.
                     //   사용자가 brand 입력한 상태면 brand 매칭 무브먼트가 상단 추천 섹션.
                     Button {
+                        movementTouched = true
                         showingMovementPicker = true
                     } label: {
                         HStack {
@@ -291,8 +301,24 @@ struct AddWatchView: View {
                         }
                         .frame(minHeight: 44)
                         .contentShape(Rectangle())
+                        // 첫 등록 강조 — 펄스 골드 테두리(탭하면 해제).
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 9)
+                                .stroke(AppColors.accent, lineWidth: 2)
+                                .opacity(showMovementEmphasis ? (movementPulse ? 1 : 0.25) : 0)
+                                .padding(.vertical, -7).padding(.horizontal, -10)
+                                .allowsHitTesting(false)
+                        )
                     }
                     .buttonStyle(.plain)
+                    // 무브먼트 필수 안내 — 기계식은 미설정 시 등록 불가(저장 버튼 비활성).
+                    if caliber == nil, movementType == .automatic || movementType == .manual {
+                        Label(String(localized: "addwatch.movement.required",
+                                     defaultValue: "무브먼트(캘리버)는 필수예요. 목록에 없으면 ‘직접 입력’으로 진동수를 넣어주세요."),
+                              systemImage: "exclamationmark.circle.fill")
+                            .font(AppTypography.caption)
+                            .foregroundStyle(AppColors.warning)
+                    }
                     // 직접입력 선택 시 BPH 입력 필드 (측정에 필수)
                     if isManualEntry {
                         VStack(alignment: .leading, spacing: 8) {
@@ -311,7 +337,7 @@ struct AddWatchView: View {
                                     }
                                 }
                                 Spacer()
-                                if let bph = Int(manualBphText), bph > 0 {
+                                if let bph = Int(manualBphText), Self.validBPHs.contains(bph) {
                                     Image(systemName: "checkmark.circle.fill")
                                         .foregroundStyle(AppColors.success)
                                 }
@@ -320,14 +346,13 @@ struct AddWatchView: View {
                                 Label(String(localized: "addwatch.movement.bph_required"), systemImage: "exclamationmark.circle.fill")
                                     .font(AppTypography.caption)
                                     .foregroundStyle(AppColors.warning)
-                            } else if let bph = Int(manualBphText), bph > 0 {
-                                let commonBPHs = [18000, 21600, 25200, 28800, 36000]
-                                if !commonBPHs.contains(bph) {
-                                    Label(String(format: NSLocalizedString("addwatch.movement.bph_uncommon", comment: ""), bph),
-                                          systemImage: "info.circle")
-                                        .font(AppTypography.caption)
-                                        .foregroundStyle(AppColors.ink3)
-                                }
+                            } else if let bph = Int(manualBphText), !Self.validBPHs.contains(bph) {
+                                // 표준 진동수가 아니면 측정 불가 → 등록 차단(저장 버튼 비활성).
+                                Label(String(localized: "addwatch.movement.bph_invalid",
+                                             defaultValue: "유효한 진동수가 아니에요. 18000·19800·21600·25200·28800·36000 중에서 입력하세요."),
+                                      systemImage: "exclamationmark.octagon.fill")
+                                    .font(AppTypography.caption)
+                                    .foregroundStyle(AppColors.danger)
                             }
                         }
                         .padding(.vertical, 4)
@@ -451,6 +476,12 @@ struct AddWatchView: View {
                              ? String(localized: "editwatch.title")
                              : String(localized: "addwatch.title"))
             .navigationBarTitleDisplayMode(.inline)
+            // 첫 등록 강조 — 무브먼트 확인 유도 플로팅 알림(무브먼트 행 탭하면 사라짐).
+            .overlay(alignment: .bottom) {
+                if showMovementEmphasis {
+                    floatingMovementHint
+                }
+            }
             .alert(String(localized: "addwatch.brand.custom"), isPresented: $showingBrandInputSheet) {
                 TextField(String(localized: "addwatch.brand"), text: $brandInputText)
                     .textInputAutocapitalization(.words)
@@ -497,7 +528,13 @@ struct AddWatchView: View {
             } message: {
                 Text(String(localized: "text.filter.blocked.body"))
             }
-            .onAppear { loadExisting() }
+            .onAppear {
+                loadExisting()
+                if emphasizeMovement {
+                    movementTouched = false
+                    withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) { movementPulse = true }
+                }
+            }
         }
     }
 
@@ -705,12 +742,44 @@ struct AddWatchView: View {
         }
     }
 
+    /// 첫 등록 강조 — 무브먼트 확인 유도 플로팅 알림(하단 캡슐).
+    private var floatingMovementHint: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "arrow.up.circle.fill")
+                .font(.system(size: 16)).foregroundStyle(AppColors.accent)
+            Text(String(localized: "addwatch.movement.emphasis_hint",
+                        defaultValue: "무브먼트(진동수)를 꼭 확인하세요 — 측정 정확도의 핵심이에요"))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(.white)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(.horizontal, 16).padding(.vertical, 12)
+        .background(AppColors.primaryDeep)
+        .clipShape(Capsule())
+        .shadow(color: .black.opacity(0.28), radius: 12, y: 5)
+        .padding(.horizontal, 24)
+        .padding(.bottom, 88)
+        .transition(.move(edge: .bottom).combined(with: .opacity))
+        .allowsHitTesting(false)
+    }
+
+    /// 측정 가능한 표준 BPH(진동수). 수동 입력은 이 값들만 허용 — 이상값은 등록 차단.
+    static let validBPHs = [18000, 19800, 21600, 25200, 28800, 36000]
+
     private var canSave: Bool {
         guard !brand.trimmingCharacters(in: .whitespaces).isEmpty,
               !model.trimmingCharacters(in: .whitespaces).isEmpty else { return false }
-        // 직접입력 선택 시 유효한 BPH 입력 필수.
-        if isManualEntry {
-            guard let bph = Int(manualBphText), bph > 0 else { return false }
+        // 기계식(자동/수동) 무브먼트 검증.
+        if movementType == .automatic || movementType == .manual {
+            // 신규 등록만 무브먼트 무조건 설정 — 캘리버 선택 또는 직접입력 필수.
+            //   (편집 모드는 레거시 시계가 캘리버 미설정이어도 다른 항목 수정·저장 가능해야 함 — 트랩 방지)
+            if existing == nil {
+                guard caliber != nil else { return false }
+            }
+            // 직접입력 BPH 는 표준값만 허용 — 이상한 값이면 신규·편집 모두 저장 불가.
+            if isManualEntry {
+                guard let bph = Int(manualBphText), Self.validBPHs.contains(bph) else { return false }
+            }
         }
         return true
     }
@@ -840,6 +909,8 @@ struct AddWatchView: View {
             existing.warrantyMonths = warrantyMonths > 0 ? warrantyMonths : nil
             existing.warrantyReminderEnabled = warrantyReminderEnabled
             existing.customBph = parsedCustomBph
+            // 등록 폼을 거쳐 저장 = 무브먼트 확인 완료 → 측정이 이 BPH 를 신뢰(인기목록 자동배정의 미확정 해제).
+            existing.movementConfirmed = true
             watch = existing
         } else {
             watch = Watch(

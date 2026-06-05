@@ -18,6 +18,7 @@ private struct AdminOpsView: View {
     @State private var composingAnnouncement = false
     @State private var composingTheme = false
     @State private var announcements: [Community.Announcement] = []
+    @State private var previewPromo = false
     @State private var composingChannel = false
     @State private var channels: [Community.CuratedChannel] = []
     @State private var suggestions: [Community.ChannelSuggestion] = []
@@ -74,6 +75,29 @@ private struct AdminOpsView: View {
                 .tint(AppColors.accent)
             } header: {
                 Text(String(localized: "admin.badge.section", defaultValue: "뱃지 확인"))
+            }
+            // 출시 프로모 공지 — 앱 내장(백엔드 불필요). 활성 상태 확인 + 미리보기.
+            Section {
+                HStack(spacing: 12) {
+                    Image(systemName: "gift.fill").font(.system(size: 20)).foregroundStyle(AppColors.accent)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "admin.promo.title", defaultValue: "출시 프로모 공지"))
+                            .font(.system(size: 15, weight: .semibold))
+                        Text(LaunchPromo.isActive
+                             ? String(format: String(localized: "admin.promo.active", defaultValue: "활성 · %@까지 전체 기능 무료"), LaunchPromo.endDateText)
+                             : String(localized: "admin.promo.ended", defaultValue: "종료됨 · 구독 정상 판매"))
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button(String(localized: "admin.promo.preview", defaultValue: "미리보기")) { previewPromo = true }
+                        .font(.system(size: 13, weight: .semibold))
+                        .buttonStyle(.bordered).tint(AppColors.accent)
+                }
+            } header: {
+                Text(String(localized: "admin.promo.section", defaultValue: "프로모션"))
+            } footer: {
+                Text(String(localized: "admin.promo.footer",
+                            defaultValue: "프로모 기간엔 전원 Pro 무료 + 구독 판매 일시중지. 종료일은 코드(LaunchPromo)에서 변경."))
             }
             Section(String(localized: "admin.notice.section")) {
                 Button {
@@ -218,6 +242,10 @@ private struct AdminOpsView: View {
                 AdminAnnouncementSheet(existing: nil) { await reloadAnnouncements() }
             }
         }
+        .sheet(isPresented: $previewPromo) {
+            // 사용자에게 보이는 그대로 프로모 공지 미리보기.
+            AnnouncementBottomSheet(announcement: RootTabView.promoAnnouncement()) { _ in previewPromo = false }
+        }
         .sheet(isPresented: $composingTheme) {
             NavigationStack {
                 AdminThemeSheet { await reloadAnnouncements() }
@@ -299,6 +327,8 @@ private struct AdminOpsView: View {
     }
 
     private func reload() async {
+        // 대시보드 조회 = 운영자가 활동 중 → 본인 presence 먼저 갱신해야 '현재 활동'에 반영됨.
+        await service.heartbeat()
         async let s = service.fetchOpsStats()
         async let r = service.fetchReports()
         async let a = service.fetchAnnouncements()

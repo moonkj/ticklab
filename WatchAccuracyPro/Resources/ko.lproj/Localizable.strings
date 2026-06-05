@@ -19,17 +19,17 @@
 
 /* Welcome flow — 디자인 SSOT (screens-onboarding.jsx) 일치 */
 "welcome.tagline" = "내 시계의 박동,\n매일의 기록";
-"welcome.subtitle" = "박동 하나하나, 기록됩니다.";
+"welcome.subtitle" = "기록하고, 분석하고, 나누는 시계 라이프.";
 "watch.primary.set" = "대표 시계로 설정";
 "watch.primary.unset" = "대표 해제";
 "stats.mood.this_month" = "이번 달";
 "welcome.cta_start" = "시작하기";
 "welcome.skip" = "건너뛰기";
-"welcome.footer" = "컬렉션 · 오늘 · 기록 · 분석";
+"welcome.footer" = "컬렉션 · 기록 · 분석 · 커뮤니티";
 "welcome.pick_watch" = "어떤 시계예요?";
 "welcome.pick_watch.subtitle" = "나중에 더 자세히 입력할 수 있어요. 우선 빠르게 시작해볼까요?";
-"feature.measure.title" = "측정";
-"feature.measure.body" = "폰 마이크로 시계 박동을 듣고\n일오차 · 비트 오차를 알려드려요.";
+"feature.measure.title" = "측정 · 진단";
+"feature.measure.body" = "폰 마이크로 박동을 듣고 일오차·비트오차를 측정,\nAI가 결과를 한 줄로 풀어줘요.";
 "feature.collect.title" = "매일의 기록";
 "feature.collect.body" = "시계마다 사진 · 메모 · 측정값을 한 곳에.\n다이어리처럼 쌓이는 시계 일상.";
 "feature.journal.title" = "한 줄 진단";
@@ -149,7 +149,7 @@
 "collection.card.measured_days_ago" = "%d일 전 측정";
 "collection.card.measure_prompt" = "측정해 보세요";
 "collection.empty.title" = "첫 시계를 등록해 보세요.";
-"collection.empty.subtitle" = "시계 추가 → 30초 측정 → 정확도 결과 확인. 매번의 측정이 시계의 시간을 기록하는 한 챕터가 됩니다.";
+"collection.empty.subtitle" = "내 시계를 등록하고 사진·기록·분석·커뮤니티를 시작하세요.";
 "collection.empty.cta" = "시계 추가";
 "collection.search.placeholder" = "컬렉션 검색";
 /* Round (3-2 잔여): collection.tab.* dead. */
@@ -591,12 +591,12 @@
 "stats.entry.league.subtitle" = "내 팀 vs 글로벌";
 "welcome.firstresult.cta" = "컬렉션으로 이동";
 "welcome.firstresult.ready" = "준비 완료";
-"welcome.firstresult.body" = "이제 컬렉션에서 시계를 골라 측정해 보세요.";
+"welcome.firstresult.body" = "이제 컬렉션에서 시계를 기록하고, 분석하고, 나눠보세요. 측정도 그중 하나예요.";
 "welcome.firstresult.tip.title" = "첫 측정 팁";
 "welcome.firstresult.tip.body" = "조용한 곳, 폰의 하단 마이크에 시계 케이스백을 직접 닿게 30초.";
 "quickwatch.cta.pick" = "시계를 선택하세요";
 "quickwatch.cta.custom" = "직접 입력 → 다음 단계";
-"quickwatch.cta.next" = "다음 → 첫 측정";
+"quickwatch.cta.next" = "다음";
 "shake.title" = "오늘의 시계";
 "shake.cta.shaking" = "흔드는 중…";
 "shake.cta.idle" = "흔들어서 뽑기";
@@ -2045,3 +2045,22 @@
 "admin.theme.title.label" = "테마 제목";
 "admin.theme.title.placeholder" = "예: 이번 주는 다이버";
 "admin.theme.publish" = "발행";
+
+// --- onboarding 5축 재구성(분석·커뮤니티 추가) ---
+"feature.analyze.title" = "분석";
+"feature.analyze.body" = "주간 · 월간 트렌드와 연말 결산,\n브랜드 리그까지 한눈에.";
+"feature.community.title" = "커뮤니티";
+"feature.community.body" = "손목 위 오늘을 익명으로 나누고,\n다른 컬렉터의 시계를 구경해요.";
+"welcome.illustration.trend" = "📈 주간 트렌드";
+"welcome.illustration.community" = "❤️ 좋아요 24";
+"settings.account.promo_body" = "프로모션 — %@까지 모든 기능 무료";
+
+// --- 출시 프로모 공지 ---
+"promo.announce.eyebrow" = "출시 기념 프로모션";
+"promo.announce.title" = "%@까지\n모든 기능 무료";
+"promo.announce.body" = "TickLab Pro의 모든 기능을 구독 없이 무료로 즐겨보세요.";
+"promo.announce.period" = "~ %@";
+"promo.announce.cta" = "확인";
+"promo.perk.unlimited" = "무제한 시계 등록 · 측정 · 일기";
+"promo.perk.ai" = "AI 진단 무제한";
+"promo.perk.share" = "고급 공유카드 · 데이터 내보내기";

@@ -116,6 +116,10 @@ final class Watch {
     /// 무브먼트 타입 — "automatic" / "manual" / "quartz". 기본 automatic.
     /// String 저장 — SwiftData enum 마이그레이션 risk 회피.
     var movementTypeRaw: String = "automatic"
+    /// 무브먼트(캘리버/BPH) 확정 여부. 등록 폼에서 사용자가 확인하면 true → 측정이 그 BPH 를 신뢰(nominal hint).
+    /// 인기목록 자동배정 등 미확정이면 false → 측정 시 전대역 자동감지(tickIQ식)로 실제 BPH 사용(잘못된 시드 BPH 무시).
+    /// lightweight migration — default true(기존 시계는 확정 취급).
+    var movementConfirmed: Bool = true
     /// 수동감기 리마인더 활성화. movementType == .manual 일 때만 의미 있음.
     var windReminderEnabled: Bool = false
     /// 매일 리마인더 시각 — 0..<24.
@@ -149,6 +153,7 @@ final class Watch {
         isPrimary: Bool = false,
         liftAngleOverride: Double? = nil,
         movementType: WatchMovementType = .automatic,
+        movementConfirmed: Bool = true,
         nickname: String? = nil,
         story: String? = nil,
         referenceNumber: String? = nil,
@@ -181,6 +186,7 @@ final class Watch {
         self.isPrimary = isPrimary
         self.liftAngleOverride = liftAngleOverride
         self.movementTypeRaw = movementType.rawValue
+        self.movementConfirmed = movementConfirmed
         self.nickname = nickname
         self.story = story
         self.referenceNumber = referenceNumber

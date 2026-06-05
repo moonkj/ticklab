@@ -181,7 +181,8 @@ struct WatchAccuracyProApp: App {
 
 /// 콜드스타트 스플래시 1회 게이트(in-memory). process lifetime 동안 단 한 번만 true.
 /// 웜 재진입(scenePhase active 복귀)에서는 이미 false → 스플래시 skip.
-private enum LaunchGate {
+/// 콜드스타트 스플래시 게이트(앱 전역). RootTabView 가 공지를 스플래시 종료 후로 미루는 데 참조 → internal.
+enum LaunchGate {
     static var shouldShowSplash = true
 }
 
@@ -334,6 +335,11 @@ private struct RootView: View {
             // Round 172 (clock 보정): 앱 foreground 마다 NTP↔monotonic 점 누적 → 측정 안 해도
             //   사용할수록 발진기 드리프트 baseline 이 차서 rate 보정이 정확해진다.
             Task { await ClockCalibrationService.shared.calibrateNow() }
+            // '현재 활동' presence — 앱 포그라운드마다 본인 하트비트(커뮤니티 활성 시).
+            //   기존엔 커뮤니티 피드 열 때만 찍혀 '앱 실행 중인데 0명' 발생 → 포그라운드로 보강.
+            if FeatureFlags.shared.communityEnabled {
+                Task { await CommunityService.shared.heartbeat() }
+            }
             lastBackgroundedAt = nil
         @unknown default: break
         }

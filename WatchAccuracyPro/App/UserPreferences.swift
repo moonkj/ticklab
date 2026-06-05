@@ -63,9 +63,15 @@ final class UserPreferences {
         didSet { defaults.set(useCoreMLBeatDetector, forKey: Keys.coreML) }
     }
 
-    /// Round 40 (Pivot Pro): Pro 구독 활성 여부. 월간/연간 자동갱신 구독 (StoreKit 엔타이틀먼트로 동기화).
+    /// Round 40 (Pivot Pro): 실제 Pro 구독 여부. 월간/연간 자동갱신 (StoreKit 엔타이틀먼트로 동기화).
+    /// 게이트는 아래 computed `isPro` 를 사용 — 출시 프로모 기간엔 전원 true.
+    private var storedPro: Bool = false {
+        didSet { defaults.set(storedPro, forKey: Keys.isPro) }
+    }
+    /// Pro 접근권 — 출시 프로모(LaunchPromo) 기간엔 구독 없이도 전체 기능 사용 가능.
     var isPro: Bool {
-        didSet { defaults.set(isPro, forKey: Keys.isPro) }
+        get { LaunchPromo.isActive || storedPro }
+        set { storedPro = newValue }
     }
 
     /// App lock 활성화 — Face ID / Touch ID.
@@ -212,7 +218,7 @@ final class UserPreferences {
         // Settings 에서 사용자가 토글하면 그 후로만 manifest 를 fetch.
         self.autoUpdateMovementDB = defaults.object(forKey: Keys.autoOTA) as? Bool ?? false
         self.useCoreMLBeatDetector = defaults.bool(forKey: Keys.coreML)
-        self.isPro = defaults.bool(forKey: Keys.isPro)
+        self.storedPro = defaults.bool(forKey: Keys.isPro)
         self.appLockEnabled = defaults.bool(forKey: Keys.appLock)
         // 사용자 요청: journalReminder / randomPick 기본 ON.
         self.journalReminderEnabled = (defaults.object(forKey: Keys.journalReminder) as? Bool) ?? true

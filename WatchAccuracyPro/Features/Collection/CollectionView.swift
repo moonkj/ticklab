@@ -9,8 +9,6 @@ struct CollectionView: View {
     // WearLog 구독 — ShakePickView 등 외부에서 착용 기록 시 자동 재렌더링.
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @State private var showingAdd = false
-    /// UX 고도화: 등록 없이 빠른 측정(transient) 진입.
-    @State private var showQuickMeasure = false
     @State private var showingSettings = false
     @State private var showingWatchBox = false
     /// 커뮤니티 활동 알림(내 글 좋아요·새 팔로워) — 종 배지.
@@ -714,25 +712,6 @@ struct CollectionView: View {
                 showingAdd = true
             }
         )
-        // UX 고도화: 등록 없이 먼저 정확도 맛보기(입문자 첫경험 마찰↓).
-        .overlay(alignment: .bottom) {
-            Button { showQuickMeasure = true } label: {
-                HStack(spacing: 6) {
-                    ConceptGlyph(systemName: "waveform", size: 15, color: AppColors.accentDark)
-                    Text(String(localized: "collection.empty.quick_measure",
-                                defaultValue: "등록 없이 빠른 측정 해보기"))
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(AppColors.accentDark)
-                }
-                .padding(.horizontal, 16).padding(.vertical, 10)
-                .overlay(Capsule().stroke(AppColors.accent.opacity(0.5), lineWidth: 1))
-            }
-            .buttonStyle(.plain)
-            .padding(.bottom, 72)
-        }
-        .quickMeasureSheet(isPresented: $showQuickMeasure, preferences: preferences) {
-            showingAdd = true
-        }
     }
 
     /// Round 62: 디자인 SSOT 의 challenge card — 다음 도전 progress.
@@ -774,7 +753,7 @@ struct CollectionView: View {
     private var footer: some View {
         // 페르소나 (cross-cutting) 피드백: hardcoded "v0.2" 와 settings 버전 drift 위험.
         // Bundle 에서 동적으로 가져옴.
-        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.1"
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String ?? "1.1.2"
         return Text("TICKLAB · v\(version)")
             .font(.system(size: 9.5, weight: .regular, design: .monospaced))
             .tracking(3)

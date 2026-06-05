@@ -70,6 +70,9 @@ final class MeasurementViewModel {
 
     let watch: Watch
     let movement: Movement?
+    /// 측정화면 표시용 nominal 진동수 — 직접입력(customBph) 우선 → DB 캘리버 → 28800 폴백.
+    /// (버그 수정: 기존 표시는 movement?.bph 만 봐서 직접입력 BPH 가 28800 으로 고정됐음)
+    var nominalBph: Int { watch.customBph ?? movement?.bph ?? 28_800 }
     let preferences: UserPreferences
 
     /// 빠른 측정(등록 없이 맛보기) 모드. true 면:
@@ -156,8 +159,9 @@ final class MeasurementViewModel {
             lastRejectionReason = nil
             setKeepScreenOn(enabled: preferences.keepScreenOnDuringMeasurement)
             let nominalBph = watch.customBph ?? movement?.bph ?? 28_800
-            // BPH/캘리버를 사용자가 명시 설정했는가 — 미설정이면 전대역 자동감지(nil hint) + 경고.
-            let bphExplicit = watch.customBph != nil || (movement?.bph ?? 0) > 0
+            // BPH/캘리버를 사용자가 명시 설정·확인했는가 — 미설정/미확정이면 전대역 자동감지(nil hint) + 경고.
+            //   인기목록 자동배정(movementConfirmed=false)은 추정치라 신뢰하지 않고 자동감지로 실제 BPH 사용.
+            let bphExplicit = (watch.customBph != nil || (movement?.bph ?? 0) > 0) && watch.movementConfirmed
             // 페르소나 (김재철) wish: watch-level lift angle override 가 있으면 우선.
             let liftAngle = watch.liftAngleOverride ?? movement?.liftAngleDegrees
             let escapement = movement?.escapement ?? .swissLever
