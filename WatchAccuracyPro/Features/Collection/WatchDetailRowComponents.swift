@@ -11,6 +11,10 @@ struct HistoryRow: View {
     var onTap: (() -> Void)? = nil
     /// Round 170: swipe-to-delete.
     var onDelete: (() -> Void)? = nil
+    /// 다중 선택 삭제 모드 — true 면 행 탭이 선택 토글로 동작하고 좌측에 체크박스 표시.
+    var selectionMode: Bool = false
+    var isSelected: Bool = false
+    var onToggleSelect: (() -> Void)? = nil
 
     private var tone: Color {
         let abs = abs(measurement.rateSecondsPerDay)
@@ -29,24 +33,31 @@ struct HistoryRow: View {
 
     var body: some View {
         Button {
-            onTap?()
+            if selectionMode { onToggleSelect?() } else { onTap?() }
         } label: {
             rowContent
         }
         .buttonStyle(.plain)
-        .disabled(onTap == nil)
+        .disabled(!selectionMode && onTap == nil)
         // Round 170: VStack 안에선 swipeActions 가 작동 X → contextMenu 로 개별 삭제 제공.
         .contextMenu {
-            if let onDelete {
+            if !selectionMode, let onDelete {
                 Button(role: .destructive) { onDelete() } label: {
                     Label(String(localized: "common.delete"), systemImage: "trash")
                 }
             }
         }
+        .accessibilityAddTraits(selectionMode && isSelected ? .isSelected : [])
     }
 
     private var rowContent: some View {
         HStack(spacing: 12) {
+            if selectionMode {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 20))
+                    .foregroundStyle(isSelected ? AppColors.accent : AppColors.ink3)
+                    .accessibilityHidden(true)   // 선택 상태는 행 .isSelected trait 로 음성 안내
+            }
             Rectangle().fill(tone).frame(width: 4, height: 30).clipShape(Capsule())
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment: .firstTextBaseline, spacing: 3) {
@@ -89,7 +100,7 @@ struct HistoryRow: View {
                     .font(.system(size: 10, design: .monospaced))
                     .foregroundStyle(AppColors.ink3)
             }
-            if onTap != nil {
+            if onTap != nil && !selectionMode {
                 Image(systemName: "chevron.right")
                     .font(.system(size: 11, weight: .medium))
                     .foregroundStyle(AppColors.ink3)

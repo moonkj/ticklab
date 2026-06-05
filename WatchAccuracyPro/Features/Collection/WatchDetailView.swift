@@ -27,6 +27,10 @@ struct WatchDetailView: View {
     @State private var cachedWornToday: Bool = false
     /// Round 170: 측정 이력 삭제 확인 (전체 삭제용).
     @State private var showDeleteAllMeasurementsAlert = false
+    /// 측정 이력 다중 선택 삭제 모드 + 선택된 측정 id + 삭제 확인.
+    @State private var historySelectMode = false
+    @State private var selectedMeasurementIDs: Set<UUID> = []
+    @State private var showDeleteSelectedAlert = false
     @State private var historyExpanded = false
     private static let historyPageSize = 8
     /// 일기 탭 더보기 토글 — 첫 진입 시 5개만 표시.
@@ -1783,22 +1787,68 @@ struct WatchDetailView: View {
                     number: preferences.userMode == .pro && movement != nil ? "04" : "03"
                 )
                 Spacer()
-                // Round 170: 전체 측정 이력 삭제 버튼 — touch target 44pt+.
-                Button {
-                    showDeleteAllMeasurementsAlert = true
-                } label: {
-                    HStack(spacing: 4) {
-                        Image(systemName: "trash")
-                            .font(.system(size: 13))
-                        Text(String(localized: "watch.history.deleteAll.confirm"))
-                            .font(.system(size: 12, weight: .medium))
+                if historySelectMode {
+                    // 선택 삭제(N) + 취소.
+                    Button {
+                        if !selectedMeasurementIDs.isEmpty { showDeleteSelectedAlert = true }
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 13))
+                            Text(String(format: String(localized: "watch.history.deleteSelected",
+                                                        defaultValue: "삭제 (%d)"), selectedMeasurementIDs.count))
+                                .font(.system(size: 12, weight: .semibold))
+                        }
+                        .foregroundStyle(selectedMeasurementIDs.isEmpty ? AppColors.ink3 : AppColors.danger)
+                        .padding(.horizontal, 12).padding(.vertical, 8)
+                        .background((selectedMeasurementIDs.isEmpty ? AppColors.ink3 : AppColors.danger).opacity(0.08))
+                        .clipShape(Capsule())
+                        .contentShape(Capsule())
                     }
-                    .foregroundStyle(AppColors.danger)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(AppColors.danger.opacity(0.08))
-                    .clipShape(Capsule())
-                    .contentShape(Capsule())
+                    .disabled(selectedMeasurementIDs.isEmpty)
+                    Button {
+                        historySelectMode = false
+                        selectedMeasurementIDs.removeAll()
+                    } label: {
+                        Text(String(localized: "common.cancel"))
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(AppColors.ink2)
+                            .padding(.horizontal, 12).padding(.vertical, 8)
+                            .background(AppColors.paper1)
+                            .clipShape(Capsule())
+                            .contentShape(Capsule())
+                    }
+                } else {
+                    // 선택 모드 진입 + 전체 삭제.
+                    Button {
+                        historySelectMode = true
+                        selectedMeasurementIDs.removeAll()
+                    } label: {
+                        Text(String(localized: "watch.history.select", defaultValue: "선택"))
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundStyle(AppColors.ink1)
+                            .padding(.horizontal, 12).padding(.vertical, 8)
+                            .background(AppColors.paper1)
+                            .clipShape(Capsule())
+                            .contentShape(Capsule())
+                    }
+                    // Round 170: 전체 측정 이력 삭제 버튼 — touch target 44pt+.
+                    Button {
+                        showDeleteAllMeasurementsAlert = true
+                    } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 13))
+                            Text(String(localized: "watch.history.deleteAll.confirm"))
+                                .font(.system(size: 12, weight: .medium))
+                        }
+                        .foregroundStyle(AppColors.danger)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 8)
+                        .background(AppColors.danger.opacity(0.08))
+                        .clipShape(Capsule())
+                        .contentShape(Capsule())
+                    }
                 }
             }
             .padding(.horizontal, 20)
@@ -1810,7 +1860,10 @@ struct WatchDetailView: View {
                         measurement: m,
                         isLast: idx == displayCount - 1 && (!hasMore || historyExpanded),
                         onTap: { editingMeasurement = m },
-                        onDelete: { measurementToDelete = m }
+                        onDelete: { measurementToDelete = m },
+                        selectionMode: historySelectMode,
+                        isSelected: selectedMeasurementIDs.contains(m.id),
+                        onToggleSelect: { toggleHistorySelect(m.id) }
                     )
                 }
                 if hasMore {
@@ -1867,6 +1920,39 @@ struct WatchDetailView: View {
         } message: {
             Text(String(localized: "watch.history.deleteOne.message"))
         }
+        .alert(
+            String(localized: "watch.history.deleteSelected.title", defaultValue: "선택한 측정 삭제"),
+            isPresented: $showDeleteSelectedAlert
+        ) {
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+            Button(String(localized: "common.delete"), role: .destructive) {
+                deleteSelectedMeasurements()
+            }
+        } message: {
+            Text(String(format: String(localized: "watch.history.deleteSelected.message",
+                                        defaultValue: "선택한 %d개의 측정을 삭제할까요? 되돌릴 수 없어요."),
+                        selectedMeasurementIDs.count))
+        }
+    }
+
+    /// 다중 선택 토글.
+    private func toggleHistorySelect(_ id: UUID) {
+        if selectedMeasurementIDs.contains(id) { selectedMeasurementIDs.remove(id) }
+        else { selectedMeasurementIDs.insert(id) }
+    }
+
+    /// 선택된 측정만 삭제 — 전체 삭제와 동일하게 스냅샷 후 제거(iOS17 live relationship UB 회피).
+    private func deleteSelectedMeasurements() {
+        let ids = selectedMeasurementIDs
+        guard !ids.isEmpty else { return }
+        for m in Array(watch.measurements) where ids.contains(m.id) {
+            m.deleteWithJournalCleanup(in: modelContext)   // JournalEntry.measurementId 댕글링 방지
+        }
+        try? modelContext.save()
+        sortedMeasurements = watch.measurements.sorted(by: { $0.timestamp > $1.timestamp })
+        WatchMoodService.invalidate(for: watch)
+        selectedMeasurementIDs.removeAll()
+        historySelectMode = false
     }
 
     /// Round 170: 측정 1건 삭제 — SwiftData context 에서 제거 + watch.measurements relationship 갱신.
