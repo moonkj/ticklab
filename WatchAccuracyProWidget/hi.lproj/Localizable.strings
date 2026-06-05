@@ -1,3 +1,5 @@
 "widget.wear.today" = "आज पहनें";
 "widget.wear.done" = "आज पहना";
 "widget.config.desc" = "नवीनतम घड़ी सटीकता";
+"widget.overhaul.due" = "सर्विस ज़रूरी";
+"widget.overhaul.in" = "%@ में सर्विस";

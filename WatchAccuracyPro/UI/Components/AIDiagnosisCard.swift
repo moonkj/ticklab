@@ -123,7 +123,7 @@ struct AIDiagnosisCard: View {
                     .foregroundStyle(AppColors.info)
                 Text(String(localized: isAI ? "aidiag.disclaimer.ai" : "aidiag.disclaimer.rule"))
                     .font(.system(size: 13))
-                    .foregroundStyle(AppColors.primaryDeep)
+                    .foregroundStyle(AppColors.ink1)
             }
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)

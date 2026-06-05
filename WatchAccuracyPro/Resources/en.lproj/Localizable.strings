@@ -1146,6 +1146,11 @@
 /* Round 129 */
 "speccard.list.empty.hint" = "Go to Watch Detail → '···' menu → 'Create Spec Card'.";
 "result.saved.hint" = "Measurement saved ✓";
+/* Quick measure (try without registering) */
+"measurement.quick.placeholder_name" = "Quick measure";
+"result.transient.title" = "Register a watch to save this result";
+"result.transient.body" = "Quick-measure results aren't saved. Register a watch to keep building your measurement history, trends, and averages.";
+"result.transient.cta" = "Register a watch";
 "measurement.hint.noise" = "🔊 Too much ambient noise. Stabilise the phone in a quiet spot and try again.";
 "measurement.hint.press_closer" = "📍 Press the case back (watch rear) firmly against the iPhone's bottom mic.";
 "measurement.hint.no_signal" = "🎤 Almost no signal. Place the mic directly against the watch's case back.";
@@ -2009,6 +2014,7 @@
 "community.brand.picker.title" = "Brand tag (optional)";
 "community.brand.picker.note" = "Only brands from your collection";
 "community.brand.feed.empty" = "No posts for this brand yet";
+"community.brands.popular.title" = "Popular brands";
 "community.notif.comment" = "Someone commented on your post";
 "forecast.legend.projected" = "%dd: ~%.1f s/d";
 "forecast.legend.a11y" = "Trend projects about %.1f s/d in %d days, margin ±%.1f s/d";

@@ -603,7 +603,7 @@ struct WatchDetailView: View {
                             .foregroundStyle(detailTab == t ? AppColors.ink0 : AppColors.ink2)
                         // Round 170: underline 3 → 4pt — active state 가시성 향상.
                         Rectangle()
-                            .fill(detailTab == t ? AppColors.primaryDeep : Color.clear)
+                            .fill(detailTab == t ? AppColors.accent : Color.clear)
                             .frame(height: 4)
                             .clipShape(Capsule())
                     }
@@ -1437,7 +1437,7 @@ struct WatchDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: "arrow.triangle.2.circlepath")
-                    .foregroundStyle(AppColors.primaryDeep)
+                    .foregroundStyle(AppColors.ink0)
                 Text(String(localized: "watch.wind.title"))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)
@@ -1494,7 +1494,7 @@ struct WatchDetailView: View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 ConceptGlyph(systemName: "battery.50", size: 17)
-                    .foregroundStyle(AppColors.primaryDeep)
+                    .foregroundStyle(AppColors.ink0)
                 Text(String(localized: "watch.battery.title"))
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)
@@ -1608,7 +1608,7 @@ struct WatchDetailView: View {
                         .fixedSize()
                         .padding(.horizontal, 10)
                         .frame(minWidth: 44, minHeight: 44)
-                        .foregroundStyle(selected ? Color.white : AppColors.ink2)
+                        .foregroundStyle(selected ? AppColors.paper0 : AppColors.ink2)
                         .background(selected ? AppColors.ink0 : .clear)
                         .clipShape(Capsule())
                         .contentShape(Capsule())

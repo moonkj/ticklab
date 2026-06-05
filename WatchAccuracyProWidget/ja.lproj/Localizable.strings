@@ -1,3 +1,5 @@
 "widget.wear.today" = "今日着用";
 "widget.wear.done" = "着用済み";
 "widget.config.desc" = "最新の精度計測";
+"widget.overhaul.due" = "オーバーホール時期";
+"widget.overhaul.in" = "%@後にオーバーホール";

@@ -10,6 +10,11 @@ struct MeasurementResultView: View {
     var bphAutoDetected: Bool = false
     /// 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심) — 감지된 BPH.
     var bphSuggested: Int? = nil
+    /// 빠른 측정(등록 없이 맛보기) 결과 — SwiftData 미저장(transient). true 면 "저장 완료" 대신
+    /// "등록하면 저장돼요" 안내 + 시계 등록 CTA 노출. 최근 평균/다음 단계 등 저장 의존 섹션은 숨김.
+    var isTransient: Bool = false
+    /// 빠른 측정 결과의 "시계 등록" CTA 콜백. nil 이면 안내 텍스트만 노출(직접 진입 없음).
+    var onRegisterWatch: (() -> Void)? = nil
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -187,6 +192,52 @@ struct MeasurementResultView: View {
         }
     }
 
+    /// 빠른 측정 결과 — 미저장 안내 + 시계 등록 CTA. (등록해야 트렌드/평균/오버홀 알림 등 활용 가능)
+    private var transientSaveBanner: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 8) {
+                ConceptGlyph(systemName: "tray.and.arrow.down", size: 16)
+                    .foregroundStyle(AppColors.accent)
+                Text(String(localized: "result.transient.title",
+                            defaultValue: "이 결과를 저장하려면 시계를 등록하세요"))
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundStyle(AppColors.ink0)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Text(String(localized: "result.transient.body",
+                        defaultValue: "빠른 측정 결과는 저장되지 않아요. 시계를 등록하면 측정 기록·트렌드·평균을 계속 쌓을 수 있어요."))
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.ink2)
+                .fixedSize(horizontal: false, vertical: true)
+            if let onRegisterWatch {
+                Button {
+                    HapticManager.trigger(.selection)
+                    onRegisterWatch()
+                } label: {
+                    Label(String(localized: "result.transient.cta",
+                                 defaultValue: "시계 등록하기"),
+                          systemImage: "plus.circle.fill")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 13)
+                        .background(AppColors.accent)
+                        .clipShape(Capsule())
+                        .contentShape(Capsule())
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.accent.opacity(0.08))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(AppColors.accent.opacity(0.35), lineWidth: 1)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
@@ -218,21 +269,26 @@ struct MeasurementResultView: View {
                 if preferences.userMode == .pro { detailsSection }
 
                 // === 해석 블록 (측정 데이터 아래로 이동) ===
-                // Round 129 (실기기 피드백): 저장 완료 확인 배너 — AI 스피너와 혼동 방지.
-                HStack(spacing: 6) {
-                    Image(systemName: "checkmark.circle.fill")
-                        .foregroundStyle(AppColors.success)
-                        .font(.system(size: 14))
-                        .accessibilityHidden(true)  // 접근성: 옆 텍스트가 의미 전달 — 장식용 아이콘
-                    Text(String(localized: "result.saved.hint"))
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(AppColors.success)
+                // 빠른 측정(transient)은 저장되지 않음 → "저장 완료" 대신 등록 안내 배너.
+                if isTransient {
+                    transientSaveBanner
+                } else {
+                    // Round 129 (실기기 피드백): 저장 완료 확인 배너 — AI 스피너와 혼동 방지.
+                    HStack(spacing: 6) {
+                        Image(systemName: "checkmark.circle.fill")
+                            .foregroundStyle(AppColors.success)
+                            .font(.system(size: 14))
+                            .accessibilityHidden(true)  // 접근성: 옆 텍스트가 의미 전달 — 장식용 아이콘
+                        Text(String(localized: "result.saved.hint"))
+                            .font(.system(size: 13, weight: .semibold))
+                            .foregroundStyle(AppColors.success)
+                    }
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 14)
+                    .background(AppColors.success.opacity(0.1))
+                    .clipShape(Capsule())
+                    .frame(maxWidth: .infinity, alignment: .center)
                 }
-                .padding(.vertical, 8)
-                .padding(.horizontal, 14)
-                .background(AppColors.success.opacity(0.1))
-                .clipShape(Capsule())
-                .frame(maxWidth: .infinity, alignment: .center)
                 if isSuspiciousMeasurement { suspiciousRemeasureBanner }
                 // Round 153 (Müller): A/B/C/F 신뢰도 큰 뱃지 + 클레임 텍스트.
                 if let grade = result.reliabilityGrade {
@@ -250,7 +306,8 @@ struct MeasurementResultView: View {
                 if let note = result.reliabilityNote { reliabilityHelp(note) }
                 // 페르소나 (박지영, 입문자) wish: "그래서 다음엔 뭘?" 가이드.
                 // 사용자 보고 fix: userMode 기본 .pro 로 바뀌어 novice 가드가 dead → 첫 측정 기준으로.
-                if watch.measurements.count <= 1 {
+                // 빠른 측정(transient)은 등록 유도가 우선 — 위 transientSaveBanner 가 다음 단계라 중복 제거.
+                if !isTransient, watch.measurements.count <= 1 {
                     nextStepGuide
                 }
                 actions

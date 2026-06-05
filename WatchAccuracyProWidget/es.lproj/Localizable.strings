@@ -1,3 +1,5 @@
 "widget.wear.today" = "Usar hoy";
 "widget.wear.done" = "Puesto hoy";
 "widget.config.desc" = "Última precisión del reloj";
+"widget.overhaul.due" = "Revisión pendiente";
+"widget.overhaul.in" = "Revisión en %@";

@@ -1,3 +1,5 @@
 "widget.wear.today" = "今日配戴";
 "widget.wear.done" = "已配戴";
 "widget.config.desc" = "最新走時精度";
+"widget.overhaul.due" = "需保養";
+"widget.overhaul.in" = "%@後保養";

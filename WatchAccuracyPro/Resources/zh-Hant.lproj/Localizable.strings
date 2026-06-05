@@ -1946,6 +1946,7 @@
 "community.brand.picker.title" = "品牌標籤（選填）";
 "community.brand.picker.note" = "僅限你收藏中的品牌";
 "community.brand.feed.empty" = "此品牌還沒有貼文";
+"community.brands.popular.title" = "熱門品牌";
 "community.notif.comment" = "有人留言了你的貼文";
 "forecast.legend.projected" = "%d天後約%.1f s/d";
 "forecast.legend.a11y" = "依趨勢%d天後約為%.1f秒/天，誤差±%.1f秒/天";
@@ -1977,3 +1978,11 @@
 "admin.theme.title.label" = "主題標題";
 "admin.theme.title.placeholder" = "例如：本週潛水錶";
 "admin.theme.publish" = "發佈";
+
+"measurement.quick.placeholder_name" = "快速測量";
+
+"result.transient.title" = "註冊手錶以儲存此結果";
+
+"result.transient.body" = "快速測量的結果不會被儲存。註冊手錶即可持續累積您的測量記錄、趨勢與平均值。";
+
+"result.transient.cta" = "註冊手錶";

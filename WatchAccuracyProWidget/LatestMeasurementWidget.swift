@@ -95,8 +95,10 @@ struct LatestMeasurementWidgetView: View {
                 .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.6)
             HStack(spacing: 10) {
                 metric("metronome", beatErrorText())
-                metric("gauge.medium", amplitudeText())
+                if showsAmplitude { metric("gauge.medium", amplitudeText()) }
             }
+            // 기계식 → 다음 오버홀, 배터리 구동(스마트워치/쿼츠) → 배터리. 데이터 있을 때만.
+            statusChip
             Spacer(minLength: 0)
             wearButton
         }
@@ -125,9 +127,14 @@ struct LatestMeasurementWidgetView: View {
 
                 VStack(alignment: .leading, spacing: 6) {
                     metric("metronome", beatErrorText())
-                    metric("gauge.medium", amplitudeText())
-                    metric("timer", bphText())
+                    if showsAmplitude {
+                        metric("gauge.medium", amplitudeText())
+                    } else {
+                        // Hard Rule #9: medium/low 신뢰도 캘리버는 amplitude 비노출 → bph 로 대체 표시.
+                        metric("timer", bphText())
+                    }
                     metric("checkmark.seal", confidenceText())
+                    statusMetric
                     Spacer(minLength: 2)
                     wearButton
                 }
@@ -147,12 +154,17 @@ struct LatestMeasurementWidgetView: View {
                 Text(rateText()).font(.caption.monospacedDigit())
                 Text("·").foregroundStyle(.secondary)
                 Text(beatErrorText()).font(.caption2.monospacedDigit()).foregroundStyle(.secondary)
-                if entry.snapshot?.amplitudeDegrees != nil {
+                if showsAmplitude {
                     Text(amplitudeText()).font(.caption2).foregroundStyle(.secondary)
                 }
             }
-            Text("\(bphText()) · \(timestampText())")
-                .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+            // 세 번째 줄: 데이터 있으면 배터리/오버홀, 없으면 기존 bph·시각.
+            if let status = statusText() {
+                Text(status).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+            } else {
+                Text("\(bphText()) · \(timestampText())")
+                    .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+            }
         }
     }
 
@@ -181,6 +193,92 @@ struct LatestMeasurementWidgetView: View {
             Text(value)
                 .font(.system(.caption2, design: .rounded).weight(.medium))
                 .foregroundStyle(.primary).lineLimit(1).minimumScaleFactor(0.7)
+        }
+    }
+
+    // MARK: - 상태 행 (배터리 / 다음 오버홀) — 무브먼트 타입에 따라 분기
+
+    /// small 레이아웃용 칩 — 데이터 없으면 렌더 안 함(공간 절약).
+    @ViewBuilder private var statusChip: some View {
+        if let info = statusInfo() {
+            HStack(spacing: 4) {
+                Image(systemName: info.icon).font(.system(size: 10))
+                Text(info.text).font(.system(size: 11, weight: .medium)).lineLimit(1).minimumScaleFactor(0.7)
+            }
+            .foregroundStyle(info.tint)
+        }
+    }
+
+    /// medium 레이아웃용 metric 행 — 데이터 없으면 timestamp 로 fallback(빈 줄 방지).
+    @ViewBuilder private var statusMetric: some View {
+        if let info = statusInfo() {
+            HStack(spacing: 4) {
+                Image(systemName: info.icon).font(.system(size: 10)).foregroundStyle(info.tint).frame(width: 14)
+                Text(info.text)
+                    .font(.system(.caption2, design: .rounded).weight(.medium))
+                    .foregroundStyle(info.tint).lineLimit(1).minimumScaleFactor(0.7)
+            }
+        } else {
+            metric("timer", bphText())
+        }
+    }
+
+    private struct StatusInfo { let icon: String; let text: String; let tint: Color }
+
+    /// 무브먼트 타입에 따라 배터리(스마트워치/쿼츠) 또는 다음 오버홀(기계식)을 결정. 데이터 없으면 nil.
+    private func statusInfo() -> StatusInfo? {
+        guard let s = entry.snapshot else { return nil }
+        if s.isBatteryPowered {
+            guard let pct = s.batteryPercent else { return nil }
+            let tint: Color = pct <= 15 ? .red : (pct <= 30 ? .orange : .green)
+            return StatusInfo(icon: batteryIcon(pct), text: "\(pct)%", tint: tint)
+        } else {
+            guard let due = s.nextOverhaulDate else { return nil }
+            let overdue = due < Date()
+            return StatusInfo(
+                icon: "wrench.and.screwdriver",
+                text: overhaulText(due),
+                tint: overdue ? .red : .secondary
+            )
+        }
+    }
+
+    /// accessory(잠금화면)용 한 줄 문자열. 데이터 없으면 nil → 호출부가 bph fallback.
+    private func statusText() -> String? {
+        guard let info = statusInfo() else { return nil }
+        return info.text
+    }
+
+    private func batteryIcon(_ pct: Int) -> String {
+        switch pct {
+        case ..<13:  return "battery.0percent"
+        case ..<38:  return "battery.25percent"
+        case ..<63:  return "battery.50percent"
+        case ..<88:  return "battery.75percent"
+        default:     return "battery.100percent"
+        }
+    }
+
+    /// 다음 오버홀 텍스트 — 지났으면 "정비 필요", 아니면 상대 기한.
+    private func overhaulText(_ date: Date) -> String {
+        if date < Date() { return String(localized: "widget.overhaul.due") }
+        let formatter = DateComponentsFormatter()
+        formatter.unitsStyle = .short
+        formatter.allowedUnits = [.year, .month]
+        formatter.maximumUnitCount = 1
+        let interval = date.timeIntervalSince(Date())
+        let rel = formatter.string(from: interval) ?? ""
+        // "1개월 후 정비" 형태 — 라벨 키에 %@ 로 기한 삽입.
+        return String(format: String(localized: "widget.overhaul.in"), rel)
+    }
+
+    /// Hard Rule #9: 신뢰도 라벨이 medium/low 인 캘리버는 amplitude 노출 금지.
+    /// 라벨이 nil(legacy) 이면 종전대로 amplitude 표시 허용.
+    private var showsAmplitude: Bool {
+        guard entry.snapshot?.amplitudeDegrees != nil else { return false }
+        switch entry.snapshot?.confidenceLabel {
+        case "medium", "low": return false
+        default:              return true
         }
     }
 

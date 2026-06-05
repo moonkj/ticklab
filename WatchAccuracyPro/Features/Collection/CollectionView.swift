@@ -9,6 +9,8 @@ struct CollectionView: View {
     // WearLog 구독 — ShakePickView 등 외부에서 착용 기록 시 자동 재렌더링.
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @State private var showingAdd = false
+    /// UX 고도화: 등록 없이 빠른 측정(transient) 진입.
+    @State private var showQuickMeasure = false
     @State private var showingSettings = false
     @State private var showingWatchBox = false
     /// 커뮤니티 활동 알림(내 글 좋아요·새 팔로워) — 종 배지.
@@ -712,6 +714,25 @@ struct CollectionView: View {
                 showingAdd = true
             }
         )
+        // UX 고도화: 등록 없이 먼저 정확도 맛보기(입문자 첫경험 마찰↓).
+        .overlay(alignment: .bottom) {
+            Button { showQuickMeasure = true } label: {
+                HStack(spacing: 6) {
+                    ConceptGlyph(systemName: "waveform", size: 15, color: AppColors.accentDark)
+                    Text(String(localized: "collection.empty.quick_measure",
+                                defaultValue: "등록 없이 빠른 측정 해보기"))
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(AppColors.accentDark)
+                }
+                .padding(.horizontal, 16).padding(.vertical, 10)
+                .overlay(Capsule().stroke(AppColors.accent.opacity(0.5), lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+            .padding(.bottom, 72)
+        }
+        .quickMeasureSheet(isPresented: $showQuickMeasure, preferences: preferences) {
+            showingAdd = true
+        }
     }
 
     /// Round 62: 디자인 SSOT 의 challenge card — 다음 도전 progress.
@@ -736,11 +757,11 @@ struct CollectionView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(String(localized: "collection.challenge.title"))
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundStyle(AppColors.primaryDeep)
+                    .foregroundStyle(AppColors.ink0)
                 // Round 104 (BUG-8): 인라인 한국어 → localize.
                 Text(String(format: String(localized: "collection.challenge.progress"), done, target, max(target - done, 0)))
                     .font(.system(size: 13))
-                    .foregroundStyle(AppColors.primary700)
+                    .foregroundStyle(AppColors.ink1)
             }
             Spacer()
         }

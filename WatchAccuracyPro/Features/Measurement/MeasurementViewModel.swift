@@ -72,6 +72,12 @@ final class MeasurementViewModel {
     let movement: Movement?
     let preferences: UserPreferences
 
+    /// 빠른 측정(등록 없이 맛보기) 모드. true 면:
+    ///  - watch 는 SwiftData 에 미저장된 transient placeholder
+    ///  - persist / WearLog / 위젯 스냅샷 / Live Activity watchName 동기화 모두 skip
+    /// 기존 "시계 선택 후 측정" 경로는 quickMode=false 로 동작 변화 없음(회귀 0).
+    let quickMode: Bool
+
     /// 테스트/preview 에서 합성 신호를 주입할 때 사용. 프로덕션에서는 nil 이라 `AudioCapture` 가 쓰임.
     private let audioSourceOverride: AudioSource?
 
@@ -83,15 +89,31 @@ final class MeasurementViewModel {
     ///   stop() detached task 가 persist 호출하던 의도치 않은 measurement save 차단.
     private var isCancelled: Bool = false
 
-    init(watch: Watch, preferences: UserPreferences, audioSourceOverride: AudioSource? = nil) {
+    init(watch: Watch, preferences: UserPreferences, quickMode: Bool = false, audioSourceOverride: AudioSource? = nil) {
         self.watch = watch
         self.preferences = preferences
+        self.quickMode = quickMode
         self.audioSourceOverride = audioSourceOverride
         if let caliber = watch.caliber {
             self.movement = MovementDatabase.shared.movement(id: caliber)
         } else {
             self.movement = nil
         }
+    }
+
+    /// 빠른 측정 전용 편의 초기화 — 등록 없이 transient placeholder watch 로 측정.
+    /// nominalBph 28800 기본 + caliber 미지정 → start() 에서 bphExplicit=false(전대역 자동감지)로 흐름.
+    /// 여기서 만드는 Watch 는 어떤 ModelContext 에도 insert 하지 않으므로 SwiftData 에 저장되지 않는다.
+    convenience init(quickMeasureWith preferences: UserPreferences, audioSourceOverride: AudioSource? = nil) {
+        let transient = Watch(
+            brand: "",
+            model: String(localized: "measurement.quick.placeholder_name",
+                          defaultValue: "빠른 측정"),
+            caliber: nil,
+            movementType: .automatic
+        )
+        self.init(watch: transient, preferences: preferences, quickMode: true,
+                  audioSourceOverride: audioSourceOverride)
     }
 
     deinit {
@@ -158,13 +180,14 @@ final class MeasurementViewModel {
                 for await live in metricsStream {
                     await MainActor.run {
                         self?.liveMetrics = live
-                        if #available(iOS 16.2, *) {
+                        // 빠른 측정은 transient — 잠금화면 Live Activity 동기화 skip.
+                        if self?.quickMode == false, #available(iOS 16.2, *) {
                             MeasurementLiveActivityService.shared.update(with: live)
                         }
                     }
                 }
             }
-            if #available(iOS 16.2, *) {
+            if !quickMode, #available(iOS 16.2, *) {
                 MeasurementLiveActivityService.shared.start(
                     watchName: "\(watch.brand) \(watch.model)",
                     caliber: movement?.id
@@ -272,7 +295,7 @@ final class MeasurementViewModel {
         waveformTask?.cancel()
         let pipelineRef = pipeline
         setKeepScreenOn(enabled: false)
-        if #available(iOS 16.2, *) {
+        if !quickMode, #available(iOS 16.2, *) {
             MeasurementLiveActivityService.shared.end(final: liveMetrics)
         }
         // Round 141 (Hyemi H7): didEnd notification 을 분석 background task 의 main 도착 후로 옮김.
@@ -301,10 +324,21 @@ final class MeasurementViewModel {
                     // BPH 자동감지/불일치 경고 플래그 — 파이프라인에서 수집.
                     self.bphAutoDetected = self.pipeline?.bphWasAutoDetected ?? false
                     self.bphMismatchSuggested = self.pipeline?.bphMismatchSuggested
+                    // 빠른 측정(transient): persist/WearLog/위젯 전부 skip. 동일 신뢰 게이트만 통과하면
+                    //   결과 화면에 표시(미저장). 게이트 실패 시 기존 경로와 동일하게 .lockFailure.
+                    let accepted = self.quickMode
+                        ? self.passesQualityGate(result: result)
+                        : self.persist(result: result, in: modelContext)
                     // Round 169: anomaly 면 .completed 가 아닌 .failed 로 → 사용자에게 명확히 알림.
                     // Round 100: anomaly trip 은 .lockFailure 로 분기 (BPH lock 잡혔으나 신뢰 X).
-                    if self.persist(result: result, in: modelContext) {
+                    if accepted {
                         self.state = .completed(result)
+                        // 편의성(UX 고도화): 측정 = 그 날 착용. 오늘 wear log 없으면 자동 생성(isAuto).
+                        //   "묻지 말고 추론" — 측정 신호로 착용을 자동 귀속. 사용자가 별도로 토글하면 그게 우선.
+                        //   빠른 측정은 transient watch 라 wear log 귀속 대상 없음 → skip.
+                        if !self.quickMode {
+                            WearLogService.ensureTodayWearOnMeasure(self.watch, in: modelContext)
+                        }
                         // 스트림A: 측정 완료 햅틱 + VoiceOver 등급 안내.
                         HapticManager.trigger(.measurementComplete)
                         self.announceCompletion(grade: result.reliabilityGrade)
@@ -345,9 +379,11 @@ final class MeasurementViewModel {
         NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
     }
 
-    /// Round 169: 반환 Bool — false 면 stop() 이 state=.failed(.noSignal) 로 전환해 사용자에게 알림.
-    @discardableResult
-    private func persist(result: MeasurementResult, in context: ModelContext) -> Bool {
+    /// 신뢰 게이트 — persist 여부(또는 빠른측정 표시 여부)를 결정하는 순수 판정.
+    /// side effect 는 lastRejectedResult/lastRejectionReason 갱신뿐(저장·위젯·WearLog 는 호출자 책임).
+    /// persist() 와 quickMode 가 **동일 게이트**를 공유하도록 추출 — 기준 drift 방지.
+    /// 격리는 persist() 와 동일(non-isolated) — 둘 다 stop() 의 MainActor.run 블록 안에서만 호출.
+    private func passesQualityGate(result: MeasurementResult) -> Bool {
         // Round 158 (Jay #F6): persist filter 대폭 완화. 거부 자체가 사용자에게 학습 효과 0 (Round 156-157
         // 효과 검증 차단). reliabilityGrade (A/B/C/F) 가 이미 사용자에게 신뢰도 표시 — persist 는 *명확한*
         // garbage (BPH lock 완전 실패) 만 차단.
@@ -379,7 +415,7 @@ final class MeasurementViewModel {
         guard failedGates.isEmpty else {
             #if DEBUG
             let rmsString = result.residualRMSSeconds.map { String(format: "%.1fμs", $0 * 1_000_000) } ?? "nil"
-            print("⚠️ Refusing to persist: failed=\(failedGates) " +
+            print("⚠️ Refusing to accept: failed=\(failedGates) " +
                   "rate=\(result.rateSecondsPerDay), beatError=\(result.beatErrorMs), " +
                   "rms=\(rmsString), conf=\(result.confidenceScore), " +
                   "beats=\(result.beatCount)/\(expectedBeats) (\(Int(beatYield * 100))%)")
@@ -392,7 +428,7 @@ final class MeasurementViewModel {
         // F-grade 는 알고리즘이 "신뢰 부족" 으로 판단 — 저장 안 함, 사용자 재측정 유도.
         if result.reliabilityGrade == .f {
             #if DEBUG
-            print("⚠️ F-grade measurement not persisted (low reliability — encouraging retry)")
+            print("⚠️ F-grade measurement not accepted (low reliability — encouraging retry)")
             #endif
             lastRejectedResult = result
             lastRejectionReason = "F-grade"
@@ -401,6 +437,13 @@ final class MeasurementViewModel {
         // success — clear prior rejection info
         lastRejectedResult = nil
         lastRejectionReason = nil
+        return true
+    }
+
+    /// Round 169: 반환 Bool — false 면 stop() 이 state=.failed(.noSignal) 로 전환해 사용자에게 알림.
+    @discardableResult
+    private func persist(result: MeasurementResult, in context: ModelContext) -> Bool {
+        guard passesQualityGate(result: result) else { return false }
         // Round 168: 측정 성공 → mood 캐시 무효화.
         WatchMoodService.invalidate(for: watch)
         // Round 18 (Doyoon): SNR 을 ambientNoiseDB 에 잘못 저장하던 history 와 호환 위해 양쪽 field 모두 채움.
@@ -429,7 +472,8 @@ final class MeasurementViewModel {
         try? context.save()
 
         // 위젯 / 잠금화면용 스냅샷 갱신.
-        let snapshot = LatestMeasurementSnapshot(
+        // UX 고도화: 위젯에 배터리·신뢰라벨까지 확장 스냅샷 기록(오버홀일은 컬렉션/서비스로그 변경 시 갱신).
+        SharedSnapshotStore.writeMeasurement(
             watchName: "\(watch.brand) \(watch.model)",
             caliber: movement?.id,
             timestamp: measurement.timestamp,
@@ -437,9 +481,12 @@ final class MeasurementViewModel {
             beatErrorMs: result.beatErrorMs,
             amplitudeDegrees: result.amplitudeDegrees,
             bph: result.bph,
-            confidenceScore: result.confidenceScore
+            confidenceScore: result.confidenceScore,
+            movementTypeRaw: watch.movementType.rawValue,
+            batteryPercent: watch.batteryPercent,
+            nextOverhaulDate: nil,
+            confidenceLabel: movement?.confidenceLabel.rawValue
         )
-        SharedSnapshotStore.write(snapshot)
         // 위젯 "오늘 착용" 버튼 상태 갱신 — 방금 측정한 시계 = 위젯이 표시할 latest watch.
         //   (persist 는 nonisolated → @MainActor WearLogService 대신 로컬 context 로 직접 판정.)
         let startOfToday = Calendar.current.startOfDay(for: Date())

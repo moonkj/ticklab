@@ -1946,6 +1946,7 @@
 "community.brand.picker.title" = "ब्रांड टैग (वैकल्पिक)";
 "community.brand.picker.note" = "केवल आपके संग्रह के ब्रांड";
 "community.brand.feed.empty" = "इस ब्रांड की अभी कोई पोस्ट नहीं";
+"community.brands.popular.title" = "लोकप्रिय ब्रांड";
 "community.notif.comment" = "किसी ने आपकी पोस्ट पर टिप्पणी की";
 "forecast.legend.projected" = "%d दिन: ~%.1f s/d";
 "forecast.legend.a11y" = "रुझान के अनुसार %d दिन में लगभग %.1f से/दिन, मार्जिन ±%.1f से/दिन";
@@ -1977,3 +1978,11 @@
 "admin.theme.title.label" = "थीम शीर्षक";
 "admin.theme.title.placeholder" = "उदा., इस सप्ताह: डाइवर";
 "admin.theme.publish" = "प्रकाशित करें";
+
+"measurement.quick.placeholder_name" = "त्वरित माप";
+
+"result.transient.title" = "इस परिणाम को सहेजने के लिए एक घड़ी पंजीकृत करें";
+
+"result.transient.body" = "त्वरित माप के परिणाम सहेजे नहीं जाते। अपना माप इतिहास, रुझान और औसत बनाते रहने के लिए एक घड़ी पंजीकृत करें।";
+
+"result.transient.cta" = "घड़ी पंजीकृत करें";

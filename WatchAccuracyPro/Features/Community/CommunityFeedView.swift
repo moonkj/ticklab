@@ -42,6 +42,7 @@ struct CommunityFeedView: View {
     @State private var activeTheme: Community.Theme?
     /// 브랜드 칩 탭 → 같은 브랜드 모아보기 시트.
     @State private var brandFilterTarget: String?
+    /// 가벼운 이모지 반응 집계 — postID → 요약. 카드별 비동기 로드(카드는 service 미관찰, 여기서 주입).
 
     /// 부분 흐림 대상 인기 기준 (좋아요 수). 저품질 익명글 흐림 역효과 방지.
     private let popularThreshold = 3
@@ -52,6 +53,9 @@ struct CommunityFeedView: View {
                 editorialHeader
                 if service.hasAcceptedViewerTerms, let theme = activeTheme {
                     themeBanner(theme)
+                }
+                if service.hasAcceptedViewerTerms, !popularBrands.isEmpty {
+                    popularBrandsRow
                 }
                 if service.hasAcceptedViewerTerms && !service.feed.isEmpty {
                     feedScopePicker
@@ -222,6 +226,51 @@ struct CommunityFeedView: View {
         }
         .buttonStyle(.plain)
         .padding(.horizontal, 20)
+        .padding(.bottom, 8)
+    }
+
+    /// 발견성: 피드에서 가장 많이 태그된 브랜드 상위 — 새 백엔드 호출 없이 로드된 feed 에서 집계.
+    /// 브랜드 칩 탭 → 기존 같은-브랜드 모아보기 시트(brandFilterTarget) 재사용.
+    private var popularBrands: [String] {
+        var counts: [String: Int] = [:]
+        for post in service.feed {
+            guard let b = post.brand?.trimmingCharacters(in: .whitespacesAndNewlines), !b.isEmpty else { continue }
+            counts[b, default: 0] += 1
+        }
+        // 카운트 내림차순 → 동률은 가나다/알파벳 안정 정렬. 상위 8개.
+        return counts.sorted { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }
+            .prefix(8).map { $0.key }
+    }
+
+    /// 인기 브랜드 칩 줄 — 발견성 전면화. 가로 스크롤, 탭 시 같은 브랜드 모아보기.
+    private var popularBrandsRow: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(String(localized: "community.brands.popular.title"))
+                .font(.system(size: 10, weight: .bold))
+                .foregroundStyle(AppColors.ink3)
+                .textCase(.uppercase)
+                .padding(.horizontal, 20)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(popularBrands, id: \.self) { brand in
+                        Button { brandFilterTarget = brand } label: {
+                            HStack(spacing: 4) {
+                                ConceptGlyph(systemName: "tag.fill", size: 9)
+                                Text(brand).font(.system(size: 12, weight: .semibold)).lineLimit(1)
+                            }
+                            .foregroundStyle(AppColors.info)
+                            .padding(.horizontal, 11).padding(.vertical, 6)
+                            .background(AppColors.info.opacity(0.08))
+                            .overlay(Capsule().stroke(AppColors.info.opacity(0.4), lineWidth: 1))
+                            .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                        .accessibilityLabel(Text(brand))
+                    }
+                }
+                .padding(.horizontal, 20)
+            }
+        }
         .padding(.bottom, 8)
     }
 
@@ -448,6 +497,7 @@ struct CommunityFeedView: View {
         guard let url = service.imageURL(for: post.imagePath) else { return }
         shareItem = ShareCardItem(url: url)
     }
+
     private func showSavedTab() {
         guard service.isSignedIn else { showLogin = true; return }
         showSaved = true

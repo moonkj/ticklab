@@ -20,6 +20,21 @@ struct LatestMeasurementSnapshot: Codable, Equatable, Sendable {
     var bph: Int
     var confidenceScore: Int
 
+    // MARK: - Round 178 (위젯 확장): 한눈 정보용 추가 필드
+    //   호환 규칙(상단 주석) 준수 — 모두 **Optional + default nil** → 같은 schemaVersion 안에서 안전.
+    //   구버전 앱이 쓴 데이터에 이 필드들이 없어도 decode 성공(nil 로 채워짐), 신버전 위젯은 nil 을 graceful 처리.
+
+    /// 시계 무브먼트 타입 raw (`automatic`/`manual`/`quartz`/`solar`/`smartwatch`).
+    /// 위젯이 기계식↔배터리 표시를 분기하는 데 사용. nil = 미상(legacy) → 기계식으로 간주.
+    var movementTypeRaw: String?
+    /// 배터리 잔량 퍼센트(0~100) — 스마트워치/쿼츠 전용. nil = 데이터 없음/해당 없음.
+    var batteryPercent: Int?
+    /// 다음 오버홀(전체 정비) 예상일 — 기계식 전용. nil = 미설정.
+    var nextOverhaulDate: Date?
+    /// 신뢰도 라벨(`high`/`medium`/`low`) — Hard Rule #9: medium/low 캘리버는 amplitude 비노출.
+    /// nil = 미상 → amplitude 표시 허용(legacy 동작 유지).
+    var confidenceLabel: String?
+
     static let placeholder = LatestMeasurementSnapshot(
         watchName: "TickLab",
         caliber: nil,
@@ -30,6 +45,44 @@ struct LatestMeasurementSnapshot: Codable, Equatable, Sendable {
         bph: 28800,
         confidenceScore: 0
     )
+
+    init(
+        schemaVersion: Int = LatestMeasurementSnapshot.currentSchemaVersion,
+        watchName: String,
+        caliber: String? = nil,
+        timestamp: Date,
+        rateSecondsPerDay: Double,
+        beatErrorMs: Double,
+        amplitudeDegrees: Double? = nil,
+        bph: Int,
+        confidenceScore: Int,
+        movementTypeRaw: String? = nil,
+        batteryPercent: Int? = nil,
+        nextOverhaulDate: Date? = nil,
+        confidenceLabel: String? = nil
+    ) {
+        self.schemaVersion = schemaVersion
+        self.watchName = watchName
+        self.caliber = caliber
+        self.timestamp = timestamp
+        self.rateSecondsPerDay = rateSecondsPerDay
+        self.beatErrorMs = beatErrorMs
+        self.amplitudeDegrees = amplitudeDegrees
+        self.bph = bph
+        self.confidenceScore = confidenceScore
+        self.movementTypeRaw = movementTypeRaw
+        self.batteryPercent = batteryPercent
+        self.nextOverhaulDate = nextOverhaulDate
+        self.confidenceLabel = confidenceLabel
+    }
+
+    /// 무브먼트가 배터리 구동(스마트워치/쿼츠/솔라)인지 — 위젯이 배터리 vs 오버홀 분기에 사용.
+    var isBatteryPowered: Bool {
+        switch movementTypeRaw {
+        case "quartz", "solar", "smartwatch": return true
+        default: return false   // automatic/manual/nil → 기계식
+        }
+    }
 }
 
 enum SharedSnapshotStore {
@@ -56,6 +109,59 @@ enum SharedSnapshotStore {
     static func write(_ snapshot: LatestMeasurementSnapshot) {
         guard let data = try? encoder.encode(snapshot) else { return }
         defaults?.set(data, forKey: key)
+    }
+
+    /// Round 178 (위젯 확장): 측정 결과 + 시계 컨텍스트(무브먼트/배터리/오버홀)를 한 번에 저장.
+    /// 앱(MeasurementViewModel)에서 직접 struct 를 조립하는 대신 이 메서드로 호출하면
+    /// 신규 필드 누락 없이 위젯에 풀 정보가 전달된다.
+    ///
+    /// **통합 담당 wire 지점**: 호출부는 `SharedSnapshotStore.write(snapshot)` 와 동일하므로
+    /// 기존 호출을 이 시그니처로 교체하거나, struct 조립 시 새 필드를 채우면 된다(아래 보고 참조).
+    static func writeMeasurement(
+        watchName: String,
+        caliber: String?,
+        timestamp: Date,
+        rateSecondsPerDay: Double,
+        beatErrorMs: Double,
+        amplitudeDegrees: Double?,
+        bph: Int,
+        confidenceScore: Int,
+        movementTypeRaw: String?,
+        batteryPercent: Int?,
+        nextOverhaulDate: Date?,
+        confidenceLabel: String?
+    ) {
+        write(LatestMeasurementSnapshot(
+            watchName: watchName,
+            caliber: caliber,
+            timestamp: timestamp,
+            rateSecondsPerDay: rateSecondsPerDay,
+            beatErrorMs: beatErrorMs,
+            amplitudeDegrees: amplitudeDegrees,
+            bph: bph,
+            confidenceScore: confidenceScore,
+            movementTypeRaw: movementTypeRaw,
+            batteryPercent: batteryPercent,
+            nextOverhaulDate: nextOverhaulDate,
+            confidenceLabel: confidenceLabel
+        ))
+    }
+
+    /// 측정 없이 시계 컨텍스트(배터리/오버홀/무브먼트/이름)만 갱신하고 싶을 때 — 기존 측정 스냅샷에 머지.
+    /// 예: 컬렉션에서 대표 시계를 바꾸거나, 스마트워치 배터리 % 가 시간 경과로 변할 때 위젯을 fresh 하게.
+    /// 기존 스냅샷이 없으면 no-op(측정 한 번은 있어야 의미 있는 위젯).
+    static func updateWatchContext(
+        watchName: String? = nil,
+        movementTypeRaw: String? = nil,
+        batteryPercent: Int? = nil,
+        nextOverhaulDate: Date? = nil
+    ) {
+        guard var snapshot = read() else { return }
+        if let watchName { snapshot.watchName = watchName }
+        if let movementTypeRaw { snapshot.movementTypeRaw = movementTypeRaw }
+        snapshot.batteryPercent = batteryPercent
+        snapshot.nextOverhaulDate = nextOverhaulDate
+        write(snapshot)
     }
 
     static func read() -> LatestMeasurementSnapshot? {

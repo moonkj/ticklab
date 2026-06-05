@@ -28,8 +28,23 @@ struct MeasurementView: View {
     /// 사용자 보고: 풀와인딩 안 한 시계 -45 s/d → "측정 오류" 오해. 측정 시작 전 안내 토스트.
     @State private var showWindingHint: Bool = false
 
+    /// 빠른 측정 모드 — 등록 없이 transient 측정. 결과는 표시하되 저장 안 함.
+    private let quickMode: Bool
+    /// 빠른 측정 결과 화면의 "시계 등록" CTA 콜백. nil 이면 결과 화면은 안내 텍스트만 노출.
+    private let onRegisterWatch: (() -> Void)?
+
     init(watch: Watch, preferences: UserPreferences) {
         _viewModel = State(wrappedValue: MeasurementViewModel(watch: watch, preferences: preferences))
+        self.quickMode = false
+        self.onRegisterWatch = nil
+    }
+
+    /// 빠른 측정(등록 없이 맛보기) 진입 — transient placeholder watch 로 측정, 결과 미저장.
+    /// 입문자 첫 경험 마찰↓. 기존 watch 측정 경로와 완전 분리.
+    init(quickMeasure preferences: UserPreferences, onRegisterWatch: (() -> Void)? = nil) {
+        _viewModel = State(wrappedValue: MeasurementViewModel(quickMeasureWith: preferences))
+        self.quickMode = true
+        self.onRegisterWatch = onRegisterWatch
     }
 
     /// 사용자 결정: Free 사용자는 하루 3회 측정 제한. Pro 무제한.
@@ -47,7 +62,9 @@ struct MeasurementView: View {
             watch: viewModel.watch,
             onRetry: { viewModel.cancel() },
             bphAutoDetected: viewModel.bphAutoDetected,
-            bphSuggested: viewModel.bphMismatchSuggested
+            bphSuggested: viewModel.bphMismatchSuggested,
+            isTransient: quickMode,
+            onRegisterWatch: onRegisterWatch
         )
     }
 

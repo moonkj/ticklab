@@ -170,9 +170,19 @@ struct TrendChartView: View {
         }
         .overlay {
             if sorted.isEmpty {
-                Text(String(localized: "trend.empty"))
-                    .font(AppTypography.caption)
-                    .foregroundStyle(AppColors.textSecondary)
+                // UX 고도화 — 빈 차트 대신 "미래를 미리보기": 글리프 + 격려 카피로 다음 행동 유도.
+                VStack(spacing: 8) {
+                    ConceptGlyph(systemName: "chart.line.uptrend.xyaxis", size: 30, color: AppColors.accent.opacity(0.55))
+                    Text(String(localized: "trend.empty"))
+                        .font(AppTypography.caption)
+                        .foregroundStyle(AppColors.textSecondary)
+                    Text(String(localized: "trend.empty.hint",
+                                defaultValue: "측정을 쌓으면 정확도 추세가 여기에 그려져요"))
+                        .font(.system(size: 11))
+                        .foregroundStyle(AppColors.ink3)
+                        .multilineTextAlignment(.center)
+                }
+                .padding(.horizontal, 20)
             }
         }
         .overlay(alignment: .topTrailing) {

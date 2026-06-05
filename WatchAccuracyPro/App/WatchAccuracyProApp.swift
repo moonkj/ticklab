@@ -25,11 +25,22 @@ struct WatchAccuracyProApp: App {
         // Round 133 사용자 보고: 오늘/일기 탭 상단 제목이 흰색으로 보이지 않음.
         // SwiftUI 의 toolbarColorScheme 만으론 large title 색상이 시스템 default(흰색) 로 잡히는 케이스 발견.
         // UINavigationBarAppearance 로 large/inline 제목 색을 명시적으로 검은색 강제.
+        // 밤의 워치 다크 테마: paper0/ink0 가 적응형 UIColor 이므로 그대로 넘기면
+        //   nav bar 도 라이트/다크에 따라 자동으로 배경·제목색을 전환한다(스냅샷 금지).
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor(AppColors.paper0)
-        appearance.titleTextAttributes = [.foregroundColor: UIColor(AppColors.ink0)]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor(AppColors.ink0)]
+        appearance.backgroundColor = UIColor { tc in
+            tc.userInterfaceStyle == .dark
+                ? UIColor(red: 0.059, green: 0.067, blue: 0.094, alpha: 1)  // #0F1118
+                : UIColor(red: 0.980, green: 0.980, blue: 0.969, alpha: 1)  // #FAFAF7
+        }
+        let titleColor = UIColor { tc in
+            tc.userInterfaceStyle == .dark
+                ? UIColor(red: 0.949, green: 0.949, blue: 0.969, alpha: 1)  // #F2F2F7
+                : UIColor(red: 0.102, green: 0.106, blue: 0.180, alpha: 1)  // #1A1B2E
+        }
+        appearance.titleTextAttributes = [.foregroundColor: titleColor]
+        appearance.largeTitleTextAttributes = [.foregroundColor: titleColor]
         appearance.shadowColor = .clear  // hairline 제거
         UINavigationBar.appearance().standardAppearance = appearance
         UINavigationBar.appearance().scrollEdgeAppearance = appearance
@@ -145,11 +156,22 @@ struct WatchAccuracyProApp: App {
         #endif
     }
 
+    /// 밤의 워치 테마 선택 → SwiftUI colorScheme. system=nil(기기 설정 따름).
+    /// 다크 테마 완성 전까지: FeatureFlags.darkModeEnabled OFF 면 시스템이 다크여도 항상 라이트 강제.
+    private var preferredColorScheme: ColorScheme? {
+        guard FeatureFlags.shared.darkModeEnabled else { return .light }
+        switch preferences.appearance {
+        case .system: return nil
+        case .light:  return .light
+        case .dark:   return .dark
+        }
+    }
+
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(preferences)
-                .preferredColorScheme(.light)
+                .preferredColorScheme(preferredColorScheme)
                 // 매우 큰 Dynamic Type 에서 layout 깨짐 방지 — accessibility3 까지 허용.
                 .dynamicTypeSize(.xSmall ... .accessibility3)
         }

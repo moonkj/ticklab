@@ -242,6 +242,7 @@
 		B6FD47F74F219314C019BB1D /* WatchCover.swift in Sources */ = {isa = PBXBuildFile; fileRef = A07FAA2F3650DB74A03B4940 /* WatchCover.swift */; };
 		B73E400264D320F5CD7BF530 /* DealerBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = B384A2B37DAF54535732F643 /* DealerBadge.swift */; };
 		B958114B075942AE4819AC17 /* BadgeGlyphs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7584E79FDD44E822785661CB /* BadgeGlyphs.swift */; };
+		B98BAC1CA10E13AABAC560AB /* QuickMeasureEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8FF43737E8AEC16E460CA2E /* QuickMeasureEntry.swift */; };
 		BAC8E110CABC5A3A5BE9401F /* WearLogServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */; };
 		BBCD94B4FDE85BA391814BD3 /* MovementDatabaseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91E473958975512F4841DB00 /* MovementDatabaseTests.swift */; };
 		BD2B1B3A0B5F6FEC9D7B6348 /* WatchMeasurementInitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025C7B9B631772F90C5E681C /* WatchMeasurementInitTests.swift */; };
@@ -679,6 +680,7 @@
 		E733AA51EC69F71E8AA02809 /* Secrets.swift.template */ = {isa = PBXFileReference; path = Secrets.swift.template; sourceTree = "<group>"; };
 		E8293C262F87D540B2E2C9E4 /* BadgesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesView.swift; sourceTree = "<group>"; };
 		E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOffboardingView.swift; sourceTree = "<group>"; };
+		E8FF43737E8AEC16E460CA2E /* QuickMeasureEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMeasureEntry.swift; sourceTree = "<group>"; };
 		E9EDDAD4DABD6B3C60B30AD2 /* DateFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatters.swift; sourceTree = "<group>"; };
 		EA71806471C899A041EC3ED7 /* WrappedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrappedView.swift; sourceTree = "<group>"; };
 		EA8FC0ED94A3DBB2B1652AD9 /* BPHEstimatorBranchExtraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BPHEstimatorBranchExtraTests.swift; sourceTree = "<group>"; };
@@ -1476,6 +1478,7 @@
 				0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */,
 				5B82869C79CF19830D780904 /* MeasurementView.swift */,
 				E1D1006CC82C071853A73BD9 /* MeasurementViewModel.swift */,
+				E8FF43737E8AEC16E460CA2E /* QuickMeasureEntry.swift */,
 			);
 			path = Measurement;
 			sourceTree = "<group>";
@@ -1915,6 +1918,7 @@
 				617932CBE745C7341559CE50 /* PurchaseRouter.swift in Sources */,
 				30814EB7EDDD89A9A26CC9DF /* PurchaseView.swift in Sources */,
 				A29D3FD2A90EA36F5AEF6725 /* QuartzBatteryCard.swift in Sources */,
+				B98BAC1CA10E13AABAC560AB /* QuickMeasureEntry.swift in Sources */,
 				757978029C1BA9D26D547F18 /* RateAggregate.swift in Sources */,
 				FC9FBA7E4E6BD71F89D926E7 /* RateCalculator.swift in Sources */,
 				E39D5900FF1267A2A375198C /* RateDial.swift in Sources */,

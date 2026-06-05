@@ -235,7 +235,7 @@ private struct FeatureCarousel: View {
             HStack(spacing: 6) {
                 ForEach(0..<pages.count, id: \.self) { i in
                     Capsule()
-                        .fill(i == page ? AppColors.primaryDeep : AppColors.ruleStrong)
+                        .fill(i == page ? AppColors.accent : AppColors.ruleStrong)
                         .frame(width: i == page ? 24 : 8, height: 8)
                         .animation(.easeOut(duration: 0.2), value: page)
                 }
@@ -465,7 +465,7 @@ private struct QuickWatchAdd: View {
                 Button(action: onSkip) {
                     Image(systemName: "chevron.left")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundStyle(AppColors.primaryDeep)
+                        .foregroundStyle(AppColors.ink0)
                         .frame(width: 44, height: 44)
                         .contentShape(Rectangle())
                 }

@@ -35,20 +35,31 @@ struct TamagotchiView: View {
         let emoji: String
     }
 
+    /// 무드 씬 배경 — 라이트 파스텔 + 다크모드 어두운 무드 틴트.
+    /// 다크에서 라이트 배경을 그대로 두면 카드(다크)와 안 어울리고 상단 제목까지 묻힘 → 적응형으로.
+    private static func moodBG(_ light: UIColor, _ dark: UIColor) -> Color {
+        Color(UIColor { $0.userInterfaceStyle == .dark ? dark : light })
+    }
+
     private func theme(for m: WatchMoodService.Mood) -> MoodTheme {
         switch m {
         // Round 123 (Hard Rule 3): label → Localizable.
-        case .energetic:  return MoodTheme(bg: Color(red: 0.91, green: 0.96, blue: 0.91),
+        case .energetic:  return MoodTheme(bg: Self.moodBG(UIColor(red: 0.91, green: 0.96, blue: 0.91, alpha: 1),
+                                                           UIColor(red: 0.075, green: 0.125, blue: 0.094, alpha: 1)),
                                             face: "◕‿◕", label: String(localized: "tamagotchi.mood.energetic"), emoji: "✨")
         case .happy:      return MoodTheme(bg: AppColors.accent50,
                                             face: "◔_◔", label: String(localized: "tamagotchi.mood.happy"), emoji: "🙂")
-        case .sleepy:     return MoodTheme(bg: Color(red: 0.95, green: 0.94, blue: 0.90),
+        case .sleepy:     return MoodTheme(bg: Self.moodBG(UIColor(red: 0.95, green: 0.94, blue: 0.90, alpha: 1),
+                                                           UIColor(red: 0.102, green: 0.098, blue: 0.078, alpha: 1)),
                                             face: "─_─", label: String(localized: "tamagotchi.mood.sleepy"), emoji: "😪")
-        case .dormant:    return MoodTheme(bg: Color(red: 0.91, green: 0.89, blue: 0.85),
+        case .dormant:    return MoodTheme(bg: Self.moodBG(UIColor(red: 0.91, green: 0.89, blue: 0.85, alpha: 1),
+                                                           UIColor(red: 0.090, green: 0.086, blue: 0.067, alpha: 1)),
                                             face: "z z z", label: String(localized: "tamagotchi.mood.dormant"), emoji: "💤")
-        case .lowBattery: return MoodTheme(bg: Color(red: 0.98, green: 0.92, blue: 0.91),
+        case .lowBattery: return MoodTheme(bg: Self.moodBG(UIColor(red: 0.98, green: 0.92, blue: 0.91, alpha: 1),
+                                                           UIColor(red: 0.125, green: 0.082, blue: 0.075, alpha: 1)),
                                             face: "x_x", label: String(localized: "tamagotchi.mood.low_battery"), emoji: "🪫")
-        case .needsWind:  return MoodTheme(bg: Color(red: 0.93, green: 0.92, blue: 0.86),
+        case .needsWind:  return MoodTheme(bg: Self.moodBG(UIColor(red: 0.93, green: 0.92, blue: 0.86, alpha: 1),
+                                                           UIColor(red: 0.102, green: 0.094, blue: 0.063, alpha: 1)),
                                             face: "◐_◐", label: String(localized: "tamagotchi.mood.needs_wind"), emoji: "🌀")
         }
     }

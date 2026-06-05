@@ -1946,6 +1946,7 @@
 "community.brand.picker.title" = "Etiqueta de marca (opcional)";
 "community.brand.picker.note" = "Solo marcas de tu colección";
 "community.brand.feed.empty" = "Aún no hay publicaciones de esta marca";
+"community.brands.popular.title" = "Marcas populares";
 "community.notif.comment" = "Alguien comentó tu publicación";
 "forecast.legend.projected" = "En %dd: ~%.1f s/d";
 "forecast.legend.a11y" = "La tendencia proyecta unos %.1f s/d en %d días, margen ±%.1f s/d";
@@ -1977,3 +1978,11 @@
 "admin.theme.title.label" = "Título del tema";
 "admin.theme.title.placeholder" = "p. ej., Esta semana: buceo";
 "admin.theme.publish" = "Publicar";
+
+"measurement.quick.placeholder_name" = "Medición rápida";
+
+"result.transient.title" = "Registra un reloj para guardar este resultado";
+
+"result.transient.body" = "Los resultados de la medición rápida no se guardan. Registra un reloj para seguir acumulando tu historial de mediciones, tendencias y promedios.";
+
+"result.transient.cta" = "Registrar un reloj";

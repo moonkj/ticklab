@@ -18,6 +18,14 @@ enum UserMode: String, CaseIterable {
     static var allCases: [UserMode] { [.novice, .pro] }
 }
 
+/// 외관(테마) 선택 — 밤의 워치 다크 테마.
+/// system=기기 설정 따름, light=항상 라이트, dark=항상 다크.
+enum AppAppearance: String, CaseIterable {
+    case system
+    case light
+    case dark
+}
+
 /// 앱 전역 사용자 설정 — 온보딩 완료 여부, 사용자 모드, 무음 측정 기본값.
 /// `@AppStorage` 와 호환되도록 String/Bool 만 다룬다.
 @Observable
@@ -159,6 +167,12 @@ final class UserPreferences {
         didSet { defaults.set(watchBoxColor, forKey: Keys.watchBoxColor) }
     }
 
+    /// 외관(테마) — 밤의 워치 다크 테마. 기본 system(기기 설정 따름).
+    /// 저장은 rawValue String. 변경 즉시 루트 `.preferredColorScheme` 에 반영.
+    var appearance: AppAppearance {
+        didSet { defaults.set(appearance.rawValue, forKey: Keys.appearance) }
+    }
+
     init() {
         // Round 23 (Min): defaults.register — 외부 reader (Settings.app) / 다른 process 에서도
         //   ON-by-default 키들이 일관된 fallback. didSet 으로 한 번이라도 write 한 값은 우선 유지.
@@ -182,7 +196,8 @@ final class UserPreferences {
             Keys.rotationNudgeDays: 7,
             Keys.haptics: true,
             Keys.watchBoxSlots: 6,
-            Keys.watchBoxColor: "walnut"
+            Keys.watchBoxColor: "walnut",
+            Keys.appearance: AppAppearance.system.rawValue
         ])
         self.hasCompletedOnboarding = defaults.bool(forKey: Keys.onboarding)
         // Round 133: 사용자 모드 선택 UI 제거됨 — 항상 .pro 로 고정 (전문 분석 노출).
@@ -224,6 +239,8 @@ final class UserPreferences {
         self.lastSeenWhatsNewVersion = defaults.string(forKey: Keys.whatsNewVersion) ?? ""
         self.watchBoxSlotCount = (defaults.object(forKey: Keys.watchBoxSlots) as? Int) ?? 6
         self.watchBoxColor = defaults.string(forKey: Keys.watchBoxColor) ?? "walnut"
+        // 외관(테마) — 저장된 rawValue 파싱, 미설정/이상값이면 system.
+        self.appearance = AppAppearance(rawValue: defaults.string(forKey: Keys.appearance) ?? "") ?? .system
         // Round 149 (Hyemi 7 H1): ProEntitlement.markPro 가 호출되면 isPro 인스턴스 즉시 동기화.
         // Round 23 (Min): observer token 보관 → deinit 에서 removeObserver.
         proEntitlementObserver = NotificationCenter.default.addObserver(
@@ -269,6 +286,7 @@ final class UserPreferences {
         static let whatsNewVersion = "ticklab.lastSeenWhatsNewVersion"
         static let watchBoxSlots = "ticklab.watchBoxSlotCount"
         static let watchBoxColor = "ticklab.watchBoxColor"
+        static let appearance = "ticklab.appearance"
         /// 측정 시작 화면의 풀와인딩 안내 토스트 마지막 노출 시각 (TimeInterval since 1970).
         /// 24h 이내 재진입 시 다시 안 띄움 — noise 줄이기 위함.
         static let windingHintShownAt = "ticklab.windingHintShownAt"

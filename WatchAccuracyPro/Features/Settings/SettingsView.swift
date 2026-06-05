@@ -141,6 +141,29 @@ struct SettingsView: View {
                     Text(String(localized: "settings.silent_mode_default.hint"))
                 }
 
+                // 밤의 워치 다크 테마 — 외관(테마) 선택. system/light/dark.
+                // 다크 테마 QA 완료 전까지 숨김(FeatureFlags.darkModeEnabled OFF). 추후 ON 시 노출 + App 에서 라이트 강제 해제.
+                if FeatureFlags.shared.darkModeEnabled {
+                    Section {
+                        Picker(
+                            String(localized: "settings.appearance", defaultValue: "외관(테마)"),
+                            selection: $preferences.appearance
+                        ) {
+                            Text(String(localized: "settings.appearance.system", defaultValue: "시스템"))
+                                .tag(AppAppearance.system)
+                            Text(String(localized: "settings.appearance.light", defaultValue: "라이트"))
+                                .tag(AppAppearance.light)
+                            Text(String(localized: "settings.appearance.dark", defaultValue: "다크"))
+                                .tag(AppAppearance.dark)
+                        }
+                    } header: {
+                        Text(String(localized: "settings.section.appearance", defaultValue: "화면"))
+                    } footer: {
+                        Text(String(localized: "settings.appearance.footer",
+                                    defaultValue: "‘밤의 워치’ 다크 테마. 시스템을 선택하면 기기 설정을 따릅니다."))
+                    }
+                }
+
                 // Round 138 사용자 요청: 동기화 섹션 (무브먼트 DB 자동 업데이트 / 지금 업데이트 확인) 제거.
                 // 원자시계 시간 확인도 일반 사용자에게 의미 없어 제거 후보 — 사용자 확인 후 처리.
 
@@ -688,7 +711,7 @@ struct SettingsView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbarBackground(AppColors.paper0, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .toolbarColorScheme(.light, for: .navigationBar)
+            // 밤의 워치 다크 테마: .light 고정 제거 — paper0/title 이 적응형이므로 자동 전환.
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
                     Button(String(localized: "common.done")) { dismiss() }

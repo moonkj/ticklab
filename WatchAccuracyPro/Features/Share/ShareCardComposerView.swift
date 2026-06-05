@@ -313,7 +313,7 @@ struct ShareCardComposerView: View {
         } label: {
             Text(label)
                 .font(.system(size: 12, weight: selected ? .semibold : .medium))
-                .foregroundStyle(selected ? .white : AppColors.ink2)
+                .foregroundStyle(selected ? AppColors.paper0 : AppColors.ink2)
                 .padding(.horizontal, 12).padding(.vertical, 6)
                 .background(selected ? AppColors.ink0 : .clear)
                 .clipShape(Capsule())

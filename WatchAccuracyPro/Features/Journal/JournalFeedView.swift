@@ -287,7 +287,7 @@ struct JournalFeedView: View {
                     Text(mode.localizedName)
                         .font(.system(size: 12, weight: selected ? .semibold : .medium, design: .monospaced))
                         .tracking(1.2)
-                        .foregroundStyle(selected ? .white : AppColors.ink2)
+                        .foregroundStyle(selected ? AppColors.paper0 : AppColors.ink2)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 10)
                         .background(selected ? AppColors.ink0 : Color.clear)

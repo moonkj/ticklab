@@ -23,6 +23,10 @@ final class FeatureFlags: ObservableObject {
     /// 큐레이션 YouTube 영상 피드(분석 탭 진입). 백엔드(curated_channels) 배포·채널 등록 전까지 OFF.
     @Published private(set) var videoFeedEnabled: Bool = false
 
+    /// 밤의 워치 다크 테마. 완성 전까지 OFF — 외관(테마) 설정 숨기고 시스템이 다크여도 항상 라이트 강제.
+    /// 추후 다크 QA 완료 시 ON 으로 퍼블리시.
+    @Published private(set) var darkModeEnabled: Bool = false
+
     // MARK: - Load from UserDefaults (Phase 1 로컬)
     private func load() {
         let d = UserDefaults.standard
@@ -33,6 +37,7 @@ final class FeatureFlags: ObservableObject {
         communityGatingEnabled = d.bool(forKey: "ticklab.flag.communityGating")
         communityFreeVisibleCount = (d.object(forKey: "ticklab.flag.communityFreeN") as? Int) ?? 10
         videoFeedEnabled = d.bool(forKey: "ticklab.flag.videoFeedEnabled")
+        darkModeEnabled = d.bool(forKey: "ticklab.flag.darkModeEnabled")
         #if DEBUG
         // DEBUG 미리보기 — 개발 빌드에서 커뮤니티 UX/UI 평가 가능. 릴리스는 백엔드 배포 후 원격 ON.
         // 백엔드 미배포 상태에선 피드 로드 실패(빈 피드)지만 화면 흐름·게이트·작성기는 확인 가능.

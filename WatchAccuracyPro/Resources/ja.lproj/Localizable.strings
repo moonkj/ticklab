@@ -1946,6 +1946,7 @@
 "community.brand.picker.title" = "ブランドタグ（任意）";
 "community.brand.picker.note" = "コレクションのブランドのみ";
 "community.brand.feed.empty" = "このブランドの投稿はまだありません";
+"community.brands.popular.title" = "人気ブランド";
 "community.notif.comment" = "あなたの投稿にコメントがつきました";
 "forecast.legend.projected" = "%d日後 約%.1f s/d";
 "forecast.legend.a11y" = "推移では%d日後に約%.1f秒/日、誤差±%.1f秒/日の見込み";
@@ -1977,3 +1978,11 @@
 "admin.theme.title.label" = "テーマ名";
 "admin.theme.title.placeholder" = "例: 今週はダイバー";
 "admin.theme.publish" = "発行";
+
+"measurement.quick.placeholder_name" = "クイック測定";
+
+"result.transient.title" = "この結果を保存するには時計を登録してください";
+
+"result.transient.body" = "クイック測定の結果は保存されません。時計を登録すると、測定履歴・トレンド・平均を蓄積できます。";
+
+"result.transient.cta" = "時計を登録";

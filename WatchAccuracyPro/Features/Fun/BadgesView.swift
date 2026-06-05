@@ -405,9 +405,9 @@ struct BadgesView: View {
                 } label: {
                     Text(f.label)
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(filter == f ? .white : AppColors.ink0)
+                        .foregroundStyle(filter == f ? AppColors.paper0 : AppColors.ink0)
                         .frame(maxWidth: .infinity, minHeight: 44)
-                        .background(filter == f ? AppColors.primaryDeep : AppColors.paper2)
+                        .background(filter == f ? AppColors.ink0 : AppColors.paper2)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .contentShape(RoundedRectangle(cornerRadius: 10))
                 }

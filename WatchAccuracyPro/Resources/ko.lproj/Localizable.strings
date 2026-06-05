@@ -1146,6 +1146,11 @@
 /* Round 129 */
 "speccard.list.empty.hint" = "Watch Detail 의 '···' 메뉴 → '스펙 카드 만들기'에서 추가할 수 있어요.";
 "result.saved.hint" = "측정값 저장됨 ✓";
+/* 빠른 측정(등록 없이 맛보기) */
+"measurement.quick.placeholder_name" = "빠른 측정";
+"result.transient.title" = "이 결과를 저장하려면 시계를 등록하세요";
+"result.transient.body" = "빠른 측정 결과는 저장되지 않아요. 시계를 등록하면 측정 기록·트렌드·평균을 계속 쌓을 수 있어요.";
+"result.transient.cta" = "시계 등록하기";
 "measurement.hint.noise" = "🔊 주변 소음이 큰 것 같아요. 폰을 안정시키고 조용한 곳에서 다시 측정해 주세요.";
 "measurement.hint.press_closer" = "📍 케이스백(시계 뒷면)을 iPhone 하단 마이크에 더 단단히 밀착해 주세요.";
 "measurement.hint.no_signal" = "🎤 신호가 거의 없어요. 폰 마이크를 시계 케이스백에 직접 닿게 대주세요.";
@@ -2008,6 +2013,7 @@
 "community.brand.picker.title" = "브랜드 태그 (선택)";
 "community.brand.picker.note" = "내 컬렉션 브랜드만 선택할 수 있어요";
 "community.brand.feed.empty" = "이 브랜드의 게시물이 아직 없어요";
+"community.brands.popular.title" = "인기 브랜드";
 "community.notif.comment" = "회원님의 게시물에 댓글을 남겼습니다";
 "forecast.legend.projected" = "%d일 후 %.1f s/d 예상";
 "forecast.legend.a11y" = "추세로 보면 %d일 후 약 %.1f초/일, 오차범위 ±%.1f초/일 예상";

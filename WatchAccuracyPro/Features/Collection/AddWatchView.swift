@@ -441,7 +441,7 @@ struct AddWatchView: View {
                             .foregroundStyle(AppColors.info)
                         Text(String(localized: "addwatch.serial.hint"))
                             .font(.system(size: 13))
-                            .foregroundStyle(AppColors.primaryDeep)
+                            .foregroundStyle(AppColors.ink1)
                     }
                     .padding(.vertical, 4)
                 }

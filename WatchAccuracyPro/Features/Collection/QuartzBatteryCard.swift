@@ -106,7 +106,7 @@ struct QuartzBatteryCard: View {
                 Spacer()
                 Text(String(localized: "battery.today"))
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
-                    .foregroundStyle(AppColors.primaryDeep)
+                    .foregroundStyle(AppColors.ink0)
                 Spacer()
                 Text(AppDateFormat.fullDate(expires))
                     .font(.system(size: 10, weight: .semibold, design: .monospaced))
@@ -174,7 +174,7 @@ struct QuartzBatteryCard: View {
         VStack(spacing: 10) {
             HStack {
                 Image(systemName: "calendar")
-                    .foregroundStyle(AppColors.primaryDeep)
+                    .foregroundStyle(AppColors.ink0)
                 DatePicker(
                     String(localized: "watch.battery.last_replaced"),
                     selection: Binding(

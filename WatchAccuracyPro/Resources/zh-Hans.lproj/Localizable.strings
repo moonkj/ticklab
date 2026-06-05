@@ -1946,6 +1946,7 @@
 "community.brand.picker.title" = "品牌标签（可选）";
 "community.brand.picker.note" = "仅限你收藏中的品牌";
 "community.brand.feed.empty" = "该品牌还没有帖子";
+"community.brands.popular.title" = "热门品牌";
 "community.notif.comment" = "有人评论了你的帖子";
 "forecast.legend.projected" = "%d天后约%.1f s/d";
 "forecast.legend.a11y" = "按趋势%d天后约为%.1f秒/天，误差±%.1f秒/天";
@@ -1977,3 +1978,11 @@
 "admin.theme.title.label" = "主题标题";
 "admin.theme.title.placeholder" = "例如：本周潜水表";
 "admin.theme.publish" = "发布";
+
+"measurement.quick.placeholder_name" = "快速测量";
+
+"result.transient.title" = "注册手表以保存此结果";
+
+"result.transient.body" = "快速测量的结果不会被保存。注册手表即可持续积累您的测量记录、趋势和平均值。";
+
+"result.transient.cta" = "注册手表";

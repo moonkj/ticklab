@@ -151,7 +151,8 @@ struct RootTabView: View {
         }
         // 사용자 보고 fix: 글로벌 accent gold 가 alert 버튼까지 propagate → 가독성 ↓ (#C9A961 on white ~2.8:1).
         //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.
-        .tint(AppColors.primaryDeep)
+        //   다크모드: indigo 는 어두운 배경에서 안 보임 → interactiveTint(light=indigo, dark=gold) 로 적응형화.
+        .tint(AppColors.interactiveTint)
         // 관리자(운영 ID) 활성 시 작은 플로팅 배지로 표시 — 상단 버튼을 가리지 않게
         // 오버레이(레이아웃 비점유) + allowsHitTesting(false)(탭 통과). 탭바 위에 위치.
         .overlay(alignment: .bottomTrailing) {

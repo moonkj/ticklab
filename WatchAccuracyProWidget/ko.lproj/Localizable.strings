@@ -1,3 +1,5 @@
 "widget.wear.today" = "오늘 착용";
 "widget.wear.done" = "착용함";
 "widget.config.desc" = "최근 시계 정확도 측정";
+"widget.overhaul.due" = "정비 필요";
+"widget.overhaul.in" = "%@ 후 정비";

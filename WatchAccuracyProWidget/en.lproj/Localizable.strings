@@ -1,3 +1,5 @@
 "widget.wear.today" = "Wear today";
 "widget.wear.done" = "Worn today";
 "widget.config.desc" = "Latest watch accuracy";
+"widget.overhaul.due" = "Service due";
+"widget.overhaul.in" = "Service in %@";

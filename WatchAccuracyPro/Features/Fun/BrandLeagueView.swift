@@ -137,9 +137,9 @@ struct BrandLeagueView: View {
                 } label: {
                     Text(p.label)
                         .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(period == p ? .white : AppColors.ink0)
+                        .foregroundStyle(period == p ? AppColors.paper0 : AppColors.ink0)
                         .frame(maxWidth: .infinity, minHeight: 44)
-                        .background(period == p ? AppColors.primaryDeep : AppColors.paper2)
+                        .background(period == p ? AppColors.ink0 : AppColors.paper2)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                         .contentShape(RoundedRectangle(cornerRadius: 10))
                 }
@@ -401,9 +401,12 @@ struct BrandLeagueView: View {
     }
 
     private func trophyView(rank: Int) -> some View {
-        let color: Color = rank == 1 ? Self.gold : rank == 2 ? Self.silver : Self.bronze
-        return ConceptGlyph(systemName: "trophy.fill", size: 26, color: color)
-            .shadow(color: .black.opacity(0.25), radius: 3, y: 1)
+        // 트로피를 블록과 같은 금/은/동으로 두면 묻힘 → 같은 금속의 '진한' 톤 + 흰 하이라이트로 양각.
+        let color: Color = rank == 1 ? Color(red: 0.42, green: 0.32, blue: 0.10)   // deep gold
+                         : rank == 2 ? Color(red: 0.34, green: 0.36, blue: 0.42)   // deep steel
+                         :             Color(red: 0.36, green: 0.22, blue: 0.10)   // deep bronze
+        return ConceptGlyph(systemName: "trophy.fill", size: 30, color: color)
+            .shadow(color: .white.opacity(0.5), radius: 0.5, x: 0, y: 1)            // 양각 하이라이트
     }
 
     // MARK: - Brand Count Computation (뷰 레벨에서 @Query wearLogs 사용 — 관계 로딩 보장)

@@ -31,6 +31,10 @@ struct TodayView: View {
     /// 빈 상태 CTA 가 단순히 첫 시계 detail 로 진입했는데, 사용자는 어느 시계를 고를지 선택권 원함.
     @State private var showingPrimaryPicker = false
 
+    /// Today UX 고도화: 히어로 하단 "오늘 한 줄" → 이 시계로 저널 작성 sheet.
+    /// (WatchDetailView 와 동일하게 JournalComposerView(defaultWatch:) 진입.)
+    @State private var journalWatch: Watch?
+
     /// Round 176 (사용자 요청 #2): 대표 시계 — 명확히 보이게 강화.
     /// 컬렉션에서 1개만 isPrimary 가 true. nil 이면 "대표 시계 없음" 빈 상태.
     private var primaryWatch: Watch? {
@@ -91,18 +95,58 @@ struct TodayView: View {
     @ViewBuilder
     private var primaryWatchSection: some View {
         if let primary = primaryWatch {
-            NavigationLink(value: primary) {
-                primaryFilledCard(for: primary)
+            VStack(spacing: 10) {
+                NavigationLink(value: primary) {
+                    primaryFilledCard(for: primary)
+                }
+                .buttonStyle(.plain)
+                // "오늘 한 줄" — 이 시계로 가벼운 저널 작성 진입(매일 열 이유).
+                journalPromptRow(for: primary)
             }
-            .buttonStyle(.plain)
+            .sheet(item: $journalWatch) { w in
+                JournalComposerView(defaultWatch: w)
+            }
         } else if !watches.isEmpty {
             primaryEmptyCard
         }
     }
 
+    /// 히어로 카드 아래 가벼운 "오늘 한 줄 남기기" 프롬프트. 탭 → 이 시계 저널 작성 sheet.
+    private func journalPromptRow(for watch: Watch) -> some View {
+        Button {
+            UISelectionFeedbackGenerator().selectionChanged()
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.85)) {
+                journalWatch = watch
+            }
+        } label: {
+            HStack(spacing: 9) {
+                ConceptGlyph(systemName: "square.and.pencil", size: 15, color: AppColors.accentDark)
+                Text(String(localized: "today.journal.prompt",
+                            defaultValue: "오늘 한 줄 남기기"))
+                    .font(.system(size: 13, weight: .medium))
+                    .foregroundStyle(AppColors.ink1)
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(AppColors.ink3)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 11)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(AppColors.paper1)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(RoundedRectangle(cornerRadius: 12).stroke(AppColors.rule, lineWidth: 1))
+            .contentShape(RoundedRectangle(cornerRadius: 12))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(String(localized: "today.journal.prompt",
+                                    defaultValue: "오늘 한 줄 남기기"))
+    }
+
     /// 웨이브2-C: 대표 시계 photo-forward 와이드 hero — 사진 배경 + scrim + 세리프 이름 + 오늘 착용상태.
     private func primaryFilledCard(for watch: Watch) -> some View {
         let worn = WearLogService.isWornToday(watch, in: modelContext)
+        let days = wearDays(for: watch)
         return ZStack(alignment: .bottomLeading) {
             // 사진 배경 — PhotoCache 재사용. 없으면 paper-cool linen + silhouette.
             ZStack {
@@ -173,6 +217,16 @@ struct TodayView: View {
                     .font(.system(size: 11, weight: .semibold))
                     .tracking(2)
                     .foregroundStyle(.white.opacity(0.82))
+                // 이 시계와 함께한 일수 — scrim 위 은은한 흰 텍스트. 0이면 숨김.
+                if days >= 1 {
+                    Text(String(format: String(localized: "today.hero.together_days",
+                                               defaultValue: "함께한 %d일"),
+                                days))
+                        .font(.system(size: 11, weight: .medium))
+                        .foregroundStyle(.white.opacity(0.72))
+                        .shadow(color: .black.opacity(0.3), radius: 3, y: 1)
+                        .padding(.top, 3)
+                }
             }
             .padding(16)
         }
@@ -241,6 +295,14 @@ struct TodayView: View {
         }
         watch.isPrimary = true
         try? modelContext.save()
+    }
+
+    /// 이 시계와 함께한 일수 = distinct startOfDay 착용 일수.
+    /// body 마다 무거운 fetch 피하려 이미 로드된 `wearLogs` @Query 에서 계산.
+    /// (WearLog.date 는 모델 init 에서 startOfDay 로 정규화되므로 Set<Date> 로 distinct.)
+    private func wearDays(for watch: Watch) -> Int {
+        let id = watch.id
+        return Set(wearLogs.filter { $0.watch?.id == id }.map { $0.date }).count
     }
 
     // MARK: - Header
