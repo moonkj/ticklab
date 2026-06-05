@@ -46,9 +46,10 @@ struct LiveWaveformCanvas: View {
                     }
 
                     if running, let bph = lockedBPH, bph > 0 {
-                        // 옅은 실신호 배경(살아있는 텍스처) — 메트로놈이 주인공이므로 낮은 opacity.
+                        // 배경 — 부드럽게 흐르는 잔잔한 파형. 모양은 매끄러운 다중 사인, **진폭만 실제 신호
+                        //   세기로 변조**(소리 크면 큰 파/작으면 잔물결). 정밀 데이터는 아래 톡톡 점이 담당.
                         if let s = samples, s.count > 1 {
-                            drawEnvelope(gc, samples: s, w: w, mid: mid, h: h, opacity: 0.07)
+                            drawSmoothWave(gc, samples: s, w: w, mid: mid, h: h, t: t)
                         }
                         // 틱 톡 틱 톡 — 점이 **고정 슬롯**에 좌→우로 하나씩 '톡톡' 찍혀 쌓임(흐름 없음).
                         //   측정된 BPH 박자(2박에 1번)로 새 점이 다음 슬롯에 stamp(팝+링). 한 줄 다 차면
@@ -103,26 +104,25 @@ struct LiveWaveformCanvas: View {
         .accessibilityHidden(true)
     }
 
-    /// 실측 진폭을 거울 밴드 + 상단 rim 으로. 3-tap smoothing 으로 샘플 지글거림 완화.
-    private func drawEnvelope(_ gc: GraphicsContext, samples: [Float], w: CGFloat, mid: CGFloat, h: CGFloat, opacity: Double = 0.12) {
-        let n = samples.count
-        guard n > 1 else { return }
-        let amp = h * 0.34
-        let mags: [CGFloat] = (0..<n).map { i in
-            let a = samples[max(0, i - 1)], b = samples[i], c = samples[min(n - 1, i + 1)]
-            return min(1.0, CGFloat(abs((a + b + c) / 3))) * amp
+    /// 부드럽게 흐르는 배경 파형 — 모양은 매끄러운 다중 사인(노이즈 X), 진폭은 실제 신호 세기로 변조,
+    /// 시간으로 연속 흐름. 정밀 측정 데이터는 위의 톡톡 점이 담당하므로 배경은 잔잔한 앰비언트.
+    private func drawSmoothWave(_ gc: GraphicsContext, samples: [Float], w: CGFloat, mid: CGFloat, h: CGFloat, t: Double) {
+        // 실제 신호 레벨(평균 |amp|) → 진폭 변조. 작아도 최소 잔물결 유지.
+        let level = samples.isEmpty ? 0 : samples.reduce(0) { $0 + abs($1) } / Float(samples.count)
+        let dynAmp = h * 0.16 * Double(min(1, level * 3))
+        let A = h * 0.04 + dynAmp
+        let flow = reduceMotion ? 0 : t * 1.2   // 연속 흐름(모션저감 시 정지)
+        var p = Path()
+        var first = true
+        for xi in stride(from: 0.0, through: Double(w), by: 3) {
+            let nx = xi / Double(max(1, w))
+            let y = Double(mid)
+                + sin(nx * 4 * .pi - flow) * A * 0.6
+                + sin(nx * 7 * .pi - flow * 1.4) * A * 0.4
+            let pt = CGPoint(x: xi, y: y)
+            if first { p.move(to: pt); first = false } else { p.addLine(to: pt) }
         }
-        func px(_ i: Int) -> CGFloat { CGFloat(i) / CGFloat(n - 1) * w }
-        var band = Path()
-        band.move(to: CGPoint(x: 0, y: mid - mags[0]))
-        for i in 1..<n { band.addLine(to: CGPoint(x: px(i), y: mid - mags[i])) }
-        for i in stride(from: n - 1, through: 0, by: -1) { band.addLine(to: CGPoint(x: px(i), y: mid + mags[i])) }
-        band.closeSubpath()
-        gc.fill(band, with: .color(AppColors.primary500.opacity(opacity)))
-        var rim = Path()
-        rim.move(to: CGPoint(x: 0, y: mid - mags[0]))
-        for i in 1..<n { rim.addLine(to: CGPoint(x: px(i), y: mid - mags[i])) }
-        gc.stroke(rim, with: .color(AppColors.primary500.opacity(min(1.0, opacity * 5))), lineWidth: 1.2)
+        gc.stroke(p, with: .color(AppColors.primary500.opacity(0.22)), lineWidth: 1.4)
     }
 
     /// 흐르는 박동 점 — 오른쪽에서 막 찍힌 점(fresh≈1)은 크고 확장·소멸 링(stamp), 좌측으로 가며 가라앉음.
