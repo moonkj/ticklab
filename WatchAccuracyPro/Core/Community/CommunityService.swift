@@ -688,10 +688,13 @@ final class CommunityService: ObservableObject {
         let hasLocalPhoto = defaults.data(forKey: "ticklab.profile.photoData") != nil
         if hasLocalName || hasLocalPhoto {
             await syncProfile()            // 로컬(최신)을 이 Apple 계정에 업로드
+        } else {
+            // 로컬이 비어있을 때만(재설치/기기변경) 서버에서 복원 — restoreProfileIfNeeded 가
+            //   시작연도·브랜드·대표메이커·소개·아바타까지 전부 채운다(needAny 확장). 로컬에 이름/사진이
+            //   있으면 복원을 매 로그인 돌리지 않는다 — 사용자가 비운 필드를 서버 옛값으로 되살리거나
+            //   불필요한 네트워크 호출을 하지 않기 위함.
+            await restoreProfileIfNeeded()
         }
-        // 로컬에 없는 필드(시작연도·브랜드·대표메이커·소개·사진)는 서버에서 보강(merge).
-        //   일부만 로컬에 있던 경우에도 나머지 전체가 복원되게 — push/pull 양쪽에서 항상 실행.
-        await restoreProfileIfNeeded()
     }
 
     /// 로그인/실행 시 — 로컬 프로필의 빈 필드를 서버에서 복원(+아바타 다운로드). 로컬에 있으면 보존(덮어쓰지 않음).

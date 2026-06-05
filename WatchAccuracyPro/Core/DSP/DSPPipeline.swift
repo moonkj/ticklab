@@ -687,9 +687,17 @@ final class DSPPipeline {
             if let free = BPHEstimator.estimate(
                 envelope: fluxSlice, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nil
             ), free.bph > 0 {
-                let hinted = bphEstOpt?.bph ?? 0
-                if bphEstOpt == nil || abs(Double(free.bph - hinted)) / Double(max(1, hinted)) > 0.12 {
-                    bphEstOpt = free
+                if let hinted = bphEstOpt {
+                    // hinted 락이 성공했을 땐 — 자동감지가 다른 패밀리(>12%)이고, **실제 측정된 주기**
+                    //   (hinted.rawBph, snap 전 원시값)가 hinted 의 snap 된 BPH 보다 자동감지 BPH 에 더 가까울
+                    //   때만 채택. 즉 hinted 가 hint 창(±20%) 밖의 진짜 peak 을 억지로 in-window 패밀리로 snap 한
+                    //   경우만 교정 → 정상 시계가 노이즈로 오보정되는 것을 차단(confidence 는 median-snap 에서
+                    //   신뢰 불가라 raw fit 으로 판별).
+                    let disagree = abs(Double(free.bph - hinted.bph)) / Double(max(1, hinted.bph)) > 0.12
+                    let freeFitsRawBetter = abs(hinted.rawBph - Double(free.bph)) < abs(hinted.rawBph - Double(hinted.bph))
+                    if disagree, freeFitsRawBetter { bphEstOpt = free }
+                } else {
+                    bphEstOpt = free   // hinted 완전 실패 → 자동감지로 측정 성립.
                 }
             }
         }
@@ -964,8 +972,15 @@ final class DSPPipeline {
                 let free = BPHEstimator.estimate(envelope: fluxSnapshot, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nil)
                     ?? BPHEstimator.estimate(envelope: envelopeDownsampled, beats: envCoarseBeats, sampleRate: envFluxRate, nominalBphHint: nil)
                 if let f = free, f.bph > 0 {
-                    let h = hinted?.bph ?? 0
-                    if hinted == nil || abs(Double(f.bph - h)) / Double(max(1, h)) > 0.12 { return f }
+                    if let h = hinted {
+                        // hinted 성공 시 — 다른 패밀리(>12%)이고 실제 측정 주기(h.rawBph)가 h.bph 보다 f.bph 에
+                        //   더 가까울 때만 채택(=hinted 가 창 밖 peak 을 억지 snap 한 경우만 교정, 오보정 차단).
+                        let disagree = abs(Double(f.bph - h.bph)) / Double(max(1, h.bph)) > 0.12
+                        let freeFitsRawBetter = abs(h.rawBph - Double(f.bph)) < abs(h.rawBph - Double(h.bph))
+                        if disagree, freeFitsRawBetter { return f }
+                    } else {
+                        return f   // hinted 완전 실패 → 자동감지로 측정 성립.
+                    }
                 }
             }
             if let est = hinted { return est }

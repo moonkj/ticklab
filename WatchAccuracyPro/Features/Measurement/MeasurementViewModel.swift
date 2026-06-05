@@ -350,13 +350,21 @@ final class MeasurementViewModel {
                             // 진동수 오입력 자동 보정: 신호가 등록 BPH 와 다른 패밀리로 잡혔고(>12%) 측정이
                             //   신뢰할 만하면(F 등급 제외), 감지된 실제 BPH 를 시계에 반영한다. 다음 측정부터
                             //   바로 정확한 BPH 로 시작 → free-fallback 없이 즉시 lock(빠른 오차 측정).
-                            if let suggested = self.bphMismatchSuggested,
+                            //   저장한 customBph 는 화면에 표시·저장된 결과의 BPH(result.bph)와 일치시킨다.
+                            //   (bphMismatchSuggested 는 마지막 윈도우 기준이라 멀티윈도우에서 result.bph 와
+                            //    어긋날 수 있음 → 사용자가 본 값으로 기록.)
+                            if self.bphMismatchSuggested != nil,
                                result.reliabilityGrade != .f,
-                               self.watch.customBph != suggested {
-                                self.watch.customBph = suggested
+                               result.bph > 0,
+                               self.watch.customBph != result.bph {
+                                self.watch.customBph = result.bph
                                 self.watch.movementConfirmed = true
-                                try? modelContext.save()
-                                self.bphAutoCorrectedTo = suggested
+                                do {
+                                    try modelContext.save()
+                                    self.bphAutoCorrectedTo = result.bph   // 저장 성공 시에만 안내 카드.
+                                } catch {
+                                    // 저장 실패 — 거짓 안내 방지(카드 미표시). 다음 측정에서 재시도됨.
+                                }
                             }
                         }
                         // 스트림A: 측정 완료 햅틱 + VoiceOver 등급 안내.
