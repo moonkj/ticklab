@@ -199,7 +199,7 @@ struct JournalComposerView: View {
                 matching: .images
             ) {
                 HStack(spacing: 8) {
-                    Image(systemName: "photo.on.rectangle")
+                    ConceptGlyph(systemName: "photo.on.rectangle", size: 17)
                     Text(String(format: NSLocalizedString("journal.compose.photo_count", comment: ""), pickedPhotoCount))
                         .font(.system(size: 13))
                     if isProcessingPhotos {

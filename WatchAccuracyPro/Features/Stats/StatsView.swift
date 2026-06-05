@@ -104,20 +104,23 @@ struct StatsView: View {
                         funEntryCard(emoji: "🏆",
                                      title: String(localized: "stats.entry.badges"),
                                      subtitle: String(localized: "stats.entry.badges.subtitle"),
-                                     tint: AppColors.accent.opacity(0.18), fillHeight: true)
+                                     tint: AppColors.accent.opacity(0.18), fillHeight: true,
+                                     symbol: "trophy.fill", symbolColor: AppColors.accent)
                     }.buttonStyle(.plain)
                     NavigationLink { HighlightTimelineView() } label: {
                         funEntryCard(emoji: "⭐",
                                      title: String(localized: "stats.entry.highlights"),
                                      subtitle: String(localized: "stats.entry.highlights.subtitle"),
-                                     tint: AppColors.warning.opacity(0.15), fillHeight: true)
+                                     tint: AppColors.warning.opacity(0.15), fillHeight: true,
+                                     symbol: "star.fill", symbolColor: AppColors.warning)
                     }.buttonStyle(.plain)
                 }
                 NavigationLink { WrappedView() } label: {
                     funEntryCard(emoji: "🎁",
                                  title: String(localized: "stats.entry.wrapped"),
                                  subtitle: String(localized: "stats.entry.wrapped.subtitle"),
-                                 tint: Color.purple.opacity(0.15))
+                                 tint: Color.purple.opacity(0.15),
+                                 symbol: "gift", symbolColor: .purple)
                 }.buttonStyle(.plain)
             }
 
@@ -133,13 +136,15 @@ struct StatsView: View {
                         funEntryCard(emoji: "🏅",
                                      title: String(localized: "stats.entry.league"),
                                      subtitle: String(localized: "stats.entry.community.subtitle"),
-                                     tint: AppColors.info.opacity(0.18), fillHeight: true)
+                                     tint: AppColors.info.opacity(0.18), fillHeight: true,
+                                     symbol: "medal", symbolColor: AppColors.info)
                     }.buttonStyle(.plain)
                     NavigationLink { BrandNewsView() } label: {
                         funEntryCard(emoji: "📰",
                                      title: String(localized: "stats.entry.news"),
                                      subtitle: String(localized: "stats.entry.news.subtitle"),
-                                     tint: Color.orange.opacity(0.15), fillHeight: true)
+                                     tint: Color.orange.opacity(0.15), fillHeight: true,
+                                     symbol: "newspaper", symbolColor: .orange)
                     }.buttonStyle(.plain)
                     // 큐레이션 YouTube 영상 — 백엔드(curated_channels) 준비 후 플래그 ON.
                     if FeatureFlags.shared.videoFeedEnabled {
@@ -168,7 +173,7 @@ struct StatsView: View {
                     .fill(tint)
                     .frame(width: 38, height: 38)
                 if let symbol {
-                    Image(systemName: symbol).font(.system(size: 18)).foregroundStyle(symbolColor)
+                    ConceptGlyph(systemName: symbol, size: 21, color: symbolColor)
                 } else {
                     Text(emoji).font(.system(size: 20))
                 }

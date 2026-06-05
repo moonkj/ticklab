@@ -46,6 +46,10 @@ final class MeasurementViewModel {
     private(set) var liveMetrics: LiveMetrics = .init(confidenceScore: 0, elapsedSeconds: 0)
     /// Round 170 (디버깅): persist 실패 시 마지막 거부 result + 사유 코드 보존 → 화면에 노출.
     private(set) var lastRejectedResult: MeasurementResult? = nil
+    /// BPH/캘리버 미설정으로 전대역 자동감지 측정됨 — 결과 화면 경고용.
+    private(set) var bphAutoDetected = false
+    /// 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심) — 감지된 BPH. nil=일치/미설정.
+    private(set) var bphMismatchSuggested: Int? = nil
     private(set) var lastRejectionReason: String? = nil
     /// 라이브 wave 표시용 — 최근 200개 다운샘플된 진폭 (-1...1).
     private(set) var waveformSamples: [Float] = Array(repeating: 0, count: 200)
@@ -130,6 +134,8 @@ final class MeasurementViewModel {
             lastRejectionReason = nil
             setKeepScreenOn(enabled: preferences.keepScreenOnDuringMeasurement)
             let nominalBph = watch.customBph ?? movement?.bph ?? 28_800
+            // BPH/캘리버를 사용자가 명시 설정했는가 — 미설정이면 전대역 자동감지(nil hint) + 경고.
+            let bphExplicit = watch.customBph != nil || (movement?.bph ?? 0) > 0
             // 페르소나 (김재철) wish: watch-level lift angle override 가 있으면 우선.
             let liftAngle = watch.liftAngleOverride ?? movement?.liftAngleDegrees
             let escapement = movement?.escapement ?? .swissLever
@@ -139,6 +145,7 @@ final class MeasurementViewModel {
             let pipeline = DSPPipeline(
                 source: source,
                 nominalBph: nominalBph,
+                bphExplicit: bphExplicit,
                 liftAngleDegrees: liftAngle,
                 escapement: escapement,
                 reliabilityLabel: reliability,
@@ -291,6 +298,9 @@ final class MeasurementViewModel {
                     return
                 }
                 if let result {
+                    // BPH 자동감지/불일치 경고 플래그 — 파이프라인에서 수집.
+                    self.bphAutoDetected = self.pipeline?.bphWasAutoDetected ?? false
+                    self.bphMismatchSuggested = self.pipeline?.bphMismatchSuggested
                     // Round 169: anomaly 면 .completed 가 아닌 .failed 로 → 사용자에게 명확히 알림.
                     // Round 100: anomaly trip 은 .lockFailure 로 분기 (BPH lock 잡혔으나 신뢰 X).
                     if self.persist(result: result, in: modelContext) {

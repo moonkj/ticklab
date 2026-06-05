@@ -77,8 +77,7 @@ struct FullscreenPhotoViewer: View {
                         }
                     }
             } else {
-                Image(systemName: "photo")
-                    .font(.system(size: 64, weight: .light))
+                ConceptGlyph(systemName: "photo", size: 60)
                     .foregroundStyle(.white.opacity(0.3))
             }
 

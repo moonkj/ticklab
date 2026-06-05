@@ -94,28 +94,44 @@ struct RootTabView: View {
             CollectionView(path: $collectionPath)
                 .id(collectionEpoch)
                 .tabItem {
-                    Label(String(localized: "tab.collection"), systemImage: "rectangle.grid.2x2")
+                    Label {
+                        Text(String(localized: "tab.collection"))
+                    } icon: {
+                        Image(uiImage: TabBarIcons.collection)
+                    }
                 }
                 .tag(Tab.collection)
 
             TodayView(path: $todayPath)
                 .id(todayEpoch)
                 .tabItem {
-                    Label(String(localized: "tab.today"), systemImage: "sun.max")
+                    Label {
+                        Text(String(localized: "tab.today"))
+                    } icon: {
+                        Image(uiImage: TabBarIcons.today)
+                    }
                 }
                 .tag(Tab.today)
 
             JournalFeedView(path: $journalPath)
                 .id(journalEpoch)
                 .tabItem {
-                    Label(String(localized: "tab.journal"), systemImage: "book.closed")
+                    Label {
+                        Text(String(localized: "tab.journal"))
+                    } icon: {
+                        Image(uiImage: TabBarIcons.journal)
+                    }
                 }
                 .tag(Tab.journal)
 
             StatsView(path: $statsPath)
                 .id(statsEpoch)
                 .tabItem {
-                    Label(String(localized: "tab.stats"), systemImage: "chart.pie")
+                    Label {
+                        Text(String(localized: "tab.stats"))
+                    } icon: {
+                        Image(uiImage: TabBarIcons.stats)
+                    }
                 }
                 .tag(Tab.stats)
 
@@ -124,7 +140,11 @@ struct RootTabView: View {
                 CommunityFeedView()
                     .id(communityEpoch)
                     .tabItem {
-                        Label(String(localized: "community.tab.title"), systemImage: "person.2")
+                        Label {
+                            Text(String(localized: "community.tab.title"))
+                        } icon: {
+                            Image(uiImage: TabBarIcons.community)
+                        }
                     }
                     .tag(Tab.community)
             }

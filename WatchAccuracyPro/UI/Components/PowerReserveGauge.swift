@@ -29,9 +29,7 @@ struct PowerReserveGauge: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 8) {
-                Image(systemName: "timer")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(gaugeColor)
+                ConceptGlyph(systemName: "timer", size: 12, color: gaugeColor)
                 Text(String(localized: "powerreserve.title"))
                     .font(.caption.weight(.semibold))
                     .tracking(1)
@@ -93,7 +91,7 @@ struct SmartwatchBatteryBadge: View {
 
     var body: some View {
         HStack(spacing: compact ? 4 : 5) {
-            Image(systemName: icon).font(.system(size: compact ? 13 : 14))
+            ConceptGlyph(systemName: icon, size: compact ? 13 : 14)
                 .accessibilityHidden(true)
             Text(percent == nil ? "—" : "\(pct)%")
                 .font(.system(size: compact ? 12 : 11, weight: .semibold))

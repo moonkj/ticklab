@@ -32,8 +32,7 @@ struct CostPerWearCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                Image(systemName: "chart.line.uptrend.xyaxis")
-                    .foregroundStyle(AppColors.accentDark)
+                ConceptGlyph(systemName: "chart.line.uptrend.xyaxis", size: 16, color: AppColors.accentDark)
                 Text(String(localized: "watch.roi.title"))
                     .font(.system(size: 13, weight: .semibold))
                     .tracking(1.2)

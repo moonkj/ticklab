@@ -1,6 +1,21 @@
 import SwiftUI
 import UIKit
 
+/// 브랜드 태그 칩 — 커뮤니티 카드 brandChip 과 동일 스타일(태그 아이콘 + 브랜드명, info 파랑 캡슐).
+struct BrandTagChip: View {
+    let brand: String
+    var body: some View {
+        HStack(spacing: 4) {
+            ConceptGlyph(systemName: "tag.fill", size: 11)
+            Text(brand).font(.system(size: 13, weight: .semibold)).lineLimit(1)
+        }
+        .foregroundStyle(AppColors.info)
+        .padding(.horizontal, 10).padding(.vertical, 5)
+        .overlay(Capsule().stroke(AppColors.info.opacity(0.5), lineWidth: 1))
+        .clipShape(Capsule())
+    }
+}
+
 /// 특정 사용자의 게시물 그리드(인스타 프로필 격자) + 팔로우. 익명 닉네임 표시.
 struct UserPostsView: View {
     let uid: String
@@ -16,7 +31,7 @@ struct UserPostsView: View {
         ScrollView {
             VStack(spacing: 14) {
                 HStack(spacing: 12) {
-                    LikerAvatar(name: displayName).frame(width: 56, height: 56)
+                    LikerAvatar(name: displayName, avatarPath: posts.first?.authorAvatarPath).frame(width: 56, height: 56)
                     Text(displayName ?? String(localized: "community.anon_handle"))
                         .font(.system(size: 18, weight: .bold)).foregroundStyle(AppColors.ink0)
                     Spacer()
@@ -38,6 +53,33 @@ struct UserPostsView: View {
                     }
                 }
                 .padding(.horizontal, 16).padding(.top, 8)
+
+                // 컬렉터 정보 — 소개 + 시작연도·좋아하는 브랜드·대표 메이커. (서버 비정규화 스냅샷, 욕설 필터 통과분)
+                if let info = posts.first,
+                   [info.authorBio, info.authorStartYear, info.authorFavBrands, info.authorRepBrand].contains(where: { $0?.isEmpty == false }) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        if let bio = info.authorBio, !bio.isEmpty {
+                            Text(bio)
+                                .font(.system(size: 13))
+                                .foregroundStyle(AppColors.ink1)
+                                .fixedSize(horizontal: false, vertical: true)
+                        }
+                        HStack(spacing: 8) {
+                            let line = collectorLine(info)
+                            if !line.isEmpty {
+                                Text(line)
+                                    .font(.system(size: 12))
+                                    .foregroundStyle(AppColors.ink3)
+                            }
+                            // 대표 메이커 — 커뮤니티 카드와 동일한 브랜드 태그 칩으로.
+                            if let rep = info.authorRepBrand, !rep.isEmpty {
+                                BrandTagChip(brand: rep)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 16)
+                }
 
                 if loaded && posts.isEmpty {
                     Text(String(localized: "community.user.empty"))
@@ -63,8 +105,7 @@ struct UserPostsView: View {
                                                 .padding(8)
                                                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                                                 .overlay(alignment: .bottomTrailing) {
-                                                    Image(systemName: "text.alignleft")
-                                                        .font(.system(size: 11))
+                                                    ConceptGlyph(systemName: "text.alignleft", size: 11)
                                                         .foregroundStyle(AppColors.ink3)
                                                         .padding(6)
                                                 }
@@ -90,6 +131,17 @@ struct UserPostsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showLogin) { CommunityLoginView() }
         .task { posts = await service.fetchPostsByAuthor(uid: uid); loaded = true }
+    }
+
+    /// 컬렉터 정보 한 줄 — 시작연도 · 좋아하는 브랜드 · 대표 메이커.
+    private func collectorLine(_ p: Community.Post) -> String {
+        var parts: [String] = []
+        if let y = p.authorStartYear, !y.isEmpty {
+            parts.append(String(format: String(localized: "profile.since"), y))
+        }
+        if let b = p.authorFavBrands, !b.isEmpty { parts.append(b) }
+        // 대표 메이커는 텍스트가 아니라 BrandTagChip 으로 별도 표시.
+        return parts.joined(separator: " · ")
     }
 }
 

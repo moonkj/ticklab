@@ -39,6 +39,18 @@ struct MeasurementView: View {
     }
 
     /// 오늘 측정 카운트 — startOfDay >= 인 WatchMeasurement 개수만 fetch.
+    /// 결과 화면 — BPH 자동감지/불일치 경고 플래그 전달. (body 타입체크 부하 분리)
+    @ViewBuilder
+    private func resultDestination(_ result: MeasurementResult) -> some View {
+        MeasurementResultView(
+            result: result,
+            watch: viewModel.watch,
+            onRetry: { viewModel.cancel() },
+            bphAutoDetected: viewModel.bphAutoDetected,
+            bphSuggested: viewModel.bphMismatchSuggested
+        )
+    }
+
     private func refreshTodayMeasurementCount() {
         guard !preferences.isPro else { return }
         let todayStart = Calendar.current.startOfDay(for: Date())
@@ -158,14 +170,10 @@ struct MeasurementView: View {
         // 결과 화면 진입 흐름: state .completed → completedResultBinding non-nil → item: trigger,
         // OR 사용자가 "결과 보기" 버튼 (NavigationLink value:) 누르면 → for: trigger.
         .navigationDestination(item: completedResultBinding) { result in
-            MeasurementResultView(result: result, watch: viewModel.watch, onRetry: {
-                viewModel.cancel()
-            })
+            resultDestination(result)
         }
         .navigationDestination(for: MeasurementResult.self) { result in
-            MeasurementResultView(result: result, watch: viewModel.watch, onRetry: {
-                viewModel.cancel()
-            })
+            resultDestination(result)
         }
         // Round 161 (사용자 보고: "30초 측정인데 35초까지 측정함"):
         // 기존 liveMetrics.elapsedSeconds 는 analyzer cycle(~1s)에 묶여 wall-clock 보다 늦음.

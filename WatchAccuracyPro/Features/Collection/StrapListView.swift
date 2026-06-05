@@ -65,8 +65,7 @@ struct StrapListView: View {
                     Image(uiImage: img).resizable().scaledToFill()
                         .frame(width: 56, height: 56).clipShape(RoundedRectangle(cornerRadius: 8))
                 } else {
-                    Image(systemName: "watch.analog")
-                        .font(.system(size: 22)).foregroundStyle(AppColors.ink3)
+                    ConceptGlyph(systemName: "watch.analog", size: 22, color: AppColors.ink3)
                 }
             }
             VStack(alignment: .leading, spacing: 3) {
@@ -81,8 +80,6 @@ struct StrapListView: View {
                 Text(StrapMaterialHelper.displayName(for: strap.material) + (strap.colorName.isEmpty ? "" : " · \(strap.colorName)"))
                     .font(.system(size: 12)).foregroundStyle(AppColors.ink2)
                 HStack(spacing: 12) {
-                    Label("\(strap.wearCount)\(String(localized: "strap.wears"))",
-                          systemImage: "repeat").font(.system(size: 11)).foregroundStyle(AppColors.ink3)
                     if let threshold = strap.replaceThreshold {
                         Text(String(format: NSLocalizedString("strap.threshold", comment: ""), threshold))
                             .font(.system(size: 11)).foregroundStyle(AppColors.ink3)
@@ -128,7 +125,6 @@ struct StrapComposerView: View {
     @State private var colorName = ""
     @State private var source = ""
     @State private var note = ""
-    @State private var wearCountText = "0"
     @State private var replaceThresholdText = ""
     @State private var showTextFilterAlert = false
 
@@ -150,12 +146,6 @@ struct StrapComposerView: View {
                     TextField(String(localized: "strap.source"), text: $source)
                 }
                 Section(String(localized: "strap.section.usage")) {
-                    HStack {
-                        Text(String(localized: "strap.wears"))
-                        Spacer()
-                        TextField("0", text: $wearCountText).keyboardType(.numberPad)
-                            .multilineTextAlignment(.trailing).frame(width: 60)
-                    }
                     HStack {
                         Text(String(localized: "strap.replace_threshold"))
                         Spacer()
@@ -190,7 +180,6 @@ struct StrapComposerView: View {
         guard let s = existing else { return }
         name = s.name; material = s.material; colorName = s.colorName
         source = s.source ?? ""; note = s.note
-        wearCountText = "\(s.wearCount)"
         replaceThresholdText = s.replaceThreshold.map { "\($0)" } ?? ""
     }
 
@@ -204,7 +193,6 @@ struct StrapComposerView: View {
         let strap = existing ?? Strap(watch: watch)
         strap.name = name; strap.material = material; strap.colorName = colorName
         strap.source = source.isEmpty ? nil : source; strap.note = note
-        strap.wearCount = Int(wearCountText) ?? 0
         strap.replaceThreshold = replaceThresholdText.isEmpty ? nil : Int(replaceThresholdText)
         if existing == nil { context.insert(strap) }
         try? context.save()

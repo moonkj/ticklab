@@ -24,8 +24,7 @@ struct CommunityComposerView: View {
         NavigationStack {
             VStack(spacing: 20) {
                 Spacer()
-                Image(systemName: "camera.aperture")
-                    .font(.system(size: 44))
+                ConceptGlyph(systemName: "camera.aperture", size: 44)
                     .foregroundStyle(AppColors.ink3)
                 Text(String(localized: "community.compose.hint"))
                     .font(AppTypography.bodySmall)
@@ -46,10 +45,6 @@ struct CommunityComposerView: View {
                 }
                 .padding(.horizontal, 32)
                 Spacer()
-                Text(String(localized: "community.compose.anonymous_note"))
-                    .font(AppTypography.caption)
-                    .foregroundStyle(AppColors.ink3)
-                    .padding(.bottom, 8)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(AppColors.paper0)
@@ -135,7 +130,7 @@ struct CommunityComposerView: View {
 
     private func sourceLabel(icon: String, key: String) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: icon)
+            ConceptGlyph(systemName: icon, size: 17)
             Text(String(localized: String.LocalizationValue(key)))
                 .font(.system(size: 15, weight: .medium))
         }
@@ -253,9 +248,6 @@ struct CommunityReviewView: View {
                         if !myBrands.isEmpty { brandPicker }
                         if let theme { themeToggle(theme) }
                     }
-                    Text(String(localized: "community.compose.anonymous_note"))
-                        .font(AppTypography.caption)
-                        .foregroundStyle(AppColors.ink3)
                     communityGuidelineNote
                 }
                 .padding(20)

@@ -52,8 +52,7 @@ struct HighlightTimelineView: View {
                         .font(.system(size: 11, weight: .semibold, design: .monospaced))
                         .foregroundStyle(AppColors.ink3)
                     if log.isHighlight {
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 10))
+                        ConceptGlyph(systemName: "star.fill", size: 12)
                             .foregroundStyle(AppColors.accent)
                     }
                 }

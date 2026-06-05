@@ -287,7 +287,7 @@ struct WatchDetailView: View {
                     // Round 20: cache 갱신 — 다음 body 호출이 fetch 안 하도록.
                     cachedWornToday = WearLogService.isWornToday(watch, in: modelContext)
                 } label: {
-                    Image(systemName: cachedWornToday ? "checkmark.seal.fill" : "checkmark.seal")
+                    ConceptGlyph(systemName: cachedWornToday ? "checkmark.seal.fill" : "checkmark.seal", size: 22)
                         .foregroundStyle(cachedWornToday ? AppColors.accent : AppColors.ink2)
                 }
                 .accessibilityLabel(String(localized: "a11y.wear_today"))
@@ -497,8 +497,7 @@ struct WatchDetailView: View {
                 UISelectionFeedbackGenerator().selectionChanged()
                 showingPhotoSourceSheet = true
             } label: {
-                Image(systemName: "camera.fill")
-                    .font(.system(size: 14))
+                ConceptGlyph(systemName: "camera.fill", size: 16)
                     .foregroundStyle(.white)
                     .frame(width: 44, height: 44)
                     .background(.black.opacity(0.5))
@@ -800,8 +799,7 @@ struct WatchDetailView: View {
             PhotoGalleryView(watch: watch)
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: "photo.on.rectangle.angled")
-                    .font(.system(size: 18))
+                ConceptGlyph(systemName: "photo.on.rectangle.angled", size: 18)
                     .foregroundStyle(AppColors.accentDark)
                 VStack(alignment: .leading, spacing: 2) {
                     Text(String(localized: "gallery.entry.title"))
@@ -850,8 +848,7 @@ struct WatchDetailView: View {
         let entries = cachedJournalEntries
         if entries.isEmpty {
             VStack(spacing: 12) {
-                Image(systemName: "book.closed")
-                    .font(.system(size: 36))
+                ConceptGlyph(systemName: "book.closed", size: 38)
                     .foregroundStyle(AppColors.accent.opacity(0.5))
                 Text(String(localized: "watch.journal.empty.title"))
                     .font(.system(size: 16, weight: .semibold))
@@ -933,7 +930,7 @@ struct WatchDetailView: View {
     /// 사용자 요청: 다음 오버홀 권장일 표시. quartz 제외.
     @ViewBuilder
     private var overhaulDueRow: some View {
-        if watch.movementType != .quartz, preferences.overhaulReminderEnabled {
+        if watch.movementType != .quartz, !watch.isSmartwatch, preferences.overhaulReminderEnabled {
             let lastDate = NotificationService.lastOverhaulDate(for: watch, in: modelContext) ?? watch.createdAt
             if let dueDate = Calendar.current.date(byAdding: .year, value: preferences.overhaulReminderYears, to: lastDate) {
                 let daysLeft = Calendar.current.dateComponents([.day], from: Date(), to: dueDate).day ?? 0
@@ -985,8 +982,7 @@ struct WatchDetailView: View {
             overhaulDueRow
             if logs.isEmpty {
                 VStack(spacing: 12) {
-                    Image(systemName: "wrench.adjustable")
-                        .font(.system(size: 36))
+                    ConceptGlyph(systemName: "wrench.adjustable", size: 36)
                         .foregroundStyle(AppColors.accent.opacity(0.5))
                     Text(String(localized: "watch.service.empty.title"))
                         .font(.system(size: 16, weight: .semibold))
@@ -1012,9 +1008,7 @@ struct WatchDetailView: View {
                                 ZStack {
                                     Circle().fill(AppColors.paper1).frame(width: 22, height: 22)
                                     Circle().stroke(AppColors.accent, lineWidth: 2).frame(width: 22, height: 22)
-                                    Image(systemName: iconFor(log.type))
-                                        .font(.system(size: 10, weight: .medium))
-                                        .foregroundStyle(AppColors.accentDark)
+                                    ConceptGlyph(systemName: iconFor(log.type), size: 10, color: AppColors.accentDark)
                                 }
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(AppDateFormat.fullDate(log.timestamp))
@@ -1099,7 +1093,7 @@ struct WatchDetailView: View {
                 StrapListView(watch: watch)
             } label: {
                 HStack(spacing: 8) {
-                    Image(systemName: "watch.analog")
+                    ConceptGlyph(systemName: "watch.analog", size: 20, color: AppColors.ink2)
                     Text(String(localized: "watch.strap.entry"))
                     Spacer()
                     Image(systemName: "chevron.right").foregroundStyle(AppColors.ink3)
@@ -1180,7 +1174,7 @@ struct WatchDetailView: View {
     private var smartwatchBatterySection: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Image(systemName: "battery.100").foregroundStyle(AppColors.success)
+                ConceptGlyph(systemName: "battery.100", size: 17).foregroundStyle(AppColors.success)
                 Text(String(localized: "detail.battery.title"))
                     .font(.system(size: 12, weight: .semibold)).tracking(1.2)
                     .foregroundStyle(AppColors.ink2)
@@ -1287,8 +1281,7 @@ struct WatchDetailView: View {
     private func statusCard(icon: String, title: String, subtitle: String, active: Bool) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack(spacing: 6) {
-                Image(systemName: icon)
-                    .font(.system(size: 14, weight: .semibold))
+                ConceptGlyph(systemName: icon, size: 14)
                     .foregroundStyle(active ? AppColors.accent : AppColors.ink2)
                 Text(title)
                     .font(.system(size: 13, weight: .semibold))
@@ -1338,8 +1331,7 @@ struct WatchDetailView: View {
                 // #18 짝: 선물받은 시계 감성 리본 — receivedFrom 1급화(평범한 info row → 첫 만남 감성).
                 if !gift.isEmpty {
                     HStack(spacing: 6) {
-                        Image(systemName: "gift")
-                            .font(.system(size: 11))
+                        ConceptGlyph(systemName: "gift", size: 11)
                             .foregroundStyle(AppColors.accentDark)
                         Text(String(format: String(localized: "watch.gift.ribbon"), gift))
                             .font(.system(size: 12, weight: .semibold))
@@ -1501,7 +1493,7 @@ struct WatchDetailView: View {
     private var batteryCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Image(systemName: "battery.50")
+                ConceptGlyph(systemName: "battery.50", size: 17)
                     .foregroundStyle(AppColors.primaryDeep)
                 Text(String(localized: "watch.battery.title"))
                     .font(.system(size: 14, weight: .semibold))
@@ -1548,8 +1540,7 @@ struct WatchDetailView: View {
 
             if let due = watch.batteryNextDue {
                 HStack(spacing: 6) {
-                    Image(systemName: "clock")
-                        .font(.system(size: 11))
+                    ConceptGlyph(systemName: "clock", size: 11, color: AppColors.ink2)
                     Text(String(format: NSLocalizedString("watch.battery.due_date", comment: ""),
                                 AppDateFormat.fullDate(due)))
                         .font(.system(size: 12, design: .monospaced))

@@ -98,9 +98,7 @@ private struct WhatsNewRow: View {
                 Circle()
                     .fill(AppColors.accentTint)
                     .frame(width: 44, height: 44)
-                Image(systemName: item.icon)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(AppColors.accentDark)
+                ConceptGlyph(systemName: item.icon, size: 18, color: AppColors.accentDark)
             }
             .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 4) {

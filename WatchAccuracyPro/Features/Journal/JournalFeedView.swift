@@ -453,8 +453,7 @@ struct JournalFeedView: View {
             }
             if entry.measurementId != nil {
                 HStack(spacing: 4) {
-                    Image(systemName: "waveform.path.ecg")
-                        .font(.system(size: 10))
+                    ConceptGlyph(systemName: "waveform.path.ecg", size: 13, color: AppColors.accent)
                     Text(String(localized: "journal.has_measurement"))
                         .font(.system(size: 10, weight: .semibold))
                         .tracking(1)
@@ -471,8 +470,7 @@ struct JournalFeedView: View {
 
     private var emptyState: some View {
         VStack(spacing: 10) {
-            Image(systemName: "book.closed")
-                .font(.system(size: 36))
+            ConceptGlyph(systemName: "book.closed", size: 38)
                 .foregroundStyle(AppColors.accent.opacity(0.5))
             Text(String(localized: "journal.empty.title"))
                 .font(.system(size: 16, weight: .medium, design: .serif))

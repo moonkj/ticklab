@@ -843,8 +843,7 @@ struct HeroWatchCard: View {
             VStack(alignment: .trailing, spacing: 8) {
                 if watch.isPrimary {
                     HStack(spacing: 4) {
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 9))
+                        ConceptGlyph(systemName: "star.fill", size: 12)
                             .accessibilityHidden(true)  // 접근성: 옆 "대표" 텍스트가 의미 전달 — 장식용
                         Text(String(localized: "watch.primary.badge"))
                             .font(.system(size: 9, weight: .semibold))
@@ -970,8 +969,7 @@ struct HeroWatchCard: View {
                     }
                 } label: {
                     HStack(spacing: 5) {
-                        Image(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal")
-                            .font(.system(size: 14))
+                        ConceptGlyph(systemName: worn ? "checkmark.seal.fill" : "checkmark.seal", size: 14)
                         Text(String(localized: worn ? "wear.toggle.on" : "wear.toggle.off"))
                             .font(.system(size: 11, weight: .semibold))
                     }
@@ -994,7 +992,7 @@ struct HeroWatchCard: View {
                         onMeasure()
                     } label: {
                         HStack(spacing: 5) {
-                            Image(systemName: "mic.fill").font(.system(size: 14))
+                            ConceptGlyph(systemName: "mic", size: 14, color: .white)
                                 .accessibilityHidden(true)  // 접근성: 옆 "측정" 텍스트가 의미 전달 — 장식용
                             Text(String(localized: "measurement.button.start_short"))
                                 .font(.system(size: 11, weight: .semibold))

@@ -6,6 +6,10 @@ struct MeasurementResultView: View {
     /// Round 133: 부모(MeasurementView) 가 state 를 .idle 로 reset 후 dismiss 하도록 콜백 주입.
     /// 없으면 단순 dismiss (sheet/standalone 으로 쓰는 경우).
     var onRetry: (() -> Void)? = nil
+    /// BPH/캘리버 미설정으로 전대역 자동감지 측정됨 — 경고 카드 표시.
+    var bphAutoDetected: Bool = false
+    /// 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심) — 감지된 BPH.
+    var bphSuggested: Int? = nil
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.dismiss) private var dismiss
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -210,6 +214,7 @@ struct MeasurementResultView: View {
                 AccuracyGradeChip(rateSecondsPerDay: result.rateSecondsPerDay)
                     .padding(.top, 2)
                 metricsSection
+                bphWarningCard
                 if preferences.userMode == .pro { detailsSection }
 
                 // === 해석 블록 (측정 데이터 아래로 이동) ===
@@ -251,8 +256,7 @@ struct MeasurementResultView: View {
                 actions
                 // Round 172: 기기 시계 자동 보정 안내 — 사용할수록 baseline 이 쌓여 정확도↑.
                 HStack(spacing: 6) {
-                    Image(systemName: ClockCalibrationService.shared.isCalibrated ? "checkmark.seal.fill" : "clock.arrow.2.circlepath")
-                        .font(.system(size: 12))
+                    ConceptGlyph(systemName: ClockCalibrationService.shared.isCalibrated ? "checkmark.seal.fill" : "clock.arrow.2.circlepath", size: 12)
                         .foregroundStyle(AppColors.accent)
                     Text(String(localized: ClockCalibrationService.shared.isCalibrated
                                 ? "result.calibration.calibrated" : "result.calibration.calibrating"))
@@ -577,6 +581,30 @@ struct MeasurementResultView: View {
     }
 
     // MARK: - Metrics
+
+    /// BPH 미설정(자동감지) / 설정값-신호 불일치 경고.
+    @ViewBuilder
+    private var bphWarningCard: some View {
+        if let suggested = bphSuggested {
+            HelpCard(
+                icon: "exclamationmark.triangle.fill",
+                title: String(localized: "meas.bph.mismatch.title", defaultValue: "설정한 BPH와 신호가 달라요"),
+                body: String(format: String(localized: "meas.bph.mismatch.body",
+                    defaultValue: "신호는 %d BPH로 감지됐어요. 캘리버(BPH) 설정이 실제와 다르면 측정값이 부정확할 수 있어요 — 설정을 확인하세요."), suggested),
+                tone: .warning
+            )
+            .padding(.horizontal, 4)
+        } else if bphAutoDetected {
+            HelpCard(
+                icon: "exclamationmark.triangle.fill",
+                title: String(localized: "meas.bph.unset.title", defaultValue: "BPH(캘리버) 미설정"),
+                body: String(localized: "meas.bph.unset.body",
+                    defaultValue: "캘리버 미지정 — BPH를 자동 감지해 측정했어요. 미설정 시 측정 실패·오차가 커질 수 있으니, 정확도를 위해 시계 캘리버를 설정하세요."),
+                tone: .warning
+            )
+            .padding(.horizontal, 4)
+        }
+    }
 
     private var metricsSection: some View {
         // Round 170 (사용자 보고: "amp 셀 자체 제거"):

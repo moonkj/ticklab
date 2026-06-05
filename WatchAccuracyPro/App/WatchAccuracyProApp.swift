@@ -186,7 +186,7 @@ private struct RootView: View {
                         LaunchGate.shouldShowSplash = false
                         showSplash = false
                     }
-                    .transition(.opacity)
+                    .transition(.opacity.combined(with: .scale(scale: 1.08)))
                     .zIndex(10)
                 }
             }

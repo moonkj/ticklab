@@ -95,11 +95,7 @@ struct SettingsView: View {
                                         .font(.system(size: 16, weight: .semibold))
                                         .foregroundStyle(AppColors.ink0)
                                     if UserProfile.isDealer {
-                                        Text(String(localized: "profile.badge.dealer"))
-                                            .font(.system(size: 9, weight: .bold))
-                                            .foregroundStyle(AppColors.primaryDeep)
-                                            .padding(.horizontal, 5).padding(.vertical, 2)
-                                            .background(AppColors.accent).clipShape(Capsule())
+                                        DealerBadge()
                                     }
                                 }
                                 if let summary = profileSummaryLine {
@@ -132,11 +128,11 @@ struct SettingsView: View {
                 // Round 133 사용자 요청: 사용자 모드 선택 메뉴 제거 — 항상 pro 모드 고정 (전문 분석).
 
                 Section {
-                    LiquidToggle(String(localized: "settings.silent_mode_default"), isOn: $preferences.silentModeDefault)
+                    Toggle(String(localized: "settings.silent_mode_default"), isOn: $preferences.silentModeDefault)
                     // Round 133: 측정 중 항상 화면 켜기 — 기본 ON.
-                    LiquidToggle(String(localized: "settings.keep_screen_on"), isOn: $preferences.keepScreenOnDuringMeasurement)
+                    Toggle(String(localized: "settings.keep_screen_on"), isOn: $preferences.keepScreenOnDuringMeasurement)
                     // T-17: 햅틱 피드백 전역 토글.
-                    LiquidToggle(String(localized: "settings.haptics"), isOn: $preferences.hapticsEnabled)
+                    Toggle(String(localized: "settings.haptics"), isOn: $preferences.hapticsEnabled)
                     audioInputPicker
                     // Round 138 사용자 요청: CoreML beat detector 토글 제거 — 일반 사용자에게 의미 없는 옵션.
                 } header: {
@@ -150,7 +146,7 @@ struct SettingsView: View {
 
                 // Round 80: Apple Intelligence 진단 토글 + 시스템 가용성 안내.
                 Section {
-                    LiquidToggle(String(localized: "settings.ai.toggle"), isOn: $preferences.aiVerdictEnabled)
+                    Toggle(String(localized: "settings.ai.toggle"), isOn: $preferences.aiVerdictEnabled)
                     if preferences.aiVerdictEnabled && !aiAvailable {
                         Button {
                             // Round 97 (이형준 #9): App-Prefs: 는 iOS 14+ 차단됨 → openSettingsURLString.
@@ -185,7 +181,7 @@ struct SettingsView: View {
                 // Round 133 사용자 요청: '리마인드' 메뉴로 일기 알림 + 랜덤 시계 추천 통합.
                 Section {
                     // 일기 알림 — Round 145 (Jay 4 P0): 권한 거부 시 토글 자동 revert.
-                    LiquidToggle(String(localized: "settings.journal_reminder"), isOn: Binding(
+                    Toggle(String(localized: "settings.journal_reminder"), isOn: Binding(
                         get: { preferences.journalReminderEnabled },
                         set: { newValue in
                             preferences.journalReminderEnabled = newValue
@@ -237,7 +233,7 @@ struct SettingsView: View {
                         )
                     }
                     // 랜덤 시계 추천 — Round 145 (Jay 4 P0): 권한 거부 시 자동 revert.
-                    LiquidToggle(String(localized: "settings.random_pick.toggle"), isOn: Binding(
+                    Toggle(String(localized: "settings.random_pick.toggle"), isOn: Binding(
                         get: { preferences.randomPickEnabled },
                         set: { newValue in
                             preferences.randomPickEnabled = newValue
@@ -275,7 +271,7 @@ struct SettingsView: View {
                         ), displayedComponents: .hourAndMinute)
                     }
                     // 사용자 요청: 오버홀 정비 리마인더 — 기본 ON, 주기 사용자 설정 (2~7년).
-                    LiquidToggle(String(localized: "settings.overhaul_reminder"), isOn: Binding(
+                    Toggle(String(localized: "settings.overhaul_reminder"), isOn: Binding(
                         get: { preferences.overhaulReminderEnabled },
                         set: { newValue in
                             preferences.overhaulReminderEnabled = newValue
@@ -298,7 +294,7 @@ struct SettingsView: View {
                         }
                     }
                     // Sprint 7 (P2-14): 로테이션 넛지
-                    LiquidToggle(String(localized: "settings.rotation_nudge"), isOn: Binding(
+                    Toggle(String(localized: "settings.rotation_nudge"), isOn: Binding(
                         get: { preferences.rotationNudgeEnabled },
                         set: { preferences.rotationNudgeEnabled = $0 }
                     ))
@@ -320,7 +316,7 @@ struct SettingsView: View {
                 }
                 // Apple guideline 5.1.1/5.1.2 fix: Brand League 데이터 전송 옵트인 명시.
                 Section {
-                    LiquidToggle(String(localized: "settings.brandleague.optin"),
+                    Toggle(String(localized: "settings.brandleague.optin"),
                                  isOn: $preferences.brandLeagueOptIn)
                 } header: {
                     Text(String(localized: "settings.section.privacy"))
@@ -328,10 +324,10 @@ struct SettingsView: View {
                     Text(String(localized: "settings.brandleague.optin.footer"))
                 }
                 Section(String(localized: "settings.section.security")) {
-                    LiquidToggle(String(localized: "settings.applock"), isOn: $preferences.appLockEnabled)
+                    Toggle(String(localized: "settings.applock"), isOn: $preferences.appLockEnabled)
                     if preferences.appLockEnabled {
                         // Round 140 (Min H7/H8): PIN 토글 OFF 시 Keychain hash 도 함께 삭제 → 다시 켰을 때 옛 PIN 부활 방지.
-                        LiquidToggle(String(localized: "settings.applock.pin_enabled"), isOn: Binding(
+                        Toggle(String(localized: "settings.applock.pin_enabled"), isOn: Binding(
                             get: { preferences.pinEnabled },
                             set: { newValue in
                                 preferences.pinEnabled = newValue
@@ -390,19 +386,41 @@ struct SettingsView: View {
                                 .tag(n)
                         }
                     }
-                    Picker(String(localized: "settings.watchbox.color"),
-                           selection: Binding(
-                            get: { preferences.watchBoxColor },
-                            set: { preferences.watchBoxColor = $0 }
-                           )) {
-                        ForEach(WatchBoxColor.allCases) { c in
-                            Label {
-                                Text(c.label)
-                            } icon: {
-                                Image(systemName: "circle.fill").foregroundStyle(c.swatch)
+                    // 보관함 색상 — 실제 재질 그라데이션 원 swatch(시스템 Picker 는 아이콘 색을 평탄화해 구분 불가).
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text(String(localized: "settings.watchbox.color"))
+                            .font(.system(size: 15))
+                        LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 4), spacing: 14) {
+                            ForEach(WatchBoxColor.allCases) { c in
+                                let selected = preferences.watchBoxColor == c.rawValue
+                                VStack(spacing: 5) {
+                                    Circle()
+                                        .fill(LinearGradient(colors: c.outerColors,
+                                                             startPoint: .topLeading, endPoint: .bottomTrailing))
+                                        .frame(width: 38, height: 38)
+                                        .overlay(Circle().stroke(selected ? AppColors.accent : AppColors.rule,
+                                                                 lineWidth: selected ? 3 : 1))
+                                        .overlay {
+                                            if selected {
+                                                Image(systemName: "checkmark")
+                                                    .font(.system(size: 14, weight: .bold))
+                                                    .foregroundStyle(c.fgColor)
+                                            }
+                                        }
+                                        .shadow(color: .black.opacity(0.12), radius: 2, y: 1)
+                                    Text(c.label)
+                                        .font(.system(size: 10))
+                                        .foregroundStyle(selected ? AppColors.ink0 : AppColors.ink3)
+                                        .lineLimit(1).minimumScaleFactor(0.7)
+                                }
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    preferences.watchBoxColor = c.rawValue
+                                    HapticManager.trigger(.selection)
+                                }
                             }
-                            .tag(c.rawValue)
                         }
+                        .padding(.vertical, 4)
                     }
                     Text(String(localized: "settings.watchbox.hint"))
                         .font(.system(size: 12))
@@ -469,7 +487,7 @@ struct SettingsView: View {
                     ) {
                         ShareLink(item: galleryURL) {
                             HStack {
-                                Image(systemName: "globe").frame(width: 24)
+                                ConceptGlyph(systemName: "globe", size: 22).frame(width: 24)
                                 Text(String(localized: "settings.data.gallery_html"))
                                 Spacer()
                                 Image(systemName: "square.and.arrow.up")
@@ -501,7 +519,7 @@ struct SettingsView: View {
                             startCommunityCardPost()
                         } label: {
                             HStack {
-                                Image(systemName: "person.2.fill").frame(width: 24)
+                                ConceptGlyph(systemName: "person.2.fill", size: 23).frame(width: 24)
                                 Text(String(localized: "share.post_to_community"))
                                 Spacer()
                                 Image(systemName: "paperplane")
@@ -567,7 +585,7 @@ struct SettingsView: View {
                 Section {
                     NavigationLink { ReferralView() } label: {
                         HStack(spacing: 12) {
-                            Image(systemName: "person.2.fill").foregroundStyle(AppColors.accentDark)
+                            ConceptGlyph(systemName: "person.2.fill", size: 24).foregroundStyle(AppColors.accentDark)
                             VStack(alignment: .leading, spacing: 2) {
                                 Text(String(localized: "settings.referral.title"))
                                     .font(.system(size: 15, weight: .semibold))
@@ -614,9 +632,7 @@ struct SettingsView: View {
                         HStack {
                             Text(String(localized: "settings.help.community_guidelines"))
                             Spacer()
-                            Image(systemName: "person.2")
-                                .font(.system(size: 13))
-                                .foregroundStyle(AppColors.ink3)
+                            ConceptGlyph(systemName: "person.2", size: 24, color: AppColors.ink3)
                         }
                     }
                     .sheet(isPresented: $showingCommunityGuidelines) {
@@ -758,8 +774,7 @@ struct SettingsView: View {
                 LinearGradient(colors: [AppColors.accent, AppColors.accentDark],
                                startPoint: .top, endPoint: .bottom)
                     .frame(width: 56, height: 56).clipShape(Circle())
-                Image(systemName: "sparkles").font(.system(size: 26, weight: .medium))
-                    .foregroundStyle(AppColors.primaryDeep)
+                BalanceWheelIcon(size: 30, color: AppColors.primaryDeep, holeColor: AppColors.accent)
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(String(localized: preferences.isPro ? "settings.account.pro_name" : "settings.account.free_name"))

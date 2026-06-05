@@ -33,8 +33,7 @@ struct BatteryView: View {
 
     private var emptyState: some View {
         VStack(spacing: 16) {
-            Image(systemName: "battery.0percent")
-                .font(.system(size: 56))
+            ConceptGlyph(systemName: "battery.0", size: 56)
                 .foregroundStyle(AppColors.accent.opacity(0.5))
             Text(String(localized: "battery.empty"))
                 .font(.system(size: 18, weight: .semibold))

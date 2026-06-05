@@ -9,8 +9,7 @@ struct ReferralView: View {
             VStack(spacing: 24) {
                 // 헤더
                 VStack(spacing: 12) {
-                    Image(systemName: "person.2.fill")
-                        .font(.system(size: 48))
+                    ConceptGlyph(systemName: "person.2.fill", size: 50)
                         .foregroundStyle(AppColors.accentDark)
                         .padding(.top, 24)
                     Text(String(localized: "referral.title"))
@@ -95,7 +94,7 @@ struct ReferralView: View {
 
     private func benefitRow(icon: String, text: LocalizedStringResource) -> some View {
         HStack(spacing: 10) {
-            Image(systemName: icon).font(.system(size: 14)).foregroundStyle(AppColors.accentDark).frame(width: 20)
+            ConceptGlyph(systemName: icon, size: 14, color: AppColors.accentDark).frame(width: 20)
             Text(text).font(.system(size: 13)).foregroundStyle(AppColors.ink2)
         }
     }

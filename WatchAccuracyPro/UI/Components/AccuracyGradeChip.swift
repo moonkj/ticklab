@@ -52,8 +52,7 @@ struct AccuracyGradeChip: View {
 
     var body: some View {
         HStack(spacing: 5) {
-            Image(systemName: tier.icon)
-                .font(.caption2.weight(.semibold))
+            ConceptGlyph(systemName: tier.icon, size: 11)
             Text(tier.label)
                 .font(.caption2.weight(.semibold))
         }

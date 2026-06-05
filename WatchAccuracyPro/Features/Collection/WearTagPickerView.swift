@@ -72,7 +72,7 @@ struct WearTagPickerView: View {
                 // 하이라이트 토글
         Toggle(isOn: $isHighlight) {
             HStack(spacing: 8) {
-                Image(systemName: "star.fill").foregroundStyle(AppColors.accent)
+                ConceptGlyph(systemName: "star.fill", size: 15).foregroundStyle(AppColors.accent)
                 Text(String(localized: "weartag.highlight"))
                     .font(.system(size: 14, weight: .semibold))
             }
@@ -114,7 +114,7 @@ struct WearTagPickerView: View {
     private func tagChip(_ label: String, icon: String, isSelected: Bool, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 6) {
-                Image(systemName: icon).font(.system(size: 12))
+                ConceptGlyph(systemName: icon, size: 12)
                 Text(label).font(.system(size: 12, weight: .semibold))
             }
             .foregroundStyle(isSelected ? AppColors.primaryDeep : AppColors.ink0)

@@ -88,7 +88,7 @@ struct SpecCardComposerView: View {
             HStack(spacing: 8) {
                 PhotosPicker(selection: $photoItem, matching: .images) {
                     HStack(spacing: 6) {
-                        Image(systemName: "photo.on.rectangle")
+                        ConceptGlyph(systemName: "photo.on.rectangle", size: 17)
                         Text(String(localized: photoData == nil ? "speccard.photo.add" : "speccard.photo.change"))
                             .font(.system(size: 14, weight: .semibold))
                     }
@@ -102,7 +102,7 @@ struct SpecCardComposerView: View {
                     showingCamera = true
                 } label: {
                     HStack(spacing: 6) {
-                        Image(systemName: "camera.fill")
+                        ConceptGlyph(systemName: "camera.fill", size: 17)
                         Text(String(localized: "speccard.camera"))
                             .font(.system(size: 14, weight: .semibold))
                     }
@@ -270,8 +270,7 @@ struct SpecCardComposerView: View {
                     Button {
                         Task { await recorder.play() }
                     } label: {
-                        Image(systemName: "play.circle.fill")
-                            .font(.system(size: 32))
+                        ConceptGlyph(systemName: "play.circle.fill", size: 32)
                             .foregroundStyle(AppColors.accent)
                     }
                     .buttonStyle(.plain)

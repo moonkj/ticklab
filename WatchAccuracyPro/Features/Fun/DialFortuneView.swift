@@ -254,8 +254,7 @@ struct DialFortuneView: View {
                 .foregroundStyle(.white.opacity(0.5))
             HStack(spacing: 2) {
                 ForEach(1...5, id: \.self) { i in
-                    Image(systemName: i <= score ? "star.fill" : "star")
-                        .font(.system(size: 12))
+                    ConceptGlyph(systemName: i <= score ? "star.fill" : "star", size: 12)
                         .foregroundStyle(i <= score ? AppColors.accent : Color.white.opacity(0.15))
                 }
             }

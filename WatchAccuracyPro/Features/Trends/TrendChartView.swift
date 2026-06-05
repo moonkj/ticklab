@@ -179,8 +179,7 @@ struct TrendChartView: View {
             // 스트림 D: ghost 예측선 범례 + 90일 외삽 요약. 예측이 있을 때만.
             if let f = forecast {
                 HStack(spacing: 4) {
-                    Image(systemName: "chart.line.uptrend.xyaxis")
-                        .font(.system(size: 8))
+                    ConceptGlyph(systemName: "chart.line.uptrend.xyaxis", size: 8)
                     Text(String(format: NSLocalizedString("forecast.legend.projected", comment: ""),
                                 f.horizonDays, f.projectedRate))
                         .font(.system(size: 8, weight: .medium, design: .monospaced))

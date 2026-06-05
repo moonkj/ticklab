@@ -1,6 +1,15 @@
 import SwiftData
 import SwiftUI
 
+/// 관리자 확인용 — 모든 뱃지를 획득 상태로 표시(override). 끄면 실제 데이터 기준으로 원상복구.
+enum BadgeAdminOverride {
+    static let key = "ticklab.admin.forceAllBadges"
+    static var grantAll: Bool {
+        get { UserDefaults.standard.bool(forKey: key) }
+        set { UserDefaults.standard.set(newValue, forKey: key) }
+    }
+}
+
 // MARK: - BadgesView
 
 struct BadgesView: View {
@@ -195,7 +204,7 @@ struct BadgesView: View {
         // b12("모두 획득")는 본인 데이터 배지 기준 — 커뮤니티(b33+) 참여/바이럴은 제외(b12 달성 가능하게).
         let communityIDs: Set<String> = ["b33", "b34", "b35", "b36", "b37", "b38"]
         let allOther = partial.filter { $0.id != "b12" && !communityIDs.contains($0.id) }.allSatisfy(\.earned)
-        return makeBadges(
+        let computed = makeBadges(
             registered: registered, totalM: totalM,
             earlyMorning: earlyMorning, lateNight: lateNight,
             distinctBrands: distinctBrands, journalCount: journalCount,
@@ -205,6 +214,12 @@ struct BadgesView: View {
             hasCOSCM: hasCOSCM, hasGradeA: hasGradeA, hasPerfectB: hasPerfectB,
             allOtherEarned: allOther, new: newParams, community: comm
         )
+        // 관리자 확인용 override — 전부 획득 상태로 표시(실제 데이터 변경 없음, 끄면 원상복구).
+        guard BadgeAdminOverride.grantAll else { return computed }
+        return computed.map {
+            Badge(id: $0.id, name: $0.name, desc: $0.desc, condition: $0.condition,
+                  emoji: $0.emoji, rarity: $0.rarity, earned: true, progress: $0.total, total: $0.total)
+        }
     }
 
     /// Round 172 커뮤니티 배지 파라미터.
@@ -342,6 +357,8 @@ struct BadgesView: View {
     // MARK: - Toast
 
     private func checkNewBadges(badges list: [Badge]? = nil) {
+        // 관리자 override 중에는 토스트·seen 갱신 안 함(실데이터 보존).
+        if BadgeAdminOverride.grantAll { return }
         let current = list ?? badges
         let earnedIds = Set(current.filter(\.earned).map(\.id))
         let newlyEarned = earnedIds.subtracting(seenIds)
@@ -453,8 +470,7 @@ private struct BadgeCell: View {
                         .opacity(badge.earned ? 0.15 : 0.5))
                     .frame(width: 68, height: 68)
                 if badge.earned {
-                    Text(badge.emoji)
-                        .font(.system(size: 32))
+                    BadgeGlyph(id: badge.id, size: 36, color: badge.rarity.color)
                 } else {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 24))
@@ -538,8 +554,7 @@ private struct BadgeDetailCardView: View {
                                 .fill(.white.opacity(0.18))
                                 .frame(width: 140, height: 140)
                             if badge.earned {
-                                Text(badge.emoji)
-                                    .font(.system(size: 64))
+                                BadgeGlyph(id: badge.id, size: 70, color: .white)
                             } else {
                                 Image(systemName: "lock.fill")
                                     .font(.system(size: 52))

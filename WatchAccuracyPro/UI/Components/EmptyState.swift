@@ -83,11 +83,8 @@ struct AnimatedEmptyIcon: View {
                 .frame(width: 96, height: 96)
             // 12-dot 시계 인덱스 — Reduce Motion 시 정적.
             DotRingMark(size: 72, rotating: !reduceMotion, goldTopDot: true)
-            Image(systemName: icon)
-                .font(.system(size: 26, weight: .light))
-                .foregroundStyle(AppColors.ink2)
-                // 아이콘 자체도 살짝 맥동(Reduce Motion 시 정지).
-                .symbolEffect(.pulse.wholeSymbol, isActive: !reduceMotion)
+            // 컨셉 글리프 — 시계/측정/저널/통계/커뮤니티/사진 컨텍스트는 커스텀 벡터, 그 외 SF Symbol 폴백.
+            ConceptGlyph(systemName: icon, size: 26, color: AppColors.ink2)
         }
     }
 }

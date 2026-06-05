@@ -21,6 +21,23 @@ final class BPHEstimatorTests: XCTestCase {
         XCTAssertEqual(estimate?.bph, 21_600)
     }
 
+    // MARK: - BPH 미설정 자동감지 / 잘못 설정 가드 (DSPPipeline bphExplicit 근거)
+
+    /// 미설정(nil hint) → 21600 신호를 21600 으로 전대역 자동감지(tickIQ식).
+    func test_unset_autodetect_locks_21600_without_hint() {
+        let raw = SyntheticSignal.ticTocImpulseTrain(bph: 21_600, duration: 5)
+        let envelope = makeEnvelope(raw)
+        XCTAssertEqual(BPHEstimator.estimate(envelope: envelope, nominalBphHint: nil)?.bph, 21_600)
+    }
+
+    /// 잘못 설정(28800 hint) → 21600 신호는 ±20% 밖이라 후보 제외 → 21600 으로 lock 안 됨.
+    /// (= 자동감지가 28800 강제보다 나은 이유 + 불일치 경고의 근거.)
+    func test_wrong_hint_28800_excludes_21600_signal() {
+        let raw = SyntheticSignal.ticTocImpulseTrain(bph: 21_600, duration: 5)
+        let envelope = makeEnvelope(raw)
+        XCTAssertNotEqual(BPHEstimator.estimate(envelope: envelope, nominalBphHint: 28_800)?.bph, 21_600)
+    }
+
     func test_estimate_36000bph_high_beat() {
         let raw = SyntheticSignal.ticTocImpulseTrain(bph: 36_000, duration: 5)
         let envelope = makeEnvelope(raw)

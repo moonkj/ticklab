@@ -109,7 +109,7 @@ struct BrandLeagueView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 NavigationLink { GlobalAnalyticsView() } label: {
-                    Image(systemName: "chart.bar.xaxis")
+                    ConceptGlyph(systemName: "chart.bar.xaxis", size: 20)
                 }
             }
         }
@@ -402,9 +402,7 @@ struct BrandLeagueView: View {
 
     private func trophyView(rank: Int) -> some View {
         let color: Color = rank == 1 ? Self.gold : rank == 2 ? Self.silver : Self.bronze
-        return Image(systemName: "trophy.fill")
-            .font(.system(size: 26, weight: .bold))
-            .foregroundStyle(color)
+        return ConceptGlyph(systemName: "trophy.fill", size: 26, color: color)
             .shadow(color: .black.opacity(0.25), radius: 3, y: 1)
     }
 

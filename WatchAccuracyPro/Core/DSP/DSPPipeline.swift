@@ -29,7 +29,17 @@ final class DSPPipeline {
     static let convergeToleranceSD: Double = 2.5
 
     private let source: AudioSource
-    private let nominalBph: Int
+    /// 명목 BPH. 사용자가 캘리버/BPH 미설정(`bphExplicit==false`)이면 28800 기본값으로 시작하되,
+    /// 첫 BPH lock 시 감지된 패밀리로 **1회 확정(resolve)** 한다 → rate/IOI/refractory 가 자동 정렬.
+    private(set) var nominalBph: Int
+    /// 사용자가 BPH/캘리버를 명시 설정했는가. false면 전대역 자동감지(nil hint) + 미설정 경고.
+    private let bphExplicit: Bool
+    /// 미설정 자동감지에서 nominalBph 가 한 번 확정됐는지.
+    private var bphResolved = false
+    /// 결과 경고용 — BPH 미설정 자동감지로 측정됨.
+    var bphWasAutoDetected: Bool { !bphExplicit }
+    /// 결과 경고용 — 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심). 감지된 BPH, 일치/미감지면 nil.
+    private(set) var bphMismatchSuggested: Int?
     private let liftAngleDegrees: Double?
     private let escapement: Escapement
     private let reliabilityLabel: ReliabilityLabel
@@ -90,9 +100,20 @@ final class DSPPipeline {
     let liveMetricsStream: AsyncStream<LiveMetrics>
     let liveWaveformStream: AsyncStream<LiveWaveformChunk>
 
+    /// BPH 탐색 hint — 명시 설정이거나 자동감지로 확정된 뒤엔 nominalBph, 미설정·미확정이면 nil(전대역 자동감지).
+    private var bphSearchHint: Int? { (bphExplicit || bphResolved) ? nominalBph : nil }
+
+    /// 미설정 자동감지에서 첫 lock 시 nominalBph 를 감지된 패밀리로 1회 확정.
+    private func resolveNominalIfNeeded(_ detectedBph: Int) {
+        guard !bphExplicit, !bphResolved, detectedBph > 0 else { return }
+        nominalBph = detectedBph
+        bphResolved = true
+    }
+
     init(
         source: AudioSource,
         nominalBph: Int,
+        bphExplicit: Bool = true,
         liftAngleDegrees: Double?,
         escapement: Escapement,
         reliabilityLabel: ReliabilityLabel,
@@ -100,6 +121,7 @@ final class DSPPipeline {
     ) {
         self.source = source
         self.nominalBph = nominalBph
+        self.bphExplicit = bphExplicit
         self.liftAngleDegrees = liftAngleDegrees
         self.escapement = escapement
         self.reliabilityLabel = reliabilityLabel
@@ -391,8 +413,9 @@ final class DSPPipeline {
             refractoryMs: BeatDetector.adaptiveRefractoryMs(nominalBph: nominalBph))   // 감사 P1: 36000 BPH refractory
         guard coarseBeats.count >= 8 else { return nil }
         guard let bphEst = BPHEstimator.estimate(
-            envelope: fluxSlice, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nominalBph
+            envelope: fluxSlice, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: bphSearchHint
         ), bphEst.bph > 0 else { return nil }
+        resolveNominalIfNeeded(bphEst.bph)
         let refined = BeatDetector.refineTimestamps(beats: coarseBeats, envelope: envSlice, envelopeSampleRate: source.sampleRate)
         let precise = preciseRate(beats: refined, bphEstimate: bphEst)
         let rate = RateCalculator.secondsPerDay(measuredBph: precise.rawBph, nominalBph: nominalBph)
@@ -651,7 +674,7 @@ final class DSPPipeline {
             envelope: fluxSlice,
             beats: coarseBeats,
             sampleRate: fluxRate,
-            nominalBphHint: nominalBph
+            nominalBphHint: bphSearchHint
         ) else {
             lastAnalyzeFailReason = "bph_lock_fail(simplified)"
             return nil
@@ -660,6 +683,7 @@ final class DSPPipeline {
             lastAnalyzeFailReason = "bph=0(simplified)"
             return nil
         }
+        resolveNominalIfNeeded(bphEst.bph)
 
         // 4) 48kHz envelope 위에서 onset timestamps refine — beatError 표시용 (rate 계산엔 사용 X).
         let refined = BeatDetector.refineTimestamps(
@@ -895,14 +919,14 @@ final class DSPPipeline {
             envelope: envelopeDownsampled,
             beats: envCoarseBeats,
             sampleRate: envFluxRate,
-            nominalBphHint: nominalBph
+            nominalBphHint: bphSearchHint
         )
         // 표준 path 우선, 실패 시 envelope path fallback.
         let standardBphEstimate = BPHEstimator.estimate(
             envelope: fluxSnapshot,
             beats: coarseBeats,
             sampleRate: fluxRate,
-            nominalBphHint: nominalBph
+            nominalBphHint: bphSearchHint
         )
         // Round 158 (tickIQ trust-the-hint): BPHEstimator 둘 다 실패해도 *signal 있으면* nominal echo 반환.
         // 사용자가 watch 등록한 BPH 신뢰. 결과 카드 항상 표시 (F-grade) — tickIQ 와 동일 UX 패턴.
@@ -925,6 +949,17 @@ final class DSPPipeline {
             return BPHEstimate(bph: 0, rawBph: 0, confidence: 0, peakLagSeconds: 0)
         }()
         guard bphEstimate.bph > 0 else { return nil }
+        resolveNominalIfNeeded(bphEstimate.bph)
+        // 잘못 설정 경고 — 명시 설정인데 신호가 다른 BPH 패밀리(>12% 차)로 잡히면 감지값 제안.
+        if bphExplicit {
+            let free = BPHEstimator.estimateAutocorrelation(envelope: fluxSnapshot, sampleRate: fluxRate, nominalBphHint: nil)
+            if let f = free, f.bph > 0,
+               abs(Double(f.bph - nominalBph)) / Double(nominalBph) > 0.12 {
+                bphMismatchSuggested = f.bph
+            } else {
+                bphMismatchSuggested = nil
+            }
+        }
         // 만약 envelope path 가 lock 잡았으면 그 beats 를 후속 분석에 사용.
         let actualBeats = standardBphEstimate != nil ? coarseBeats : envCoarseBeats
         let elapsed = Date().timeIntervalSince(startTime ?? Date())

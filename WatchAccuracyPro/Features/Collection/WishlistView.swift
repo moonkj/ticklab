@@ -67,7 +67,7 @@ struct WishlistView: View {
                     let fmt = NumberFormatter()
                     let _ = { fmt.numberStyle = .currency; fmt.currencyCode = item.currency; fmt.maximumFractionDigits = 0 }()
                     HStack(spacing: 4) {
-                        Image(systemName: "target").font(.system(size: 10)).foregroundStyle(AppColors.accentDark)
+                        ConceptGlyph(systemName: "target", size: 13).foregroundStyle(AppColors.accentDark)
                         Text(fmt.string(from: NSDecimalNumber(decimal: price)) ?? "")
                             .font(.system(size: 12, weight: .semibold)).foregroundStyle(AppColors.accentDark)
                     }
@@ -173,7 +173,7 @@ struct WishlistComposerView: View {
                                 Image(uiImage: img).resizable().scaledToFill()
                                     .frame(width: 44, height: 44).clipShape(RoundedRectangle(cornerRadius: 8))
                             } else {
-                                Image(systemName: "photo").frame(width: 44, height: 44)
+                                ConceptGlyph(systemName: "photo", size: 26).frame(width: 44, height: 44)
                                     .background(AppColors.paper2).clipShape(RoundedRectangle(cornerRadius: 8))
                             }
                             Text(String(localized: "wishlist.photo")).foregroundStyle(AppColors.accentDark)

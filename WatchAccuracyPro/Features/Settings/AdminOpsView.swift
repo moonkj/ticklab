@@ -22,6 +22,8 @@ private struct AdminOpsView: View {
     @State private var channels: [Community.CuratedChannel] = []
     @State private var suggestions: [Community.ChannelSuggestion] = []
     @State private var feedback: [Community.Feedback] = []
+    /// 관리자 확인용 — 뱃지 전부 획득 override.
+    @AppStorage("ticklab.admin.forceAllBadges") private var forceAllBadges = false
 
     private struct ReportGroup: Identifiable {
         let postID: String
@@ -57,6 +59,21 @@ private struct AdminOpsView: View {
                 Text(String(localized: "admin.stats.section"))
             } footer: {
                 Text(String(localized: "admin.stats.footer"))
+            }
+            // 뱃지 확인용 — 전부 획득/원상복구 (실데이터 변경 없음, 화면 표시만 override).
+            Section {
+                Toggle(isOn: $forceAllBadges) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(String(localized: "admin.badge.grant_all", defaultValue: "뱃지 전부 획득 (확인용)"))
+                            .font(.system(size: 15, weight: .semibold))
+                        Text(String(localized: "admin.badge.grant_all.hint",
+                                    defaultValue: "업적 화면이 모두 획득으로 보입니다. 끄면 원상복구."))
+                            .font(.caption).foregroundStyle(.secondary)
+                    }
+                }
+                .tint(AppColors.accent)
+            } header: {
+                Text(String(localized: "admin.badge.section", defaultValue: "뱃지 확인"))
             }
             Section(String(localized: "admin.notice.section")) {
                 Button {
@@ -94,7 +111,11 @@ private struct AdminOpsView: View {
             }
             Section(String(localized: "admin.channel.section")) {
                 Button { composingChannel = true } label: {
-                    Label(String(localized: "admin.channel.new"), systemImage: "play.rectangle")
+                    Label {
+                        Text(String(localized: "admin.channel.new"))
+                    } icon: {
+                        ConceptGlyph(systemName: "play.rectangle", size: 18)
+                    }
                 }
                 ForEach(channels) { ch in
                     NavigationLink {
@@ -250,7 +271,7 @@ private struct AdminOpsView: View {
                     AsyncImage(url: url) { img in img.resizable().scaledToFill() } placeholder: { Color.clear }
                         .clipShape(RoundedRectangle(cornerRadius: 8))
                 } else {
-                    Image(systemName: "photo").foregroundStyle(AppColors.ink3)
+                    ConceptGlyph(systemName: "photo", size: 22).foregroundStyle(AppColors.ink3)
                 }
             }
             .frame(width: 60, height: 60)

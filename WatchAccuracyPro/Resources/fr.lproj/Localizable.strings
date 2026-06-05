@@ -292,7 +292,7 @@
 "collection.more_menu" = "Plus";
 "photo.crop.hint" = "Faites glisser et pincez pour cadrer la montre";
 "community.tab.title" = "Communauté";
-"community.subtitle" = "Là où les collectionneurs partagent leur poignet";
+"community.subtitle" = "Là où chacun partage son poignet";
 "compare.title" = "Comparer les montres";
 "compare.entry" = "Comparer à une autre montre";
 "compare.select" = "Choisir une montre à comparer";
@@ -349,7 +349,7 @@
 "timeline.service" = "Entretien";
 "community.compose" = "Publier une photo";
 "community.compose.hint" = "Partagez la montre du jour. Une photo par jour.";
-"community.compose.anonymous_note" = "Publié avec votre profil · une fois par jour";
+"community.compose.anonymous_note" = "Publié avec votre profil";
 "community.compose.text_only" = "Texte seul";
 "community.compose.text_only.empty" = "Veuillez saisir du texte.";
 "community.empty.title" = "Aucune publication";

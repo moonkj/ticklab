@@ -292,7 +292,7 @@
 "collection.more_menu" = "और";
 "photo.crop.hint" = "घड़ी को फ्रेम करने के लिए खींचें और पिंच करें";
 "community.tab.title" = "समुदाय";
-"community.subtitle" = "जहाँ संग्राहक अपनी कलाई साझा करते हैं";
+"community.subtitle" = "जहाँ हर कोई अपनी कलाई साझा करता है";
 "compare.title" = "घड़ी तुलना";
 "compare.entry" = "दूसरी घड़ी से तुलना करें";
 "compare.select" = "तुलना के लिए घड़ी चुनें";
@@ -349,7 +349,7 @@
 "timeline.service" = "सर्विस";
 "community.compose" = "फ़ोटो पोस्ट करें";
 "community.compose.hint" = "आज की घड़ी साझा करें। दिन में एक फ़ोटो।";
-"community.compose.anonymous_note" = "आपकी प्रोफ़ाइल से पोस्ट · दिन में एक बार";
+"community.compose.anonymous_note" = "आपकी प्रोफ़ाइल से पोस्ट";
 "community.compose.text_only" = "केवल टेक्स्ट";
 "community.compose.text_only.empty" = "कृपया कुछ टेक्स्ट लिखें।";
 "community.empty.title" = "अभी कोई पोस्ट नहीं";

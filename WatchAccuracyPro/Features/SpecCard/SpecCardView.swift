@@ -207,9 +207,7 @@ struct SpecCardView: View {
                     .font(.system(size: 15, weight: .semibold))
                     .foregroundStyle(AppColors.ink0)
                 Spacer()
-                Image(systemName: "waveform")
-                    .font(.system(size: 18))
-                    .foregroundStyle(AppColors.ink2)
+                ConceptGlyph(systemName: "waveform", size: 20, color: AppColors.ink2)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 14)

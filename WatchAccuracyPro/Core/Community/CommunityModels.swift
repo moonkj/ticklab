@@ -23,6 +23,10 @@ enum Community {
         let authorBadge: String?
         /// Round 174: 작성자 대표 시계 메이커(프로필 좋아하는 브랜드 1순위). 아바타 하단 칩. nil = 미설정/구글.
         let authorRepBrand: String?
+        /// 컬렉터 프로필(프로필 탭 노출용) — 소개·컬렉션 시작연도·좋아하는 브랜드. 욕설 필터 통과분만 업로드. 미배포/미설정 시 nil.
+        let authorBio: String?
+        let authorStartYear: String?
+        let authorFavBrands: String?
         var likeCount: Int
         var commentCount: Int?      // 비정규화(트리거). 미배포 시 nil → 0 처리.
         let status: PostStatus
@@ -38,6 +42,9 @@ enum Community {
             case authorAvatarPath = "author_avatar_path"
             case authorBadge = "author_badge"
             case authorRepBrand = "author_rep_brand"
+            case authorBio = "author_bio"
+            case authorStartYear = "author_start_year"
+            case authorFavBrands = "author_fav_brands"
             case likeCount = "like_count"
             case commentCount = "comment_count"
             case status
@@ -156,8 +163,14 @@ enum Community {
     struct Liker: Codable, Identifiable, Hashable {
         let uid: String
         let authorName: String?
+        /// 대표사진(아바타) 경로 — community_likes.author_avatar_path. 미배포/미설정 시 nil → 이니셜 폴백.
+        let authorAvatarPath: String?
         var id: String { uid }
-        enum CodingKeys: String, CodingKey { case uid; case authorName = "author_name" }
+        enum CodingKeys: String, CodingKey {
+            case uid
+            case authorName = "author_name"
+            case authorAvatarPath = "author_avatar_path"
+        }
     }
 
     /// 커뮤니티 댓글.

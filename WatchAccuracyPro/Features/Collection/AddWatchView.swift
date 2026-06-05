@@ -243,7 +243,7 @@ struct AddWatchView: View {
                     Section(String(localized: "addwatch.battery.section")) {
                         Stepper(value: $batteryFullChargeDays, in: 1...30) {
                             HStack {
-                                Image(systemName: "battery.100").foregroundStyle(AppColors.success)
+                                ConceptGlyph(systemName: "battery.100", size: 17).foregroundStyle(AppColors.success)
                                 Text(String(localized: "addwatch.battery.life_days"))
                                 Spacer()
                                 Text(String(format: String(localized: "addwatch.battery.days_value"), batteryFullChargeDays))
@@ -554,8 +554,7 @@ struct AddWatchView: View {
                         size: 60
                     )
                 } else {
-                    Image(systemName: "photo")
-                        .font(.system(size: 28))
+                    ConceptGlyph(systemName: "photo", size: 30)
                         .foregroundStyle(AppColors.textMuted)
                 }
             }
@@ -907,8 +906,8 @@ struct AddWatchView: View {
         // Sprint 2 (P2-9): 보증 알림 — purchaseDate + warrantyMonths 둘 다 있으면 schedule.
         NotificationService.scheduleWarrantyReminder(for: watch)
         // 사용자 요청: 시계 추가/편집 시 오버홀 리마인더도 같이 스케줄.
-        //   기계식 (auto/manual) 만 대상. 첫 등록 시 createdAt 기준으로 +N년 후 알림.
-        if movementType != .quartz {
+        //   기계식 (auto/manual) 만 대상 — quartz·스마트워치는 오버홀 개념 없음(제외).
+        if movementType != .quartz && movementType != .smartwatch {
             let lastDate = NotificationService.lastOverhaulDate(for: watch, in: modelContext) ?? watch.createdAt
             NotificationService.scheduleOverhaulReminder(
                 for: watch,

@@ -8,17 +8,17 @@ struct CommunitySavedView: View {
     @State private var shareItem: ShareCardItem?
     @State private var loaded = false
     @State private var showLogin = false
+    @State private var authorTarget: Community.Post?
 
     var body: some View {
         NavigationStack {
             Group {
                 if !loaded && service.savedFeed.isEmpty {
-                    ProgressView().tint(AppColors.ink2)
+                    BalanceWheelLoader()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if service.savedFeed.isEmpty {
                     VStack(spacing: 14) {
-                        Image(systemName: "bookmark")
-                            .font(.system(size: 44)).foregroundStyle(AppColors.ink3)
+                        ConceptGlyph(systemName: "bookmark", size: 44).foregroundStyle(AppColors.ink3)
                         Text(String(localized: "community.saved.empty"))
                             .font(AppTypography.bodySmall).foregroundStyle(AppColors.ink2)
                     }
@@ -46,6 +46,7 @@ struct CommunitySavedView: View {
                                     onShare: {
                                         if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) }
                                     },
+                                    onAuthor: { authorTarget = post },
                                     onDelete: nil
                                 )
                                 Rectangle().fill(AppColors.rule).frame(height: 0.5)
@@ -66,6 +67,16 @@ struct CommunitySavedView: View {
             .task { await service.loadSavedPosts(); loaded = true }
             .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
             .sheet(isPresented: $showLogin) { CommunityLoginView() }
+            .sheet(item: $authorTarget) { post in
+                NavigationStack {
+                    UserPostsView(uid: post.authorUID, displayName: post.authorName)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button(String(localized: "common.close")) { authorTarget = nil }
+                            }
+                        }
+                }
+            }
         }
     }
 }

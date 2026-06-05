@@ -299,7 +299,7 @@
 "collection.more_menu" = "More";
 "photo.crop.hint" = "Drag and pinch to frame the watch";
 "community.tab.title" = "Community";
-"community.subtitle" = "Where collectors share what's on the wrist";
+"community.subtitle" = "Where everyone shares what's on the wrist";
 "compare.title" = "Compare";
 "compare.entry" = "Compare with another watch";
 "compare.select" = "Select a watch to compare";
@@ -356,7 +356,7 @@
 "timeline.service" = "Service";
 "community.compose" = "Post a photo";
 "community.compose.hint" = "Share today's watch. One photo a day.";
-"community.compose.anonymous_note" = "Posted with your profile · once a day";
+"community.compose.anonymous_note" = "Posted with your profile";
 "community.compose.text_only" = "Text only";
 "community.compose.text_only.empty" = "Please enter some text.";
 "community.empty.title" = "No posts yet";

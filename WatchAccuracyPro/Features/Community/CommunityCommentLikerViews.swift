@@ -189,7 +189,7 @@ struct LikersView: View {
         return HStack(spacing: 12) {
             // 이름·아바타 탭 → 그 사람 게시물(NavigationLink 미사용 — 버튼이 가로 확장돼 팔로우를 밀어내는 문제 회피).
             Button { profileTarget = liker } label: {
-                LikerAvatar(name: liker.authorName).frame(width: 34, height: 34)
+                LikerAvatar(name: liker.authorName, avatarPath: liker.authorAvatarPath).frame(width: 34, height: 34)
                 Text(liker.authorName ?? String(localized: "community.anon_handle"))
                     .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
             }
@@ -218,16 +218,27 @@ struct LikersView: View {
 /// 라이커/작성자 아바타 — TickLab은 앱 아이콘, 그 외 이니셜.
 struct LikerAvatar: View {
     let name: String?
+    /// 대표사진(아바타) 경로 — 있으면 사진, 없으면 이니셜 폴백.
+    var avatarPath: String? = nil
     var body: some View {
         ZStack {
-            if name == "TickLab", let icon = AppIconProvider.image {
-                Image(uiImage: icon).resizable().scaledToFill().clipShape(Circle())
+            if let path = avatarPath, !path.isEmpty,
+               let url = CommunityService.shared.imageURL(for: path) {
+                Circle().fill(AppColors.paper2)
+                AsyncImage(url: url) { img in
+                    img.resizable().scaledToFill()
+                } placeholder: {
+                    Color.clear
+                }
+            } else if name == "TickLab", let icon = AppIconProvider.image {
+                Image(uiImage: icon).resizable().scaledToFill()
             } else {
                 Circle().fill(AppColors.paper2)
                 Text(String((name ?? "C").first.map(String.init) ?? "C").uppercased())
                     .font(.system(size: 13, weight: .bold)).foregroundStyle(AppColors.ink2)
             }
         }
+        .clipShape(Circle())
     }
 }
 

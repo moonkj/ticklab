@@ -55,9 +55,7 @@ struct GlossaryView: View {
                         UISelectionFeedbackGenerator().selectionChanged()
                     } label: {
                         VStack(alignment: .leading, spacing: 8) {
-                            Image(systemName: entry.icon)
-                                .font(.system(size: 20))
-                                .foregroundStyle(AppColors.accent)
+                            ConceptGlyph(systemName: entry.icon, size: 20, color: AppColors.accent)
                             Text(String(localized: String.LocalizationValue(entry.key)))
                                 .font(.system(size: 14, weight: .semibold))
                                 .foregroundStyle(AppColors.ink0)
@@ -108,9 +106,7 @@ struct GlossaryDetailSheet: View {
     var body: some View {
         VStack(spacing: 20) {
             Capsule().fill(AppColors.rule).frame(width: 36, height: 4).padding(.top, 10)
-            Image(systemName: icon)
-                .font(.system(size: 44))
-                .foregroundStyle(AppColors.accentDark)
+            ConceptGlyph(systemName: icon, size: 44, color: AppColors.accentDark)
             Text(String(localized: String.LocalizationValue(key)))
                 .font(.system(size: 24, weight: .bold))
                 .foregroundStyle(AppColors.ink0)

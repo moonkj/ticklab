@@ -17,6 +17,8 @@ struct CommunityPostCard: View {
     let onShare: () -> Void
     var onComment: () -> Void = {}
     var onLikers: () -> Void = {}
+    /// 작성자(아바타/이름) 탭 → 그 사람 프로필 + 게시물(인스타식).
+    var onAuthor: () -> Void = {}
     /// 브랜드 칩 탭 → 같은 브랜드 모아보기. nil/미전달이면 칩은 비탭(표시만).
     var onBrandTap: ((String) -> Void)? = nil
     let onDelete: (() -> Void)?
@@ -94,12 +96,16 @@ struct CommunityPostCard: View {
                         .offset(y: 7)
                 }
             }
+            .contentShape(Circle())
+            .onTapGesture { onAuthor() }
             VStack(alignment: .leading, spacing: 1) {
                 HStack(spacing: 5) {
                     Text(handle)
                         .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(AppColors.ink0)
                         .lineLimit(1)
+                        .contentShape(Rectangle())
+                        .onTapGesture { onAuthor() }
                     // Round 174 (사용자 요청): 이모지 대신 획득 뱃지 '이름'을 칩으로 표시.
                     if let badge = post.authorBadge, let name = BadgeCatalog.name(forBadge: badge) {
                         Text(name)
@@ -142,7 +148,7 @@ struct CommunityPostCard: View {
     /// 브랜드 태그 칩 — 탭 시 같은 브랜드 모아보기(onBrandTap). 화이트리스트(내 컬렉션) 메타 수준.
     @ViewBuilder private func brandChip(_ brand: String) -> some View {
         let label = HStack(spacing: 3) {
-            Image(systemName: "tag.fill").font(.system(size: 8, weight: .bold))
+            ConceptGlyph(systemName: "tag.fill", size: 8)
             Text(brand).font(.system(size: 10, weight: .semibold)).lineLimit(1)
         }
         .foregroundStyle(AppColors.info)
@@ -205,8 +211,7 @@ struct CommunityPostCard: View {
             // 좋아요 — 하트 토글 + (탭 시 라이커) 숫자.
             HStack(spacing: 6) {
                 Button(action: onLike) {
-                    Image(systemName: liked ? "heart.fill" : "heart")
-                        .font(.system(size: 23, weight: .light))
+                    ConceptGlyph(systemName: liked ? "heart.fill" : "heart", size: 23)
                         .foregroundStyle(liked ? AppColors.danger : AppColors.ink0)
                 }
                 .buttonStyle(.plain)
@@ -242,8 +247,7 @@ struct CommunityPostCard: View {
             Spacer()
             // 스크랩(저장).
             Button(action: onBookmark) {
-                Image(systemName: bookmarked ? "bookmark.fill" : "bookmark")
-                    .font(.system(size: 21, weight: .light))
+                ConceptGlyph(systemName: bookmarked ? "bookmark.fill" : "bookmark", size: 21)
                     .foregroundStyle(bookmarked ? AppColors.accentDark : AppColors.ink0)
             }
             .buttonStyle(.plain)

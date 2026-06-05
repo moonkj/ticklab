@@ -106,8 +106,7 @@ struct MagneticFieldView: View {
                         .progressViewStyle(.circular)
                         .tint(.white)
                 } else {
-                    Image(systemName: "dot.radiowaves.left.and.right")
-                        .font(.system(size: 16, weight: .semibold))
+                    ConceptGlyph(systemName: "dot.radiowaves.left.and.right", size: 16, color: .white)
                 }
                 Text(isMeasuring
                      ? String(localized: "magnetic.measuring")

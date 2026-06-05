@@ -16,6 +16,7 @@ struct CommunityFeedView: View {
     @State private var commentTarget: Community.Post?
     @State private var likersTarget: Community.Post?
     @State private var editTarget: Community.Post?
+    @State private var authorTarget: Community.Post?
     @State private var showViewerGate = false
     /// 신원 전환: 게시·좋아요 등 액션 전 Apple 로그인 게이트.
     @State private var showLogin = false
@@ -110,6 +111,17 @@ struct CommunityFeedView: View {
             }
             .sheet(item: $editTarget) { post in
                 CommunityEditView(post: post)
+            }
+            // 작성자 프로필 — 인스타식. 내부 격자 탭→상세 푸시 위해 NavigationStack 으로 감싼다.
+            .sheet(item: $authorTarget) { post in
+                NavigationStack {
+                    UserPostsView(uid: post.authorUID, displayName: post.authorName)
+                        .toolbar {
+                            ToolbarItem(placement: .topBarTrailing) {
+                                Button(String(localized: "common.close")) { authorTarget = nil }
+                            }
+                        }
+                }
             }
             .sheet(isPresented: $showNotifications) {
                 CommunityNotificationsView()
@@ -225,7 +237,7 @@ struct CommunityFeedView: View {
             }
             .accessibilityLabel(String(localized: "collection.notifications"))
             Button { showSavedTab() } label: {
-                Image(systemName: "bookmark").font(.system(size: 22, weight: .regular))
+                ConceptGlyph(systemName: "bookmark", size: 22)
                     .foregroundStyle(AppColors.ink0).frame(width: 40, height: 40)
             }
             .accessibilityLabel(String(localized: "community.saved.title"))
@@ -333,6 +345,7 @@ struct CommunityFeedView: View {
                         onShare: { sharePost(post) },
                         onComment: { commentTarget = post },
                         onLikers: { likersTarget = post },
+                        onAuthor: { authorTarget = post },
                         onBrandTap: { brand in brandFilterTarget = brand },
                         onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
                         onEdit: post.isMine(currentUID: service.myUID) ? { editTarget = post } : nil,
@@ -374,12 +387,10 @@ struct CommunityFeedView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    /// 최초 로딩 — 빈 화면/깜빡임 대신 크고 분명한 로딩 스피너.
+    /// 최초 로딩 — 빈 화면/깜빡임 대신 브랜드 메달리온(회전 dot-ring + 가운데 아이콘).
     private var loadingState: some View {
-        VStack(spacing: 12) {
-            ProgressView()
-                .controlSize(.large)
-                .tint(AppColors.ink1)
+        VStack(spacing: 16) {
+            BalanceWheelLoader()
             Text(String(localized: "community.loading"))
                 .font(AppTypography.caption)
                 .foregroundStyle(AppColors.ink3)
@@ -389,8 +400,7 @@ struct CommunityFeedView: View {
 
     private var emptyState: some View {
         VStack(spacing: 14) {
-            Image(systemName: "person.2.circle")
-                .font(.system(size: 48))
+            ConceptGlyph(systemName: "person.2.circle", size: 48)
                 .foregroundStyle(AppColors.ink3)
             Text(String(localized: "community.empty.title"))
                 .font(AppTypography.headline)
@@ -472,7 +482,7 @@ struct CommunityBrandFeedView: View {
         NavigationStack {
             Group {
                 if !loaded {
-                    ProgressView().controlSize(.large).tint(AppColors.ink1)
+                    BalanceWheelLoader()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 } else if posts.isEmpty {
                     VStack(spacing: 12) {

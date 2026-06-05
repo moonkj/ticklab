@@ -76,8 +76,7 @@ struct PhotoSourceSheet: View {
     private func row(label: String, icon: String, destructive: Bool = false, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack(spacing: 16) {
-                Image(systemName: icon)
-                    .font(.system(size: 17))
+                ConceptGlyph(systemName: icon, size: 17)
                     .foregroundStyle(destructive ? AppColors.danger : AppColors.accent)
                     .frame(width: 28, alignment: .center)
                 Text(label)

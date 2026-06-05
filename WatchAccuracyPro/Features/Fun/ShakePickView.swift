@@ -78,7 +78,7 @@ struct ShakePickView: View {
         .overlay(alignment: .top) {
             if wornToastVisible {
                 HStack(spacing: 8) {
-                    Image(systemName: "checkmark.seal.fill")
+                    ConceptGlyph(systemName: "checkmark.seal.fill", size: 16)
                         .foregroundStyle(AppColors.success)
                     Text(String(localized: "wear.toast.logged"))
                         .font(.system(size: 14, weight: .semibold))
@@ -157,11 +157,13 @@ struct ShakePickView: View {
                     .frame(width: 200, height: 200)
                     .shadow(color: AppColors.accent.opacity(0.5), radius: 30, y: 30)
                 if let img = PhotoCache.image(for: watch.id, data: watch.photoData) {
+                    // 사진이 금색 공을 꽉 채우도록 200px clip + 얇은 골드 림만 유지.
                     Image(uiImage: img)
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 140, height: 140)
+                        .frame(width: 200, height: 200)
                         .clipShape(Circle())
+                        .overlay(Circle().stroke(AppColors.accentLight, lineWidth: 3))
                 } else {
                     WatchSilhouette(watch: watch, size: 140)
                 }

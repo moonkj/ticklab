@@ -70,8 +70,7 @@ struct WrappedView: View {
     private func coverPage(_ d: WrappedReportData) -> some View {
         wrappedCard(glow: AppColors.accent, particles: true) {
             VStack(spacing: 18) {
-                Text("⌚")
-                    .font(.system(size: 72))
+                ConceptGlyph(systemName: "watch.analog", size: 72, color: .white)
                     .shadow(color: AppColors.accent.opacity(0.6), radius: 24)
                 EyebrowWhite(String(localized: "wrapped.cover.eyebrow"))
                 Text(String(format: NSLocalizedString("wrapped.cover.title", comment: ""), d.year))
@@ -234,7 +233,7 @@ struct WrappedView: View {
     private func memoriesPage(_ d: WrappedReportData) -> some View {
         wrappedCard(glow: AppColors.accentLight) {
             VStack(spacing: 16) {
-                Text("✨").font(.system(size: 44))
+                ConceptGlyph(systemName: "star.fill", size: 44, color: AppColors.accentLight)
                 if d.highlightCount > 0 {
                     statLabel(String(localized: "wrapped.highlights.label"))
                     bigNumber(d.highlightCount)
@@ -256,7 +255,7 @@ struct WrappedView: View {
     private func closingPage(_ d: WrappedReportData) -> some View {
         wrappedCard(glow: AppColors.accent, particles: true) {
             VStack(spacing: 16) {
-                Text("🎉").font(.system(size: 56))
+                ConceptGlyph(systemName: "trophy.fill", size: 56, color: AppColors.accent)
                 Text(String(format: NSLocalizedString("wrapped.closing.title", comment: ""), d.year + 1))
                     .font(.system(size: 28, weight: .bold, design: .serif))
                     .italic()

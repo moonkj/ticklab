@@ -293,6 +293,16 @@ final class CommunityService: ObservableObject {
             }
             req.httpBody = try? JSONSerialization.data(withJSONObject: dict)
             _ = try? await URLSession.shared.data(for: req)
+            // 좋아요 목록 아바타 — 내 대표사진 경로를 best-effort 로 기록.
+            // 별도 PATCH 라 컬럼(author_avatar_path) 미배포여도 좋아요 자체는 안 깨진다(조용히 무시).
+            if let uid = myUID,
+               let avatarPath = defaults.string(forKey: "ticklab.profile.avatarPath"), !avatarPath.isEmpty,
+               !defaults.bool(forKey: "ticklab.admin.actingAsTickLab"),
+               let patchURL = URL(string: "\(baseURL)/rest/v1/community_likes?post_id=eq.\(post.id)&uid=eq.\(uid)") {
+                var preq = authedRequest(patchURL, method: "PATCH")
+                preq.httpBody = try? JSONSerialization.data(withJSONObject: ["author_avatar_path": avatarPath])
+                _ = try? await URLSession.shared.data(for: preq)
+            }
         }
     }
 
@@ -828,6 +838,20 @@ final class CommunityService: ObservableObject {
             let trimmed = caption.trimmingCharacters(in: .whitespacesAndNewlines)
             if !trimmed.isEmpty { body["caption"] = String(trimmed.prefix(CommunityTextModerator.maxLength)) }
         }
+        // 컬렉터 프로필 스냅샷(프로필 탭 노출) — 소개·시작연도·좋아하는 브랜드.
+        // 운영(TickLab) 계정 제외, 소개·브랜드는 욕설 필터 통과분만. 컬럼 미배포 시 아래 재시도에서 strip.
+        if !defaults.bool(forKey: "ticklab.admin.actingAsTickLab") {
+            let bio = (defaults.string(forKey: "ticklab.profile.bio") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !bio.isEmpty, !CommunityTextModerator.containsProfanity(bio) {
+                body["author_bio"] = String(bio.prefix(300))
+            }
+            let startYear = (defaults.string(forKey: "ticklab.profile.startYear") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !startYear.isEmpty { body["author_start_year"] = String(startYear.prefix(10)) }
+            let favBrands = (defaults.string(forKey: "ticklab.profile.brands") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+            if !favBrands.isEmpty, !CommunityTextModerator.containsProfanity(favBrands) {
+                body["author_fav_brands"] = String(favBrands.prefix(120))
+            }
+        }
         // 위클리 테마 귀속(선택) — theme_id 컬럼. 미배포 시 insert 가 거절될 수 있어 아래에서 1회 재시도.
         if let themeID, !themeID.isEmpty { body["theme_id"] = themeID }
 
@@ -838,9 +862,10 @@ final class CommunityService: ObservableObject {
             var msg = String(data: insData, encoding: .utf8) ?? ""
             // graceful degrade: theme_id 컬럼 미배포(weekly_theme.sql 전)면 그 컬럼만 빼고 1회 재시도.
             // (PostgREST: 미존재 컬럼은 PGRST204 / "column ... does not exist".)
-            if themeID != nil, body["theme_id"] != nil,
-               (msg.contains("theme_id") || msg.contains("PGRST204")) {
-                body.removeValue(forKey: "theme_id")
+            let optionalCols = ["theme_id", "author_bio", "author_start_year", "author_fav_brands"]
+            let hasOptional = optionalCols.contains { body[$0] != nil }
+            if hasOptional, (msg.contains("PGRST204") || optionalCols.contains { msg.contains($0) }) {
+                for c in optionalCols { body.removeValue(forKey: c) }
                 ins.httpBody = try? JSONSerialization.data(withJSONObject: body)
                 (insData, insResp) = try await URLSession.shared.data(for: ins)
                 msg = String(data: insData, encoding: .utf8) ?? ""

@@ -292,7 +292,7 @@
 "collection.more_menu" = "更多";
 "photo.crop.hint" = "拖动·捏合调整手表位置";
 "community.tab.title" = "社区";
-"community.subtitle" = "藏家分享腕上时光的地方";
+"community.subtitle" = "分享腕上时光的地方";
 "compare.title" = "比较手表";
 "compare.entry" = "与其他手表比较";
 "compare.select" = "选择要比较的手表";
@@ -349,7 +349,7 @@
 "timeline.service" = "保养";
 "community.compose" = "发布照片";
 "community.compose.hint" = "分享今天的腕表。每天一张。";
-"community.compose.anonymous_note" = "以你的资料发布 · 每天一张";
+"community.compose.anonymous_note" = "以你的资料发布";
 "community.compose.text_only" = "仅文字";
 "community.compose.text_only.empty" = "请输入内容。";
 "community.empty.title" = "还没有帖子";

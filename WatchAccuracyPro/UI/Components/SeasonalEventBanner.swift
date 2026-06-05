@@ -16,9 +16,7 @@ struct SeasonalEventBanner: View {
     var body: some View {
         if flags.seasonalEventEnabled && !flags.seasonalEventTitle.isEmpty {
             HStack(spacing: 10) {
-                Image(systemName: "gift.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(.white)
+                ConceptGlyph(systemName: "gift.fill", size: 14, color: .white)
                 Text(flags.seasonalEventTitle)
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(.white)

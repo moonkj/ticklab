@@ -71,9 +71,7 @@ struct SpecCardListView: View {
                     VStack {
                         HStack {
                             Spacer()
-                            Image(systemName: "waveform")
-                                .font(.system(size: 14))
-                                .foregroundStyle(AppColors.accent)
+                            ConceptGlyph(systemName: "waveform", size: 16, color: AppColors.accent)
                                 .padding(6)
                                 .background(.black.opacity(0.4))
                                 .clipShape(Circle())

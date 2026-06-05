@@ -36,9 +36,7 @@ struct TrendDiagnosisCard: View {
             } label: {
                 VStack(alignment: .leading, spacing: 10) {
                     HStack(spacing: 10) {
-                        Image(systemName: icon(d.severity))
-                            .font(.system(size: 18))
-                            .foregroundStyle(tone(d.severity))
+                        ConceptGlyph(systemName: icon(d.severity), size: 18, color: tone(d.severity))
                         VStack(alignment: .leading, spacing: 2) {
                             Text(String(localized: "trend.eyebrow"))
                                 .font(.system(size: 10, weight: .semibold))

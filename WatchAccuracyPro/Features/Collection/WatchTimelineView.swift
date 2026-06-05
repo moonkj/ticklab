@@ -116,9 +116,7 @@ struct WatchTimelineView: View {
             VStack(spacing: 0) {
                 ZStack {
                     Circle().fill(ev.kind.color.opacity(0.15)).frame(width: 30, height: 30)
-                    Image(systemName: ev.kind.icon)
-                        .font(.system(size: 13, weight: .semibold))
-                        .foregroundStyle(ev.kind.color)
+                    ConceptGlyph(systemName: ev.kind.icon, size: 13, color: ev.kind.color)
                 }
                 if !isLast {
                     Rectangle().fill(AppColors.rule)

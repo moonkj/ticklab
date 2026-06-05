@@ -668,8 +668,7 @@ private struct FirstResultPlaceholder: View {
 
     private var measureGuideCard: some View {
         HStack(alignment: .top, spacing: 12) {
-            Image(systemName: "mic.circle.fill")
-                .font(.system(size: 28))
+            ConceptGlyph(systemName: "mic.circle.fill", size: 28)
                 .foregroundStyle(AppColors.accent)
             VStack(alignment: .leading, spacing: 4) {
                 Text(String(localized: "welcome.firstresult.tip.title"))

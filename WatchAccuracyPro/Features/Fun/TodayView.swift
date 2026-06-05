@@ -133,8 +133,7 @@ struct TodayView: View {
             VStack(alignment: .leading, spacing: 0) {
                 HStack {
                     HStack(spacing: 6) {
-                        Image(systemName: "star.fill")
-                            .font(.system(size: 10))
+                        ConceptGlyph(systemName: "star.fill", size: 12)
                         Text(String(localized: "watch.is_primary").uppercased())
                             .font(.system(size: 10, weight: .semibold))
                             .tracking(1.5)
@@ -190,8 +189,7 @@ struct TodayView: View {
                     .strokeBorder(AppColors.rule, style: StrokeStyle(lineWidth: 1.5, dash: [4]))
                     .frame(width: 56, height: 56)
                     .background(Circle().fill(AppColors.paper2))
-                Image(systemName: "star")
-                    .font(.system(size: 22))
+                ConceptGlyph(systemName: "star", size: 22)
                     .foregroundStyle(AppColors.ink3)
             }
             VStack(alignment: .leading, spacing: 4) {
@@ -299,8 +297,7 @@ struct TodayView: View {
         let result = StreakService.currentStreak(in: modelContext)
         if result.current >= 1 {
             HStack(spacing: 6) {
-                Text("🔥")
-                    .font(.system(size: 13))
+                ConceptGlyph(systemName: "flame", size: 15, color: .orange)
                 Text(String(format: String(localized: "streak.chip.label",
                                            defaultValue: "%d일 연속 측정"),
                             result.current))
@@ -436,7 +433,7 @@ struct TodayView: View {
                         colors: [AppColors.accentLight, AppColors.accent],
                         center: UnitPoint(x: 0.35, y: 0.25), startRadius: 5, endRadius: 50))
                         .frame(width: 64, height: 64)
-                    Image(systemName: "dice.fill").font(.system(size: 28)).foregroundStyle(.white)
+                    ConceptGlyph(systemName: "dice", size: 28).foregroundStyle(.white)
                 }
                 VStack(alignment: .leading, spacing: 4) {
                     Text(String(localized: "today.shake.title"))
@@ -480,7 +477,7 @@ struct TodayView: View {
             compactSquareCard(
                 title: String(localized: "today.fortune.title"),
                 subtitle: String(localized: "today.fortune.subtitle"),
-                icon: "sparkles",
+                icon: "moon.stars",
                 iconColor: Color(red: 0.95, green: 0.85, blue: 0.55),
                 gradient: [Color(red: 0.10, green: 0.13, blue: 0.22),
                            Color(red: 0.17, green: 0.20, blue: 0.32)]
@@ -496,7 +493,7 @@ struct TodayView: View {
             compactSquareCard(
                 title: String(localized: "today.card.magnetic.title"),
                 subtitle: String(localized: "today.card.magnetic.subtitle"),
-                icon: "dot.radiowaves.left.and.right",
+                icon: "magnet",
                 iconColor: .white,
                 gradient: [Color(red: 0.18, green: 0.32, blue: 0.55),
                            Color(red: 0.30, green: 0.46, blue: 0.72)]
@@ -514,9 +511,7 @@ struct TodayView: View {
                     .fill(LinearGradient(colors: gradient,
                                          startPoint: .topLeading, endPoint: .bottomTrailing))
                     .frame(width: 48, height: 48)
-                Image(systemName: icon)
-                    .font(.system(size: 22))
-                    .foregroundStyle(iconColor)
+                ConceptGlyph(systemName: icon, size: 24, color: iconColor)
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
@@ -579,7 +574,8 @@ struct TodayView: View {
     /// Round 138: 시계 상태 카드 — mood + 에너지 게이지 + brand/model.
     private func stateCard(for watch: Watch) -> some View {
         let status = WatchMoodService.status(of: watch, in: modelContext)
-        let energy = status.mood.energy
+        // 스마트워치는 mood 에너지 대신 실제 배터리%를 게이지에 반영 → 컬렉션 카드(배터리)와 일치.
+        let energy = watch.isSmartwatch ? (watch.batteryPercent ?? status.mood.energy) : status.mood.energy
         return VStack(spacing: 8) {
             ZStack {
                 if let ui = PhotoCache.image(for: watch.id, data: watch.photoData) {
@@ -641,8 +637,7 @@ struct TodayView: View {
                         .fill(AppColors.paper2)
                         .frame(width: 72, height: 72)
                         .overlay(
-                            Image(systemName: "applewatch")
-                                .font(.system(size: 28))
+                            ConceptGlyph(systemName: "applewatch", size: 30)
                                 .foregroundStyle(AppColors.ink3)
                         )
                 }
@@ -702,7 +697,7 @@ private struct PrimaryWatchPickerSheet: View {
                             }
                             Spacer()
                             if watch.isPrimary {
-                                Image(systemName: "star.fill")
+                                ConceptGlyph(systemName: "star.fill", size: 14)
                                     .foregroundStyle(AppColors.accent)
                             }
                         }

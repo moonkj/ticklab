@@ -122,7 +122,7 @@ struct VideoFeedView: View {
                         }
                         .clipped()
                     HStack(spacing: 4) {
-                        Image(systemName: "play.rectangle.fill")
+                        ConceptGlyph(systemName: "play.rectangle.fill", size: 12)
                         Text(String(localized: "video.watch_on_youtube"))
                             .font(.system(size: 10, weight: .semibold))
                     }
