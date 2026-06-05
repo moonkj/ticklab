@@ -50,17 +50,31 @@ struct LiveWaveformCanvas: View {
                         if let s = samples, s.count > 1 {
                             drawEnvelope(gc, samples: s, w: w, mid: mid, h: h, opacity: 0.07)
                         }
-                        // 메트로놈 펄스 — 측정된 BPH 주기로 tic(좌)/toc(우)가 번갈아 제자리에서 '똑—딱' 펄스.
-                        //   위상은 마지막 실제 onset 에 고정(측정된 박동을 이어서 박자). 흐름 없이 제자리 박동.
-                        let beatPeriod = 3600.0 / Double(bph)            // 한 beat(똑 또는 딱) 간격(초)
-                        let now = measurementStartedAt.map { ctx.date.timeIntervalSince($0) } ?? t
-                        let latest = recentOnsetTimes?.last ?? 0
-                        let beats = max(0, (now - latest) / beatPeriod)  // 마지막 onset 이후 흐른 beat 수
-                        // Double 연산만(Int 변환 회피 — 큰 시간값 오버플로 방지). 위상·패리티.
-                        let phase = beats - beats.rounded(.down)         // 현재 beat 내 0..1
-                        let isTic = beats.truncatingRemainder(dividingBy: 2) < 1
-                        let pulse = max(0.0, 1.0 - phase * 2.5)          // 박동 순간 또렷 → 빠르게 사라짐
-                        drawMetronome(gc, w: w, mid: mid, isTic: isTic, pulse: pulse, animated: !reduceMotion)
+                        let _ = bph
+                        // 왼쪽으로 흐르며 찍히는 점 — 2박에 1번만(똑…딱… 더 또렷), tic(위)/toc(아래) 번갈아.
+                        //   viewEnd 를 wall-clock 으로 전진 → 점이 부드럽게 좌측으로 흐름. 오른쪽에서 막 등장한
+                        //   점은 크게 '찍히고'(stamp) 좌측으로 가며 가라앉는다(위치 기반 freshness → 배치 데이터에 강건).
+                        if let onsets = recentOnsetTimes, let latest = onsets.last {
+                            let secondsPerScreen: Double = 5.0
+                            let lag: Double = 1.0
+                            let now = measurementStartedAt.map { ctx.date.timeIntervalSince($0) } ?? latest
+                            let viewEnd = reduceMotion ? latest : max(now - lag, latest)
+                            let viewStart = viewEnd - secondsPerScreen
+                            let yT: CGFloat = mid - 16
+                            let yB: CGFloat = mid + 16
+                            var kept = 0
+                            for (i, ts) in onsets.enumerated() {
+                                guard i % 2 == 0 else { continue }   // 2박에 1번 다운샘플
+                                defer { kept += 1 }                  // 화면 밖 점도 카운트 → tic/toc 패리티 안정
+                                guard ts >= viewStart, ts <= viewEnd else { continue }
+                                let progress = (ts - viewStart) / secondsPerScreen   // 0(좌)..1(우)
+                                let x = CGFloat(progress) * w
+                                let isTic = kept % 2 == 0
+                                // 오른쪽(새 점)=찍힘 1 → 왼쪽으로 가며 0. 모션저감이면 stamp 없음.
+                                let fresh = reduceMotion ? 0 : max(0, min(1, (progress - 0.35) / 0.6))
+                                drawFlowBeat(gc, x: x, y: isTic ? yT : yB, isTic: isTic, fresh: fresh)
+                            }
+                        }
                     } else if running {
                         // lock 전 — 측정 중 dashed line. 모션저감이면 고정, 아니면 흐름.
                         let dashLen: CGFloat = 8, gapLen: CGFloat = 6
@@ -114,43 +128,24 @@ struct LiveWaveformCanvas: View {
         gc.stroke(rim, with: .color(AppColors.primary500.opacity(min(1.0, opacity * 5))), lineWidth: 1.2)
     }
 
-    /// 메트로놈 — tic(좌)·toc(우) 가 번갈아 제자리에서 펄스. 시계처럼 '똑—딱'.
-    /// animated=false(모션저감): 깜빡임 없이 양쪽 정적 표시(빠른 alternation 회피).
-    private func drawMetronome(_ gc: GraphicsContext, w: CGFloat, mid: CGFloat, isTic: Bool, pulse: Double, animated: Bool) {
-        let cx = w * 0.5
-        let dx: CGFloat = 30
-        let ticX = cx - dx, tocX = cx + dx
-        // 두 점을 잇는 축(메트로놈 baseline).
-        var axis = Path()
-        axis.move(to: CGPoint(x: ticX, y: mid)); axis.addLine(to: CGPoint(x: tocX, y: mid))
-        gc.stroke(axis, with: .color(AppColors.rule), lineWidth: 1)
-        guard animated else {
-            drawTickDot(gc, cx: ticX, y: mid, active: true, pulse: 0, isTic: true)
-            drawTickDot(gc, cx: tocX, y: mid, active: true, pulse: 0, isTic: false)
-            return
-        }
-        drawTickDot(gc, cx: ticX, y: mid, active: isTic, pulse: isTic ? pulse : 0, isTic: true)
-        drawTickDot(gc, cx: tocX, y: mid, active: !isTic, pulse: !isTic ? pulse : 0, isTic: false)
-    }
-
-    /// 한 박동 표시 — 활성 시 커지고 밝아지며 링이 퍼졌다 사라짐(ping). 비활성은 작고 흐림.
+    /// 흐르는 박동 점 — 오른쪽에서 막 찍힌 점(fresh≈1)은 크고 확장·소멸 링(stamp), 좌측으로 가며 가라앉음.
     /// tic=원, toc=다이아몬드(색 외 형태 구분) + 어두운 림(대비).
-    private func drawTickDot(_ gc: GraphicsContext, cx: CGFloat, y: CGFloat, active: Bool, pulse: Double, isTic: Bool) {
-        let baseR: CGFloat = 6
+    private func drawFlowBeat(_ gc: GraphicsContext, x: CGFloat, y: CGFloat, isTic: Bool, fresh: Double) {
         let color: Color = diffWithoutColor ? AppColors.ink0 : (isTic ? AppColors.success : AppColors.accentDark)
-        // 확장·소멸 링(ping) — 박동 순간 또렷, 점차 퍼지며 사라짐.
-        if pulse > 0.02 {
-            let ringR = baseR + CGFloat(1 - pulse) * 16
+        let baseR: CGFloat = 3.5
+        let r = baseR + CGFloat(fresh) * 4   // 새 점일수록 크게 '찍힘'
+        // 확장·소멸 링(ping) — 등장 직후 또렷, 흐르며 퍼져 사라짐.
+        if fresh > 0.05 {
+            let ringR = r + 3 + CGFloat(1 - fresh) * 12
             gc.stroke(
-                Path(ellipseIn: CGRect(x: cx - ringR, y: y - ringR, width: 2 * ringR, height: 2 * ringR)),
-                with: .color(color.opacity(pulse * 0.5)), lineWidth: 2
+                Path(ellipseIn: CGRect(x: x - ringR, y: y - ringR, width: 2 * ringR, height: 2 * ringR)),
+                with: .color(color.opacity(fresh * 0.4)), lineWidth: 1.5
             )
         }
-        let r = active ? baseR + CGFloat(pulse) * 5 : baseR * 0.6
         let shape: Path = isTic
-            ? Path(ellipseIn: CGRect(x: cx - r, y: y - r, width: 2 * r, height: 2 * r))
-            : diamond(cx: cx, cy: y, r: r + 0.5)
-        gc.fill(shape, with: .color(active ? color : color.opacity(0.3)))
+            ? Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r))
+            : diamond(cx: x, cy: y, r: r + 0.5)
+        gc.fill(shape, with: .color(color))
         gc.stroke(shape, with: .color(AppColors.ink0.opacity(0.45)), lineWidth: 1)
     }
 
