@@ -29,6 +29,9 @@ struct MeasurementView: View {
     @State private var showWindingHint: Bool = false
     /// BPH 가 처음 lock 된 순간 1회만 햅틱 — "신호를 잡았다" 확인감. 측정 시작 시 리셋.
     @State private var didLockHaptic = false
+    /// 측정 진행 단계(0 듣는중 → 1 박동잡음 → 2 고정중 → 3 마무리). **단조 latch** — 절대 역행 안 함
+    ///   (불안 유발 카운트다운 대신 진행 안심감 제공, 신뢰도 숫자 노출 없이). 측정 시작 시 0 리셋.
+    @State private var measurePhaseRaw = 0
 
     /// 빠른 측정 모드 — 등록 없이 transient 측정. 결과는 표시하되 저장 안 함.
     private let quickMode: Bool
@@ -83,6 +86,7 @@ struct MeasurementView: View {
     private func attemptStart() {
         if canStartMeasurement {
             didLockHaptic = false   // 새 측정 — 첫 lock 햅틱 다시 가능하게.
+            measurePhaseRaw = 0     // 단계 내러티브 리셋.
             Task { await viewModel.start() }
         } else {
             showDailyLimitAlert = true
@@ -220,6 +224,10 @@ struct MeasurementView: View {
                 didLockHaptic = true
                 HapticManager.trigger(.selection)
             }
+        }
+        // 단계 내러티브 latch — instant phase 가 오르면만 반영(역행 금지 → 깜빡임/불안 방지).
+        .onChange(of: instantPhase) { _, p in
+            if p > measurePhaseRaw { measurePhaseRaw = p }
         }
         // Round 15 (Hyemi): weakSnrSeenAt mutation 을 body 밖으로.
         .onChange(of: viewModel.lastSnapshotSNRDB) { _, newValue in
@@ -455,7 +463,11 @@ struct MeasurementView: View {
         let isRunning: Bool
         if case .measuring = viewModel.state { isRunning = true } else { isRunning = false }
         return VStack(alignment: .leading, spacing: 10) {
-            EyebrowLabel(text: String(localized: "measurement.eyebrow.live_signal"), number: "02")
+            HStack {
+                EyebrowLabel(text: String(localized: "measurement.eyebrow.live_signal"), number: "02")
+                Spacer()
+                if isRunning { phaseStatusLine }
+            }
             // 접근성: Canvas 파형은 시각 전용 — VoiceOver 예외 (수치는 03 metrics/diagnostic 에서 음성 안내)
             LiveWaveformCanvas(
                 running: isRunning,
@@ -471,6 +483,53 @@ struct MeasurementView: View {
             )
             .frame(height: 170)
         }
+    }
+
+    // MARK: - Phase narrative (Expert 2)
+
+    /// 현재 신호 상태에서 본 즉시 단계(latch 전). converged/막바지 → 마무리, bph 락 → 고정중,
+    ///   onset≥5(약검출 임계와 동일) → 박동잡음, 그 외 → 듣는 중.
+    private var instantPhase: Int {
+        let lm = viewModel.liveMetrics
+        if lm.converged || lm.elapsedSeconds >= 27 { return 3 }
+        if lm.bph != nil { return 2 }
+        if (lm.onsetCount ?? 0) >= 5 { return 1 }
+        return 0
+    }
+
+    /// 단계 라벨(단조 latch 된 measurePhaseRaw 기준). 카운트다운의 불안 대신 "진행되고 있다" 안심.
+    private var phaseStatusLine: some View {
+        let (icon, text, tone): (String, String, Color) = {
+            switch measurePhaseRaw {
+            case 3: return ("checkmark.seal.fill",
+                            String(localized: "measurement.phase.finalizing", defaultValue: "마무리하는 중…"),
+                            AppColors.success)
+            case 2: return ("lock.fill",
+                            String(localized: "measurement.phase.locking", defaultValue: "주파수 고정 중…"),
+                            AppColors.accentDark)
+            case 1: return ("waveform.path.ecg",
+                            String(localized: "measurement.phase.caught", defaultValue: "박동을 잡았어요"),
+                            AppColors.accentDark)
+            default: return ("dot.radiowaves.left.and.right",
+                             String(localized: "measurement.phase.listening", defaultValue: "듣는 중…"),
+                             AppColors.ink2)
+            }
+        }()
+        return HStack(spacing: 5) {
+            Image(systemName: icon)
+                .font(.system(size: 11, weight: .semibold))
+            Text(text)
+                .font(.system(size: 12, weight: .semibold))
+        }
+        .foregroundStyle(tone)
+        .padding(.horizontal, 9).padding(.vertical, 4)
+        .background(tone.opacity(0.1))
+        .clipShape(Capsule())
+        .contentTransition(.opacity)
+        .animation(.easeInOut(duration: 0.25), value: measurePhaseRaw)
+        // 접근성: 단계 전환을 한 요소로 음성 안내.
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(text)
     }
 
     // MARK: - Metrics
