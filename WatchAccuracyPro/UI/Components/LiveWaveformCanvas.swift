@@ -46,36 +46,21 @@ struct LiveWaveformCanvas: View {
                     }
 
                     if running, let bph = lockedBPH, bph > 0 {
-                        // 1) 실측 진폭 엔벨로프 (합성 sin 제거). 신호가 약하면 낮고 노이즈하게, 깨끗하면 또렷한 버스트.
+                        // 옅은 실신호 배경(살아있는 텍스처) — 메트로놈이 주인공이므로 낮은 opacity.
                         if let s = samples, s.count > 1 {
-                            drawEnvelope(gc, samples: s, w: w, mid: mid, h: h)
-                        } else {
-                            var base = Path(); base.move(to: CGPoint(x: 0, y: mid)); base.addLine(to: CGPoint(x: w, y: mid))
-                            gc.stroke(base, with: .color(AppColors.primary500.opacity(0.3)), lineWidth: 1)
+                            drawEnvelope(gc, samples: s, w: w, mid: mid, h: h, opacity: 0.07)
                         }
-                        // 2) 실제 onset — tic(원)/toc(다이아몬드), 5초 viewport.
-                        //    핵심: viewport 우측 끝(viewEnd)을 **매 프레임 wall-clock 으로 전진** →
-                        //    점들이 시계 소리처럼 부드럽게 왼쪽으로 흐른다. (이전엔 viewEnd=latest 고정이라
-                        //    analyzer 배치 갱신(~1초) 사이엔 점이 정지해 보였음 — 노이즈 엔벨로프만 움직이는 듯.)
-                        //    lag 만큼 빼서 최신 점을 우측 edge 근처로(빈 우측 최소화), 최신 점은 항상 보이게 max.
-                        if let onsets = recentOnsetTimes, let latest = onsets.last {
-                            let secondsPerScreen: Double = 5.0
-                            let lag: Double = 1.0
-                            let viewEnd: Double = {
-                                // 모션저감: 연속 스크롤 끄고 배치 갱신(latest)만 — 흐름 대신 점 등장.
-                                guard !reduceMotion, let startedAt = measurementStartedAt else { return latest }
-                                return max(ctx.date.timeIntervalSince(startedAt) - lag, latest)
-                            }()
-                            let viewStart = viewEnd - secondsPerScreen
-                            let yT: CGFloat = mid - 16
-                            let yB: CGFloat = mid + 16
-                            for (i, ts) in onsets.enumerated() where ts >= viewStart && ts <= viewEnd {
-                                let progress = (ts - viewStart) / secondsPerScreen
-                                let x = CGFloat(progress) * w
-                                let isTic = (i % 2 == 0)
-                                drawBeat(gc, x: x, y: isTic ? yT : yB, isTic: isTic)
-                            }
-                        }
+                        // 메트로놈 펄스 — 측정된 BPH 주기로 tic(좌)/toc(우)가 번갈아 제자리에서 '똑—딱' 펄스.
+                        //   위상은 마지막 실제 onset 에 고정(측정된 박동을 이어서 박자). 흐름 없이 제자리 박동.
+                        let beatPeriod = 3600.0 / Double(bph)            // 한 beat(똑 또는 딱) 간격(초)
+                        let now = measurementStartedAt.map { ctx.date.timeIntervalSince($0) } ?? t
+                        let latest = recentOnsetTimes?.last ?? 0
+                        let beats = max(0, (now - latest) / beatPeriod)  // 마지막 onset 이후 흐른 beat 수
+                        // Double 연산만(Int 변환 회피 — 큰 시간값 오버플로 방지). 위상·패리티.
+                        let phase = beats - beats.rounded(.down)         // 현재 beat 내 0..1
+                        let isTic = beats.truncatingRemainder(dividingBy: 2) < 1
+                        let pulse = max(0.0, 1.0 - phase * 2.5)          // 박동 순간 또렷 → 빠르게 사라짐
+                        drawMetronome(gc, w: w, mid: mid, isTic: isTic, pulse: pulse, animated: !reduceMotion)
                     } else if running {
                         // lock 전 — 측정 중 dashed line. 모션저감이면 고정, 아니면 흐름.
                         let dashLen: CGFloat = 8, gapLen: CGFloat = 6
@@ -108,7 +93,7 @@ struct LiveWaveformCanvas: View {
     }
 
     /// 실측 진폭을 거울 밴드 + 상단 rim 으로. 3-tap smoothing 으로 샘플 지글거림 완화.
-    private func drawEnvelope(_ gc: GraphicsContext, samples: [Float], w: CGFloat, mid: CGFloat, h: CGFloat) {
+    private func drawEnvelope(_ gc: GraphicsContext, samples: [Float], w: CGFloat, mid: CGFloat, h: CGFloat, opacity: Double = 0.12) {
         let n = samples.count
         guard n > 1 else { return }
         let amp = h * 0.34
@@ -122,24 +107,51 @@ struct LiveWaveformCanvas: View {
         for i in 1..<n { band.addLine(to: CGPoint(x: px(i), y: mid - mags[i])) }
         for i in stride(from: n - 1, through: 0, by: -1) { band.addLine(to: CGPoint(x: px(i), y: mid + mags[i])) }
         band.closeSubpath()
-        gc.fill(band, with: .color(AppColors.primary500.opacity(0.12)))
+        gc.fill(band, with: .color(AppColors.primary500.opacity(opacity)))
         var rim = Path()
         rim.move(to: CGPoint(x: 0, y: mid - mags[0]))
         for i in 1..<n { rim.addLine(to: CGPoint(x: px(i), y: mid - mags[i])) }
-        gc.stroke(rim, with: .color(AppColors.primary500.opacity(0.8)), lineWidth: 1.3)
+        gc.stroke(rim, with: .color(AppColors.primary500.opacity(min(1.0, opacity * 5))), lineWidth: 1.2)
     }
 
-    /// 검출 박동 — tic=원, toc=다이아몬드(형태 구분) + 어두운 림(대비). 색은 보조.
-    private func drawBeat(_ gc: GraphicsContext, x: CGFloat, y: CGFloat, isTic: Bool) {
-        let r: CGFloat = 4
-        let fillColor: Color = diffWithoutColor
-            ? AppColors.ink0
-            : (isTic ? AppColors.success : AppColors.accentDark)
+    /// 메트로놈 — tic(좌)·toc(우) 가 번갈아 제자리에서 펄스. 시계처럼 '똑—딱'.
+    /// animated=false(모션저감): 깜빡임 없이 양쪽 정적 표시(빠른 alternation 회피).
+    private func drawMetronome(_ gc: GraphicsContext, w: CGFloat, mid: CGFloat, isTic: Bool, pulse: Double, animated: Bool) {
+        let cx = w * 0.5
+        let dx: CGFloat = 30
+        let ticX = cx - dx, tocX = cx + dx
+        // 두 점을 잇는 축(메트로놈 baseline).
+        var axis = Path()
+        axis.move(to: CGPoint(x: ticX, y: mid)); axis.addLine(to: CGPoint(x: tocX, y: mid))
+        gc.stroke(axis, with: .color(AppColors.rule), lineWidth: 1)
+        guard animated else {
+            drawTickDot(gc, cx: ticX, y: mid, active: true, pulse: 0, isTic: true)
+            drawTickDot(gc, cx: tocX, y: mid, active: true, pulse: 0, isTic: false)
+            return
+        }
+        drawTickDot(gc, cx: ticX, y: mid, active: isTic, pulse: isTic ? pulse : 0, isTic: true)
+        drawTickDot(gc, cx: tocX, y: mid, active: !isTic, pulse: !isTic ? pulse : 0, isTic: false)
+    }
+
+    /// 한 박동 표시 — 활성 시 커지고 밝아지며 링이 퍼졌다 사라짐(ping). 비활성은 작고 흐림.
+    /// tic=원, toc=다이아몬드(색 외 형태 구분) + 어두운 림(대비).
+    private func drawTickDot(_ gc: GraphicsContext, cx: CGFloat, y: CGFloat, active: Bool, pulse: Double, isTic: Bool) {
+        let baseR: CGFloat = 6
+        let color: Color = diffWithoutColor ? AppColors.ink0 : (isTic ? AppColors.success : AppColors.accentDark)
+        // 확장·소멸 링(ping) — 박동 순간 또렷, 점차 퍼지며 사라짐.
+        if pulse > 0.02 {
+            let ringR = baseR + CGFloat(1 - pulse) * 16
+            gc.stroke(
+                Path(ellipseIn: CGRect(x: cx - ringR, y: y - ringR, width: 2 * ringR, height: 2 * ringR)),
+                with: .color(color.opacity(pulse * 0.5)), lineWidth: 2
+            )
+        }
+        let r = active ? baseR + CGFloat(pulse) * 5 : baseR * 0.6
         let shape: Path = isTic
-            ? Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r))
-            : diamond(cx: x, cy: y, r: r + 0.5)
-        gc.fill(shape, with: .color(fillColor))
-        gc.stroke(shape, with: .color(AppColors.ink0.opacity(0.5)), lineWidth: 1)
+            ? Path(ellipseIn: CGRect(x: cx - r, y: y - r, width: 2 * r, height: 2 * r))
+            : diamond(cx: cx, cy: y, r: r + 0.5)
+        gc.fill(shape, with: .color(active ? color : color.opacity(0.3)))
+        gc.stroke(shape, with: .color(AppColors.ink0.opacity(0.45)), lineWidth: 1)
     }
 
     private func diamond(cx: CGFloat, cy: CGFloat, r: CGFloat) -> Path {
