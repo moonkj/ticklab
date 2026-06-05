@@ -3,7 +3,7 @@ import SwiftUI
 /// Editorial help card — 안내 카드.
 /// neutral: paper-1 배경 / warning: warningTint
 struct HelpCard: View {
-    enum Tone { case info, warning }
+    enum Tone { case info, warning, success }
     let icon: String
     let title: String
     let message: String
@@ -46,18 +46,21 @@ struct HelpCard: View {
         switch tone {
         case .info:    return AppColors.paper1
         case .warning: return AppColors.warningTint
+        case .success: return AppColors.success.opacity(0.1)
         }
     }
     private var borderColor: Color {
         switch tone {
         case .info:    return AppColors.rule
         case .warning: return AppColors.warning.opacity(0.3)
+        case .success: return AppColors.success.opacity(0.3)
         }
     }
     private var iconColor: Color {
         switch tone {
         case .info:    return AppColors.ink2
         case .warning: return AppColors.warning
+        case .success: return AppColors.success
         }
     }
 }

@@ -50,6 +50,8 @@ final class MeasurementViewModel {
     private(set) var bphAutoDetected = false
     /// 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심) — 감지된 BPH. nil=일치/미설정.
     private(set) var bphMismatchSuggested: Int? = nil
+    /// 진동수 오입력을 신호 기반으로 자동 보정해 시계 BPH 를 업데이트함 — 결과 화면 안내용. nil=미보정.
+    private(set) var bphAutoCorrectedTo: Int? = nil
     private(set) var lastRejectionReason: String? = nil
     /// 라이브 wave 표시용 — 최근 200개 다운샘플된 진폭 (-1...1).
     private(set) var waveformSamples: [Float] = Array(repeating: 0, count: 200)
@@ -326,8 +328,11 @@ final class MeasurementViewModel {
                 }
                 if let result {
                     // BPH 자동감지/불일치 경고 플래그 — 파이프라인에서 수집.
-                    self.bphAutoDetected = self.pipeline?.bphWasAutoDetected ?? false
-                    self.bphMismatchSuggested = self.pipeline?.bphMismatchSuggested
+                    //   주의: self.pipeline 은 위에서 nil 처리됨 → 반드시 pipelineRef 에서 읽어야 함
+                    //   (이전엔 self.pipeline 에서 읽어 항상 nil → 불일치 경고/제안이 UI 에 안 떴음).
+                    self.bphAutoDetected = pipelineRef?.bphWasAutoDetected ?? false
+                    self.bphMismatchSuggested = pipelineRef?.bphMismatchSuggested
+                    self.bphAutoCorrectedTo = nil   // 측정마다 초기화 — 이번 측정에서 보정됐을 때만 다시 설정.
                     // 빠른 측정(transient): persist/WearLog/위젯 전부 skip. 동일 신뢰 게이트만 통과하면
                     //   결과 화면에 표시(미저장). 게이트 실패 시 기존 경로와 동일하게 .lockFailure.
                     let accepted = self.quickMode
@@ -342,6 +347,17 @@ final class MeasurementViewModel {
                         //   빠른 측정은 transient watch 라 wear log 귀속 대상 없음 → skip.
                         if !self.quickMode {
                             WearLogService.ensureTodayWearOnMeasure(self.watch, in: modelContext)
+                            // 진동수 오입력 자동 보정: 신호가 등록 BPH 와 다른 패밀리로 잡혔고(>12%) 측정이
+                            //   신뢰할 만하면(F 등급 제외), 감지된 실제 BPH 를 시계에 반영한다. 다음 측정부터
+                            //   바로 정확한 BPH 로 시작 → free-fallback 없이 즉시 lock(빠른 오차 측정).
+                            if let suggested = self.bphMismatchSuggested,
+                               result.reliabilityGrade != .f,
+                               self.watch.customBph != suggested {
+                                self.watch.customBph = suggested
+                                self.watch.movementConfirmed = true
+                                try? modelContext.save()
+                                self.bphAutoCorrectedTo = suggested
+                            }
                         }
                         // 스트림A: 측정 완료 햅틱 + VoiceOver 등급 안내.
                         HapticManager.trigger(.measurementComplete)

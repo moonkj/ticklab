@@ -60,6 +60,35 @@ final class RateAccuracyFixtureTests: XCTestCase {
         XCTAssertGreaterThan(r.beatCount, 120, "고진동에서 refractory 가 onset 을 과도히 솎으면 안 됨")
     }
 
+    // MARK: - 진동수 오입력 복구 (auto-correct)
+
+    /// 사용자 보고: "진동수를 잘못 입력했을 때 아예 측정이 안 됨".
+    /// 원인: bphExplicit 일 때 BPH 후보가 입력값 ±20% 로 하드 락 → 실제 신호가 창 밖이면 lock 실패 → nil.
+    /// 수정: hint 창 lock 실패 시 전대역 자동감지(무힌트)로 폴백 + 등록값과 다른 패밀리(>12%)면
+    ///       nominalBph 를 감지값으로 보정 → 측정 성립 + mismatch 경고.
+    /// 28800 시계를 21600(−25%, 창 밖)으로 잘못 등록해도 28800 패밀리로 lock·rate 복원해야 한다.
+    func test_wrongBph_recoversViaAutoDetect() throws {
+        let signal = SyntheticSignal.ticTocImpulseTrain(bph: 28_800, duration: 24)
+        let source = SyntheticAudioSource(signal: signal)
+        let pipeline = DSPPipeline(
+            source: source, nominalBph: 21_600,   // 사용자가 진동수를 틀리게 등록
+            liftAngleDegrees: 52, escapement: .swissLever, reliabilityLabel: .high
+        )
+        try pipeline.start()
+        let r = try XCTUnwrap(pipeline.stop(), "진동수 오입력(21600)인데도 측정이 nil 이면 안 됨 — 자동감지 복구 실패")
+        print("🎯 wrongBph: bph=\(r.bph) rate=\(String(format: "%.2f", r.rateSecondsPerDay)) suggest=\(pipeline.bphMismatchSuggested ?? -1)")
+        XCTAssertEqual(r.bph, 28_800, "틀린 21600 대신 실제 28800 패밀리로 자동 lock")
+        XCTAssertEqual(r.rateSecondsPerDay, 0, accuracy: 12, "보정 후 on-rate 합성은 ≈0 s/d (틀린 nominal 로 계산하면 안 됨)")
+        XCTAssertEqual(pipeline.bphMismatchSuggested, 28_800, "등록 BPH 와 불일치 — 감지값(28800) 제안")
+    }
+
+    /// 회귀 가드: 올바른 BPH 등록은 자동보정이 절대 끼어들지 않아야(mismatch nil, 진값 그대로).
+    func test_correctBph_noFalseAutoCorrect() throws {
+        let r = try measure(actualBph: 28_800, nominalBph: 28_800)
+        XCTAssertEqual(r.bph, 28_800)
+        XCTAssertEqual(r.rateSecondsPerDay, 0, accuracy: 10)
+    }
+
     // MARK: - Phase B: 신뢰 게이트 (cross-window 일관성)
 
     func test_consistentMeasurement_smallSpread_gradeA() throws {

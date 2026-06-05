@@ -40,6 +40,8 @@ final class DSPPipeline {
     var bphWasAutoDetected: Bool { !bphExplicit }
     /// 결과 경고용 — 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심). 감지된 BPH, 일치/미감지면 nil.
     private(set) var bphMismatchSuggested: Int?
+    /// 진동수 오입력 복구 기준 — 등록 시 입력한 원래 BPH(자동보정 전). mismatch 경고는 항상 이 값 기준.
+    private let originalNominalBph: Int
     private let liftAngleDegrees: Double?
     private let escapement: Escapement
     private let reliabilityLabel: ReliabilityLabel
@@ -121,6 +123,7 @@ final class DSPPipeline {
     ) {
         self.source = source
         self.nominalBph = nominalBph
+        self.originalNominalBph = nominalBph
         self.bphExplicit = bphExplicit
         self.liftAngleDegrees = liftAngleDegrees
         self.escapement = escapement
@@ -670,20 +673,41 @@ final class DSPPipeline {
 
         // 3) BPHEstimator (autocorrelation) — rawBph 가 bias 없는 period 추정.
         // legacy path 도 autocorrelation 사용 → 검증된 unbiased estimator.
-        guard let bphEst = BPHEstimator.estimate(
+        var bphEstOpt = BPHEstimator.estimate(
             envelope: fluxSlice,
             beats: coarseBeats,
             sampleRate: fluxRate,
             nominalBphHint: bphSearchHint
-        ) else {
+        )
+        // 진동수 오입력 복구: 명시 BPH 면 전대역 자동감지(무힌트)도 함께 구한다. hint 락이 실패했거나,
+        //   hint 창(±20%) 안에서 엉뚱한 패밀리로 snap(예: 21600 힌트가 실제 28800 신호를 25200 로 락)된 경우
+        //   자동감지가 등록값과 다른 패밀리(>12%)면 자동감지를 신뢰 → 실제 신호의 BPH 로 측정 성립.
+        //   (사용자가 캘리버/BPH 를 틀리게 등록해도 "측정 자체 불가" 대신 자동 보정 + 경고.)
+        if bphExplicit {
+            if let free = BPHEstimator.estimate(
+                envelope: fluxSlice, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nil
+            ), free.bph > 0 {
+                let hinted = bphEstOpt?.bph ?? 0
+                if bphEstOpt == nil || abs(Double(free.bph - hinted)) / Double(max(1, hinted)) > 0.12 {
+                    bphEstOpt = free
+                }
+            }
+        }
+        guard let bphEst = bphEstOpt, bphEst.bph > 0 else {
             lastAnalyzeFailReason = "bph_lock_fail(simplified)"
             return nil
         }
-        guard bphEst.bph > 0 else {
-            lastAnalyzeFailReason = "bph=0(simplified)"
-            return nil
+        // 자동감지 BPH 가 등록(원래 입력) BPH 와 다른 패밀리(>12%)면 — 사용자가 진동수를 틀리게 등록한 것.
+        //   nominalBph 를 감지값으로 보정해 rate/IOI/refractory/RateCalculator/TgRate 가 실제 신호와
+        //   정합되게 하고(측정 성립), 원래 등록값 기준 mismatch 경고를 띄워 설정 수정을 유도한다.
+        //   (resolveNominalIfNeeded 는 미설정 자동감지 전용 → explicit 케이스는 여기서 보정.)
+        if bphExplicit, abs(Double(bphEst.bph - originalNominalBph)) / Double(max(1, originalNominalBph)) > 0.12 {
+            bphMismatchSuggested = bphEst.bph
+            nominalBph = bphEst.bph
+        } else {
+            bphMismatchSuggested = nil
+            resolveNominalIfNeeded(bphEst.bph)
         }
-        resolveNominalIfNeeded(bphEst.bph)
 
         // 4) 48kHz envelope 위에서 onset timestamps refine — beatError 표시용 (rate 계산엔 사용 X).
         let refined = BeatDetector.refineTimestamps(
@@ -932,7 +956,19 @@ final class DSPPipeline {
         // 사용자가 watch 등록한 BPH 신뢰. 결과 카드 항상 표시 (F-grade) — tickIQ 와 동일 UX 패턴.
         // 진짜 lock 실패 (no signal) 만 nil 반환.
         let bphEstimate: BPHEstimate = {
-            if let est = standardBphEstimate ?? envBphEstimate { return est }
+            let hinted = standardBphEstimate ?? envBphEstimate
+            // 진동수 오입력 복구: 명시 BPH 면 전대역 자동감지(무힌트)도 구해, hint 락 실패 OR hint 가 엉뚱한
+            //   패밀리로 snap(예: 21600 힌트가 실제 28800 을 25200 로 락)된 경우 — 자동감지가 등록값과 다른
+            //   패밀리(>12%)면 자동감지 채택 → 실제 신호의 BPH 로 측정 성립.
+            if bphExplicit {
+                let free = BPHEstimator.estimate(envelope: fluxSnapshot, beats: coarseBeats, sampleRate: fluxRate, nominalBphHint: nil)
+                    ?? BPHEstimator.estimate(envelope: envelopeDownsampled, beats: envCoarseBeats, sampleRate: envFluxRate, nominalBphHint: nil)
+                if let f = free, f.bph > 0 {
+                    let h = hinted?.bph ?? 0
+                    if hinted == nil || abs(Double(f.bph - h)) / Double(max(1, h)) > 0.12 { return f }
+                }
+            }
+            if let est = hinted { return est }
             // Fallback: nominalBph echo with minimal confidence.
             // 안전 가드: 최소 8 onset 있어야 (완전 무신호 차단).
             if max(coarseBeats.count, envCoarseBeats.count) >= 8 {
@@ -949,16 +985,14 @@ final class DSPPipeline {
             return BPHEstimate(bph: 0, rawBph: 0, confidence: 0, peakLagSeconds: 0)
         }()
         guard bphEstimate.bph > 0 else { return nil }
-        resolveNominalIfNeeded(bphEstimate.bph)
-        // 잘못 설정 경고 — 명시 설정인데 신호가 다른 BPH 패밀리(>12% 차)로 잡히면 감지값 제안.
-        if bphExplicit {
-            let free = BPHEstimator.estimateAutocorrelation(envelope: fluxSnapshot, sampleRate: fluxRate, nominalBphHint: nil)
-            if let f = free, f.bph > 0,
-               abs(Double(f.bph - nominalBph)) / Double(nominalBph) > 0.12 {
-                bphMismatchSuggested = f.bph
-            } else {
-                bphMismatchSuggested = nil
-            }
+        // 자동감지 BPH 가 원래 등록 BPH 와 다른 패밀리(>12%)면 — 진동수 오입력. nominalBph 를 감지값으로
+        //   보정해 측정 성립시키고, 원래 등록값 기준 mismatch 경고로 설정 수정을 유도.
+        if bphExplicit, abs(Double(bphEstimate.bph - originalNominalBph)) / Double(max(1, originalNominalBph)) > 0.12 {
+            bphMismatchSuggested = bphEstimate.bph
+            nominalBph = bphEstimate.bph
+        } else {
+            bphMismatchSuggested = nil
+            resolveNominalIfNeeded(bphEstimate.bph)
         }
         // 만약 envelope path 가 lock 잡았으면 그 beats 를 후속 분석에 사용.
         let actualBeats = standardBphEstimate != nil ? coarseBeats : envCoarseBeats

@@ -10,6 +10,8 @@ struct MeasurementResultView: View {
     var bphAutoDetected: Bool = false
     /// 설정 BPH 와 신호가 다른 패밀리로 감지됨(잘못 설정 의심) — 감지된 BPH.
     var bphSuggested: Int? = nil
+    /// 진동수 오입력을 신호 기반으로 자동 보정해 이 시계 BPH 를 업데이트함 — 감지·반영된 BPH. nil=미보정.
+    var bphAutoCorrected: Int? = nil
     /// 빠른 측정(등록 없이 맛보기) 결과 — SwiftData 미저장(transient). true 면 "저장 완료" 대신
     /// "등록하면 저장돼요" 안내 + 시계 등록 CTA 노출. 최근 평균/다음 단계 등 저장 의존 섹션은 숨김.
     var isTransient: Bool = false
@@ -242,8 +244,9 @@ struct MeasurementResultView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 #if DEBUG
-                // (DEBUG 진단) 추정기 내부값 — 고정 시계 run-to-run 변동 원인 추적. 릴리스 미표시.
-                if let diag = result.diagnostic {
+                // (개발 진단) 추정기 내부값 — 고정 시계 run-to-run 변동 원인 추적. 릴리스 미표시.
+                // 기본 OFF — 일반 사용자(개발자 DEBUG 빌드 포함)에겐 안 보이게. 필요 시 dev 플래그로만 노출.
+                if UserDefaults.standard.bool(forKey: "ticklab.dev.showDiagnostics"), let diag = result.diagnostic {
                     Text(diag)
                         .font(.system(size: 11, weight: .semibold, design: .monospaced))
                         .foregroundStyle(AppColors.accentDark)
@@ -642,7 +645,17 @@ struct MeasurementResultView: View {
     /// BPH 미설정(자동감지) / 설정값-신호 불일치 경고.
     @ViewBuilder
     private var bphWarningCard: some View {
-        if let suggested = bphSuggested {
+        if let corrected = bphAutoCorrected {
+            // 진동수 오입력을 신호 기반으로 자동 보정 + 시계 BPH 반영 완료 — 다음 측정부터 바로 정확.
+            HelpCard(
+                icon: "checkmark.circle.fill",
+                title: String(localized: "meas.bph.autocorrect.title", defaultValue: "BPH를 신호에 맞춰 업데이트했어요"),
+                body: String(format: String(localized: "meas.bph.autocorrect.body",
+                    defaultValue: "등록된 진동수가 실제와 달라, 감지된 %d BPH로 이 시계 설정을 자동 보정했어요. 다음 측정부터 바로 정확하게 시작돼요."), corrected),
+                tone: .success
+            )
+            .padding(.horizontal, 4)
+        } else if let suggested = bphSuggested {
             HelpCard(
                 icon: "exclamationmark.triangle.fill",
                 title: String(localized: "meas.bph.mismatch.title", defaultValue: "설정한 BPH와 신호가 달라요"),

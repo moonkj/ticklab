@@ -688,9 +688,10 @@ final class CommunityService: ObservableObject {
         let hasLocalPhoto = defaults.data(forKey: "ticklab.profile.photoData") != nil
         if hasLocalName || hasLocalPhoto {
             await syncProfile()            // 로컬(최신)을 이 Apple 계정에 업로드
-        } else {
-            await restoreProfileIfNeeded() // 비어있으면 서버에서 복원(다운로드)
         }
+        // 로컬에 없는 필드(시작연도·브랜드·대표메이커·소개·사진)는 서버에서 보강(merge).
+        //   일부만 로컬에 있던 경우에도 나머지 전체가 복원되게 — push/pull 양쪽에서 항상 실행.
+        await restoreProfileIfNeeded()
     }
 
     /// 로그인/실행 시 — 로컬 프로필의 빈 필드를 서버에서 복원(+아바타 다운로드). 로컬에 있으면 보존(덮어쓰지 않음).
@@ -699,7 +700,14 @@ final class CommunityService: ObservableObject {
         func emptyLocal(_ k: String) -> Bool { (d.string(forKey: k) ?? "").isEmpty }
         let needName = emptyLocal("ticklab.profile.name")
         let needPhoto = d.data(forKey: "ticklab.profile.photoData") == nil
-        if !needName && !needPhoto { return }   // 이미 충분 — 네트워크 호출 생략
+        // 비어있는 필드가 하나라도 있으면 서버에서 보강(merge). 이름/사진만 보고 일찍 끝내면
+        //   시작연도·좋아하는 브랜드·대표 메이커·소개가 영영 복원 안 되던 문제 수정.
+        let needAny = needName || needPhoto
+            || emptyLocal("ticklab.profile.bio")
+            || emptyLocal("ticklab.profile.startYear")
+            || emptyLocal("ticklab.profile.brands")
+            || emptyLocal("ticklab.profile.repBrand")
+        guard needAny else { return }   // 모든 필드 이미 채워짐 — 네트워크 호출 생략
         guard let p = await fetchMyProfile() else { return }
         if needName, let n = p.displayName, !n.isEmpty { d.set(n, forKey: "ticklab.profile.name") }
         if let v = p.bio, !v.isEmpty, emptyLocal("ticklab.profile.bio") { d.set(v, forKey: "ticklab.profile.bio") }

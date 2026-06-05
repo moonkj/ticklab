@@ -63,6 +63,7 @@ struct MeasurementView: View {
             onRetry: { viewModel.cancel() },
             bphAutoDetected: viewModel.bphAutoDetected,
             bphSuggested: viewModel.bphMismatchSuggested,
+            bphAutoCorrected: viewModel.bphAutoCorrectedTo,
             isTransient: quickMode,
             onRegisterWatch: onRegisterWatch
         )
