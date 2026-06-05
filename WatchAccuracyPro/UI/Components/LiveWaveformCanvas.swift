@@ -50,30 +50,27 @@ struct LiveWaveformCanvas: View {
                         if let s = samples, s.count > 1 {
                             drawEnvelope(gc, samples: s, w: w, mid: mid, h: h, opacity: 0.07)
                         }
-                        let _ = bph
-                        // 왼쪽으로 흐르며 찍히는 점 — 2박에 1번만(똑…딱… 더 또렷), tic(위)/toc(아래) 번갈아.
-                        //   viewEnd 를 wall-clock 으로 전진 → 점이 부드럽게 좌측으로 흐름. 오른쪽에서 막 등장한
-                        //   점은 크게 '찍히고'(stamp) 좌측으로 가며 가라앉는다(위치 기반 freshness → 배치 데이터에 강건).
-                        if let onsets = recentOnsetTimes, let latest = onsets.last {
-                            let secondsPerScreen: Double = 5.0
-                            let lag: Double = 1.0
-                            let now = measurementStartedAt.map { ctx.date.timeIntervalSince($0) } ?? latest
-                            let viewEnd = reduceMotion ? latest : max(now - lag, latest)
-                            let viewStart = viewEnd - secondsPerScreen
-                            let yT: CGFloat = mid - 16
-                            let yB: CGFloat = mid + 16
-                            var kept = 0
-                            for (i, ts) in onsets.enumerated() {
-                                guard i % 2 == 0 else { continue }   // 2박에 1번 다운샘플
-                                defer { kept += 1 }                  // 화면 밖 점도 카운트 → tic/toc 패리티 안정
-                                guard ts >= viewStart, ts <= viewEnd else { continue }
-                                let progress = (ts - viewStart) / secondsPerScreen   // 0(좌)..1(우)
-                                let x = CGFloat(progress) * w
-                                let isTic = kept % 2 == 0
-                                // 오른쪽(새 점)=찍힘 1 → 왼쪽으로 가며 0. 모션저감이면 stamp 없음.
-                                let fresh = reduceMotion ? 0 : max(0, min(1, (progress - 0.35) / 0.6))
-                                drawFlowBeat(gc, x: x, y: isTic ? yT : yB, isTic: isTic, fresh: fresh)
-                            }
+                        // 틱 톡 틱 톡 — 점이 **고정 슬롯**에 좌→우로 하나씩 '톡톡' 찍혀 쌓임(흐름 없음).
+                        //   측정된 BPH 박자(2박에 1번)로 새 점이 다음 슬롯에 stamp(팝+링). 한 줄 다 차면
+                        //   비우고 다시 좌측부터. 위상은 마지막 실제 onset 에 고정(측정 박동을 이어 박자).
+                        let beatPeriod = 3600.0 / Double(bph)
+                        let now = measurementStartedAt.map { ctx.date.timeIntervalSince($0) } ?? t
+                        let latest = recentOnsetTimes?.last ?? 0
+                        let marks = max(0, (now - latest) / beatPeriod / 2.0)   // 2박에 1번 = 1 mark
+                        let slots = 20
+                        let pos = Int(marks.truncatingRemainder(dividingBy: Double(slots)))  // 현재 채움 위치 0..19
+                        let phase = marks - marks.rounded(.down)                              // 현재 mark 내 0..1
+                        let pageStart = (marks - Double(pos)).rounded()                       // 이 줄 첫 mark id(패리티)
+                        let margin = w * 0.06
+                        let spacing = (w - margin * 2) / CGFloat(slots - 1)
+                        let yT: CGFloat = mid - 16
+                        let yB: CGFloat = mid + 16
+                        for s in 0...pos {
+                            let x = margin + CGFloat(s) * spacing
+                            let isTic = (pageStart + Double(s)).truncatingRemainder(dividingBy: 2) < 1
+                            // 막 찍힌 점(맨 오른쪽)만 stamp(팝+링), 나머진 정적. 모션저감이면 stamp 없음.
+                            let stamp = (s == pos && !reduceMotion) ? max(0, 1 - phase * 2.0) : 0
+                            drawFlowBeat(gc, x: x, y: isTic ? yT : yB, isTic: isTic, fresh: stamp)
                         }
                     } else if running {
                         // lock 전 — 측정 중 dashed line. 모션저감이면 고정, 아니면 흐름.
