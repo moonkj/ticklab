@@ -27,6 +27,8 @@ struct MeasurementView: View {
     @State private var weakSnrSeenAt: Date?
     /// 사용자 보고: 풀와인딩 안 한 시계 -45 s/d → "측정 오류" 오해. 측정 시작 전 안내 토스트.
     @State private var showWindingHint: Bool = false
+    /// BPH 가 처음 lock 된 순간 1회만 햅틱 — "신호를 잡았다" 확인감. 측정 시작 시 리셋.
+    @State private var didLockHaptic = false
 
     /// 빠른 측정 모드 — 등록 없이 transient 측정. 결과는 표시하되 저장 안 함.
     private let quickMode: Bool
@@ -80,6 +82,7 @@ struct MeasurementView: View {
 
     private func attemptStart() {
         if canStartMeasurement {
+            didLockHaptic = false   // 새 측정 — 첫 lock 햅틱 다시 가능하게.
             Task { await viewModel.start() }
         } else {
             showDailyLimitAlert = true
@@ -209,6 +212,13 @@ struct MeasurementView: View {
         .onChange(of: viewModel.liveMetrics.converged) { _, converged in
             if converged, case .measuring = viewModel.state {
                 viewModel.stop(modelContext: modelContext)
+            }
+        }
+        // ②/③ BPH 첫 lock 햅틱 — bph 가 nil→값 으로 처음 잡힌 순간 1회. (상태변화 1회라 60fps 무관.)
+        .onChange(of: viewModel.liveMetrics.bph != nil) { _, locked in
+            if locked, !didLockHaptic, case .measuring = viewModel.state {
+                didLockHaptic = true
+                HapticManager.trigger(.selection)
             }
         }
         // Round 15 (Hyemi): weakSnrSeenAt mutation 을 body 밖으로.

@@ -12,6 +12,8 @@ struct TodayView: View {
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @Environment(UserPreferences.self) private var preferences
     @Environment(\.modelContext) private var modelContext
+    /// 대표 시계 카드 → 상세 화면 공유요소(히어로) zoom 전환용 (iOS 18+, 17 폴백 no-op).
+    @Namespace private var heroNS
 
     /// Round 12: 자정 넘어가도 stale 안 되도록 computed.
     private var today: Date { Date() }
@@ -85,6 +87,7 @@ struct TodayView: View {
             // 기존엔 watchFamilySection 안에만 있어 watches.count==1 일 때 destination 미존재.
             .navigationDestination(for: Watch.self) { w in
                 WatchDetailView(watch: w)
+                    .heroDestination(id: w.id, in: heroNS)
             }
         }
     }
@@ -100,6 +103,7 @@ struct TodayView: View {
                     primaryFilledCard(for: primary)
                 }
                 .buttonStyle(.plain)
+                .heroSource(id: primary.id, in: heroNS)
                 // "오늘 한 줄" — 이 시계로 가벼운 저널 작성 진입(매일 열 이유).
                 journalPromptRow(for: primary)
             }

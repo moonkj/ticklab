@@ -130,7 +130,10 @@ struct CommunityPostCard: View {
             Spacer()
             // 팔로우 — 본인 글 제외.
             if !isMine {
-                Button(action: onFollow) {
+                Button {
+                    HapticManager.trigger(.selection)
+                    onFollow()
+                } label: {
                     Text(String(localized: following ? "community.following" : "community.follow"))
                         .font(.system(size: 12, weight: .semibold))
                         .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
@@ -213,9 +216,14 @@ struct CommunityPostCard: View {
         HStack(spacing: 18) {
             // 좋아요 — 하트 토글 + (탭 시 라이커) 숫자.
             HStack(spacing: 6) {
-                Button(action: onLike) {
+                Button {
+                    HapticManager.trigger(.selection)   // 좋아요 탭 햅틱 (커뮤니티 햅틱 부재 보강)
+                    onLike()
+                } label: {
                     ConceptGlyph(systemName: liked ? "heart.fill" : "heart", size: 23)
                         .foregroundStyle(liked ? AppColors.danger : AppColors.ink0)
+                        .scaleEffect(liked ? 1.0 : 0.92)   // 채워질 때 살짝 부푸는 spring pop
+                        .animation(.spring(response: 0.28, dampingFraction: 0.5), value: liked)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(String(localized: "community.like"))
@@ -249,9 +257,14 @@ struct CommunityPostCard: View {
             .accessibilityLabel(String(localized: "community.share"))
             Spacer()
             // 스크랩(저장).
-            Button(action: onBookmark) {
+            Button {
+                HapticManager.trigger(.selection)
+                onBookmark()
+            } label: {
                 ConceptGlyph(systemName: bookmarked ? "bookmark.fill" : "bookmark", size: 21)
                     .foregroundStyle(bookmarked ? AppColors.accentDark : AppColors.ink0)
+                    .scaleEffect(bookmarked ? 1.0 : 0.94)
+                    .animation(.spring(response: 0.28, dampingFraction: 0.55), value: bookmarked)
             }
             .buttonStyle(.plain)
             .accessibilityLabel(String(localized: "community.bookmark"))

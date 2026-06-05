@@ -175,6 +175,7 @@ struct MeasurementResultView: View {
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
                     Text(String(format: "%+.1f", t.meanRate))
                         .font(.system(size: 30, weight: .bold, design: .rounded))
+                        .monospacedDigit()   // tabular figures — 값 갱신 시 자릿수 흔들림 방지
                         .foregroundStyle(AppColors.ink0)
                     Text(String(localized: "unit.seconds_per_day_short"))
                         .font(.system(size: 14, weight: .medium))
@@ -191,6 +192,8 @@ struct MeasurementResultView: View {
             .padding(14)
             .background(AppColors.accent.opacity(0.08))
             .clipShape(RoundedRectangle(cornerRadius: 12))
+            // VoiceOver: 흩어진 텍스트를 한 요소로 묶어 "최근 평균 마이너스 2.3초/일" 처럼 한 번에 읽게.
+            .accessibilityElement(children: .combine)
         }
     }
 

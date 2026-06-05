@@ -10,6 +10,8 @@ struct CollectionView: View {
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @State private var showingAdd = false
     @State private var showingSettings = false
+    /// 시계 카드 → 상세 화면 공유요소(히어로) zoom 전환용 네임스페이스 (iOS 18+, 17 폴백 no-op).
+    @Namespace private var heroNS
     @State private var showingWatchBox = false
     /// 커뮤니티 활동 알림(내 글 좋아요·새 팔로워) — 종 배지.
     @State private var showingNotifications = false
@@ -207,6 +209,7 @@ struct CollectionView: View {
                                         .contentShape(Rectangle())
                                 }
                                 .buttonStyle(.plain)
+                                .heroSource(id: primary.id, in: heroNS)
                                 .padding(.horizontal, 20)
                                 .padding(.top, 8)
                                 .contextMenu {
@@ -290,6 +293,7 @@ struct CollectionView: View {
                                         } content: {
                                             WatchListRow(watch: watch, wornToday: wornTodayIds.contains(watch.id))
                                         }
+                                        .heroSource(id: watch.id, in: heroNS)
                                         // 인터랙션 진단(R1): 비대표 카드에 삭제/대표설정 경로가 없어
                                         //   시계 1~2개 사용자는 삭제를 못 찾음. long-press contextMenu 로 노출.
                                         .contextMenu {
@@ -375,6 +379,7 @@ struct CollectionView: View {
             }
             .navigationDestination(for: Watch.self) { watch in
                 WatchDetailView(watch: watch)
+                    .heroDestination(id: watch.id, in: heroNS)
             }
             // Round 113: Pro 게이팅 alert. Round 126: 업그레이드 CTA 추가.
             // 사용자 보고 fix: 업그레이드는 shell-level PurchaseRouter 로 위임 (4 분산 sheet 통합).
