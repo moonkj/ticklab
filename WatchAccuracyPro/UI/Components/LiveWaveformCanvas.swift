@@ -51,27 +51,29 @@ struct LiveWaveformCanvas: View {
                         if let s = samples, s.count > 1 {
                             drawSmoothWave(gc, samples: s, w: w, mid: mid, h: h, t: t)
                         }
-                        // 틱 톡 틱 톡 — 점이 **고정 슬롯**에 좌→우로 하나씩 '톡톡' 찍혀 쌓임(흐름 없음).
-                        //   측정된 BPH 박자(2박에 1번)로 새 점이 다음 슬롯에 stamp(팝+링). 한 줄 다 차면
-                        //   비우고 다시 좌측부터. 위상은 마지막 실제 onset 에 고정(측정 박동을 이어 박자).
+                        // 틱 톡 틱 톡 — 측정된 BPH 박자(2박에 1번)로 새 점이 **오른쪽에 하나씩 '톡톡' 찍힘**.
+                        //   처음엔 좌→우로 채워지고, 다 차면 가장 오래된 점이 왼쪽으로 빠지며 새 점이 오른쪽에
+                        //   계속 찍힌다(끊김 없이 이어짐 — 비우고 다시 시작 X). tic/toc 은 mark 인덱스 패리티로 고정.
                         let beatPeriod = 3600.0 / Double(bph)
                         let now = measurementStartedAt.map { ctx.date.timeIntervalSince($0) } ?? t
-                        let latest = recentOnsetTimes?.last ?? 0
-                        let marks = max(0, (now - latest) / beatPeriod / 2.0)   // 2박에 1번 = 1 mark
+                        let markFloat = max(0, now / (beatPeriod * 2.0))   // 경과시간 기준 — 꾸준히 증가
+                        let M = markFloat.rounded(.down)                   // 현재(최신) mark 인덱스
+                        let phase = markFloat - M                          // 현재 mark 내 0..1
                         let slots = 20
-                        let pos = Int(marks.truncatingRemainder(dividingBy: Double(slots)))  // 현재 채움 위치 0..19
-                        let phase = marks - marks.rounded(.down)                              // 현재 mark 내 0..1
-                        let pageStart = (marks - Double(pos)).rounded()                       // 이 줄 첫 mark id(패리티)
+                        let offset = max(0, M - Double(slots - 1))         // 다 차면(왼쪽으로) 스크롤 오프셋
                         let margin = w * 0.06
                         let spacing = (w - margin * 2) / CGFloat(slots - 1)
                         let yT: CGFloat = mid - 16
                         let yB: CGFloat = mid + 16
-                        for s in 0...pos {
-                            let x = margin + CGFloat(s) * spacing
-                            let isTic = (pageStart + Double(s)).truncatingRemainder(dividingBy: 2) < 1
-                            // 막 찍힌 점(맨 오른쪽)만 stamp(팝+링), 나머진 정적. 모션저감이면 stamp 없음.
-                            let stamp = (s == pos && !reduceMotion) ? max(0, 1 - phase * 2.0) : 0
+                        var m = offset
+                        while m <= M {
+                            let slot = m - offset                         // 0..slots-1
+                            let x = margin + CGFloat(slot) * spacing
+                            let isTic = m.truncatingRemainder(dividingBy: 2) < 1
+                            // 막 찍힌 점(최신, 맨 오른쪽)만 stamp(팝+링), 나머진 정적. 모션저감이면 stamp 없음.
+                            let stamp = (m >= M - 0.5 && !reduceMotion) ? max(0, 1 - phase * 2.0) : 0
                             drawFlowBeat(gc, x: x, y: isTic ? yT : yB, isTic: isTic, fresh: stamp)
+                            m += 1
                         }
                     } else if running {
                         // lock 전 — 측정 중 dashed line. 모션저감이면 고정, 아니면 흐름.
