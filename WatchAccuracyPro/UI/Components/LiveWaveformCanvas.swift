@@ -53,10 +53,19 @@ struct LiveWaveformCanvas: View {
                             var base = Path(); base.move(to: CGPoint(x: 0, y: mid)); base.addLine(to: CGPoint(x: w, y: mid))
                             gc.stroke(base, with: .color(AppColors.primary500.opacity(0.3)), lineWidth: 1)
                         }
-                        // 2) 실제 onset — tic(원)/toc(다이아몬드), 5초 viewport, latest 기준.
+                        // 2) 실제 onset — tic(원)/toc(다이아몬드), 5초 viewport.
+                        //    핵심: viewport 우측 끝(viewEnd)을 **매 프레임 wall-clock 으로 전진** →
+                        //    점들이 시계 소리처럼 부드럽게 왼쪽으로 흐른다. (이전엔 viewEnd=latest 고정이라
+                        //    analyzer 배치 갱신(~1초) 사이엔 점이 정지해 보였음 — 노이즈 엔벨로프만 움직이는 듯.)
+                        //    lag 만큼 빼서 최신 점을 우측 edge 근처로(빈 우측 최소화), 최신 점은 항상 보이게 max.
                         if let onsets = recentOnsetTimes, let latest = onsets.last {
                             let secondsPerScreen: Double = 5.0
-                            let viewEnd = latest
+                            let lag: Double = 1.0
+                            let viewEnd: Double = {
+                                // 모션저감: 연속 스크롤 끄고 배치 갱신(latest)만 — 흐름 대신 점 등장.
+                                guard !reduceMotion, let startedAt = measurementStartedAt else { return latest }
+                                return max(ctx.date.timeIntervalSince(startedAt) - lag, latest)
+                            }()
                             let viewStart = viewEnd - secondsPerScreen
                             let yT: CGFloat = mid - 16
                             let yB: CGFloat = mid + 16
