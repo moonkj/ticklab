@@ -1942,7 +1942,7 @@
 /* Round 176: 하드코딩 라벨 현지화 */
 "collection.dashboard.total_watches" = "시계 %d개";
 "collection.chip.new" = "신규";
-"journal.eyebrow" = "필드 노트";
+"journal.eyebrow" = "FIELD NOTES";
 "watchbox.material.walnut" = "월넛";
 "watchbox.material.ebony" = "에보니";
 "watchbox.material.leather" = "가죽";
