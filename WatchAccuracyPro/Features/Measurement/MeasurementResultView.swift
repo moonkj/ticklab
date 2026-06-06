@@ -199,32 +199,6 @@ struct MeasurementResultView: View {
         }
     }
 
-    /// 측정 데이터로 실제 구동되는 무브먼트 모션 — BPH 로 밸런스/이스케이프먼트, (신뢰 시) amplitude 로 진폭.
-    private var movementMotionCard: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(String(localized: "result.movement.title", defaultValue: "이 무브먼트, 지금 이렇게 뛰고 있어요"))
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundStyle(AppColors.accentDark)
-            MovementCanvas(bph: result.bph, amplitudeDegrees: result.amplitudeDegrees)
-            HStack(spacing: 6) {
-                ConceptGlyph(systemName: "metronome", size: 11).foregroundStyle(AppColors.accent)
-                Text("\(result.bph) BPH")
-                    .font(.system(size: 11, weight: .medium, design: .monospaced))
-                    .foregroundStyle(AppColors.ink2)
-                if let esc = movement?.escapement.rawValue {
-                    Text("· \(esc.uppercased())")
-                        .font(.system(size: 11, design: .monospaced))
-                        .foregroundStyle(AppColors.ink3)
-                }
-                Spacer()
-                Text(String(localized: "result.movement.caption", defaultValue: "측정값으로 움직여요"))
-                    .font(.system(size: 10))
-                    .foregroundStyle(AppColors.ink3)
-            }
-        }
-        .padding(.horizontal, 2)
-    }
-
     /// 빠른 측정 결과 — 미저장 안내 + 시계 등록 CTA. (등록해야 트렌드/평균/오버홀 알림 등 활용 가능)
     private var transientSaveBanner: some View {
         VStack(alignment: .leading, spacing: 12) {
@@ -300,10 +274,6 @@ struct MeasurementResultView: View {
                     .padding(.top, 2)
                 metricsSection
                 bphWarningCard
-                // 데이터로 구동되는 무브먼트 모션 — 기계식 + BPH lock 시에만(스마트워치/미락 제외).
-                if result.bph > 0, !watch.isSmartwatch {
-                    movementMotionCard
-                }
                 if preferences.userMode == .pro { detailsSection }
 
                 // === 해석 블록 (측정 데이터 아래로 이동) ===
@@ -649,12 +619,10 @@ struct MeasurementResultView: View {
                     .opacity(dialOpacity)
                     // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
                     .accessibilityHidden(true)
-                // A등급(고신뢰)일 때만 도착 후 0.4s 뒤 골드 인장 fade-in.
-                if isHighConfidenceGrade && result.reliabilityGrade == .a {
-                    RevealGoldSeal()
-                        .frame(width: dialSize * 0.34, height: dialSize * 0.34)
-                        .opacity(showGoldSeal ? 1 : 0)
-                        .scaleEffect(showGoldSeal ? 1 : (reduceMotion ? 1 : 0.6))
+                // 인장 자리에 밸런스휠 — 측정된 BPH 로 그 자리에서 진동(기계식 lock 시). 인장 크기.
+                if result.bph > 0 {
+                    BalanceWheelLive(bph: result.bph, amplitudeDegrees: result.amplitudeDegrees)
+                        .frame(width: dialSize * 0.4, height: dialSize * 0.4)
                         .offset(y: dialSize * 0.14)
                         .accessibilityHidden(true)
                 }

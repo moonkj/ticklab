@@ -126,10 +126,76 @@ struct MovementCanvas: View {
     }
 }
 
+/// 밸런스휠 단독 — 프레임 중앙에서 SHM 진동(헤어스프링 포함). 배경 투명(다른 요소 위에 얹기 좋게).
+/// 결과화면 RateDial 중앙(인장 자리)에 인장 크기로 넣어 그 자리에서 돌게 하는 용도.
+/// BPH → 진동 주파수, amplitudeDegrees(신뢰 시 non-nil) → 진폭. Reduce Motion 정적.
+struct BalanceWheelLive: View {
+    var bph: Int = 28_800
+    var amplitudeDegrees: Double? = nil
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    private var swingDeg: Double { min(320, max(140, amplitudeDegrees ?? 285)) }
+    private var oscHz: Double { Double(max(3600, bph)) / 3600.0 / 2.0 }
+
+    var body: some View {
+        TimelineView(.animation(minimumInterval: 1.0 / 60.0, paused: reduceMotion)) { ctx in
+            Canvas { gc, size in
+                let t = reduceMotion ? 0 : ctx.date.timeIntervalSinceReferenceDate
+                draw(gc, size: size, t: t)
+            }
+        }
+        .accessibilityHidden(true)
+    }
+
+    private func draw(_ gc: GraphicsContext, size: CGSize, t: Double) {
+        let cx = size.width / 2, cy = size.height / 2
+        let rb = min(size.width, size.height) / 2 * 0.86
+        let s = rb / 78
+        let swingRad = swingDeg * .pi / 180
+        let theta = reduceMotion ? swingRad * 0.5 : swingRad * cos(2 * .pi * oscHz * t)
+        let gold = AppColors.accent, goldL = AppColors.accentLight, goldD = AppColors.accentDark
+        func circle(_ x: CGFloat, _ y: CGFloat, _ r: CGFloat) -> Path {
+            Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r))
+        }
+        func line(_ x1: CGFloat, _ y1: CGFloat, _ x2: CGFloat, _ y2: CGFloat) -> Path {
+            var p = Path(); p.move(to: CGPoint(x: x1, y: y1)); p.addLine(to: CGPoint(x: x2, y: y2)); return p
+        }
+        // 헤어스프링
+        var hs = gc
+        hs.translateBy(x: cx, y: cy); hs.rotate(by: .radians(theta * 0.12))
+        var spiral = Path()
+        let turns = 3.5, b = (rb * 0.6) / (turns * .pi * 2)
+        var a = 0.0
+        while a < turns * .pi * 2 {
+            let r = 5 * s + b * a
+            let p = CGPoint(x: CGFloat(cos(a)) * r, y: CGFloat(sin(a)) * r)
+            if a == 0 { spiral.move(to: p) } else { spiral.addLine(to: p) }
+            a += 0.18
+        }
+        hs.stroke(spiral, with: .color(gold.opacity(0.4)), lineWidth: 1.0 * s)
+        // 밸런스휠
+        var bw = gc
+        bw.translateBy(x: cx, y: cy); bw.rotate(by: .radians(theta))
+        bw.stroke(circle(0, 0, rb), with: .linearGradient(Gradient(colors: [goldL, goldD, goldL]),
+                                                          startPoint: CGPoint(x: -rb, y: -rb),
+                                                          endPoint: CGPoint(x: rb, y: rb)), lineWidth: 6 * s)
+        bw.stroke(circle(0, 0, rb - 9 * s), with: .color(gold.opacity(0.35)), lineWidth: 1.4 * s)
+        for k in 0..<3 {
+            var sp = bw
+            sp.rotate(by: .radians(Double(k) * .pi * 2 / 3))
+            sp.stroke(line(0, 0, 0, -(rb - 3 * s)), with: .color(goldD), lineWidth: 4 * s)
+            sp.fill(circle(0, -(rb - 2 * s), 3 * s), with: .color(gold))
+        }
+        bw.fill(circle(0, 0, 7 * s), with: .color(gold))
+        bw.fill(circle(0, 0, 3 * s), with: .color(AppColors.paper0))
+    }
+}
+
 #Preview {
     VStack(spacing: 16) {
         MovementCanvas(bph: 28_800, amplitudeDegrees: 278)
-        MovementCanvas(bph: 21_600, amplitudeDegrees: nil)   // 저신뢰 → nominal 스윙
+        BalanceWheelLive(bph: 28_800, amplitudeDegrees: 278).frame(width: 90, height: 90)
     }
     .padding()
     .background(AppColors.paper0)
