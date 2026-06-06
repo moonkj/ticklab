@@ -40,14 +40,24 @@ final class BrandNewsService: ObservableObject {
         lastError = nil
         defer { isLoading = false }
 
+        // 빠른 로딩: RSS 피드들을 **병렬**로 받고, **도착하는 대로** 화면 갱신(첫 피드 오면 바로 보임,
+        //   나머지는 이어서 채워짐). 이전엔 모든 피드를 순차로 다 받은 뒤에야 표시 → 매우 느렸음.
         var all: [NewsArticle] = []
-        for source in rssSources {
-            guard let url = URL(string: source.url) else { continue }
-            let items = await fetchRSS(url: url, sourceName: source.name)
-            all.append(contentsOf: items)
+        await withTaskGroup(of: [NewsArticle].self) { group in
+            for source in rssSources {
+                guard let url = URL(string: source.url) else { continue }
+                group.addTask { await self.fetchRSS(url: url, sourceName: source.name) }
+            }
+            for await items in group {
+                all.append(contentsOf: items)
+                articles = Self.curate(all)   // 도착할 때마다 필터·정렬·상위 20개 갱신
+            }
         }
+        lastFetchAt = Date()
+    }
 
-        // 시계 관련 기사만 표시 — 브랜드 매칭 없이 전체 시계 뉴스
+    /// 시계 관련 기사만 필터 → 날짜 역순 정렬 → 상위 20개. (점진 표시에서 매 피드 도착 시 재적용.)
+    private static func curate(_ all: [NewsArticle]) -> [NewsArticle] {
         let watchKeywords = ["watch", "timepiece", "chronograph", "movement", "caliber",
                              "rolex", "omega", "seiko", "iwc", "patek", "audemars",
                              "tudor", "breitling", "tag heuer", "longines", "tissot",
@@ -55,18 +65,14 @@ final class BrandNewsService: ObservableObject {
                              "grand seiko", "zenith", "oris", "hublot", "strap",
                              "caseback", "dial", "bezel", "tourbillon", "mechanical",
                              "automatic", "quartz", "luxury"]
-        let filtered = all.filter { article in
-            let title = article.title.lowercased()
-            return watchKeywords.contains { title.contains($0) }
-        }
-
-        // 날짜 역순 정렬, 최대 20개
-        articles = filtered
+        return all
+            .filter { article in
+                let title = article.title.lowercased()
+                return watchKeywords.contains { title.contains($0) }
+            }
             .sorted { ($0.publishedAt ?? .distantPast) > ($1.publishedAt ?? .distantPast) }
             .prefix(20)
             .map { $0 }
-
-        lastFetchAt = Date()
     }
 
     private func fetchRSS(url: URL, sourceName: String) async -> [NewsArticle] {
