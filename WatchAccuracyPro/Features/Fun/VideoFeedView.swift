@@ -46,7 +46,8 @@ struct VideoFeedView: View {
                     message: String(localized: "video.empty.body")
                 )
             } else {
-                ScrollView {
+                // 자동 로터 pull-to-refresh — 당기면 로터가 돌고 새로고침.
+                RotorRefreshScrollView(onRefresh: { await service.load(force: true) }) {
                     LazyVStack(spacing: 16) {
                         ForEach(displayedVideos) { video in
                             videoCard(video)
@@ -96,7 +97,6 @@ struct VideoFeedView: View {
         }
         .sheet(isPresented: $showSuggest) { ChannelSuggestSheet() }
         .task { await service.load(); didFirstLoad = true }
-        .refreshable { await service.load(force: true) }
     }
 
     private func videoCard(_ video: YouTubeFeedService.YouTubeVideo) -> some View {

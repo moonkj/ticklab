@@ -199,6 +199,7 @@
 		901DBC9B7FBE6EE60B563C0B /* MovementCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */; };
 		936F6646A4D81A8B922D4EAE /* StreakService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D68900F4F27A1CAF6ABD1FEA /* StreakService.swift */; };
 		966D900DC82453601AA07667 /* LocalizationParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B67DE1AE5717360E55EB0 /* LocalizationParityTests.swift */; };
+		96B364EF80BDCF81FD3B6421 /* RotorRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3B7EC25F0C4F7B21698A3 /* RotorRefresh.swift */; };
 		96E18BF4543AA4B570297798 /* MovementPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */; };
 		96EDBAC0599088A662F43280 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090D20C16B59509F9494E62C /* SettingsView.swift */; };
 		980695D5D9B20789B246BF91 /* SpecCardComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C5CAA0588BDF3BFCD3981B /* SpecCardComposerView.swift */; };
@@ -702,6 +703,7 @@
 		F23444BF1EB9720E38132881 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
 		F302C7B8CE7C443C452EB3B2 /* AudioInputClassifyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputClassifyTests.swift; sourceTree = "<group>"; };
 		F341EE5EE217E7EB16CC927F /* Chip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chip.swift; sourceTree = "<group>"; };
+		F3F3B7EC25F0C4F7B21698A3 /* RotorRefresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotorRefresh.swift; sourceTree = "<group>"; };
 		F438F2F3C7631E436F562F7D /* CommunityModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityModels.swift; sourceTree = "<group>"; };
 		F4DA4EFFE1238185232C696F /* BrandNewsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandNewsService.swift; sourceTree = "<group>"; };
 		F5D6F05B7D6C49E563D6B7F1 /* MatchedFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchedFilter.swift; sourceTree = "<group>"; };
@@ -1151,6 +1153,7 @@
 				9FAC0D83943B770F1B767C04 /* PressableCard.swift */,
 				9FF677B2D361B068A1718069 /* PrimaryButton.swift */,
 				AB7A8BBC217A99FA65A04B05 /* RateDial.swift */,
+				F3F3B7EC25F0C4F7B21698A3 /* RotorRefresh.swift */,
 				923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */,
 				AA7595104575323D6621C7F4 /* SkeletonView.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
@@ -1948,6 +1951,7 @@
 				C7698D46EE9F5C1ACE4C7A85 /* ReviewRequestService.swift in Sources */,
 				EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */,
 				D37F5A2E79203CCD6E7C293A /* RotationNudgeService.swift in Sources */,
+				96B364EF80BDCF81FD3B6421 /* RotorRefresh.swift in Sources */,
 				73F4C4184D65555EFDE89372 /* SeasonalEventBanner.swift in Sources */,
 				D5C2E92A16DDAAF32117D6E8 /* Secrets.swift in Sources */,
 				06F90F2BE59C4D0B3FE5CD81 /* ServiceCenterFavoritesService.swift in Sources */,
