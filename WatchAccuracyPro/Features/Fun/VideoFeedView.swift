@@ -35,15 +35,10 @@ struct VideoFeedView: View {
     var body: some View {
         Group {
             if (service.isLoading || !didFirstLoad) && service.videos.isEmpty {
-                // 스켈레톤 — 영상 카드 모양 placeholder + shimmer. 로딩 완료 시 즉시 콘텐츠로 교체.
-                ScrollView {
-                    LazyVStack(spacing: 16) {
-                        ForEach(0..<4, id: \.self) { _ in VideoCardSkeleton() }
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 14)
-                }
-                .disabled(true)
+                // 하이라이트 빈상태와 동일한 회전 링 스피너 — 로딩 완료 시 위 조건이 false 가 되어 즉시 콘텐츠 표시.
+                AnimatedEmptyIcon(icon: "play.rectangle")
+                    .frame(maxWidth: .infinity, minHeight: 220)
+                    .frame(maxHeight: .infinity)
             } else if service.videos.isEmpty {
                 EmptyState(
                     icon: "play.rectangle",
