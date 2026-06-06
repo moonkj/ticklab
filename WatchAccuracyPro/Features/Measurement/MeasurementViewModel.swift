@@ -369,6 +369,7 @@ final class MeasurementViewModel {
                         }
                         // 스트림A: 측정 완료 햅틱 + VoiceOver 등급 안내.
                         HapticManager.trigger(.measurementComplete)
+                        SoundManager.playComplete()   // 옵트인 — 완료 톡.
                         self.announceCompletion(grade: result.reliabilityGrade)
                     } else {
                         self.state = .failed(.lockFailure)

@@ -2051,3 +2051,5 @@
 "today.journal.prompt" = "今日の一行を残す";
 "today.hero.together_days" = "一緒に過ごした%d日";
 "trend.empty.hint" = "計測を重ねると、精度の推移がここに表示されます";
+
+"settings.measurement_sound" = "計測サウンド（ティック）";

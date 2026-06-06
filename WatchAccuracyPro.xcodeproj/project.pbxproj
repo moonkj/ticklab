@@ -254,6 +254,7 @@
 		BDA488FFB8DA05E6E0EE21E7 /* UserPreferencesExtraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D091E1018C78CD881864AAA9 /* UserPreferencesExtraTests.swift */; };
 		BF73D6A8D8F3C62DBD9D1073 /* WatchAccuracyProWidgetBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210A3C66675F389ED6F6C111 /* WatchAccuracyProWidgetBundle.swift */; };
 		BFB115FDA5736642BB0E4509 /* CommunityProfileViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37F83C4BB9B64ABEE6619C2F /* CommunityProfileViews.swift */; };
+		C253BDBABB7DAFC080A534F4 /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6531278EEA6B51CA1518461B /* SoundManager.swift */; };
 		C37CD00EDAB1AA21779B58E7 /* CommunityService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B8FBDA63BC87E5163F5279 /* CommunityService.swift */; };
 		C509FC401B8430A29D971920 /* DialColorExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD694460270D95643C92DEE /* DialColorExtractor.swift */; };
 		C50BAE28D1F6192EA74CAEFB /* WatchComputedPropertiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFD650403F17C38FD0A6D75 /* WatchComputedPropertiesTests.swift */; };
@@ -516,6 +517,7 @@
 		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64952ABFADF1A165684DD426 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakePickView.swift; sourceTree = "<group>"; };
+		6531278EEA6B51CA1518461B /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		65540C10846C70E94C617A8C /* ClockCalibrationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockCalibrationServiceTests.swift; sourceTree = "<group>"; };
 		66DCCBEDCDAED7D7BEDE087F /* AudioSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioSource.swift; sourceTree = "<group>"; };
 		67729A8C8633CABBF5FC5506 /* YouTubeFeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeFeedService.swift; sourceTree = "<group>"; };
@@ -1159,6 +1161,7 @@
 				923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */,
 				2E04583E95BFFF7983F89DB1 /* Skeleton.swift */,
 				AA7595104575323D6621C7F4 /* SkeletonView.swift */,
+				6531278EEA6B51CA1518461B /* SoundManager.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
 				3FA878C1D368EE7D32EBEE82 /* TabBarIcons.swift */,
 				5E0E660A4EBF89F8F31A37CE /* TCOCard.swift */,
@@ -1967,6 +1970,7 @@
 				65A62726A9852DFC7E26E5DF /* SimulatedAudioSource.swift in Sources */,
 				456474690EF4A34192048B63 /* Skeleton.swift in Sources */,
 				29123D4A4F4DEB813748E1DC /* SkeletonView.swift in Sources */,
+				C253BDBABB7DAFC080A534F4 /* SoundManager.swift in Sources */,
 				4DA99E823280A8742B3140A4 /* Sparkline.swift in Sources */,
 				4D79179B03097BA6CA041622 /* SpecCard.swift in Sources */,
 				980695D5D9B20789B246BF91 /* SpecCardComposerView.swift in Sources */,

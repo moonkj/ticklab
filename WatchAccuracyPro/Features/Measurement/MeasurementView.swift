@@ -229,6 +229,7 @@ struct MeasurementView: View {
             if locked, !didLockHaptic, case .measuring = viewModel.state {
                 didLockHaptic = true
                 HapticManager.trigger(.selection)
+                SoundManager.playLock()   // 옵트인 — BPH 락 '딱' 틱.
             }
         }
         // 단계 내러티브 latch — instant phase 가 오르면만 반영(역행 금지 → 깜빡임/불안 방지).

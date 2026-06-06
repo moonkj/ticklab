@@ -2051,3 +2051,5 @@
 "today.journal.prompt" = "写下今天的一句";
 "today.hero.together_days" = "相伴 %d 天";
 "trend.empty.hint" = "随着测量积累，准确度趋势会显示在这里";
+
+"settings.measurement_sound" = "测量声音（滴答）";

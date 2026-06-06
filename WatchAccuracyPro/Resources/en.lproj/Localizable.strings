@@ -2111,3 +2111,5 @@
 "today.journal.prompt" = "Add today's line";
 "today.hero.together_days" = "%d days together";
 "trend.empty.hint" = "As you log measurements, your accuracy trend appears here";
+
+"settings.measurement_sound" = "Measurement sound (tick)";

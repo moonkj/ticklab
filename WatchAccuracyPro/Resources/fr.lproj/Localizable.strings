@@ -2051,3 +2051,5 @@
 "today.journal.prompt" = "Ajouter la ligne du jour";
 "today.hero.together_days" = "%d jours ensemble";
 "trend.empty.hint" = "Au fil de vos mesures, votre tendance de précision apparaîtra ici";
+
+"settings.measurement_sound" = "Son de mesure (tic)";

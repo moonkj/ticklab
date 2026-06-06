@@ -2051,3 +2051,5 @@
 "today.journal.prompt" = "आज की एक पंक्ति लिखें";
 "today.hero.together_days" = "साथ बिताए %d दिन";
 "trend.empty.hint" = "जैसे-जैसे आप मापन जोड़ेंगे, आपकी सटीकता प्रवृत्ति यहाँ दिखेगी";
+
+"settings.measurement_sound" = "मापन ध्वनि (टिक)";

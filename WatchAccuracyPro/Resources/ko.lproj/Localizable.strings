@@ -2110,3 +2110,5 @@
 "today.journal.prompt" = "오늘 한 줄 남기기";
 "today.hero.together_days" = "함께한 %d일";
 "trend.empty.hint" = "측정을 쌓으면 정확도 추세가 여기에 그려져요";
+
+"settings.measurement_sound" = "측정 사운드 (틱)";

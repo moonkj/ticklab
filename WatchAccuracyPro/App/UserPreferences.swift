@@ -118,6 +118,11 @@ final class UserPreferences {
         didSet { defaults.set(hapticsEnabled, forKey: Keys.haptics) }
     }
 
+    /// 측정 사운드(기계식 tick) on/off. 기본 OFF — 옵트인. (SoundManager 가 매 호출 시 참조.)
+    var measurementSoundEnabled: Bool {
+        didSet { defaults.set(measurementSoundEnabled, forKey: Keys.measurementSound) }
+    }
+
     /// 자기장 측정 기능 활성화 — Apple Intelligence 코멘트 연동.
     var magneticFieldMeasurementEnabled: Bool {
         didSet { defaults.set(magneticFieldMeasurementEnabled, forKey: Keys.magneticField) }
@@ -232,6 +237,7 @@ final class UserPreferences {
         // 기본 ON — 사용자 요청 (측정 중 잠금 화면 진입 방지).
         self.keepScreenOnDuringMeasurement = (defaults.object(forKey: Keys.keepScreenOn) as? Bool) ?? true
         self.hapticsEnabled = (defaults.object(forKey: Keys.haptics) as? Bool) ?? true
+        self.measurementSoundEnabled = (defaults.object(forKey: Keys.measurementSound) as? Bool) ?? false
         self.magneticFieldMeasurementEnabled = defaults.bool(forKey: Keys.magneticField)
         self.pinEnabled = defaults.bool(forKey: Keys.pinEnabled)
         // Round 170: simplified DSP — 기본 ON. 사용자가 명시 OFF 해야 legacy 경로 사용.
@@ -289,6 +295,7 @@ final class UserPreferences {
         static let rotationNudge = "ticklab.rotationNudgeEnabled"
         static let rotationNudgeDays = "ticklab.rotationNudgeDays"
         static let haptics = "ticklab.hapticsEnabled"
+        static let measurementSound = "ticklab.measurementSound"
         static let whatsNewVersion = "ticklab.lastSeenWhatsNewVersion"
         static let watchBoxSlots = "ticklab.watchBoxSlotCount"
         static let watchBoxColor = "ticklab.watchBoxColor"

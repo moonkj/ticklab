@@ -142,6 +142,9 @@ struct SettingsView: View {
                     Toggle(String(localized: "settings.keep_screen_on"), isOn: $preferences.keepScreenOnDuringMeasurement)
                     // T-17: 햅틱 피드백 전역 토글.
                     Toggle(String(localized: "settings.haptics"), isOn: $preferences.hapticsEnabled)
+                    Toggle(String(localized: "settings.measurement_sound",
+                                  defaultValue: "측정 사운드 (틱)"),
+                           isOn: $preferences.measurementSoundEnabled)
                     audioInputPicker
                     // Round 138 사용자 요청: CoreML beat detector 토글 제거 — 일반 사용자에게 의미 없는 옵션.
                 } header: {
