@@ -113,27 +113,6 @@ struct WatchDetailView: View {
                     .opacity(heroVisible ? 1 : 0)
                     .animation(.easeIn(duration: 0.18), value: heroVisible)
                 actionsSection
-                // C: 데이터로 구동되는 무브먼트 모션 — 기계식 시계만(스마트워치/쿼츠 제외). 결과화면과 동일
-                //   엔진(MovementCanvas). 측정 라이브 화면이 아니므로 60fps budget 여유(Hard Rule #4 안전).
-                if watch.movementType == .automatic || watch.movementType == .manual {
-                    VStack(alignment: .leading, spacing: 8) {
-                        MovementCanvas(bph: watch.customBph ?? movement?.bph ?? 28_800,
-                                       amplitudeDegrees: nil, height: 160)
-                        HStack(spacing: 6) {
-                            ConceptGlyph(systemName: "metronome", size: 11).foregroundStyle(AppColors.accent)
-                            Text("\(watch.customBph ?? movement?.bph ?? 28_800) BPH")
-                                .font(.system(size: 11, weight: .medium, design: .monospaced))
-                                .foregroundStyle(AppColors.ink2)
-                            if let esc = movement?.escapement.rawValue {
-                                Text("· \(esc.uppercased())")
-                                    .font(.system(size: 11, design: .monospaced))
-                                    .foregroundStyle(AppColors.ink3)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 14)
-                }
                 // 무브먼트 미확정(인기목록 자동배정) — 측정 정확도를 위해 확인 유도. 탭 → 등록 폼 편집(확인 시 확정).
                 if !watch.movementConfirmed, watch.movementType == .automatic || watch.movementType == .manual {
                     Button { editing = true } label: {
