@@ -176,7 +176,8 @@ struct CommunityFeedView: View {
         EditorialPageHeader(
             eyebrow: String(localized: "community.eyebrow"),
             title: String(localized: "community.tab.title"),
-            subtitle: String(localized: "community.subtitle")
+            subtitle: String(localized: "community.subtitle"),
+            showGear: true
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)

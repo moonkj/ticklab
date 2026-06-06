@@ -84,7 +84,8 @@ struct StatsView: View {
         EditorialPageHeader(
             eyebrow: String(localized: "stats.eyebrow.figures"),
             title: String(localized: "stats.title"),
-            subtitle: String(localized: "stats.subtitle")
+            subtitle: String(localized: "stats.subtitle"),
+            showGear: true
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)

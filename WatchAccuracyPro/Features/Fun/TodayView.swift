@@ -49,7 +49,8 @@ struct TodayView: View {
                 // 고정 헤더 — 스크롤되지 않는 최상단 제목 영역(4탭 통일).
                 EditorialPageHeader(
                     eyebrow: String(localized: "today.eyebrow"),
-                    title: String(localized: "tab.today")
+                    title: String(localized: "tab.today"),
+                    showGear: true
                 )
                 .padding(.horizontal, 16)
                 .padding(.top, 8)

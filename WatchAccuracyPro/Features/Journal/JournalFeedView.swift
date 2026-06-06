@@ -112,7 +112,8 @@ struct JournalFeedView: View {
         EditorialPageHeader(
             eyebrow: String(localized: "journal.eyebrow"),
             title: String(localized: "journal.title"),
-            subtitle: String(localized: "journal.subtitle")
+            subtitle: String(localized: "journal.subtitle"),
+            showGear: true
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)
