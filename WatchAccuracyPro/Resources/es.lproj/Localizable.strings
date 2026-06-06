@@ -2024,3 +2024,30 @@
 "league.optin.cta" = "Unirme y sumar mi uso";
 "watch.movement.unconfirmed.title" = "Confirma el movimiento";
 "watch.movement.unconfirmed.body" = "Este movimiento se asignó automáticamente. Confirma el calibre y el BPH para medir con precisión.";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "El movimiento (calibre) es obligatorio. Si no aparece, elige 'Introducir manualmente' y añade el BPH.";
+"addwatch.movement.bph_invalid" = "BPH no válido. Introduce 18000, 19800, 21600, 25200, 28800 o 36000.";
+"addwatch.movement.emphasis_hint" = "Confirma el movimiento (BPH): es clave para la precisión de la medición";
+"meas.bph.autocorrect.title" = "BPH actualizado para coincidir con la señal";
+"meas.bph.autocorrect.body" = "El BPH guardado no coincidía con la realidad, así que corregimos este reloj al %d BPH detectado. Tu próxima medición empezará con precisión.";
+"meas.bph.mismatch.title" = "El BPH configurado no coincide con la señal";
+"meas.bph.mismatch.body" = "La señal se detectó a %d BPH. Si el ajuste de calibre (BPH) difiere de la realidad, los resultados pueden ser imprecisos: revisa el ajuste.";
+"settings.profile.login_hint" = "Inicia sesión para configurar tu perfil";
+"settings.appearance" = "Apariencia";
+"settings.appearance.system" = "Sistema";
+"settings.appearance.light" = "Claro";
+"settings.appearance.dark" = "Oscuro";
+"settings.section.appearance" = "Pantalla";
+"settings.appearance.footer" = "Tema oscuro 'Night Watch'. Elige Sistema para seguir el ajuste del dispositivo.";
+"speccard.spec.movement_type" = "Tipo de movimiento";
+"speccard.spec.caliber" = "Calibre";
+"speccard.spec.reference" = "Referencia";
+"speccard.spec.production_year" = "Año de producción";
+"speccard.spec.measure_count" = "Mediciones";
+"speccard.spec.best_rate" = "Mejor precisión";
+"speccard.spec.amplitude" = "Amplitud media";
+"speccard.spec.beat_error" = "Error de ritmo medio";
+"today.journal.prompt" = "Añade la línea de hoy";
+"today.hero.together_days" = "%d días juntos";
+"trend.empty.hint" = "A medida que registres mediciones, tu tendencia de precisión aparecerá aquí";

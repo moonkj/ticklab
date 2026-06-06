@@ -2084,3 +2084,30 @@
 "league.optin.cta" = "Join and add my wear";
 "watch.movement.unconfirmed.title" = "Confirm the movement";
 "watch.movement.unconfirmed.body" = "This movement was auto-assigned. Confirm the caliber and BPH for accurate measurement.";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "Movement (caliber) is required. If it's not listed, choose 'Enter manually' and add the BPH.";
+"addwatch.movement.bph_invalid" = "Not a valid BPH. Enter one of 18000, 19800, 21600, 25200, 28800, or 36000.";
+"addwatch.movement.emphasis_hint" = "Be sure to confirm the movement (BPH) — it's key to measurement accuracy";
+"meas.bph.autocorrect.title" = "Updated BPH to match the signal";
+"meas.bph.autocorrect.body" = "The saved BPH didn't match reality, so we corrected this watch to the detected %d BPH. Your next measurement starts accurate right away.";
+"meas.bph.mismatch.title" = "The set BPH doesn't match the signal";
+"meas.bph.mismatch.body" = "The signal was detected at %d BPH. If the caliber (BPH) setting differs from reality, results may be inaccurate — check the setting.";
+"settings.profile.login_hint" = "Sign in to set up your profile";
+"settings.appearance" = "Appearance";
+"settings.appearance.system" = "System";
+"settings.appearance.light" = "Light";
+"settings.appearance.dark" = "Dark";
+"settings.section.appearance" = "Display";
+"settings.appearance.footer" = "The 'Night Watch' dark theme. Choose System to follow your device setting.";
+"speccard.spec.movement_type" = "Movement type";
+"speccard.spec.caliber" = "Caliber";
+"speccard.spec.reference" = "Reference";
+"speccard.spec.production_year" = "Production year";
+"speccard.spec.measure_count" = "Measurements";
+"speccard.spec.best_rate" = "Best accuracy";
+"speccard.spec.amplitude" = "Avg. amplitude";
+"speccard.spec.beat_error" = "Avg. beat error";
+"today.journal.prompt" = "Add today's line";
+"today.hero.together_days" = "%d days together";
+"trend.empty.hint" = "As you log measurements, your accuracy trend appears here";

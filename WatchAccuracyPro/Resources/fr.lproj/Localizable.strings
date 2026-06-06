@@ -2024,3 +2024,30 @@
 "league.optin.cta" = "Rejoindre et ajouter mon port";
 "watch.movement.unconfirmed.title" = "Confirmez le mouvement";
 "watch.movement.unconfirmed.body" = "Ce mouvement a été attribué automatiquement. Confirmez le calibre et le BPH pour une mesure précise.";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "Le mouvement (calibre) est requis. S'il n'est pas listé, choisissez « Saisir manuellement » et ajoutez le BPH.";
+"addwatch.movement.bph_invalid" = "BPH non valide. Saisissez 18000, 19800, 21600, 25200, 28800 ou 36000.";
+"addwatch.movement.emphasis_hint" = "Confirmez bien le mouvement (BPH) — c'est essentiel à la précision de la mesure";
+"meas.bph.autocorrect.title" = "BPH mis à jour pour correspondre au signal";
+"meas.bph.autocorrect.body" = "Le BPH enregistré ne correspondait pas, nous avons donc corrigé cette montre au %d BPH détecté. Votre prochaine mesure démarrera précise.";
+"meas.bph.mismatch.title" = "Le BPH défini ne correspond pas au signal";
+"meas.bph.mismatch.body" = "Le signal a été détecté à %d BPH. Si le réglage du calibre (BPH) diffère de la réalité, les résultats peuvent être imprécis — vérifiez le réglage.";
+"settings.profile.login_hint" = "Connectez-vous pour configurer votre profil";
+"settings.appearance" = "Apparence";
+"settings.appearance.system" = "Système";
+"settings.appearance.light" = "Clair";
+"settings.appearance.dark" = "Sombre";
+"settings.section.appearance" = "Affichage";
+"settings.appearance.footer" = "Thème sombre « Night Watch ». Choisissez Système pour suivre le réglage de l'appareil.";
+"speccard.spec.movement_type" = "Type de mouvement";
+"speccard.spec.caliber" = "Calibre";
+"speccard.spec.reference" = "Référence";
+"speccard.spec.production_year" = "Année de production";
+"speccard.spec.measure_count" = "Mesures";
+"speccard.spec.best_rate" = "Meilleure précision";
+"speccard.spec.amplitude" = "Amplitude moy.";
+"speccard.spec.beat_error" = "Erreur de battement moy.";
+"today.journal.prompt" = "Ajouter la ligne du jour";
+"today.hero.together_days" = "%d jours ensemble";
+"trend.empty.hint" = "Au fil de vos mesures, votre tendance de précision apparaîtra ici";

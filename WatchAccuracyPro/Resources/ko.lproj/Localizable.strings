@@ -2083,3 +2083,30 @@
 "league.optin.cta" = "참여하고 내 착용 반영하기";
 "watch.movement.unconfirmed.title" = "무브먼트 확인이 필요해요";
 "watch.movement.unconfirmed.body" = "자동 배정된 무브먼트예요. 측정 정확도를 위해 캘리버·진동수를 확인하세요.";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "무브먼트(캘리버)는 필수예요. 목록에 없으면 ‘직접 입력’으로 진동수를 넣어주세요.";
+"addwatch.movement.bph_invalid" = "유효한 진동수가 아니에요. 18000·19800·21600·25200·28800·36000 중에서 입력하세요.";
+"addwatch.movement.emphasis_hint" = "무브먼트(진동수)를 꼭 확인하세요 — 측정 정확도의 핵심이에요";
+"meas.bph.autocorrect.title" = "BPH를 신호에 맞춰 업데이트했어요";
+"meas.bph.autocorrect.body" = "등록된 진동수가 실제와 달라, 감지된 %d BPH로 이 시계 설정을 자동 보정했어요. 다음 측정부터 바로 정확하게 시작돼요.";
+"meas.bph.mismatch.title" = "설정한 BPH와 신호가 달라요";
+"meas.bph.mismatch.body" = "신호는 %d BPH로 감지됐어요. 캘리버(BPH) 설정이 실제와 다르면 측정값이 부정확할 수 있어요 — 설정을 확인하세요.";
+"settings.profile.login_hint" = "로그인하면 프로필을 설정할 수 있어요";
+"settings.appearance" = "외관(테마)";
+"settings.appearance.system" = "시스템";
+"settings.appearance.light" = "라이트";
+"settings.appearance.dark" = "다크";
+"settings.section.appearance" = "화면";
+"settings.appearance.footer" = "‘밤의 워치’ 다크 테마. 시스템을 선택하면 기기 설정을 따릅니다.";
+"speccard.spec.movement_type" = "구동 방식";
+"speccard.spec.caliber" = "캘리버";
+"speccard.spec.reference" = "레퍼런스";
+"speccard.spec.production_year" = "생산 연도";
+"speccard.spec.measure_count" = "측정 횟수";
+"speccard.spec.best_rate" = "최고 정확도";
+"speccard.spec.amplitude" = "평균 진폭";
+"speccard.spec.beat_error" = "평균 비트에러";
+"today.journal.prompt" = "오늘 한 줄 남기기";
+"today.hero.together_days" = "함께한 %d일";
+"trend.empty.hint" = "측정을 쌓으면 정확도 추세가 여기에 그려져요";

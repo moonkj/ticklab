@@ -2024,3 +2024,30 @@
 "league.optin.cta" = "参加して着用を反映";
 "watch.movement.unconfirmed.title" = "ムーブメントの確認が必要です";
 "watch.movement.unconfirmed.body" = "自動割り当てされたムーブメントです。正確な計測のためキャリバーとBPHをご確認ください。";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "ムーブメント（キャリバー）は必須です。一覧にない場合は「手動入力」で振動数を入力してください。";
+"addwatch.movement.bph_invalid" = "有効な振動数ではありません。18000・19800・21600・25200・28800・36000 のいずれかを入力してください。";
+"addwatch.movement.emphasis_hint" = "ムーブメント（振動数）を必ず確認してください — 計測精度の鍵です";
+"meas.bph.autocorrect.title" = "BPHを信号に合わせて更新しました";
+"meas.bph.autocorrect.body" = "登録の振動数が実際と異なっていたため、この時計の設定を検出した %d BPH に自動補正しました。次の計測からすぐ正確に始まります。";
+"meas.bph.mismatch.title" = "設定したBPHと信号が異なります";
+"meas.bph.mismatch.body" = "信号は %d BPH として検出されました。キャリバー（BPH）設定が実際と異なると計測値が不正確になることがあります — 設定をご確認ください。";
+"settings.profile.login_hint" = "ログインするとプロフィールを設定できます";
+"settings.appearance" = "外観（テーマ）";
+"settings.appearance.system" = "システム";
+"settings.appearance.light" = "ライト";
+"settings.appearance.dark" = "ダーク";
+"settings.section.appearance" = "画面";
+"settings.appearance.footer" = "「夜のウォッチ」ダークテーマ。システムを選ぶと端末の設定に従います。";
+"speccard.spec.movement_type" = "駆動方式";
+"speccard.spec.caliber" = "キャリバー";
+"speccard.spec.reference" = "リファレンス";
+"speccard.spec.production_year" = "製造年";
+"speccard.spec.measure_count" = "計測回数";
+"speccard.spec.best_rate" = "ベスト精度";
+"speccard.spec.amplitude" = "平均振り角";
+"speccard.spec.beat_error" = "平均ビートエラー";
+"today.journal.prompt" = "今日の一行を残す";
+"today.hero.together_days" = "一緒に過ごした%d日";
+"trend.empty.hint" = "計測を重ねると、精度の推移がここに表示されます";

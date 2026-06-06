@@ -2024,3 +2024,30 @@
 "league.optin.cta" = "शामिल हों और मेरा उपयोग जोड़ें";
 "watch.movement.unconfirmed.title" = "मूवमेंट की पुष्टि करें";
 "watch.movement.unconfirmed.body" = "यह मूवमेंट स्वतः असाइन हुआ है। सटीक मापन के लिए कैलिबर और BPH की पुष्टि करें।";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "मूवमेंट (कैलिबर) ज़रूरी है। यदि सूची में न हो, तो 'मैन्युअल रूप से दर्ज करें' चुनकर BPH जोड़ें।";
+"addwatch.movement.bph_invalid" = "मान्य BPH नहीं। 18000, 19800, 21600, 25200, 28800 या 36000 में से दर्ज करें।";
+"addwatch.movement.emphasis_hint" = "मूवमेंट (BPH) ज़रूर जांचें — यह मापन सटीकता की कुंजी है";
+"meas.bph.autocorrect.title" = "सिग्नल से मेल खाने के लिए BPH अपडेट किया गया";
+"meas.bph.autocorrect.body" = "सहेजा गया BPH वास्तविकता से मेल नहीं खाता था, इसलिए हमने इस घड़ी को पहचाने गए %d BPH पर ठीक किया। अगला मापन तुरंत सटीक शुरू होगा।";
+"meas.bph.mismatch.title" = "सेट किया गया BPH सिग्नल से मेल नहीं खाता";
+"meas.bph.mismatch.body" = "सिग्नल %d BPH पर पहचाना गया। यदि कैलिबर (BPH) सेटिंग वास्तविकता से भिन्न है, तो परिणाम गलत हो सकते हैं — सेटिंग जांचें।";
+"settings.profile.login_hint" = "प्रोफ़ाइल सेट करने के लिए साइन इन करें";
+"settings.appearance" = "रूप-रंग";
+"settings.appearance.system" = "सिस्टम";
+"settings.appearance.light" = "लाइट";
+"settings.appearance.dark" = "डार्क";
+"settings.section.appearance" = "डिस्प्ले";
+"settings.appearance.footer" = "'नाइट वॉच' डार्क थीम। डिवाइस सेटिंग का पालन करने के लिए सिस्टम चुनें।";
+"speccard.spec.movement_type" = "मूवमेंट प्रकार";
+"speccard.spec.caliber" = "कैलिबर";
+"speccard.spec.reference" = "रेफ़रेंस";
+"speccard.spec.production_year" = "उत्पादन वर्ष";
+"speccard.spec.measure_count" = "मापन संख्या";
+"speccard.spec.best_rate" = "सर्वोत्तम सटीकता";
+"speccard.spec.amplitude" = "औसत आयाम";
+"speccard.spec.beat_error" = "औसत बीट त्रुटि";
+"today.journal.prompt" = "आज की एक पंक्ति लिखें";
+"today.hero.together_days" = "साथ बिताए %d दिन";
+"trend.empty.hint" = "जैसे-जैसे आप मापन जोड़ेंगे, आपकी सटीकता प्रवृत्ति यहाँ दिखेगी";

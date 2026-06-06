@@ -2024,3 +2024,30 @@
 "league.optin.cta" = "加入并计入我的佩戴";
 "watch.movement.unconfirmed.title" = "需要确认机芯";
 "watch.movement.unconfirmed.body" = "这是自动分配的机芯。请确认机芯与 BPH 以保证测量准确。";
+
+/* D 잔여: 사용자 문구 8로케일 등록 (관리자 전용은 제외) */
+"addwatch.movement.required" = "机芯（型号）为必填。若列表中没有，请选择“手动输入”并填写振频。";
+"addwatch.movement.bph_invalid" = "振频无效。请输入 18000、19800、21600、25200、28800 或 36000 中的一个。";
+"addwatch.movement.emphasis_hint" = "请务必确认机芯（振频）——这是测量准确度的关键";
+"meas.bph.autocorrect.title" = "已将 BPH 更新为与信号一致";
+"meas.bph.autocorrect.body" = "已登记的振频与实际不符，已将此表自动校正为检测到的 %d BPH。下次测量即可准确开始。";
+"meas.bph.mismatch.title" = "设置的 BPH 与信号不符";
+"meas.bph.mismatch.body" = "信号被检测为 %d BPH。若机芯（BPH）设置与实际不符，结果可能不准 — 请检查设置。";
+"settings.profile.login_hint" = "登录后即可设置个人资料";
+"settings.appearance" = "外观（主题）";
+"settings.appearance.system" = "系统";
+"settings.appearance.light" = "浅色";
+"settings.appearance.dark" = "深色";
+"settings.section.appearance" = "显示";
+"settings.appearance.footer" = "“夜之表”深色主题。选择“系统”将跟随设备设置。";
+"speccard.spec.movement_type" = "机芯类型";
+"speccard.spec.caliber" = "机芯型号";
+"speccard.spec.reference" = "型号编号";
+"speccard.spec.production_year" = "生产年份";
+"speccard.spec.measure_count" = "测量次数";
+"speccard.spec.best_rate" = "最佳精度";
+"speccard.spec.amplitude" = "平均振幅";
+"speccard.spec.beat_error" = "平均击节误差";
+"today.journal.prompt" = "写下今天的一句";
+"today.hero.together_days" = "相伴 %d 天";
+"trend.empty.hint" = "随着测量积累，准确度趋势会显示在这里";
