@@ -13,10 +13,15 @@ struct BrandNewsView: View {
     var body: some View {
         Group {
             if (service.isLoading || !didFirstLoad) && service.articles.isEmpty {
-                // 하이라이트 빈상태와 동일한 회전 링 스피너 — 로딩 완료 시 위 조건이 false 가 되어 즉시 콘텐츠 표시.
-                AnimatedEmptyIcon(icon: "newspaper")
-                    .frame(maxWidth: .infinity, minHeight: 200)
-                    .frame(maxHeight: .infinity)
+                // 스켈레톤 — 뉴스 행 모양 placeholder + shimmer.
+                ScrollView {
+                    VStack(spacing: 18) {
+                        ForEach(0..<6, id: \.self) { _ in ListRowSkeleton(lines: 3) }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 14)
+                }
+                .disabled(true)
             } else if service.articles.isEmpty {
                 EmptyState(
                     icon: "newspaper",

@@ -103,6 +103,7 @@
 		42AE05482808B86ECA2AF17A /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91ACB6334163B5ED5BB8F8B6 /* CollectionView.swift */; };
 		4337AA48923664FFB6932D88 /* PositionalDeltaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56F0D174FCB7932D7D69F55C /* PositionalDeltaView.swift */; };
 		4548DF66FC35644DB9DFE5A7 /* CostPerWearCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = D02497C4FA9F2012D2D6D2D0 /* CostPerWearCard.swift */; };
+		456474690EF4A34192048B63 /* Skeleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E04583E95BFFF7983F89DB1 /* Skeleton.swift */; };
 		45BEA8592C353A4A3F03722D /* COSCBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56D001FBFE55C95EE047F4F0 /* COSCBar.swift */; };
 		46AFE5684B1CEA0F32AD630A /* BrandNewsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4DA4EFFE1238185232C696F /* BrandNewsService.swift */; };
 		4738EC1C2E83E1763DA6675A /* AppLockServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1AA309AD8FBCF43189141D /* AppLockServiceTests.swift */; };
@@ -428,6 +429,7 @@
 		2B4D26544BF069711EF76911 /* ShareCardComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareCardComposerView.swift; sourceTree = "<group>"; };
 		2BAE473F011F80979E6DDE96 /* DSPFiltersTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSPFiltersTests.swift; sourceTree = "<group>"; };
 		2DE10565489923480790DEF0 /* AsyncDiskImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncDiskImage.swift; sourceTree = "<group>"; };
+		2E04583E95BFFF7983F89DB1 /* Skeleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skeleton.swift; sourceTree = "<group>"; };
 		31D139B4AF6C836D0C752590 /* StreakServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreakServiceTests.swift; sourceTree = "<group>"; };
 		320B6CDCA66C5E935C100A11 /* Strap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strap.swift; sourceTree = "<group>"; };
 		325A1E00FC26DD48B6AA30C8 /* JournalEntryDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JournalEntryDetailView.swift; sourceTree = "<group>"; };
@@ -1155,6 +1157,7 @@
 				AB7A8BBC217A99FA65A04B05 /* RateDial.swift */,
 				F3F3B7EC25F0C4F7B21698A3 /* RotorRefresh.swift */,
 				923B681694CDEC0062DEC474 /* SeasonalEventBanner.swift */,
+				2E04583E95BFFF7983F89DB1 /* Skeleton.swift */,
 				AA7595104575323D6621C7F4 /* SkeletonView.swift */,
 				D4E81ECC8B8E83AAE2EA6B58 /* Sparkline.swift */,
 				3FA878C1D368EE7D32EBEE82 /* TabBarIcons.swift */,
@@ -1962,6 +1965,7 @@
 				598A4B35012B82C9E3C97B45 /* ShareCardComposerView.swift in Sources */,
 				30A1D7E3B9E8A3EC4FF2A3F3 /* SharedSnapshotStore.swift in Sources */,
 				65A62726A9852DFC7E26E5DF /* SimulatedAudioSource.swift in Sources */,
+				456474690EF4A34192048B63 /* Skeleton.swift in Sources */,
 				29123D4A4F4DEB813748E1DC /* SkeletonView.swift in Sources */,
 				4DA99E823280A8742B3140A4 /* Sparkline.swift in Sources */,
 				4D79179B03097BA6CA041622 /* SpecCard.swift in Sources */,
