@@ -428,7 +428,8 @@ struct CollectionView: View {
         EditorialPageHeader(
             eyebrow: String(localized: "collection.eyebrow"),
             title: String(localized: "collection.title"),
-            subtitle: String(localized: "collection.subtitle")
+            subtitle: String(localized: "collection.subtitle"),
+            showGear: true
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)

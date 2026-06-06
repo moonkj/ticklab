@@ -57,7 +57,9 @@ struct GlobalAnalyticsView: View {
     }
 
     var body: some View {
-        ScrollView {
+        RotorRefreshScrollView(onRefresh: {
+            await service.fetchRanking(periodType: period.rawValue)
+        }) {
             VStack(alignment: .leading, spacing: 16) {
                 // 기간 피커
                 Picker(String(localized: "analytics.period"), selection: $period) {
@@ -103,9 +105,6 @@ struct GlobalAnalyticsView: View {
         .navigationTitle(String(localized: "analytics.nav.title"))
         .navigationBarTitleDisplayMode(.inline)
         .task(id: period.rawValue) {
-            await service.fetchRanking(periodType: period.rawValue)
-        }
-        .refreshable {
             await service.fetchRanking(periodType: period.rawValue)
         }
     }

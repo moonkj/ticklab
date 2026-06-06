@@ -83,7 +83,10 @@ struct BrandLeagueView: View {
     // MARK: - Body
 
     var body: some View {
-        ScrollView {
+        RotorRefreshScrollView(onRefresh: {
+            await service.uploadBrandCounts(computedBrandCounts())
+            await service.fetchRanking(periodType: period.supabaseType)
+        }) {
             VStack(spacing: 14) {
                 tabRow
                 if !preferences.brandLeagueOptIn {
@@ -122,10 +125,6 @@ struct BrandLeagueView: View {
             await service.fetchRanking(periodType: period.supabaseType)
         }
         .task(id: wearLogs.count) {
-            await service.uploadBrandCounts(computedBrandCounts())
-            await service.fetchRanking(periodType: period.supabaseType)
-        }
-        .refreshable {
             await service.uploadBrandCounts(computedBrandCounts())
             await service.fetchRanking(periodType: period.supabaseType)
         }

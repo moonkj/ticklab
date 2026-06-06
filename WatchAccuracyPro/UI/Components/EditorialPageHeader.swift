@@ -6,19 +6,27 @@ struct EditorialPageHeader: View {
     let eyebrow: String
     let title: String
     let subtitle: String?
+    /// 브랜드 시그니처 — eyebrow 옆 앰비언트 틱톡 기어(1초 1스텝). 홈에서만 권장.
+    var showGear: Bool = false
 
-    init(eyebrow: String, title: String, subtitle: String? = nil) {
+    init(eyebrow: String, title: String, subtitle: String? = nil, showGear: Bool = false) {
         self.eyebrow = eyebrow
         self.title = title
         self.subtitle = subtitle
+        self.showGear = showGear
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(eyebrow.uppercased())
-                .font(.system(size: 10.5, weight: .semibold, design: .monospaced))
-                .tracking(2.5)
-                .foregroundStyle(AppColors.accent)
+            HStack(spacing: 6) {
+                if showGear {
+                    TickingGearView(teeth: 10, size: 13, color: AppColors.accent)
+                }
+                Text(eyebrow.uppercased())
+                    .font(.system(size: 10.5, weight: .semibold, design: .monospaced))
+                    .tracking(2.5)
+                    .foregroundStyle(AppColors.accent)
+            }
             Text(title)
                 .font(.system(size: 38, weight: .medium, design: .serif))
                 .italic()

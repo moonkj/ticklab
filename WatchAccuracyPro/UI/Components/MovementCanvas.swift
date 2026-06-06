@@ -192,10 +192,57 @@ struct BalanceWheelLive: View {
     }
 }
 
+/// 톱니바퀴 Shape — teeth 개 클럽 톱니.
+struct GearShape: Shape {
+    var teeth: Int = 12
+    func path(in rect: CGRect) -> Path {
+        let c = CGPoint(x: rect.midX, y: rect.midY)
+        let rO = min(rect.width, rect.height) / 2
+        let rI = rO * 0.74
+        var p = Path()
+        let stp = Double.pi * 2 / Double(teeth)
+        func pt(_ r: CGFloat, _ a: Double) -> CGPoint { CGPoint(x: c.x + CGFloat(cos(a)) * r, y: c.y + CGFloat(sin(a)) * r) }
+        for i in 0..<teeth {
+            let a = Double(i) * stp
+            if i == 0 { p.move(to: pt(rI, a)) } else { p.addLine(to: pt(rI, a)) }
+            p.addLine(to: pt(rO, a + stp * 0.22))
+            p.addLine(to: pt(rO, a + stp * 0.5))
+            p.addLine(to: pt(rI, a + stp * 0.72))
+        }
+        p.closeSubpath()
+        return p
+    }
+}
+
+/// 앰비언트 틱톡 기어 — 1초에 한 톱니씩 스텝(Timer + easeOut, 60fps 아님 → 배터리 안전).
+/// "항상 살아있는 무브먼트" 브랜드 시그니처. Reduce Motion 정적. 측정 라이브 화면엔 미사용.
+struct TickingGearView: View {
+    var teeth: Int = 12
+    var size: CGFloat = 18
+    var color: Color = AppColors.accent
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var step = 0
+    private let timer = Timer.publish(every: 1.0, on: .main, in: .common).autoconnect()
+
+    var body: some View {
+        ZStack {
+            GearShape(teeth: teeth)
+                .fill(color.opacity(0.85))
+                .rotationEffect(.degrees(Double(step) * 360.0 / Double(teeth)))
+                .animation(reduceMotion ? nil : .easeOut(duration: 0.22), value: step)
+            Circle().fill(AppColors.paper0).frame(width: size * 0.26, height: size * 0.26)
+        }
+        .frame(width: size, height: size)
+        .onReceive(timer) { _ in if !reduceMotion { step += 1 } }
+        .accessibilityHidden(true)
+    }
+}
+
 #Preview {
     VStack(spacing: 16) {
         MovementCanvas(bph: 28_800, amplitudeDegrees: 278)
         BalanceWheelLive(bph: 28_800, amplitudeDegrees: 278).frame(width: 90, height: 90)
+        HStack { TickingGearView(); TickingGearView(teeth: 10, size: 22, color: .accentColor) }
     }
     .padding()
     .background(AppColors.paper0)

@@ -12,8 +12,8 @@ struct AutomaticRotorView: View {
             Canvas { gc, size in
                 let t = ctx.date.timeIntervalSinceReferenceDate
                 let angle: Double = spinning
-                    ? (reduceMotion ? 0 : t * 3.4)              // 연속 회전
-                    : progress * .pi * 1.5                       // 당김 비례
+                    ? (reduceMotion ? 0 : t * 5.5)              // 연속 회전(≈0.9 turn/s)
+                    : progress * .pi * 2.0                       // 당김 비례(임계까지 ≈1바퀴)
                 draw(gc, size: size, angle: angle)
             }
         }
@@ -66,21 +66,25 @@ struct RotorRefreshScrollView<Content: View>: View {
     @State private var pull: CGFloat = 0
     @State private var armed = false
     @State private var isRefreshing = false
-    private let threshold: CGFloat = 84
+    private let threshold: CGFloat = 72
 
+    @ViewBuilder
     var body: some View {
+        if #available(iOS 18.0, *) {
+            scroll18
+        } else {
+            // iOS 17 폴백 — 시스템 refreshable(로터 당김 비례는 없지만 동작 보장).
+            ScrollView { content }.refreshable { await onRefresh() }
+        }
+    }
+
+    @available(iOS 18.0, *)
+    private var scroll18: some View {
         ScrollView {
             VStack(spacing: 0) {
-                // 최상단 0-높이 프로브 — 당김량 측정(헤더 높이 변화에 영향 안 받게 헤더 위에 둠).
-                Color.clear.frame(height: 0)
-                    .background(GeometryReader { geo in
-                        Color.clear.preference(key: RotorOffsetKey.self,
-                                               value: geo.frame(in: .named("rotorSpace")).minY)
-                    })
-                // 로터 헤더 — 당김/새로고침 시 펼쳐짐.
                 let headerH = isRefreshing ? threshold : min(max(0, pull), threshold)
                 AutomaticRotorView(spinning: isRefreshing,
-                                   progress: Double(min(1.4, max(0, pull) / threshold)))
+                                   progress: Double(min(3.0, max(0, pull) / threshold)))
                     .frame(width: 38, height: 38)
                     .opacity(headerH > 6 ? 1 : 0)
                     .frame(height: headerH)
@@ -88,14 +92,16 @@ struct RotorRefreshScrollView<Content: View>: View {
                 content
             }
         }
-        .coordinateSpace(name: "rotorSpace")
-        .onPreferenceChange(RotorOffsetKey.self) { y in
+        // 신뢰성 있는 스크롤 오프셋 — 최상단 rest=0, 위로 당기면(overscroll) 음수.
+        .onScrollGeometryChange(for: CGFloat.self) { geo in
+            geo.contentOffset.y + geo.contentInsets.top
+        } action: { _, v in
             guard !isRefreshing else { return }
-            pull = y
-            if y >= threshold {
+            let p = max(0, -v)                 // 당김량
+            pull = p
+            if p >= threshold {
                 armed = true
-            } else if armed, y < threshold {
-                // 임계 넘긴 뒤 놓음 → 새로고침.
+            } else if armed, p < threshold {   // 임계 넘긴 뒤 놓음 → 새로고침
                 armed = false
                 isRefreshing = true
                 HapticManager.trigger(.selection)

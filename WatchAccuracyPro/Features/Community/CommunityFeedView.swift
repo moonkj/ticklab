@@ -88,7 +88,6 @@ struct CommunityFeedView: View {
                     showViewerGate = true
                 }
             }
-            .refreshable { if service.hasAcceptedViewerTerms { await service.loadFeed() } }
             .sheet(isPresented: $showComposer) {
                 CommunityComposerView()
             }
@@ -358,7 +357,9 @@ struct CommunityFeedView: View {
     }
 
     private var feedList: some View {
-        ScrollView {
+        RotorRefreshScrollView(onRefresh: {
+            if service.hasAcceptedViewerTerms { await service.loadFeed() }
+        }) {
             LazyVStack(spacing: 0) {
                 if followingOnly && displayedFeed.isEmpty {
                     Text(String(localized: "community.scope.following.empty"))
