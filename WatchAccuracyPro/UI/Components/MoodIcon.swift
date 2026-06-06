@@ -5,10 +5,12 @@ import SwiftUI
 struct MoodIcon: View {
     let mood: Mood
     var isSelected: Bool = false
+    /// 애니메이션 ON/OFF. 기본 ON — 표시되는 동안 계속 움직임(HTML 디자인 의도). Reduce Motion 시 자동 정지.
+    var animated: Bool = true
     var size: CGFloat = 42
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
-    private var animate: Bool { isSelected && !reduceMotion }
+    private var animate: Bool { animated && !reduceMotion }
 
     var body: some View {
         TimelineView(.animation(minimumInterval: 1.0 / 30.0, paused: !animate)) { tl in
@@ -106,15 +108,15 @@ private enum MoodArt {
         // ===== 긍정 =====
         case .happy: // satisfied — 흐뭇한 미소, 위아래 bob
             let c = rgb(216, 154, 62)
-            group(ctx, dy: animate ? -2 * sin(t / 3.5 * 2 * .pi) : 0) { g in
+            group(ctx, dy: animate ? -5 * osc(t, 2.2) : 0) { g in
                 stroke(&g, quad(37, 44, 41, 39, 45, 44), c, 3)
                 stroke(&g, quad(55, 44, 59, 39, 63, 44), c, 3)
                 stroke(&g, quad(37, 56, 50, 69, 63, 56), c, 3.4)
             }
         case .excited: // 설렘 — 바운스 + 위 스파크
             let c = rgb(232, 150, 110); let sp = rgb(240, 176, 112)
-            let riseT = (t.truncatingRemainder(dividingBy: 1.8)) / 1.8
-            group(ctx, dy: animate ? (riseT < 0.45 ? -3 * (riseT / 0.45) : 0) : 0) {
+            let riseT = (t.truncatingRemainder(dividingBy: 1.4)) / 1.4
+            group(ctx, dy: animate ? (riseT < 0.45 ? -7 * (riseT / 0.45) : -7 * (1 - (riseT - 0.45) / 0.55)) : 0) {
                 stroke(&$0, quad(37, 46, 41, 40, 45, 46), c, 3)
                 stroke(&$0, quad(55, 46, 59, 40, 63, 46), c, 3)
                 stroke(&$0, quad(35, 54, 50, 71, 65, 54), c, 3.4)
@@ -126,29 +128,29 @@ private enum MoodArt {
                 stroke(&g, line(x, x == 50 ? 27 : 33, x, (x == 50 ? 27 : 33) - 5), sp.opacity(sparkA), 2)
             }
         case .proud: // 자랑 — 별 트윙클(회전+확대)
-            let sc = animate ? 1 + 0.18 * osc(t, 3) : 1
-            let rot = animate ? 0.78 * sin(t / 3 * 2 * .pi) : 0
+            let sc = animate ? 1 + 0.30 * osc(t, 1.8) : 1
+            let rot = animate ? 1.2 * sin(t / 2 * 2 * .pi) : 0
             group(ctx, rotate: rot, scale: sc, anchor: CGPoint(x: 50, y: 52)) {
                 $0.fill(star(50, 50, 18, 7.5), with: .color(rgb(232, 194, 90)))
             }
             ctx.fill(star(68, 43, 5, 2.2), with: .color(rgb(240, 216, 138).opacity(animate ? osc(t, 2.4) : 0.7)))
         case .awe: // 감탄 — 광선 펄스 + 눈 확대
             let c = rgb(240, 184, 76)
-            let rs = animate ? 0.9 + 0.18 * osc(t, 2.6) : 1
+            let rs = animate ? 0.82 + 0.34 * osc(t, 1.8) : 1
             group(ctx, scale: rs) { g in
                 let rays: [(Double, Double, Double, Double)] = [(50,20,50,15),(71,29,74,25),(29,29,26,25),(76,50,81,50),(24,50,19,50)]
                 for (x1, y1, x2, y2) in rays {
                     stroke(&g, line(x1, y1, x2, y2), c.opacity(animate ? (0.3 + 0.55 * osc(t, 2.6)) : 0.7), 2)
                 }
             }
-            let es = animate ? 1 + 0.15 * osc(t, 2.6) : 1
+            let es = animate ? 1 + 0.28 * osc(t, 1.8) : 1
             group(ctx, scale: es, anchor: CGPoint(x: 50, y: 47)) {
                 $0.fill(circle(41, 47, 4.2), with: .color(c))
                 $0.fill(circle(59, 47, 4.2), with: .color(c))
             }
             ctx.stroke(circle(50, 61, 4.2), with: .color(c), style: StrokeStyle(lineWidth: 2.6))
         case .accomplished: // 뿌듯 — 체크 팝
-            let sc = animate ? 1 + 0.16 * osc(t, 2.4) : 1
+            let sc = animate ? 1 + 0.30 * osc(t, 1.8) : 1
             group(ctx, scale: sc, anchor: CGPoint(x: 50, y: 52)) {
                 var p = Path(); p.move(to: CGPoint(x: 36, y: 50)); p.addLine(to: CGPoint(x: 46, y: 60)); p.addLine(to: CGPoint(x: 65, y: 39))
                 $0.stroke(p, with: .color(gold), style: StrokeStyle(lineWidth: 4.4, lineCap: .round, lineJoin: .round))
@@ -159,15 +161,15 @@ private enum MoodArt {
             ctx.fill(circle(50, 50, 33), with: .color(c.opacity(0.07)))
             let dots: [(Double, Double)] = [(50,22),(78,50),(50,78),(22,50)]
             for (x, y) in dots { ctx.fill(circle(x, y, 1.6), with: .color(c)) }
-            group(ctx, rotate: animate ? -(t.truncatingRemainder(dividingBy: 12) / 12) * 2 * .pi : 0) {
+            group(ctx, rotate: animate ? -(t.truncatingRemainder(dividingBy: 6) / 6) * 2 * .pi : 0) {
                 stroke(&$0, line(50, 50, 50, 33), c, 3)
                 stroke(&$0, line(50, 50, 63, 50), c, 2.4)
             }
             ctx.fill(circle(50, 50, 2.6), with: .color(rgb(154, 123, 46)))
         // ===== 긍정(추가) =====
         case .love: // 애정 — 하트비트
-            let beat = t.truncatingRemainder(dividingBy: 1.8) / 1.8
-            let sc = animate ? (beat < 0.15 ? 1 + beat / 0.15 * 0.16 : beat < 0.3 ? 1.16 - (beat - 0.15) / 0.15 * 0.16 : beat < 0.45 ? 1 + (beat - 0.3) / 0.15 * 0.1 : beat < 0.6 ? 1.1 - (beat - 0.45) / 0.15 * 0.1 : 1) : 1
+            let beat = t.truncatingRemainder(dividingBy: 1.4) / 1.4
+            let sc = animate ? (beat < 0.15 ? 1 + beat / 0.15 * 0.30 : beat < 0.3 ? 1.30 - (beat - 0.15) / 0.15 * 0.30 : beat < 0.45 ? 1 + (beat - 0.3) / 0.15 * 0.18 : beat < 0.6 ? 1.18 - (beat - 0.45) / 0.15 * 0.18 : 1) : 1
             group(ctx, scale: sc) {
                 var p = Path()
                 p.move(to: CGPoint(x: 50, y: 64))
@@ -179,14 +181,14 @@ private enum MoodArt {
             }
         case .relief: // 안도 — ∪ 눈, 아래로 sink
             let c = rgb(127, 176, 152)
-            group(ctx, dy: animate ? 1.4 * osc(t, 3.4) : 0) {
+            group(ctx, dy: animate ? 3.5 * osc(t, 2.6) : 0) {
                 stroke(&$0, quad(37, 47, 41, 51, 45, 47), c, 3)
                 stroke(&$0, quad(55, 47, 59, 51, 63, 47), c, 3)
                 stroke(&$0, quad(40, 57, 50, 65, 60, 57), c, 3.2)
             }
         case .calm: // 평온 — 호흡(scale)
             let c = rgb(122, 160, 176)
-            group(ctx, scale: animate ? 1 + 0.05 * osc(t, 4.5) : 1) {
+            group(ctx, scale: animate ? 1 + 0.13 * osc(t, 2.8) : 1) {
                 stroke(&$0, line(37, 47, 45, 47), c, 3)
                 stroke(&$0, line(55, 47, 63, 47), c, 3)
                 stroke(&$0, quad(42, 58, 50, 63, 58, 58), c, 3)
@@ -194,7 +196,7 @@ private enum MoodArt {
         // ===== 사색·중립 =====
         case .neutral: // 평범 — 깜빡임
             let c = rgb(154, 160, 168)
-            let blink = animate ? (osc(t, 5) > 0.96 ? 0.1 : 1) : 1
+            let blink = animate ? (osc(t, 3.2) > 0.9 ? 0.12 : 1) : 1
             group(ctx, scale: 1, anchor: CGPoint(x: 50, y: 46)) { g in
                 var gg = g; gg.translateBy(x: 50, y: 46); gg.scaleBy(x: 1, y: blink); gg.translateBy(x: -50, y: -46)
                 gg.fill(circle(41, 46, 3), with: .color(c))
@@ -203,7 +205,7 @@ private enum MoodArt {
             stroke(&ctx, line(40, 60, 60, 60), c, 3.2)
         case .curious: // 호기심 — 돋보기 기울임 + 반짝
             let c = rgb(100, 112, 174)
-            group(ctx, rotate: animate ? 0.12 * sin(t / 4 * 2 * .pi) : 0) {
+            group(ctx, rotate: animate ? 0.24 * sin(t / 2.6 * 2 * .pi) : 0, anchor: CGPoint(x: 45, y: 45)) {
                 $0.fill(circle(45, 45, 13), with: .color(c.opacity(0.08)))
                 $0.stroke(circle(45, 45, 13), with: .color(c), style: StrokeStyle(lineWidth: 3.2))
                 stroke(&$0, line(55, 55, 66, 66), rgb(154, 123, 46), 4)
@@ -212,13 +214,13 @@ private enum MoodArt {
             }
         case .focused: // 집중 — 동심원 수축 펄스
             let c = rgb(80, 96, 160)
-            let r1 = animate ? 1 - 0.18 * osc(t, 2.4) : 1
+            let r1 = animate ? 1 - 0.34 * osc(t, 1.8) : 1
             group(ctx, scale: r1) { $0.stroke(circle(50, 50, 16), with: .color(c), style: StrokeStyle(lineWidth: 2.4)) }
-            group(ctx, scale: animate ? 1 - 0.18 * osc(t, 2.4, 0.15) : 1) { $0.stroke(circle(50, 50, 9), with: .color(c), style: StrokeStyle(lineWidth: 2.4)) }
+            group(ctx, scale: animate ? 1 - 0.34 * osc(t, 1.8, 0.2) : 1) { $0.stroke(circle(50, 50, 9), with: .color(c), style: StrokeStyle(lineWidth: 2.4)) }
             ctx.fill(circle(50, 50, 3), with: .color(c))
         case .thoughtful: // 사색 — 톱니 회전 + 생각 점
             let c = rgb(138, 138, 176)
-            group(ctx, rotate: animate ? (t.truncatingRemainder(dividingBy: 9) / 9) * 2 * .pi : 0, anchor: CGPoint(x: 50, y: 48)) {
+            group(ctx, rotate: animate ? (t.truncatingRemainder(dividingBy: 4.5) / 4.5) * 2 * .pi : 0, anchor: CGPoint(x: 50, y: 48)) {
                 $0.fill(gear(50, 48, 15, 11, 8), with: .color(c.opacity(0.9)))
             }
             ctx.stroke(circle(50, 48, 4.5), with: .color(c), style: StrokeStyle(lineWidth: 2))
@@ -227,8 +229,8 @@ private enum MoodArt {
         // ===== 복잡·부정 =====
         case .concerned: // 우려 — 떨림 + 찌푸린 눈썹
             let c = rgb(189, 154, 94)
-            group(ctx, dx: animate ? 0.9 * sin(t / 0.5 * 2 * .pi) : 0) { g in
-                let bf = animate ? -1 * osc(t, 2.5) : 0
+            group(ctx, dx: animate ? 2.2 * sin(t / 0.4 * 2 * .pi) : 0) { g in
+                let bf = animate ? -2.5 * osc(t, 2) : 0
                 stroke(&g, line(36, 41 + bf, 45, 44 + bf), c, 3)
                 stroke(&g, line(64, 41 + bf, 55, 44 + bf), c, 3)
                 g.fill(circle(41, 50, 2.8), with: .color(c))
@@ -237,21 +239,21 @@ private enum MoodArt {
             }
         case .disappointed: // 실망 — 처짐
             let c = rgb(138, 149, 168)
-            group(ctx, dy: animate ? 1.6 * osc(t, 3.2) : 0) {
+            group(ctx, dy: animate ? 3.5 * osc(t, 2.4) : 0) {
                 stroke(&$0, quad(37, 44, 41, 49, 45, 46), c, 3)
                 stroke(&$0, quad(55, 46, 59, 43, 63, 48), c, 3)
                 stroke(&$0, quad(40, 63, 50, 56, 60, 63), c, 3.2)
             }
         case .surprised: // 놀람 — 팝
             let c = rgb(232, 184, 76)
-            group(ctx, scale: animate ? 1 + 0.16 * osc(t, 2.2) : 1) {
+            group(ctx, scale: animate ? 1 + 0.30 * osc(t, 1.6) : 1) {
                 $0.fill(circle(41, 46, 4.2), with: .color(c))
                 $0.fill(circle(59, 46, 4.2), with: .color(c))
                 $0.stroke(Path(ellipseIn: CGRect(x: 45.8, y: 55.6, width: 8.4, height: 10.8)), with: .color(c), style: StrokeStyle(lineWidth: 2.6))
             }
         case .confused: // 혼란 — 물음표 기울임
             let c = rgb(160, 138, 176)
-            group(ctx, rotate: animate ? 0.1 * sin(t / 3.4 * 2 * .pi) : 0) {
+            group(ctx, rotate: animate ? 0.22 * sin(t / 2.4 * 2 * .pi) : 0, anchor: CGPoint(x: 50, y: 48)) {
                 var p = Path()
                 p.move(to: CGPoint(x: 43, y: 43))
                 p.addQuadCurve(to: CGPoint(x: 51, y: 34), control: CGPoint(x: 43, y: 34))
@@ -265,12 +267,12 @@ private enum MoodArt {
             ctx.fill(circle(44, 47, 3), with: .color(c))
             ctx.fill(circle(58, 47, 3), with: .color(c))
             stroke(&ctx, quad(42, 59, 50, 63, 58, 58), c, 3)
-            let dr = animate ? t.truncatingRemainder(dividingBy: 3) / 3 : 0.3
-            var g = ctx; g.translateBy(x: dr * 7, y: -dr * 5)
-            g.fill(star(68, 35, 5, 2.2), with: .color(rgb(176, 160, 188).opacity(animate ? max(0, 1 - dr) : 0.6)))
+            let dr = animate ? t.truncatingRemainder(dividingBy: 2.6) / 2.6 : 0.3
+            var g = ctx; g.translateBy(x: dr * 12, y: -dr * 9)
+            g.fill(star(64, 38, 5.5, 2.4), with: .color(rgb(176, 160, 188).opacity(animate ? max(0, 1 - dr) : 0.6)))
         case .tired: // 지침 — 무거운 눈 + zzz
             let c = rgb(154, 154, 160)
-            let hb = animate ? (osc(t, 4) > 0.88 ? 0.25 : 1) : 1
+            let hb = animate ? (osc(t, 2.8) > 0.82 ? 0.18 : 1) : 1
             group(ctx, scale: 1, anchor: CGPoint(x: 50, y: 48)) { g in
                 var gg = g; gg.translateBy(x: 50, y: 48); gg.scaleBy(x: 1, y: hb); gg.translateBy(x: -50, y: -48)
                 stroke(&gg, quad(37, 48, 41, 51, 45, 48), c, 3)
