@@ -199,6 +199,17 @@ final class AppleIntelligenceVerdictService {
             let session = LanguageModelSession(instructions: instructions)
             let response = try await session.respond(to: prompt)
             let raw = response.content.trimmingCharacters(in: .whitespacesAndNewlines)
+            // 사용자 보고: 모델이 <headline>..</headline> <content>..</content> 태그로 감싸 출력 →
+            //   태그가 화면에 그대로 노출. 태그가 있으면 안쪽을 직접 추출(한 줄/여러 줄 모두 안전).
+            if let h = Self.extractTagged("headline", from: raw) ?? Self.extractTagged("title", from: raw) {
+                let c = Self.extractTagged("content", from: raw) ?? Self.extractTagged("body", from: raw) ?? ""
+                let headline = String(Self.sanitizeLLMResponse(h).prefix(50))
+                if !headline.isEmpty {
+                    return Verdict(headline: headline,
+                                   body: String(Self.sanitizeLLMResponse(c).prefix(160)),
+                                   source: .appleIntelligence)
+                }
+            }
             // Round 133 사용자 보고: LLM 이 markdown(**, \_, [], *) 그대로 뱉어 화면에 특수문자 노출.
             let cleaned = Self.sanitizeLLMResponse(raw)
             let lines = cleaned.split(separator: "\n", omittingEmptySubsequences: true).map(String.init)
@@ -256,8 +267,23 @@ final class AppleIntelligenceVerdictService {
     /// 사용자 보고:
     ///   Round 133 — "* **[IWC ㅓㅓ · IWC\_35111: 부드" markdown 노출
     ///   Round 138 — "헤드라인: 137 μT" / "본문: ..." 라벨 prefix 노출
+    /// `<tag>...</tag>`(대소문자·줄바꿈 무시) 안쪽 텍스트 추출. 모델이 출력을 태그로 감쌀 때 사용.
+    nonisolated static func extractTagged(_ tag: String, from text: String) -> String? {
+        guard let re = try? NSRegularExpression(pattern: "<\(tag)>(.*?)</\(tag)>",
+                                                options: [.caseInsensitive, .dotMatchesLineSeparators]) else { return nil }
+        let range = NSRange(text.startIndex..., in: text)
+        guard let m = re.firstMatch(in: text, range: range), m.numberOfRanges > 1,
+              let r = Range(m.range(at: 1), in: text) else { return nil }
+        let inner = String(text[r]).trimmingCharacters(in: .whitespacesAndNewlines)
+        return inner.isEmpty ? nil : inner
+    }
+
     nonisolated static func sanitizeLLMResponse(_ text: String) -> String {
         var s = text
+        // XML/HTML 유사 태그 제거 — 모델이 <headline>/<content> 등으로 감싸는 경우(사용자 보고).
+        //   `<` 뒤가 영문자인 여는/닫는 태그만 매치 → "rate < 5" 같은 부등호는 안 건드림.
+        s = s.replacingOccurrences(of: #"</?[A-Za-z][A-Za-z0-9_]*\s*/?>"#,
+                                   with: "", options: .regularExpression)
         // bold/italic markdown
         s = s.replacingOccurrences(of: "**", with: "")
         s = s.replacingOccurrences(of: "__", with: "")

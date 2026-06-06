@@ -109,14 +109,17 @@ struct VideoFeedView: View {
                     Color(AppColors.paper2)
                         .aspectRatio(16.0 / 9.0, contentMode: .fit)
                         .overlay {
-                            AsyncImage(url: video.thumbnailHigh) { phase in
-                                switch phase {
-                                case .success(let img): img.resizable().scaledToFill()
-                                case .failure:
-                                    AsyncImage(url: video.thumbnailMid) { img in
-                                        img.resizable().scaledToFill()
-                                    } placeholder: { Color.clear }
-                                default: Color.clear
+                            // 빠른 로딩: 작고 항상 존재하는 mqdefault 를 먼저 표시(즉시 보임) →
+                            //   maxres 는 성공 시 위로 fade-in(화질 업그레이드). 이전엔 maxres 먼저라
+                            //   maxres 없는 영상마다 404 대기 후 mqdefault → 전체 로딩이 매우 느렸음.
+                            ZStack {
+                                AsyncImage(url: video.thumbnailMid) { img in
+                                    img.resizable().scaledToFill()
+                                } placeholder: { Color.clear }
+                                AsyncImage(url: video.thumbnailHigh) { phase in
+                                    if case .success(let img) = phase {
+                                        img.resizable().scaledToFill().transition(.opacity)
+                                    } else { Color.clear }
                                 }
                             }
                         }

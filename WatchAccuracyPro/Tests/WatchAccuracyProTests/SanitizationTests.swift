@@ -98,4 +98,27 @@ final class SanitizationTests: XCTestCase {
         XCTAssertFalse(clean.contains("헤드라인:"))
         XCTAssertFalse(clean.contains("본문:"))
     }
+
+    // MARK: - XML 태그 누출 (사용자 보고: <headline>/<content> 그대로 노출)
+
+    func test_response_strips_xml_tags() {
+        let raw = "<headline>매우 좋음 🎉</headline>\n<content>COSC 기준 통과.</content>"
+        let clean = AppleIntelligenceVerdictService.sanitizeLLMResponse(raw)
+        XCTAssertFalse(clean.contains("<headline>"))
+        XCTAssertFalse(clean.contains("</content>"))
+        XCTAssertTrue(clean.contains("매우 좋음"))
+    }
+
+    func test_response_keeps_lessthan_inequality() {
+        // "rate < 5" 같은 부등호는 태그가 아니므로 보존.
+        let clean = AppleIntelligenceVerdictService.sanitizeLLMResponse("rate < 5 s/d 양호")
+        XCTAssertTrue(clean.contains("< 5"))
+    }
+
+    func test_extractTagged_pulls_inner_text() {
+        let raw = "<headline>좋음</headline><content>본문 텍스트</content>"
+        XCTAssertEqual(AppleIntelligenceVerdictService.extractTagged("headline", from: raw), "좋음")
+        XCTAssertEqual(AppleIntelligenceVerdictService.extractTagged("content", from: raw), "본문 텍스트")
+        XCTAssertNil(AppleIntelligenceVerdictService.extractTagged("missing", from: raw))
+    }
 }
