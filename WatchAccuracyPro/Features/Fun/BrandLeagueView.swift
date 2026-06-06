@@ -7,6 +7,7 @@ struct BrandLeagueView: View {
     @Query private var watches: [Watch]
     @Query(sort: \WearLog.date, order: .reverse) private var wearLogs: [WearLog]
     @StateObject private var service = SupabaseBrandLeagueService.shared
+    @Environment(UserPreferences.self) private var preferences
     @State private var period: Period = .week
 
     // MARK: - Period
@@ -85,6 +86,10 @@ struct BrandLeagueView: View {
         ScrollView {
             VStack(spacing: 14) {
                 tabRow
+                if !preferences.brandLeagueOptIn {
+                    // 옵트인 꺼짐 — 착용해도 리그에 안 올라가는 핵심 원인. 그 자리에서 켤 수 있게 안내.
+                    optInCard
+                }
                 if service.isLoading && service.globalRanking.isEmpty {
                     loadingView
                 } else if service.globalRanking.isEmpty {
@@ -164,6 +169,43 @@ struct BrandLeagueView: View {
     }
 
     // MARK: - Empty
+
+    /// 브랜드 리그 참여(옵트인) 안내 + 바로 켜기. 꺼져 있으면 착용해도 글로벌 랭킹에 반영 안 됨.
+    private var optInCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                ConceptGlyph(systemName: "trophy", size: 18).foregroundStyle(AppColors.accent)
+                Text(String(localized: "league.optin.title", defaultValue: "아직 브랜드 리그에 참여 중이 아니에요"))
+                    .font(.system(size: 15, weight: .bold)).foregroundStyle(AppColors.ink0)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Text(String(localized: "league.optin.body",
+                        defaultValue: "참여하면 내 시계 착용 기록이 익명으로 글로벌 브랜드 랭킹에 반영돼요. 측정값·사진·개인정보는 전송되지 않아요."))
+                .font(.system(size: 13)).foregroundStyle(AppColors.ink2)
+                .fixedSize(horizontal: false, vertical: true)
+            Button {
+                preferences.brandLeagueOptIn = true
+                HapticManager.trigger(.selection)
+                Task {
+                    await service.uploadBrandCounts(computedBrandCounts())
+                    await service.fetchRanking(periodType: period.supabaseType)
+                }
+            } label: {
+                Text(String(localized: "league.optin.cta", defaultValue: "참여하고 내 착용 반영하기"))
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 12)
+                    .background(AppColors.accent).clipShape(Capsule())
+                    .contentShape(Capsule())
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(AppColors.accent.opacity(0.08))
+        .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.accent.opacity(0.3), lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 14))
+    }
 
     private var emptyState: some View {
         EmptyState(
