@@ -60,11 +60,15 @@ enum ConfidenceScorer {
     /// T-02: 신뢰도 저하의 주된 원인 분류 — UI 가 개선 안내(HelpCard)로 노출. 우선순위 순.
     /// `bphConfidence` 가 주어지면(DSP 경로) 직접 판정, nil(결과화면 경로)이면
     /// SNR·측정시간으로 설명되지 않는 저점수를 BPH lock 문제로 추정한다.
+    /// - convergedEarly: 측정 알고리즘이 tg σ 수렴으로 30초 전 **자동 종료**했는가. true 면 그 짧은
+    ///   측정시간은 알고리즘의 최적 판단이므로 "30초 이상 측정하라"는 모순 안내를 띄우지 않는다.
     static func reasons(snrDB: Double, durationSeconds: Double,
-                        confidenceScore: Int, bphConfidence: Double? = nil) -> [ConfidenceReason] {
+                        confidenceScore: Int, bphConfidence: Double? = nil,
+                        convergedEarly: Bool = false) -> [ConfidenceReason] {
         var out: [ConfidenceReason] = []
         if snrDB < 14 { out.append(.lowSNR) }
-        if durationSeconds < 30 { out.append(.shortDuration) }
+        // 자동 조기종료(수렴) 측정엔 "더 길게 재라" 안내 모순 → 짧아도 표시 X.
+        if durationSeconds < 30, !convergedEarly { out.append(.shortDuration) }
         if let c = bphConfidence {
             if c < 0.6 { out.append(.bphUncertain) }
         } else if confidenceScore < 70, snrDB >= 14, durationSeconds >= 30 {

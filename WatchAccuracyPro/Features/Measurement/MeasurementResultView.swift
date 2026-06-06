@@ -676,12 +676,14 @@ struct MeasurementResultView: View {
             )
             .padding(.horizontal, 4)
         } else if bphAutoDetected {
+            // 사용자가 캘리버를 '모름'으로 둔 의도적 선택 + 자동 감지가 실제로 lock 됨 → 경고가 아니라
+            //   "자동 감지로 측정됨" 안내(감지값 표시). 캘리버 설정을 권하되 실패처럼 겁주지 않음.
             HelpCard(
-                icon: "exclamationmark.triangle.fill",
-                title: String(localized: "meas.bph.unset.title", defaultValue: "BPH(캘리버) 미설정"),
-                body: String(localized: "meas.bph.unset.body",
-                    defaultValue: "캘리버 미지정 — BPH를 자동 감지해 측정했어요. 미설정 시 측정 실패·오차가 커질 수 있으니, 정확도를 위해 시계 캘리버를 설정하세요."),
-                tone: .warning
+                icon: "wand.and.stars",
+                title: String(localized: "meas.bph.auto.title", defaultValue: "BPH 자동 감지로 측정했어요"),
+                body: String(format: String(localized: "meas.bph.auto.body",
+                    defaultValue: "캘리버를 '모름'으로 두셔서 신호에서 BPH를 자동 감지했어요 (감지: %d BPH). 캘리버를 직접 설정하면 더 정확하고 빠르게 측정돼요."), result.bph),
+                tone: .info
             )
             .padding(.horizontal, 4)
         }
@@ -730,10 +732,13 @@ struct MeasurementResultView: View {
     /// T-02: 신뢰도<70 이면 저하 원인별 개선 안내(1장으로 통합 — 동일 제목 반복 방지).
     @ViewBuilder private var confidenceHelpCard: some View {
         if result.confidenceScore < 70 {
+            // tg σ 가 수렴 임계 이하면 알고리즘이 30초 전 자동 종료한 것 → "더 길게 재라" 안내 억제.
+            let convergedEarly = (result.tgSigma ?? .infinity) <= DSPPipeline.convergeToleranceSD
             let reasons = ConfidenceScorer.reasons(
                 snrDB: result.snrDB,
                 durationSeconds: Double(result.durationSeconds),
-                confidenceScore: result.confidenceScore
+                confidenceScore: result.confidenceScore,
+                convergedEarly: convergedEarly
             )
             if !reasons.isEmpty {
                 HelpCard(

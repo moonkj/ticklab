@@ -86,6 +86,14 @@ final class ConfidenceScorerTests: XCTestCase {
         XCTAssertTrue(r.contains(.shortDuration))
     }
 
+    /// 사용자 보고: 알고리즘이 수렴으로 30초 전 자동 종료했는데 "30초 이상 측정하라" 모순 안내.
+    /// convergedEarly=true 면 짧은 측정시간이라도 .shortDuration 안내 억제.
+    func test_reason_shortDuration_suppressed_when_convergedEarly() {
+        let r = ConfidenceScorer.reasons(snrDB: 20, durationSeconds: 15, confidenceScore: 50,
+                                         convergedEarly: true)
+        XCTAssertFalse(r.contains(.shortDuration), "조기종료(수렴) 측정엔 '더 길게 재라' 안내 X")
+    }
+
     func test_reason_bphUncertain_ui_heuristic() {
         // SNR·시간 양호한데 점수 낮음 → UI 경로(bphConfidence nil)에서 BPH 문제로 추정.
         let r = ConfidenceScorer.reasons(snrDB: 20, durationSeconds: 60, confidenceScore: 50)
