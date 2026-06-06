@@ -11,6 +11,8 @@ struct JournalFeedView: View {
 
     @State private var viewMode: ViewMode = .feed
     @State private var composing = false
+    /// 히어로 zoom 전환(iOS18+) — 일기 카드 → 상세. iOS17 no-op.
+    @Namespace private var heroNS
     /// 인터랙션 진단(R1): 저널은 LazyVStack/Grid 라 swipe 불가 + 삭제 경로 없었음 → long-press contextMenu 삭제.
     @State private var deletingEntry: JournalEntry?
     /// 더보기 / 접기 토글. 표준: dense grid 12, narrative feed 8 — 너무 많은 데이터 노출 방지.
@@ -72,6 +74,7 @@ struct JournalFeedView: View {
             // Round 141 (Hyemi H2): NavigationStack 최상단에 한 번만 등록 — gridSection/feedSection 중복 제거.
             .navigationDestination(for: JournalEntry.self) { entry in
                 JournalEntryDetailView(entry: entry)
+                    .heroDestination(id: entry.persistentModelID, in: heroNS)
             }
         }
         .alert(
@@ -315,6 +318,7 @@ struct JournalFeedView: View {
                     NavigationLink(value: entry) {
                         gridThumb(entry: entry)
                     }
+                    .heroSource(id: entry.persistentModelID, in: heroNS)
                     .contextMenu { deleteMenuButton(for: entry) }
                 }
             }
@@ -378,6 +382,7 @@ struct JournalFeedView: View {
                         feedCard(entry: entry)
                     }
                     .buttonStyle(.plain)
+                    .heroSource(id: entry.persistentModelID, in: heroNS)
                     .contextMenu { deleteMenuButton(for: entry) }
                 }
                 if hasMore {
