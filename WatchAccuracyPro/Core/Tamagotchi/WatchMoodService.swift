@@ -36,6 +36,19 @@ enum WatchMoodService {
             }
         }
 
+        /// 펫 상태 → 가장 가까운 저널 Mood. MoodIcon(베젤 벡터)로 일관 표시용.
+        /// (enum 내부에선 `Mood` 가 Self 로 해석되어 모듈 한정 필요.)
+        var iconMood: WatchAccuracyPro.Mood {
+            switch self {
+            case .energetic:  return .excited
+            case .happy:      return .happy
+            case .sleepy:     return .tired
+            case .dormant:    return .neutral
+            case .lowBattery: return .disappointed
+            case .needsWind:  return .thoughtful   // 회전 톱니 = 감기 메타포
+            }
+        }
+
         /// 0..100. UI 게이지.
         var energy: Int {
             switch self {

@@ -951,9 +951,8 @@ struct HeroWatchCard: View {
                 .frame(height: 0.5)
                 .accessibilityHidden(true)
             HStack(spacing: 10) {
-                // Round 152/70: 다마고치 mood emoji.
-                Text(mood.emoji)
-                    .font(.system(size: 16))
+                // 다마고치 무드 — 베젤 벡터 아이콘.
+                MoodIcon(mood: mood.iconMood, size: 26)
                 Spacer()
                 // Round 151: hero card 에도 wear toggle.
                 Button {
@@ -1149,10 +1148,9 @@ struct WatchListRow: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            // Round 152: 다마고치 mood emoji (small list).
+            // 다마고치 무드 — 베젤 벡터 아이콘 (small list).
             let mood = WatchMoodService.status(of: watch, in: modelContext).mood
-            Text(mood.emoji)
-                .font(.system(size: 16))
+            MoodIcon(mood: mood.iconMood, size: 24)
             // 컴팩트 wear toggle — chevron 제거로 SE 폭 확보 (NavigationLink 가 row 전체 tap 처리).
             let worn = wornToday
             Button {

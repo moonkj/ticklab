@@ -911,7 +911,7 @@ struct WatchDetailView: View {
                         JournalEntryDetailView(entry: entry)
                     } label: {
                         HStack(alignment: .top, spacing: 12) {
-                            Text(entry.mood.emoji).font(.system(size: 24))
+                            MoodIcon(mood: entry.mood, size: 30)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(AppDateFormat.fullDate(entry.timestamp))
                                     .font(.system(size: 11, weight: .semibold, design: .monospaced))
@@ -1438,8 +1438,7 @@ struct WatchDetailView: View {
 
     private func moodCard(_ status: WatchMoodService.Status) -> some View {
         HStack(alignment: .center, spacing: 14) {
-            Text(status.mood.emoji)
-                .font(.system(size: 32))
+            MoodIcon(mood: status.mood.iconMood, size: 40)
             VStack(alignment: .leading, spacing: 4) {
                 Text(status.mood.label)
                     .font(.system(size: 15, weight: .semibold))
