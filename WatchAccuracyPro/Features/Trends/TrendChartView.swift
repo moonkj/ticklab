@@ -56,6 +56,8 @@ struct TrendChartView: View {
     var range: WatchDetailTrendRange?
     /// 스트림 D: Rate Drift 예측 ghost 선 표시 여부. 기본 ON.
     var showForecast: Bool = true
+    /// 스크럽 — 드래그로 선택된 측정(그 시점 rate·날짜 말풍선).
+    @State private var selected: WatchMeasurement?
 
     private var sorted: [WatchMeasurement] {
         measurements.sorted(by: { $0.timestamp < $1.timestamp })
@@ -157,6 +159,19 @@ struct TrendChartView: View {
                         .symbolSize(40)
                         .symbol(.diamond)
                 }
+                // 스크럽 선택 — 드래그한 지점의 측정 강조 + 말풍선.
+                if let sel = selected {
+                    RuleMark(x: .value("date", sel.timestamp))
+                        .foregroundStyle(AppColors.ink3.opacity(0.45))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [3, 3]))
+                    PointMark(x: .value("date", sel.timestamp), y: .value("rate", sel.rateSecondsPerDay))
+                        .foregroundStyle(color(for: sel))
+                        .symbolSize(150)
+                        .annotation(position: .top,
+                                    overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) {
+                            scrubReadout(sel)
+                        }
+                }
             }
             RuleMark(y: .value("zero", 0)).foregroundStyle(AppColors.border)
         }
@@ -166,6 +181,16 @@ struct TrendChartView: View {
             AxisMarks(position: .leading) { _ in
                 AxisGridLine()
                 AxisValueLabel()
+            }
+        }
+        .chartOverlay { proxy in
+            GeometryReader { geo in
+                Rectangle().fill(Color.clear).contentShape(Rectangle())
+                    .gesture(
+                        DragGesture(minimumDistance: 0)
+                            .onChanged { v in updateSelection(at: v.location, proxy: proxy, geo: geo) }
+                            .onEnded { _ in selected = nil }
+                    )
             }
         }
         .overlay {
@@ -261,6 +286,36 @@ struct TrendChartView: View {
                 })
             }
         }
+    }
+
+    /// 드래그 위치 → 가장 가까운 측정 선택. 새 포인트로 바뀔 때마다 톡 햅틱(시계 박동 메타포).
+    private func updateSelection(at point: CGPoint, proxy: ChartProxy, geo: GeometryProxy) {
+        guard !sorted.isEmpty, let plotFrame = proxy.plotFrame else { return }
+        let x = point.x - geo[plotFrame].origin.x
+        guard let date: Date = proxy.value(atX: x) else { return }
+        guard let nearest = sorted.min(by: {
+            abs($0.timestamp.timeIntervalSince(date)) < abs($1.timestamp.timeIntervalSince(date))
+        }) else { return }
+        if nearest.id != selected?.id {
+            selected = nearest
+            HapticManager.trigger(.selection)
+        }
+    }
+
+    @ViewBuilder private func scrubReadout(_ m: WatchMeasurement) -> some View {
+        VStack(spacing: 2) {
+            Text(String(format: "%+.1f ", m.rateSecondsPerDay) + String(localized: "unit.seconds_per_day"))
+                .font(.system(size: 12, weight: .bold, design: .monospaced))
+                .foregroundStyle(color(for: m))
+            Text(m.timestamp.formatted(.dateTime.month().day().hour().minute()))
+                .font(.system(size: 9, design: .monospaced))
+                .foregroundStyle(AppColors.ink3)
+        }
+        .padding(.horizontal, 8).padding(.vertical, 5)
+        .background(AppColors.paper1)
+        .overlay(RoundedRectangle(cornerRadius: 7).stroke(AppColors.rule, lineWidth: 1))
+        .clipShape(RoundedRectangle(cornerRadius: 7))
+        .shadow(color: .black.opacity(0.08), radius: 4, y: 2)
     }
 
     private func color(for m: WatchMeasurement) -> Color {
