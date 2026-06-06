@@ -417,16 +417,16 @@ struct JournalFeedView: View {
 
     private func feedCard(entry: JournalEntry) -> some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 8) {
-                MoodIcon(mood: entry.mood, size: 24)
+            HStack(spacing: 11) {
+                MoodIcon(mood: entry.mood, size: 40)
                 if let watch = entry.watch {
                     // Round 133: 제조사 + 모델명 함께 표시 (같은 제조사 여러 시계 구분).
-                    VStack(alignment: .leading, spacing: 0) {
+                    VStack(alignment: .leading, spacing: 1) {
                         Text(watch.brand)
-                            .font(.system(size: 13, weight: .semibold, design: .serif))
+                            .font(.system(size: 16, weight: .semibold, design: .serif))
                             .foregroundStyle(AppColors.ink0)
                         Text(watch.model)
-                            .font(.system(size: 11))
+                            .font(.system(size: 12.5))
                             .foregroundStyle(AppColors.ink2)
                     }
                 }

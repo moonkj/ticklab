@@ -914,7 +914,7 @@
 "tab.today" = "Hoy";
 "today.greeting" = "¿Qué reloj llevarás hoy?";
 "today.eyebrow" = "DAILY";
-"today.stat.watches" = "Familia de relojes";
+"today.stat.watches" = "Relojes";
 "today.stat.this_week" = "Esta semana";
 "today.shake.title" = "Reloj elegido para hoy";
 "today.shake.subtitle" = "¿Cuál llevarás hoy?";
