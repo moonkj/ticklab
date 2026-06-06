@@ -2005,3 +2005,22 @@
 "promo.perk.unlimited" = "Montres, mesures et journaux illimités";
 "promo.perk.ai" = "Diagnostic IA illimité";
 "promo.perk.share" = "Cartes premium et export de données";
+
+/* D: 다국어 점검 — defaultValue 한글 노출 수정 (사용자 문구 8로케일 등록) */
+"measurement.phase.listening" = "Écoute…";
+"measurement.phase.caught" = "Battement capté";
+"measurement.phase.locking" = "Verrouillage…";
+"measurement.phase.finalizing" = "Finalisation…";
+"measurement.ipad.title" = "La mesure se fait sur iPhone";
+"measurement.ipad.body" = "Une mesure précise nécessite d'approcher le micro de la montre, elle n'est donc disponible que sur iPhone. La collection, le journal, les analyses et la communauté fonctionnent aussi sur iPad.";
+"watch.history.select" = "Sélectionner";
+"watch.history.deleteSelected" = "Supprimer (%d)";
+"watch.history.deleteSelected.title" = "Supprimer les mesures sélectionnées";
+"watch.history.deleteSelected.message" = "Supprimer les %d mesures sélectionnées ? Action irréversible.";
+"meas.bph.auto.title" = "Mesuré avec un BPH détecté automatiquement";
+"meas.bph.auto.body" = "Le calibre étant « Inconnu », nous avons détecté le BPH à partir du signal (détecté : %d BPH). Définir le calibre rend la mesure plus rapide et précise.";
+"league.optin.title" = "Vous n'êtes pas encore dans la Ligue des marques";
+"league.optin.body" = "Rejoignez pour ajouter votre port de montre, de façon anonyme, au classement mondial des marques. Mesures, photos et infos personnelles ne sont jamais envoyées.";
+"league.optin.cta" = "Rejoindre et ajouter mon port";
+"watch.movement.unconfirmed.title" = "Confirmez le mouvement";
+"watch.movement.unconfirmed.body" = "Ce mouvement a été attribué automatiquement. Confirmez le calibre et le BPH pour une mesure précise.";

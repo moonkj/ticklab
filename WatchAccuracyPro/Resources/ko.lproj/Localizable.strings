@@ -2064,3 +2064,22 @@
 "promo.perk.unlimited" = "무제한 시계 등록 · 측정 · 일기";
 "promo.perk.ai" = "AI 진단 무제한";
 "promo.perk.share" = "고급 공유카드 · 데이터 내보내기";
+
+/* D: 다국어 점검 — defaultValue 한글 노출 수정 (사용자 문구 8로케일 등록) */
+"measurement.phase.listening" = "듣는 중…";
+"measurement.phase.caught" = "박동을 잡았어요";
+"measurement.phase.locking" = "주파수 고정 중…";
+"measurement.phase.finalizing" = "마무리하는 중…";
+"measurement.ipad.title" = "측정은 iPhone에서 지원돼요";
+"measurement.ipad.body" = "정확한 측정을 위해 마이크를 시계에 가까이 대야 해서, 측정은 iPhone에서만 제공돼요. 컬렉션·기록·분석·커뮤니티는 iPad에서도 모두 사용할 수 있어요.";
+"watch.history.select" = "선택";
+"watch.history.deleteSelected" = "삭제 (%d)";
+"watch.history.deleteSelected.title" = "선택한 측정 삭제";
+"watch.history.deleteSelected.message" = "선택한 %d개의 측정을 삭제할까요? 되돌릴 수 없어요.";
+"meas.bph.auto.title" = "BPH 자동 감지로 측정했어요";
+"meas.bph.auto.body" = "캘리버를 '모름'으로 두셔서 신호에서 BPH를 자동 감지했어요 (감지: %d BPH). 캘리버를 직접 설정하면 더 정확하고 빠르게 측정돼요.";
+"league.optin.title" = "아직 브랜드 리그에 참여 중이 아니에요";
+"league.optin.body" = "참여하면 내 시계 착용 기록이 익명으로 글로벌 브랜드 랭킹에 반영돼요. 측정값·사진·개인정보는 전송되지 않아요.";
+"league.optin.cta" = "참여하고 내 착용 반영하기";
+"watch.movement.unconfirmed.title" = "무브먼트 확인이 필요해요";
+"watch.movement.unconfirmed.body" = "자동 배정된 무브먼트예요. 측정 정확도를 위해 캘리버·진동수를 확인하세요.";

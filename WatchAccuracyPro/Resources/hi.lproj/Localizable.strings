@@ -2005,3 +2005,22 @@
 "promo.perk.unlimited" = "असीमित घड़ियाँ, माप और जर्नल";
 "promo.perk.ai" = "असीमित AI निदान";
 "promo.perk.share" = "प्रीमियम शेयर कार्ड और डेटा निर्यात";
+
+/* D: 다국어 점검 — defaultValue 한글 노출 수정 (사용자 문구 8로케일 등록) */
+"measurement.phase.listening" = "सुन रहे हैं…";
+"measurement.phase.caught" = "धड़कन पकड़ी";
+"measurement.phase.locking" = "लॉक हो रहा है…";
+"measurement.phase.finalizing" = "पूरा हो रहा है…";
+"measurement.ipad.title" = "मापन iPhone पर उपलब्ध है";
+"measurement.ipad.body" = "सटीक मापन के लिए माइक को घड़ी के पास रखना होता है, इसलिए यह केवल iPhone पर उपलब्ध है। कलेक्शन, जर्नल, विश्लेषण और कम्युनिटी iPad पर भी काम करते हैं।";
+"watch.history.select" = "चुनें";
+"watch.history.deleteSelected" = "हटाएँ (%d)";
+"watch.history.deleteSelected.title" = "चुने गए मापन हटाएँ";
+"watch.history.deleteSelected.message" = "चुने गए %d मापन हटाएँ? यह पूर्ववत नहीं होगा।";
+"meas.bph.auto.title" = "BPH स्वतः पहचान कर मापा गया";
+"meas.bph.auto.body" = "कैलिबर 'अज्ञात' होने से हमने सिग्नल से BPH स्वतः पहचाना (पहचाना: %d BPH)। कैलिबर सेट करने पर मापन तेज़ और सटीक होगा।";
+"league.optin.title" = "आप अभी ब्रांड लीग में नहीं हैं";
+"league.optin.body" = "शामिल हों और अपनी घड़ी पहनने का रिकॉर्ड गुमनाम रूप से वैश्विक ब्रांड रैंकिंग में जोड़ें। मापन, फ़ोटो और निजी जानकारी कभी नहीं भेजी जाती।";
+"league.optin.cta" = "शामिल हों और मेरा उपयोग जोड़ें";
+"watch.movement.unconfirmed.title" = "मूवमेंट की पुष्टि करें";
+"watch.movement.unconfirmed.body" = "यह मूवमेंट स्वतः असाइन हुआ है। सटीक मापन के लिए कैलिबर और BPH की पुष्टि करें।";

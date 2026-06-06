@@ -2065,3 +2065,22 @@
 "promo.perk.unlimited" = "Unlimited watches, measurements & journals";
 "promo.perk.ai" = "Unlimited AI diagnosis";
 "promo.perk.share" = "Premium share cards & data export";
+
+/* D: 다국어 점검 — defaultValue 한글 노출 수정 (사용자 문구 8로케일 등록) */
+"measurement.phase.listening" = "Listening…";
+"measurement.phase.caught" = "Caught the beat";
+"measurement.phase.locking" = "Locking in…";
+"measurement.phase.finalizing" = "Finalizing…";
+"measurement.ipad.title" = "Measurement is on iPhone";
+"measurement.ipad.body" = "Accurate measurement needs the mic held close to the watch, so it's available only on iPhone. Collection, journal, analytics, and community all work on iPad too.";
+"watch.history.select" = "Select";
+"watch.history.deleteSelected" = "Delete (%d)";
+"watch.history.deleteSelected.title" = "Delete selected measurements";
+"watch.history.deleteSelected.message" = "Delete the %d selected measurements? This can't be undone.";
+"meas.bph.auto.title" = "Measured with auto-detected BPH";
+"meas.bph.auto.body" = "Since the caliber is set to 'Unknown', we auto-detected the BPH from the signal (detected: %d BPH). Setting the caliber makes measurement faster and more accurate.";
+"league.optin.title" = "You're not in the Brand League yet";
+"league.optin.body" = "Join to add your watch-wear, anonymously, to the global brand ranking. Measurements, photos, and personal info are never sent.";
+"league.optin.cta" = "Join and add my wear";
+"watch.movement.unconfirmed.title" = "Confirm the movement";
+"watch.movement.unconfirmed.body" = "This movement was auto-assigned. Confirm the caliber and BPH for accurate measurement.";

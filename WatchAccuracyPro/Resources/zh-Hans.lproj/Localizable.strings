@@ -2005,3 +2005,22 @@
 "promo.perk.unlimited" = "无限手表、测量与记录";
 "promo.perk.ai" = "无限 AI 诊断";
 "promo.perk.share" = "高级分享卡与数据导出";
+
+/* D: 다국어 점검 — defaultValue 한글 노출 수정 (사용자 문구 8로케일 등록) */
+"measurement.phase.listening" = "正在聆听…";
+"measurement.phase.caught" = "已捕捉到节拍";
+"measurement.phase.locking" = "正在锁定频率…";
+"measurement.phase.finalizing" = "正在完成…";
+"measurement.ipad.title" = "测量功能在 iPhone 上提供";
+"measurement.ipad.body" = "精确测量需要将麦克风贴近手表，因此仅在 iPhone 上提供。收藏、记录、分析和社区在 iPad 上也都可用。";
+"watch.history.select" = "选择";
+"watch.history.deleteSelected" = "删除 (%d)";
+"watch.history.deleteSelected.title" = "删除所选测量";
+"watch.history.deleteSelected.message" = "删除所选的 %d 个测量？此操作无法撤销。";
+"meas.bph.auto.title" = "已自动检测 BPH 并测量";
+"meas.bph.auto.body" = "由于机芯设为“未知”，我们从信号中自动检测了 BPH（检测：%d BPH）。设置机芯可让测量更快更准。";
+"league.optin.title" = "你还未加入品牌联赛";
+"league.optin.body" = "加入后，你的佩戴记录将匿名计入全球品牌排行。测量数据、照片和个人信息不会被发送。";
+"league.optin.cta" = "加入并计入我的佩戴";
+"watch.movement.unconfirmed.title" = "需要确认机芯";
+"watch.movement.unconfirmed.body" = "这是自动分配的机芯。请确认机芯与 BPH 以保证测量准确。";
