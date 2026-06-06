@@ -196,6 +196,7 @@
 		8C45706325DD0340F2E849D8 /* WearLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B179281822F0A79F6C7494A1 /* WearLog.swift */; };
 		8D80677ACAB34AB22CB34AB6 /* SmartwatchBatteryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D5D31E0AD826DDDB1AD488D /* SmartwatchBatteryTests.swift */; };
 		900D3F073538D3098D9AC89E /* ServiceLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09F8C4A5F535A21D8C8AEF /* ServiceLog.swift */; };
+		901DBC9B7FBE6EE60B563C0B /* MovementCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */; };
 		936F6646A4D81A8B922D4EAE /* StreakService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D68900F4F27A1CAF6ABD1FEA /* StreakService.swift */; };
 		966D900DC82453601AA07667 /* LocalizationParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B67DE1AE5717360E55EB0 /* LocalizationParityTests.swift */; };
 		96E18BF4543AA4B570297798 /* MovementPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */; };
@@ -394,6 +395,7 @@
 		11DD44A69BACBC9F88907263 /* RateCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RateCalculator.swift; sourceTree = "<group>"; };
 		147FD52A1A20999D7CCBD88E /* DataExportServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExportServiceTests.swift; sourceTree = "<group>"; };
 		150979BC7F5BCCEF68BC3701 /* FeatureFlagsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlagsTests.swift; sourceTree = "<group>"; };
+		156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementCanvas.swift; sourceTree = "<group>"; };
 		156B5A20F81D43120D72F7DC /* CommunityModerationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityModerationService.swift; sourceTree = "<group>"; };
 		15760E394B5817EC63E9E57B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1686561FE30C447D3AA4707A /* AppleIntelligenceVerdictService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIntelligenceVerdictService.swift; sourceTree = "<group>"; };
@@ -1142,6 +1144,7 @@
 				5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */,
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
+				156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */,
 				83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */,
 				0A3F867375C95643C502D0FB /* PhotoCropView.swift */,
 				92A36BE3BF6CA4AAB6ACF58A /* PowerReserveGauge.swift */,
@@ -1907,6 +1910,7 @@
 				F676A03D2DD8AE447C352FC2 /* MetricBadge.swift in Sources */,
 				3B773AC96D9BCA257EA98347 /* MetricKitSubscriber.swift in Sources */,
 				8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */,
+				901DBC9B7FBE6EE60B563C0B /* MovementCanvas.swift in Sources */,
 				76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */,
 				E37390163694686A0BC080FD /* MovementDatabase.swift in Sources */,
 				E0C27E99478158E257D721C4 /* MovementMatcher.swift in Sources */,
