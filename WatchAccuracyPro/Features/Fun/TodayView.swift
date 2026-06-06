@@ -52,7 +52,7 @@ struct TodayView: View {
                     title: String(localized: "tab.today"),
                     showGear: true
                 )
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 4)
                 ScrollView {
@@ -75,7 +75,7 @@ struct TodayView: View {
                     }
                     watchFamilySection
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 20)
                 .padding(.top, 8)
                 .padding(.bottom, 80)
                 .readableContentWidth()   // iPad 가로폭 제한(아이폰 무영향)
