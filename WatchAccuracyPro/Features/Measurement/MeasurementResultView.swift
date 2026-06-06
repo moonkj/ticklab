@@ -575,21 +575,29 @@ struct MeasurementResultView: View {
                 .font(.system(size: 10, weight: .semibold))
                 .tracking(2.2)
                 .foregroundStyle(AppColors.ink2)
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                RevealCountingNumber(value: heroDisplayRate, format: formatRate)
-                    .font(.system(size: bigFont, weight: .medium, design: .monospaced))
-                    .monospacedDigit()
-                    .tracking(-1.5)
-                    .foregroundStyle(bigColor)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.55)
-                Text(String(localized: "unit.seconds_per_day"))
-                    .font(.system(size: rateUnitSize, design: .monospaced))
-                    .foregroundStyle(AppColors.ink2)
-                    .lineLimit(1)
+            // rate 숫자(축소) + 옆에 밸런스휠(측정 BPH 로 동작, 기계식 lock 시).
+            HStack(alignment: .center, spacing: 14) {
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    RevealCountingNumber(value: heroDisplayRate, format: formatRate)
+                        .font(.system(size: bigFont * 0.62, weight: .medium, design: .monospaced))
+                        .monospacedDigit()
+                        .tracking(-1.0)
+                        .foregroundStyle(bigColor)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.55)
+                    Text(String(localized: "unit.seconds_per_day"))
+                        .font(.system(size: rateUnitSize * 0.85, design: .monospaced))
+                        .foregroundStyle(AppColors.ink2)
+                        .lineLimit(1)
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(String(format: NSLocalizedString("a11y.rate_value", comment: ""), formatRate(result.rateSecondsPerDay), String(localized: "unit.seconds_per_day")))
+                if result.bph > 0 {
+                    BalanceWheelLive(bph: result.bph, amplitudeDegrees: result.amplitudeDegrees)
+                        .frame(width: 76, height: 76)
+                        .accessibilityHidden(true)
+                }
             }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(String(format: NSLocalizedString("a11y.rate_value", comment: ""), formatRate(result.rateSecondsPerDay), String(localized: "unit.seconds_per_day")))
             // 웨이브2-B: 고신뢰일 때 세리프 verdict headline 을 hero 숫자 바로 아래로(스크린 디자이너 제안).
             if isHighConfidenceGrade {
                 Text("\u{201C}\(verdict.headline)\(needsTrailingDot(verdict.headline) ? "." : "")\u{201D}")
@@ -612,33 +620,23 @@ struct MeasurementResultView: View {
                 Chip(rateUncertainty, tone: .neutral, small: true)
                     .accessibilityLabel(String(format: String(localized: "a11y.rate_uncertainty"), rateUncertainty))
             }
-            // 게이지(좌, 바늘+A등급 인장 복구) + 밸런스휠(우) 좌우 배치 — 겹침 없음.
-            HStack(alignment: .center, spacing: 12) {
-                let g: CGFloat = 175
-                ZStack {
-                    RateDial(rate: result.rateSecondsPerDay, size: g,
-                             animatedRate: isHighConfidenceGrade)
-                        .opacity(dialOpacity)
-                        // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
-                        .accessibilityHidden(true)
-                    // A등급(고신뢰)일 때만 도착 후 0.4s 뒤 골드 인장 fade-in.
-                    if isHighConfidenceGrade && result.reliabilityGrade == .a {
-                        RevealGoldSeal()
-                            .frame(width: g * 0.34, height: g * 0.34)
-                            .opacity(showGoldSeal ? 1 : 0)
-                            .scaleEffect(showGoldSeal ? 1 : (reduceMotion ? 1 : 0.6))
-                            .offset(y: g * 0.14)
-                            .accessibilityHidden(true)
-                    }
-                }
-                // 오른쪽 — 측정된 BPH 로 동작하는 밸런스휠(기계식 lock 시).
-                if result.bph > 0 {
-                    BalanceWheelLive(bph: result.bph, amplitudeDegrees: result.amplitudeDegrees)
-                        .frame(width: 112, height: 112)
+            // 다이얼: 원래 크기/위치(중앙) + A등급 골드 인장(완료 체크) 복구.
+            ZStack {
+                RateDial(rate: result.rateSecondsPerDay, size: dialSize,
+                         animatedRate: isHighConfidenceGrade)
+                    .opacity(dialOpacity)
+                    // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
+                    .accessibilityHidden(true)
+                // A등급(고신뢰)일 때 도착 후 0.4s 뒤 골드 인장 fade-in.
+                if isHighConfidenceGrade && result.reliabilityGrade == .a {
+                    RevealGoldSeal()
+                        .frame(width: dialSize * 0.34, height: dialSize * 0.34)
+                        .opacity(showGoldSeal ? 1 : 0)
+                        .scaleEffect(showGoldSeal ? 1 : (reduceMotion ? 1 : 0.6))
+                        .offset(y: dialSize * 0.14)
                         .accessibilityHidden(true)
                 }
             }
-            .frame(maxWidth: .infinity)
             .padding(.top, 4)
             HStack(spacing: 8) {
                 let inCosc = result.rateSecondsPerDay >= -4 && result.rateSecondsPerDay <= 6
