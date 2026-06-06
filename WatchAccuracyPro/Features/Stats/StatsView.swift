@@ -552,15 +552,31 @@ struct StatsView: View {
 
     private struct MoodCount { let mood: Mood; let count: Int }
 
-    /// Round 59: 6가지 mood color 색약 친화 — Okabe-Ito 팔레트 일부 차용 + 시각 명도 차이 확대.
+    /// 무드 19종 색상 — 색약 친화 톤. 긍정=골드/그린, 사색=블루/인디고, 복잡=버밀리언/뮤트.
     private func colorForMood(_ mood: Mood) -> Color {
         switch mood {
-        case .happy:      return AppColors.accent                                  // gold
-        case .proud:      return AppColors.primaryDeep                             // dark indigo (강한 대비)
-        case .curious:    return Color(red: 0.0, green: 0.620, blue: 0.451)        // bluish-green (Okabe-Ito)
-        case .neutral:    return AppColors.ink3                                    // light gray (was ink2 too dark)
-        case .concerned:  return Color(red: 0.835, green: 0.369, blue: 0.0)        // vermillion (Okabe-Ito)
-        case .nostalgic:  return Color(red: 0.337, green: 0.706, blue: 0.914)      // sky blue (Okabe-Ito)
+        // 긍정
+        case .happy:        return AppColors.accent
+        case .excited:      return Color(red: 0.91, green: 0.59, blue: 0.43)
+        case .proud:        return Color(red: 0.91, green: 0.76, blue: 0.35)
+        case .awe:          return Color(red: 0.94, green: 0.72, blue: 0.30)
+        case .accomplished: return Color(red: 0.79, green: 0.66, blue: 0.29)
+        case .love:         return Color(red: 0.85, green: 0.54, blue: 0.54)
+        case .relief:       return Color(red: 0.0, green: 0.620, blue: 0.451)      // bluish-green (Okabe-Ito)
+        case .calm:         return Color(red: 0.48, green: 0.63, blue: 0.69)
+        // 사색·중립
+        case .neutral:      return AppColors.ink3
+        case .curious:      return Color(red: 0.39, green: 0.44, blue: 0.68)
+        case .focused:      return AppColors.primaryDeep
+        case .thoughtful:   return Color(red: 0.54, green: 0.54, blue: 0.69)
+        case .nostalgic:    return Color(red: 0.337, green: 0.706, blue: 0.914)    // sky blue (Okabe-Ito)
+        // 복잡·부정
+        case .concerned:    return Color(red: 0.835, green: 0.369, blue: 0.0)      // vermillion (Okabe-Ito)
+        case .disappointed: return Color(red: 0.54, green: 0.58, blue: 0.66)
+        case .surprised:    return Color(red: 0.91, green: 0.72, blue: 0.30)
+        case .confused:     return Color(red: 0.63, green: 0.54, blue: 0.69)
+        case .longing:      return Color(red: 0.60, green: 0.54, blue: 0.63)
+        case .tired:        return AppColors.ink2
         }
     }
 

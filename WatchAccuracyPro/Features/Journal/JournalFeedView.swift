@@ -351,15 +351,13 @@ struct JournalFeedView: View {
                     WatchSilhouette(watch: watch, size: 90)
                 }
             } else {
-                Text(entry.mood.emoji)
-                    .font(.system(size: 32))
+                MoodIcon(mood: entry.mood, size: 40)
             }
             // Mood overlay (bottom-left, jsx 매칭). UX 감사: 14→16pt 가독성.
             VStack {
                 Spacer()
                 HStack {
-                    Text(entry.mood.emoji)
-                        .font(.system(size: 16))
+                    MoodIcon(mood: entry.mood, size: 22)
                         .shadow(color: .black.opacity(0.3), radius: 2)
                     Spacer()
                 }
@@ -420,7 +418,7 @@ struct JournalFeedView: View {
     private func feedCard(entry: JournalEntry) -> some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 8) {
-                Text(entry.mood.emoji)
+                MoodIcon(mood: entry.mood, size: 24)
                 if let watch = entry.watch {
                     // Round 133: 제조사 + 모델명 함께 표시 (같은 제조사 여러 시계 구분).
                     VStack(alignment: .leading, spacing: 0) {

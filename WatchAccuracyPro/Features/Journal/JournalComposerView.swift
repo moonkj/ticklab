@@ -112,34 +112,47 @@ struct JournalComposerView: View {
     }
 
     private var moodPicker: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
             EyebrowLabel(text: String(localized: "journal.compose.mood"))
-            HStack(spacing: 8) {
-                ForEach(Mood.allCases, id: \.self) { m in
-                    Button {
-                        UISelectionFeedbackGenerator().selectionChanged()
-                        withAnimation(.easeOut(duration: 0.12)) { mood = m }
-                    } label: {
-                        VStack(spacing: 2) {
-                            Text(m.emoji).font(.system(size: 22))
-                            Text(m.localizedName)
-                                .font(.system(size: 9, weight: .medium))
-                                .foregroundStyle(mood == m ? AppColors.accentDark : AppColors.ink3)
+            // 19종 — 긍정/사색/복잡 3군으로 묶어 4열 그리드.
+            ForEach(Mood.Category.allCases, id: \.self) { cat in
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(cat.localizedName.uppercased())
+                        .font(.system(size: 9, weight: .semibold, design: .monospaced))
+                        .tracking(1.5)
+                        .foregroundStyle(AppColors.ink3)
+                    LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 4), spacing: 6) {
+                        ForEach(Mood.allCases.filter { $0.category == cat }, id: \.self) { m in
+                            moodCell(m)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 8)
-                        // Round 66: accent50 너무 옅음 → accent100 강화.
-                        .background(mood == m ? AppColors.accent100 : Color.clear)
-                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: AppRadius.sm)
-                                .stroke(mood == m ? AppColors.accent : AppColors.rule, lineWidth: mood == m ? 1.5 : 1)
-                        )
                     }
-                    .buttonStyle(.plain)
                 }
             }
         }
+    }
+
+    private func moodCell(_ m: Mood) -> some View {
+        Button {
+            UISelectionFeedbackGenerator().selectionChanged()
+            withAnimation(.easeOut(duration: 0.12)) { mood = m }
+        } label: {
+            VStack(spacing: 3) {
+                MoodIcon(mood: m, isSelected: mood == m, size: 34)
+                Text(m.localizedName)
+                    .font(.system(size: 9, weight: .medium))
+                    .foregroundStyle(mood == m ? AppColors.accentDark : AppColors.ink3)
+                    .lineLimit(1).minimumScaleFactor(0.75)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 7)
+            .background(mood == m ? AppColors.accent100 : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: AppRadius.sm))
+            .overlay(
+                RoundedRectangle(cornerRadius: AppRadius.sm)
+                    .stroke(mood == m ? AppColors.accent : AppColors.rule, lineWidth: mood == m ? 1.5 : 1)
+            )
+        }
+        .buttonStyle(.plain)
     }
 
     private var bodyEditor: some View {

@@ -132,6 +132,7 @@
 		5625F3ED18C013FDF153690C /* ConfidenceScorerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52312AAEEDF5CBFC3F2CAD65 /* ConfidenceScorerTests.swift */; };
 		56AB31E34521BD8E03F0CA09 /* JournalFeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C61A0EC7E6B49980D6EAB40 /* JournalFeedView.swift */; };
 		57442566C961CA26627FE75E /* MeasurementMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = 425B8082627ED465EBBC3B05 /* MeasurementMetadata.swift */; };
+		593F9F4A3D816D4F3DEDAF21 /* MoodIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652253D00D757C46BD62A631 /* MoodIcon.swift */; };
 		598A4B35012B82C9E3C97B45 /* ShareCardComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4D26544BF069711EF76911 /* ShareCardComposerView.swift */; };
 		5A0011328BD6071DD10F006F /* PressableCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FAC0D83943B770F1B767C04 /* PressableCard.swift */; };
 		5A896560E27D0CE652E12A6F /* SpectralFluxBPHIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A97745FEBC88A23361251E8 /* SpectralFluxBPHIntegrationTests.swift */; };
@@ -516,6 +517,7 @@
 		6321C02B534578D2BF56FB2A /* TrendDiagnosisCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrendDiagnosisCard.swift; sourceTree = "<group>"; };
 		63CD830DBF3DE1C69D871910 /* WatchAccuracyPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WatchAccuracyPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64952ABFADF1A165684DD426 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		652253D00D757C46BD62A631 /* MoodIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodIcon.swift; sourceTree = "<group>"; };
 		6523BA86C41C1ACF33FD1EC6 /* ShakePickView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShakePickView.swift; sourceTree = "<group>"; };
 		6531278EEA6B51CA1518461B /* SoundManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundManager.swift; sourceTree = "<group>"; };
 		65540C10846C70E94C617A8C /* ClockCalibrationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClockCalibrationServiceTests.swift; sourceTree = "<group>"; };
@@ -1150,6 +1152,7 @@
 				5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */,
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
+				652253D00D757C46BD62A631 /* MoodIcon.swift */,
 				156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */,
 				83332CD492C03DB4D50F51C8 /* NextStepsGuideCard.swift */,
 				0A3F867375C95643C502D0FB /* PhotoCropView.swift */,
@@ -1918,6 +1921,7 @@
 				36C2B82C6131CB8239301BFE /* MeasurementViewModel.swift in Sources */,
 				F676A03D2DD8AE447C352FC2 /* MetricBadge.swift in Sources */,
 				3B773AC96D9BCA257EA98347 /* MetricKitSubscriber.swift in Sources */,
+				593F9F4A3D816D4F3DEDAF21 /* MoodIcon.swift in Sources */,
 				8BA99E8E8DC45A2CEEF00F67 /* Movement.swift in Sources */,
 				901DBC9B7FBE6EE60B563C0B /* MovementCanvas.swift in Sources */,
 				76C4DBB7516AD8ABA7FD229E /* MovementDBOTAService.swift in Sources */,

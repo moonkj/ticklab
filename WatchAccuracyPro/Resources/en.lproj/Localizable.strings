@@ -2113,3 +2113,21 @@
 "trend.empty.hint" = "As you log measurements, your accuracy trend appears here";
 
 "settings.measurement_sound" = "Measurement sound (tick)";
+
+/* 무드 19종 확장 — 신규 무드 + 카테고리 */
+"mood.excited" = "Excited";
+"mood.awe" = "Awe";
+"mood.accomplished" = "Accomplished";
+"mood.love" = "Love";
+"mood.relief" = "Relief";
+"mood.calm" = "Calm";
+"mood.focused" = "Focused";
+"mood.thoughtful" = "Thoughtful";
+"mood.disappointed" = "Disappointed";
+"mood.surprised" = "Surprised";
+"mood.confused" = "Confused";
+"mood.longing" = "Longing";
+"mood.tired" = "Tired";
+"mood.category.positive" = "Positive";
+"mood.category.reflective" = "Reflective";
+"mood.category.complex" = "Complex";

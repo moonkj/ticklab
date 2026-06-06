@@ -2112,3 +2112,21 @@
 "trend.empty.hint" = "측정을 쌓으면 정확도 추세가 여기에 그려져요";
 
 "settings.measurement_sound" = "측정 사운드 (틱)";
+
+/* 무드 19종 확장 — 신규 무드 + 카테고리 */
+"mood.excited" = "설렘";
+"mood.awe" = "감탄";
+"mood.accomplished" = "뿌듯";
+"mood.love" = "애정";
+"mood.relief" = "안도";
+"mood.calm" = "평온";
+"mood.focused" = "집중";
+"mood.thoughtful" = "사색";
+"mood.disappointed" = "실망";
+"mood.surprised" = "놀람";
+"mood.confused" = "혼란";
+"mood.longing" = "그리움";
+"mood.tired" = "지침";
+"mood.category.positive" = "긍정";
+"mood.category.reflective" = "사색·중립";
+"mood.category.complex" = "복잡·부정";

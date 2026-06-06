@@ -2053,3 +2053,21 @@
 "trend.empty.hint" = "Au fil de vos mesures, votre tendance de précision apparaîtra ici";
 
 "settings.measurement_sound" = "Son de mesure (tic)";
+
+/* 무드 19종 확장 — 신규 무드 + 카테고리 */
+"mood.excited" = "Enthousiasme";
+"mood.awe" = "Émerveillement";
+"mood.accomplished" = "Accompli";
+"mood.love" = "Affection";
+"mood.relief" = "Soulagement";
+"mood.calm" = "Calme";
+"mood.focused" = "Concentré";
+"mood.thoughtful" = "Pensif";
+"mood.disappointed" = "Déçu";
+"mood.surprised" = "Surpris";
+"mood.confused" = "Confus";
+"mood.longing" = "Manque";
+"mood.tired" = "Fatigue";
+"mood.category.positive" = "Positif";
+"mood.category.reflective" = "Réflexion";
+"mood.category.complex" = "Complexe";

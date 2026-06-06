@@ -2053,3 +2053,21 @@
 "trend.empty.hint" = "随着测量积累，准确度趋势会显示在这里";
 
 "settings.measurement_sound" = "测量声音（滴答）";
+
+/* 무드 19종 확장 — 신규 무드 + 카테고리 */
+"mood.excited" = "兴奋";
+"mood.awe" = "惊叹";
+"mood.accomplished" = "成就感";
+"mood.love" = "喜爱";
+"mood.relief" = "安心";
+"mood.calm" = "平静";
+"mood.focused" = "专注";
+"mood.thoughtful" = "沉思";
+"mood.disappointed" = "失望";
+"mood.surprised" = "惊讶";
+"mood.confused" = "困惑";
+"mood.longing" = "思念";
+"mood.tired" = "疲惫";
+"mood.category.positive" = "积极";
+"mood.category.reflective" = "沉思";
+"mood.category.complex" = "复杂";

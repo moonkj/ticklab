@@ -96,17 +96,15 @@ struct JournalEntryDetailView: View {
                 } else if let watch = entry.watch {
                     WatchSilhouette(watch: watch, size: 180)
                 } else {
-                    Text(entry.mood.emoji)
-                        .font(.system(size: 64))
+                    MoodIcon(mood: entry.mood, isSelected: true, size: 96)
                 }
             }
             .clipShape(RoundedRectangle(cornerRadius: AppRadius.lg))
     }
 
     private var headerSection: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 12) {
-            Text(entry.mood.emoji)
-                .font(.system(size: 32))
+        HStack(alignment: .center, spacing: 12) {
+            MoodIcon(mood: entry.mood, size: 38)
             VStack(alignment: .leading, spacing: 2) {
                 if let watch = entry.watch {
                     Text(watch.brand.uppercased())

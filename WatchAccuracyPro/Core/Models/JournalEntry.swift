@@ -56,22 +56,55 @@ final class JournalEntry {
     }
 }
 
+/// 무드 — 19종(긍정 8 · 사색 5 · 복잡 6). rawValue 는 영구 저장 키이므로 기존 6종
+/// (happy/proud/curious/neutral/concerned/nostalgic)은 절대 변경 금지(기존 일기 호환).
 enum Mood: String, CaseIterable, Codable, Sendable {
-    case happy        // 😊 만족
-    case proud        // ✨ 자랑스러움
-    case curious      // 🔍 호기심
-    case neutral      // 😐 평범
-    case concerned    // 😟 우려
-    case nostalgic    // 🕰️ 향수
+    // 긍정
+    case happy          // 만족
+    case excited        // 설렘
+    case proud          // 자랑
+    case awe            // 감탄
+    case accomplished   // 뿌듯
+    case love           // 애정
+    case relief         // 안도
+    case calm           // 평온
+    // 사색·중립
+    case neutral        // 평범
+    case curious        // 호기심
+    case focused        // 집중
+    case thoughtful     // 사색
+    case nostalgic      // 향수
+    // 복잡·부정
+    case concerned      // 우려
+    case disappointed   // 실망
+    case surprised      // 놀람
+    case confused       // 혼란
+    case longing        // 그리움
+    case tired          // 지침
 
+    enum Category: String, CaseIterable {
+        case positive, reflective, complex
+        var localizedName: String { NSLocalizedString("mood.category.\(rawValue)", comment: "") }
+    }
+
+    var category: Category {
+        switch self {
+        case .happy, .excited, .proud, .awe, .accomplished, .love, .relief, .calm: return .positive
+        case .neutral, .curious, .focused, .thoughtful, .nostalgic: return .reflective
+        case .concerned, .disappointed, .surprised, .confused, .longing, .tired: return .complex
+        }
+    }
+
+    /// 폴백/내보내기용 이모지(화면 표시는 MoodIcon 벡터 사용).
     var emoji: String {
         switch self {
-        case .happy: return "😊"
-        case .proud: return "✨"
-        case .curious: return "🔍"
-        case .neutral: return "😐"
-        case .concerned: return "😟"
-        case .nostalgic: return "🕰️"
+        case .happy: return "😊"; case .excited: return "🤩"; case .proud: return "✨"
+        case .awe: return "😮"; case .accomplished: return "✅"; case .love: return "🥰"
+        case .relief: return "😌"; case .calm: return "🧘"; case .neutral: return "😐"
+        case .curious: return "🔍"; case .focused: return "🎯"; case .thoughtful: return "🤔"
+        case .nostalgic: return "🕰️"; case .concerned: return "😟"; case .disappointed: return "😞"
+        case .surprised: return "😲"; case .confused: return "😕"; case .longing: return "🥺"
+        case .tired: return "😴"
         }
     }
 

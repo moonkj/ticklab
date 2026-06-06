@@ -2053,3 +2053,21 @@
 "trend.empty.hint" = "जैसे-जैसे आप मापन जोड़ेंगे, आपकी सटीकता प्रवृत्ति यहाँ दिखेगी";
 
 "settings.measurement_sound" = "मापन ध्वनि (टिक)";
+
+/* 무드 19종 확장 — 신규 무드 + 카테고리 */
+"mood.excited" = "उत्साह";
+"mood.awe" = "विस्मय";
+"mood.accomplished" = "उपलब्धि";
+"mood.love" = "स्नेह";
+"mood.relief" = "राहत";
+"mood.calm" = "शांति";
+"mood.focused" = "एकाग्र";
+"mood.thoughtful" = "विचारशील";
+"mood.disappointed" = "निराशा";
+"mood.surprised" = "आश्चर्य";
+"mood.confused" = "उलझन";
+"mood.longing" = "लालसा";
+"mood.tired" = "थकान";
+"mood.category.positive" = "सकारात्मक";
+"mood.category.reflective" = "चिंतनशील";
+"mood.category.complex" = "जटिल";
