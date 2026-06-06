@@ -612,21 +612,33 @@ struct MeasurementResultView: View {
                 Chip(rateUncertainty, tone: .neutral, small: true)
                     .accessibilityLabel(String(format: String(localized: "a11y.rate_uncertainty"), rateUncertainty))
             }
-            // 다이얼: 고신뢰 reveal 시 바늘 스윕(0→rate). 저신뢰/정적은 즉시 표시.
-            ZStack {
-                RateDial(rate: result.rateSecondsPerDay, size: dialSize,
-                         animatedRate: isHighConfidenceGrade)
-                    .opacity(dialOpacity)
-                    // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
-                    .accessibilityHidden(true)
-                // 인장 자리에 밸런스휠 — 측정된 BPH 로 그 자리에서 진동(기계식 lock 시). 인장 크기.
+            // 게이지(좌, 바늘+A등급 인장 복구) + 밸런스휠(우) 좌우 배치 — 겹침 없음.
+            HStack(alignment: .center, spacing: 12) {
+                let g: CGFloat = 175
+                ZStack {
+                    RateDial(rate: result.rateSecondsPerDay, size: g,
+                             animatedRate: isHighConfidenceGrade)
+                        .opacity(dialOpacity)
+                        // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
+                        .accessibilityHidden(true)
+                    // A등급(고신뢰)일 때만 도착 후 0.4s 뒤 골드 인장 fade-in.
+                    if isHighConfidenceGrade && result.reliabilityGrade == .a {
+                        RevealGoldSeal()
+                            .frame(width: g * 0.34, height: g * 0.34)
+                            .opacity(showGoldSeal ? 1 : 0)
+                            .scaleEffect(showGoldSeal ? 1 : (reduceMotion ? 1 : 0.6))
+                            .offset(y: g * 0.14)
+                            .accessibilityHidden(true)
+                    }
+                }
+                // 오른쪽 — 측정된 BPH 로 동작하는 밸런스휠(기계식 lock 시).
                 if result.bph > 0 {
                     BalanceWheelLive(bph: result.bph, amplitudeDegrees: result.amplitudeDegrees)
-                        .frame(width: dialSize * 0.4, height: dialSize * 0.4)
-                        .offset(y: dialSize * 0.14)
+                        .frame(width: 112, height: 112)
                         .accessibilityHidden(true)
                 }
             }
+            .frame(maxWidth: .infinity)
             .padding(.top, 4)
             HStack(spacing: 8) {
                 let inCosc = result.rateSecondsPerDay >= -4 && result.rateSecondsPerDay <= 6
