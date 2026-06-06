@@ -145,6 +145,7 @@
 		63B613E8C23829F5477EA4BF /* InAppFeedbackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAD78D2E9F5A2A3F1F18B3B2 /* InAppFeedbackView.swift */; };
 		645CC3C17C2FCF029B536985 /* MeasurementNoteEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DAE00D3FC0E2D6BE9B20D5A /* MeasurementNoteEditor.swift */; };
 		64D43609A9792CC8F52D8621 /* MagneticFieldLevelExtraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6D391B5B25871BF5002420 /* MagneticFieldLevelExtraTests.swift */; };
+		657BD3247A0796584F6340F8 /* AppDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 17F6181676694AED90817288 /* AppDevice.swift */; };
 		65A62726A9852DFC7E26E5DF /* SimulatedAudioSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76C1431560C91FE2CE1E48C0 /* SimulatedAudioSource.swift */; };
 		66D865D6E286F217643AEB64 /* FullscreenPhotoViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BDB539F26B6E6FA7F0DF2DF /* FullscreenPhotoViewer.swift */; };
 		6987920579A548A0A76E9757 /* DataExportServiceExtraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECE751D8D8F9C247E6F10A9B /* DataExportServiceExtraTests.swift */; };
@@ -397,6 +398,7 @@
 		15760E394B5817EC63E9E57B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1686561FE30C447D3AA4707A /* AppleIntelligenceVerdictService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleIntelligenceVerdictService.swift; sourceTree = "<group>"; };
 		17C335E55F42B3AAF37CF8FF /* AppDateFormatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDateFormatTests.swift; sourceTree = "<group>"; };
+		17F6181676694AED90817288 /* AppDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDevice.swift; sourceTree = "<group>"; };
 		19FD49FFB3DABEA5E057AA0D /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1B32F34BE6A08EC72DF89798 /* SpecCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecCard.swift; sourceTree = "<group>"; };
 		1B917C29646CD8DD43F3FFD6 /* AudioInputManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioInputManager.swift; sourceTree = "<group>"; };
@@ -905,6 +907,7 @@
 				F5E5779E3A00F67FECFA7C64 /* Network */,
 				A2F16A4FFCC8CFF52EF660AA /* News */,
 				7A1B60BBC65CCF11C3D48128 /* Notifications */,
+				35F7E8FA395B9B7508763667 /* Platform */,
 				8AA5312EFA376ACCBAAE7609 /* Referral */,
 				2F1AEA5FB2151A411475F63A /* Reports */,
 				F17ABBF4B4F32363BDB89F98 /* Review */,
@@ -918,6 +921,14 @@
 				25F22FEFAD9A7BD674ED986A /* Wear */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		35F7E8FA395B9B7508763667 /* Platform */ = {
+			isa = PBXGroup;
+			children = (
+				17F6181676694AED90817288 /* AppDevice.swift */,
+			);
+			path = Platform;
 			sourceTree = "<group>";
 		};
 		3ADD53335AE9BE06C20D39B3 /* SpecCard */ = {
@@ -1795,6 +1806,7 @@
 				EC95084D4287B94F221841B5 /* AdminOpsView.swift in Sources */,
 				2521BE79E2DE837FACC7DAF4 /* AmplitudeEstimator.swift in Sources */,
 				6DF3C0FA58B411726D96A2DC /* AnomalyDetector.swift in Sources */,
+				657BD3247A0796584F6340F8 /* AppDevice.swift in Sources */,
 				9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */,
 				8629EB70487A13566F4103C7 /* AppleIntelligenceVerdictService.swift in Sources */,
 				0E742B15576835ADDBCA32BB /* AsyncDiskImage.swift in Sources */,

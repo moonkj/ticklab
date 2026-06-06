@@ -84,6 +84,7 @@ struct MeasurementView: View {
     }
 
     private func attemptStart() {
+        guard AppDevice.supportsMeasurement else { return }   // iPad 등 — 측정 진입 차단(안내만).
         if canStartMeasurement {
             didLockHaptic = false   // 새 측정 — 첫 lock 햅틱 다시 가능하게.
             measurePhaseRaw = 0     // 단계 내러티브 리셋.
@@ -140,6 +141,10 @@ struct MeasurementView: View {
         ScrollView {
             VStack(spacing: 16) {
                 identityStrip
+                if !AppDevice.supportsMeasurement {
+                    // iPad 등 — 측정 미지원 플랫폼. 측정 UI 대신 안내(나머지 기능은 전부 사용 가능).
+                    measurementUnsupportedNotice
+                } else {
                 if !isFailed {
                     bigRateReadout
                     liveSignalSection
@@ -170,6 +175,7 @@ struct MeasurementView: View {
                     // Round 170: coupling coaching bars (마이크 접촉 / 락 안정도) 숨김 — 사용자 요청.
                     diagnosticStrip
                 }
+                }   // end measurement-supported branch
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
@@ -778,8 +784,36 @@ struct MeasurementView: View {
 
     // MARK: - Controls
 
+    /// iPad 등 측정 미지원 플랫폼 안내 — 측정 UI 자리 대체. 나머지 기능은 전부 사용 가능함을 명시.
+    private var measurementUnsupportedNotice: some View {
+        VStack(spacing: 16) {
+            ConceptGlyph(systemName: "iphone", size: 44)
+                .foregroundStyle(AppColors.accent)
+                .padding(.top, 40)
+            Text(String(localized: "measurement.ipad.title", defaultValue: "측정은 iPhone에서 지원돼요"))
+                .font(.system(size: 18, weight: .bold))
+                .foregroundStyle(AppColors.ink0)
+                .multilineTextAlignment(.center)
+            Text(String(localized: "measurement.ipad.body",
+                        defaultValue: "정확한 측정을 위해 마이크를 시계에 가까이 대야 해서, 측정은 iPhone에서만 제공돼요. 컬렉션·기록·분석·커뮤니티는 iPad에서도 모두 사용할 수 있어요."))
+                .font(.system(size: 14))
+                .foregroundStyle(AppColors.ink2)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.horizontal, 8)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(20)
+        .background(AppColors.paper1)
+        .clipShape(RoundedRectangle(cornerRadius: 16))
+        .padding(.top, 8)
+    }
+
     @ViewBuilder
     private var controls: some View {
+        if !AppDevice.supportsMeasurement {
+            EmptyView()   // 측정 미지원 플랫폼 — 시작/정지 버튼 없음(안내만).
+        } else {
         switch viewModel.state {
         case .idle:
             PrimaryButton(String(localized: "measurement.button.start"), icon: "mic") {
@@ -833,6 +867,7 @@ struct MeasurementView: View {
         case .failed(let reason):
             failureCard(reason: reason)
         }
+        }   // end measurement-supported branch
     }
 
     @ViewBuilder
