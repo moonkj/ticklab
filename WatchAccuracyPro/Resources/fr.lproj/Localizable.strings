@@ -2087,6 +2087,8 @@
 "community.stat.posts" = "Publications";
 "community.stat.followers" = "Abonnés";
 "community.stat.following" = "Abonnements";
+"community.followers.empty" = "Aucun abonné pour l'instant";
+"community.following.empty" = "Vous ne suivez personne pour l'instant";
 "community.profile.edit" = "Modifier le profil";
 
 /* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */

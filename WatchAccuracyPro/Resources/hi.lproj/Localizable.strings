@@ -2087,6 +2087,8 @@
 "community.stat.posts" = "पोस्ट";
 "community.stat.followers" = "फ़ॉलोअर";
 "community.stat.following" = "फ़ॉलोइंग";
+"community.followers.empty" = "अभी तक कोई फ़ॉलोअर नहीं";
+"community.following.empty" = "अभी तक किसी को फ़ॉलो नहीं किया";
 "community.profile.edit" = "प्रोफ़ाइल संपादित करें";
 
 /* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */

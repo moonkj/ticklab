@@ -351,6 +351,39 @@ final class CommunityService: ObservableObject {
         return (await posts, await followers, await following)
     }
 
+    /// 팔로워/팔로잉 목록 — community_follows 는 uid만 보관하므로, 닉네임·아바타는 각 uid의
+    /// 최근 게시물(community_posts)에서 해석한다(단일 in 쿼리). 게시물 없는 사용자는 익명 표시.
+    /// followers=true → 나를 팔로우한 사람들, false → 내가 팔로우한 사람들.
+    func fetchFollowList(uid: String, followers: Bool) async -> [Community.Liker] {
+        await ensureSignedIn()
+        // 1) 관계 테이블에서 상대 uid 수집(순서 유지).
+        let selectCol = followers ? "follower_uid" : "followed_uid"
+        let filter = followers ? "followed_uid=eq.\(uid)" : "follower_uid=eq.\(uid)"
+        guard let relURL = URL(string: "\(baseURL)/rest/v1/community_follows?select=\(selectCol)&\(filter)&order=created_at.desc&limit=500"),
+              let (relData, _) = try? await URLSession.shared.data(for: authedRequest(relURL, method: "GET")),
+              let rows = try? JSONSerialization.jsonObject(with: relData) as? [[String: Any]] else { return [] }
+        var seen = Set<String>()
+        let relUIDs = rows.compactMap { $0[selectCol] as? String }
+            .filter { !blockedUIDs.contains($0) && seen.insert($0).inserted }
+        guard !relUIDs.isEmpty else { return [] }
+        // 2) uid → 최근 게시물에서 닉네임·아바타 해석(단일 in 쿼리). 게시물 없는 uid 는 익명.
+        var nameByUID: [String: (name: String?, avatar: String?)] = [:]
+        let csv = relUIDs.joined(separator: ",")
+        if let pURL = URL(string: "\(baseURL)/rest/v1/community_posts?select=author_uid,author_name,author_avatar_path&author_uid=in.(\(csv))&status=eq.approved&order=created_at.desc"),
+           let (pData, _) = try? await URLSession.shared.data(for: authedRequest(pURL, method: "GET")),
+           let pRows = try? JSONSerialization.jsonObject(with: pData) as? [[String: Any]] {
+            for row in pRows {
+                guard let u = row["author_uid"] as? String, nameByUID[u] == nil else { continue }
+                nameByUID[u] = (row["author_name"] as? String, row["author_avatar_path"] as? String)
+            }
+        }
+        // 3) 관계 순서 유지하며 Liker 구성.
+        return relUIDs.map { u in
+            let info = nameByUID[u]
+            return Community.Liker(uid: u, authorName: info?.name, authorAvatarPath: info?.avatar)
+        }
+    }
+
     /// 게시물 라이커 목록(인스타 "누가 좋아요") — 차단 작성자 제외. likes 전체 읽기 RLS 필요.
     func fetchLikers(postID: String) async -> [Community.Liker] {
         await ensureSignedIn()

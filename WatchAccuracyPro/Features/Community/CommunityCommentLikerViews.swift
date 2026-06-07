@@ -218,6 +218,84 @@ struct LikersView: View {
     }
 }
 
+/// 팔로워/팔로잉 목록 — 프로필의 팔로워·팔로잉 숫자 탭 시 누가 있는지 표시.
+/// 이름 탭 → 그 사람 게시물, 옆에 팔로우 토글(LikersView 와 동일 패턴). 푸시로 진입하므로 NavigationStack 미포함.
+struct FollowListView: View {
+    let uid: String
+    /// 네비게이션 타이틀(팔로워/팔로잉).
+    let title: String
+    /// true=팔로워(나를 팔로우), false=팔로잉(내가 팔로우).
+    let followers: Bool
+    @ObservedObject private var service = CommunityService.shared
+    @State private var users: [Community.Liker] = []
+    @State private var loaded = false
+    @State private var profileTarget: Community.Liker?
+    @State private var showLogin = false
+
+    var body: some View {
+        Group {
+            if loaded && users.isEmpty {
+                EmptyState(
+                    icon: followers ? "person.2" : "person.badge.plus",
+                    title: title,
+                    message: String(localized: followers ? "community.followers.empty" : "community.following.empty")
+                )
+            } else {
+                ScrollView {
+                    LazyVStack(spacing: 0) {
+                        ForEach(users) { u in
+                            row(u)
+                            Divider().padding(.leading, 62)
+                        }
+                    }
+                    .padding(.vertical, 4)
+                }
+            }
+        }
+        .background(AppColors.paper0.ignoresSafeArea())
+        .navigationTitle(title)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationDestination(item: $profileTarget) { liker in
+            UserPostsView(uid: liker.uid, displayName: liker.authorName)
+        }
+        .sheet(isPresented: $showLogin) { CommunityLoginView() }
+        .task { users = await service.fetchFollowList(uid: uid, followers: followers); loaded = true }
+    }
+
+    private func row(_ liker: Community.Liker) -> some View {
+        let isMe = liker.uid == service.myUID
+        let following = service.isFollowing(liker.uid)
+        return HStack(spacing: 12) {
+            Button { profileTarget = liker } label: {
+                LikerAvatar(name: liker.authorName, avatarPath: liker.authorAvatarPath).frame(width: 34, height: 34)
+                Text(liker.authorName ?? String(localized: "community.anon_handle"))
+                    .font(.system(size: 14, weight: .semibold)).foregroundStyle(AppColors.ink0)
+            }
+            .buttonStyle(.plain)
+            Spacer(minLength: 8)
+            if !isMe {
+                Button {
+                    guard service.isSignedIn else { showLogin = true; return }
+                    Task { await service.toggleFollow(liker.uid) }
+                } label: {
+                    HStack(spacing: 4) {
+                        if following { Image(systemName: "checkmark").font(.system(size: 10, weight: .bold)) }
+                        Text(String(localized: following ? "community.following" : "community.follow"))
+                            .font(.system(size: 12, weight: .semibold))
+                    }
+                        .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
+                        .padding(.horizontal, 14).padding(.vertical, 6)
+                        .background(following ? Color.clear : AppColors.ink0)
+                        .overlay(Capsule().stroke(following ? AppColors.rule : Color.clear, lineWidth: 1))
+                        .clipShape(Capsule())
+                }
+                .buttonStyle(.borderless)
+            }
+        }
+        .padding(.horizontal, 16).padding(.vertical, 8)
+    }
+}
+
 /// 라이커/작성자 아바타 — TickLab은 앱 아이콘, 그 외 이니셜.
 struct LikerAvatar: View {
     let name: String?

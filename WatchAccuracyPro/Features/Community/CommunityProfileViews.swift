@@ -113,8 +113,17 @@ struct UserPostsView: View {
                 }
                 HStack(spacing: 0) {
                     statCell(count: posts.count, title: String(localized: "community.stat.posts", defaultValue: "게시물"))
-                    statCell(count: followers, title: String(localized: "community.stat.followers", defaultValue: "팔로워"))
-                    statCell(count: following, title: String(localized: "community.stat.following", defaultValue: "팔로잉"))
+                    // 팔로워·팔로잉 숫자 탭 → 누가 있는지 목록(인스타식).
+                    NavigationLink {
+                        FollowListView(uid: uid, title: String(localized: "community.stat.followers", defaultValue: "팔로워"), followers: true)
+                    } label: {
+                        statCell(count: followers, title: String(localized: "community.stat.followers", defaultValue: "팔로워"))
+                    }.buttonStyle(.plain)
+                    NavigationLink {
+                        FollowListView(uid: uid, title: String(localized: "community.stat.following", defaultValue: "팔로잉"), followers: false)
+                    } label: {
+                        statCell(count: following, title: String(localized: "community.stat.following", defaultValue: "팔로잉"))
+                    }.buttonStyle(.plain)
                 }
                 collectorInfo
                 if isMe { watchStatsStrip }
@@ -287,9 +296,15 @@ struct UserPostsView: View {
                             ConceptGlyph(systemName: "text.alignleft", size: 11)
                                 .foregroundStyle(AppColors.ink3).padding(6)
                         }
-                } else {
-                    AsyncImage(url: service.imageURL(for: p.imagePath)) { phase in
-                        if case .success(let img) = phase { img.resizable().scaledToFill() } else { Color.clear }
+                } else if let url = service.imageURL(for: p.imagePath) {
+                    // 피드와 동일하게 RetryAsyncImage 사용 — 일시적 실패 시 자동 재요청(격자에서 일부 칸이 빈
+                    // 채로 멈추던 "게시글 로딩 안됨" 해소). 소진 시에만 사진 글리프 폴백.
+                    RetryAsyncImage(url: url) { img in
+                        img.resizable().scaledToFill()
+                    } placeholder: {
+                        Color(AppColors.paper2)
+                    } failure: {
+                        ConceptGlyph(systemName: "photo", size: 18).foregroundStyle(AppColors.ink3)
                     }
                 }
             }

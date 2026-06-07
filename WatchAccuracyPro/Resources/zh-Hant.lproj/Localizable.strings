@@ -2087,6 +2087,8 @@
 "community.stat.posts" = "貼文";
 "community.stat.followers" = "粉絲";
 "community.stat.following" = "追蹤中";
+"community.followers.empty" = "還沒有粉絲";
+"community.following.empty" = "還沒有追蹤任何人";
 "community.profile.edit" = "編輯個人檔案";
 
 /* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */

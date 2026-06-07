@@ -2147,6 +2147,8 @@
 "community.stat.posts" = "Posts";
 "community.stat.followers" = "Followers";
 "community.stat.following" = "Following";
+"community.followers.empty" = "No followers yet";
+"community.following.empty" = "Not following anyone yet";
 "community.profile.edit" = "Edit profile";
 
 /* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */
