@@ -229,30 +229,30 @@ struct UserPostsView: View {
     // MARK: - 탭 (게시물 / 컬렉션)
 
     private var tabBar: some View {
-        HStack(spacing: 6) {
+        // 두 탭을 각각 외곽선 있는 박스로 — 미선택 탭도 또렷이 보이게(track 배경 제거).
+        HStack(spacing: 10) {
             tabButton(.posts, icon: "square.grid.2x2", title: "\(String(localized: "community.stat.posts", defaultValue: "게시물")) \(posts.count)")
             tabButton(.collection, icon: "circle.grid.2x2", title: "\(String(localized: "tab.collection")) \(myWatches.count)")
         }
-        .padding(4)
-        .background(AppColors.paper2)
-        .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 16)
     }
 
     private func tabButton(_ t: ProfileTab, icon: String, title: String) -> some View {
         let on = tab == t
-        let fg = on ? AppColors.accentDark : AppColors.ink3
+        let fg = on ? AppColors.accentDark : AppColors.ink2
         return Button { withAnimation(.easeOut(duration: 0.15)) { tab = t } } label: {
             HStack(spacing: 6) {
                 ConceptGlyph(systemName: icon, size: 15, color: fg)
                 Text(title).font(.system(size: 13, weight: on ? .bold : .medium))
                     .foregroundStyle(fg)
             }
-            .frame(maxWidth: .infinity).padding(.vertical, 9)
-            // 선택 탭 — 흰색 pill + 그림자 + 골드 글자로 배경(paper2)과 또렷이 구분.
-            .background(on ? AppColors.paper0 : Color.clear)
-            .clipShape(RoundedRectangle(cornerRadius: 9))
-            .overlay(RoundedRectangle(cornerRadius: 9).stroke(on ? AppColors.accent.opacity(0.35) : Color.clear, lineWidth: 1))
+            .frame(maxWidth: .infinity).padding(.vertical, 10)
+            // 선택=골드 테두리·연한 골드 배경·그림자 / 미선택=뚜렷한 rule 테두리(이전엔 투명이라 안 보였음).
+            .background(on ? AppColors.accent.opacity(0.10) : AppColors.paper1)
+            .clipShape(RoundedRectangle(cornerRadius: 11))
+            .overlay(RoundedRectangle(cornerRadius: 11)
+                .stroke(on ? AppColors.accent : AppColors.ink3.opacity(0.45),
+                        lineWidth: on ? 1.6 : 1))
             .shadow(color: on ? .black.opacity(0.08) : .clear, radius: 3, y: 1)
         }.buttonStyle(.plain)
     }
