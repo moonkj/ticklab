@@ -333,7 +333,7 @@ struct UserPostsView: View {
             let a = abs(r); return a <= 6 ? AppColors.success : a <= 20 ? AppColors.warning : AppColors.danger
         }()
         return VStack(alignment: .leading, spacing: 9) {
-            HStack { Spacer(); WatchSilhouette(watch: w, size: 64); Spacer() }
+            HStack { Spacer(); watchThumb(w, size: 64); Spacer() }
             Text(w.brand).font(.system(size: 13, weight: .bold)).foregroundStyle(AppColors.ink0).lineLimit(1)
             Text(w.model).font(.system(size: 10, design: .monospaced)).foregroundStyle(AppColors.ink3).lineLimit(1)
             Divider()
@@ -367,6 +367,18 @@ struct UserPostsView: View {
         .padding(.horizontal, 16)
     }
 
+    /// 시계 썸네일 — 등록 사진 있으면 사진, 없으면 실루엣. (대표 시계·컬렉션 카드 공통)
+    @ViewBuilder
+    private func watchThumb(_ w: Watch, size: CGFloat) -> some View {
+        if let data = w.photoData, let ui = UIImage(data: data) {
+            Image(uiImage: ui).resizable().scaledToFill()
+                .frame(width: size, height: size)
+                .clipShape(RoundedRectangle(cornerRadius: size * 0.18))
+        } else {
+            WatchSilhouette(watch: w, size: size)
+        }
+    }
+
     @ViewBuilder
     private var signatureSection: some View {
         if let w = myWatches.first(where: { $0.isPrimary }) ?? myWatches.first {
@@ -374,7 +386,7 @@ struct UserPostsView: View {
             VStack(alignment: .leading, spacing: 10) {
                 sectionHeader(String(localized: "community.section.signature", defaultValue: "대표 시계"))
                 HStack(spacing: 16) {
-                    WatchSilhouette(watch: w, size: 72)
+                    watchThumb(w, size: 72)
                     VStack(alignment: .leading, spacing: 4) {
                         Text(w.brand + " " + w.model)
                             .font(.system(size: 15, weight: .bold)).foregroundStyle(AppColors.ink0).lineLimit(2)
@@ -430,6 +442,8 @@ struct UserPostsView: View {
                 let d = cal.date(byAdding: .day, value: -(69 - i), to: today)!
                 return acc + (counts[d, default: 0] > 0 ? 1 : 0)
             }
+            // 7열 × 10행, 읽는 순서(왼→오, 위→아래): 왼쪽 위 = 70일 전(첫날), 오른쪽 아래 = 오늘.
+            let gridCols = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
             VStack(alignment: .leading, spacing: 10) {
                 sectionHeader(String(localized: "community.section.activity", defaultValue: "측정 활동"))
                 VStack(spacing: 12) {
@@ -443,14 +457,23 @@ struct UserPostsView: View {
                         Text(String(format: String(localized: "community.activity.total", defaultValue: "최근 10주 · %d회"), total))
                             .font(.system(size: 11)).foregroundStyle(AppColors.ink3)
                     }
-                    LazyHGrid(rows: Array(repeating: GridItem(.fixed(13), spacing: 3), count: 7), spacing: 3) {
+                    LazyVGrid(columns: gridCols, spacing: 4) {
                         ForEach(0..<70, id: \.self) { i in
                             let d = cal.date(byAdding: .day, value: -(69 - i), to: today)!
-                            heatCell(counts[d, default: 0])
+                            heatCell(counts[d, default: 0], isToday: i == 69)
                         }
                     }
-                    .frame(height: 7 * 13 + 6 * 3)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                    // 범례 — 방향(왼쪽 위=시작) + 오늘 칸 표시(골드 테두리).
+                    HStack(spacing: 6) {
+                        Text(String(localized: "community.activity.range_start", defaultValue: "70일 전"))
+                            .font(.system(size: 10)).foregroundStyle(AppColors.ink3)
+                        Spacer()
+                        RoundedRectangle(cornerRadius: 3)
+                            .stroke(AppColors.accentDark, lineWidth: 2)
+                            .frame(width: 12, height: 12)
+                        Text(String(localized: "community.activity.today", defaultValue: "오늘"))
+                            .font(.system(size: 10, weight: .semibold)).foregroundStyle(AppColors.accentDark)
+                    }
                 }
                 .padding(16)
                 .background(AppColors.paper1)
@@ -461,12 +484,18 @@ struct UserPostsView: View {
         }
     }
 
-    private func heatCell(_ count: Int) -> some View {
+    private func heatCell(_ count: Int, isToday: Bool = false) -> some View {
         let color: Color = count == 0 ? AppColors.paper2
             : count == 1 ? AppColors.accent.opacity(0.35)
             : count == 2 ? AppColors.accent.opacity(0.65)
             : AppColors.accent
-        return RoundedRectangle(cornerRadius: 3).fill(color).frame(width: 13, height: 13)
+        return RoundedRectangle(cornerRadius: 3)
+            .fill(color)
+            .aspectRatio(1, contentMode: .fit)
+            .overlay(
+                RoundedRectangle(cornerRadius: 3)
+                    .stroke(isToday ? AppColors.accentDark : Color.clear, lineWidth: 2)
+            )
     }
 }
 

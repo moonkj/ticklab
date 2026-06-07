@@ -2103,3 +2103,5 @@
 "community.section.activity" = "Activité de mesure";
 "community.activity.streak" = "%d jours de mesure d'affilée";
 "community.activity.total" = "10 dernières semaines · %d";
+"community.activity.range_start" = "Il y a 70 j";
+"community.activity.today" = "Aujourd'hui";

@@ -2103,3 +2103,5 @@
 "community.section.activity" = "मापन गतिविधि";
 "community.activity.streak" = "%d दिन लगातार मापन";
 "community.activity.total" = "पिछले 10 सप्ताह · %d";
+"community.activity.range_start" = "70 दिन पहले";
+"community.activity.today" = "आज";

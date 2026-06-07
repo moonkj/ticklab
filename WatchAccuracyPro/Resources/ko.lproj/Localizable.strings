@@ -2162,3 +2162,5 @@
 "community.section.activity" = "측정 활동";
 "community.activity.streak" = "%d일 연속 측정";
 "community.activity.total" = "최근 10주 · %d회";
+"community.activity.range_start" = "70일 전";
+"community.activity.today" = "오늘";

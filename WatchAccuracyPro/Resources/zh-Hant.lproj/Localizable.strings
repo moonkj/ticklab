@@ -2103,3 +2103,5 @@
 "community.section.activity" = "測量活動";
 "community.activity.streak" = "連續測量 %d 天";
 "community.activity.total" = "近10週 · %d 次";
+"community.activity.range_start" = "70天前";
+"community.activity.today" = "今天";

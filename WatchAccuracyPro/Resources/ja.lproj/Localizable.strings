@@ -2103,3 +2103,5 @@
 "community.section.activity" = "計測アクティビティ";
 "community.activity.streak" = "%d日連続で計測中";
 "community.activity.total" = "直近10週 · %d回";
+"community.activity.range_start" = "70日前";
+"community.activity.today" = "今日";
