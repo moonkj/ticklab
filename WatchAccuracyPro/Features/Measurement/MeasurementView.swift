@@ -817,7 +817,7 @@ struct MeasurementView: View {
         } else {
         switch viewModel.state {
         case .idle:
-            PrimaryButton(String(localized: "measurement.button.start"), icon: "mic") {
+            PrimaryButton(String(localized: "measurement.button.start"), balanceWheel: true) {
                 attemptStart()
             }
             .padding(.top, 4)

@@ -10,6 +10,8 @@ struct PrimaryButton: View {
     let style: Style
     let isEnabled: Bool
     let icon: String?
+    /// true 면 SF 아이콘 대신 좌우로 진동하는 밸런스 휠을 리딩 아이콘으로 표시(측정 시작 등).
+    let balanceWheel: Bool
     let height: CGFloat
     let action: () -> Void
 
@@ -18,6 +20,7 @@ struct PrimaryButton: View {
         style: Style = .filled,
         isEnabled: Bool = true,
         icon: String? = nil,
+        balanceWheel: Bool = false,
         height: CGFloat = 52,
         action: @escaping () -> Void
     ) {
@@ -25,6 +28,7 @@ struct PrimaryButton: View {
         self.style = style
         self.isEnabled = isEnabled
         self.icon = icon
+        self.balanceWheel = balanceWheel
         self.height = height
         self.action = action
     }
@@ -32,7 +36,11 @@ struct PrimaryButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 8) {
-                if let icon { Image(systemName: icon).font(.system(size: 15, weight: .semibold)) }
+                if balanceWheel {
+                    ButtonBalanceWheel(size: 20, color: foreground)
+                } else if let icon {
+                    Image(systemName: icon).font(.system(size: 15, weight: .semibold))
+                }
                 Text(title)
                     .font(.system(size: 15.5, weight: .semibold))
                     .tracking(0.2)
@@ -73,6 +81,24 @@ struct PrimaryButton: View {
     }
     private var borderWidth: CGFloat {
         style == .bordered ? 1 : 1
+    }
+}
+
+/// 버튼 리딩 아이콘용 밸런스 휠 — 시계 비트처럼 좌우로 진동(easeInOut 왕복). Reduce Motion 시 정지.
+private struct ButtonBalanceWheel: View {
+    var size: CGFloat = 20
+    var color: Color
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var beat = false
+
+    var body: some View {
+        BalanceWheelIcon(size: size, color: color, holeColor: .clear)
+            .rotationEffect(.degrees(reduceMotion ? 0 : (beat ? 28 : -28)))
+            .onAppear {
+                guard !reduceMotion else { return }
+                withAnimation(.easeInOut(duration: 0.46).repeatForever(autoreverses: true)) { beat = true }
+            }
+            .accessibilityHidden(true)
     }
 }
 
