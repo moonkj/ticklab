@@ -160,9 +160,7 @@ struct TamagotchiView: View {
                                 .rotationEffect(.degrees(Double(i) * 45))
                                 .opacity(sparkOffsets[i] > 30 ? 0 : 1)
                         }
-                        Text("⚡")
-                            .font(.system(size: 32, weight: .heavy))
-                            .foregroundStyle(AppColors.accent)
+                        ConceptGlyph(systemName: "bolt.fill", size: 32, color: AppColors.accent)
                             .scaleEffect(reactionVisible ? 1.4 : 0.5)
                     }
                 }
@@ -173,7 +171,7 @@ struct TamagotchiView: View {
                 .font(.system(size: 22, weight: .bold, design: .serif))
                 .foregroundStyle(AppColors.ink0)
             HStack(spacing: 6) {
-                Text(theme.emoji)
+                MoodIcon(mood: mood.iconMood, size: 18)
                 Text(theme.label)
                     .font(.system(size: 13))
                     .foregroundStyle(AppColors.ink2)
@@ -240,7 +238,7 @@ struct TamagotchiView: View {
             }
             // 오늘 착용 — wornToday 면 checkmark + accent.
             petAction(
-                icon: worn ? "✅" : "🤝",
+                icon: worn ? "checkmark.seal.fill" : "hand.raised.fill",
                 label: worn
                     ? String(localized: "tamagotchi.worn_today")
                     : String(localized: "tamagotchi.wear_today"),
@@ -254,7 +252,7 @@ struct TamagotchiView: View {
                 MeasurementView(watch: watch, preferences: preferences)
             } label: {
                 petActionBody(
-                    icon: "📐",
+                    icon: "dot.radiowaves.left.and.right",
                     label: String(localized: "tamagotchi.measure"),
                     state: .secondary
                 )
@@ -306,7 +304,7 @@ struct TamagotchiView: View {
                 MainspringIcon(size: 24, color: fgColor)
                     .rotationEffect(.degrees(isWinding ? windRotation : 0))
             } else {
-                Text(icon).font(.system(size: 22))
+                ConceptGlyph(systemName: icon, size: 23, color: fgColor)
             }
             Text(label).font(.system(size: 12, weight: .semibold))
         }
@@ -359,9 +357,8 @@ struct TamagotchiView: View {
                 }
                 .frame(width: 56, height: 56)
                 .clipShape(Circle())
-                Text(t.emoji)
-                    .font(.system(size: 12))
-                    .frame(width: 20, height: 20)
+                MoodIcon(mood: m.iconMood, size: 18)
+                    .padding(2)
                     .background(.white)
                     .clipShape(Circle())
                     .shadow(color: .black.opacity(0.15), radius: 2, y: 1)

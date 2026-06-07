@@ -5,6 +5,8 @@ import SwiftUI
 struct CollectionValueCard: View {
     let watches: [Watch]
     @State private var showingInfo = false
+    /// 계산기준 시트 — 내용 높이에 맞춰 detent 동적 조정(문구 길이 변화 대응).
+    @State private var sheetHeight: CGFloat = 360
 
     private var priceWatches: [Watch] { watches.filter { $0.purchasePrice != nil } }
 
@@ -90,10 +92,15 @@ struct CollectionValueCard: View {
                 infoRow(icon: "exclamationmark.triangle", text: String(localized: "collection.value.info.disclaimer"))
             }
             .padding(.horizontal, 24)
-
-            Spacer()
         }
-        .presentationDetents([.height(380)])
+        .padding(.bottom, 24)
+        // 내용 높이 측정 → detent 에 반영(빈 공간 없이 문구 길이에 맞춤).
+        .background(GeometryReader { geo in
+            Color.clear
+                .onAppear { sheetHeight = geo.size.height }
+                .onChange(of: geo.size.height) { _, h in sheetHeight = h }
+        })
+        .presentationDetents([.height(sheetHeight)])
         .presentationDragIndicator(.hidden)
         .background(AppColors.paper0.ignoresSafeArea())
     }
