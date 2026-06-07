@@ -117,6 +117,8 @@
 "pin.entry.remaining" = "%d प्रयास शेष";
 "pin.entry.locked_out" = "PIN लॉक हो गया — Face ID का उपयोग करें";
 "pin.entry.use_face_id" = "Face ID का उपयोग करें";
+"pin.entry.use_pin" = "PIN दर्ज करें";
+"pin.entry.unlocked" = "अनलॉक";
 "settings.applock.pin_enabled" = "PIN सक्षम करें";
 "settings.applock.pin_setup" = "PIN सेट करें";
 "settings.applock.pin_warning" = "5 असफल प्रयासों के बाद, केवल Face ID से अनलॉक होगा";

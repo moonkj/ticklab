@@ -12,10 +12,8 @@ struct LockScreenView: View {
     var body: some View {
         Group {
             if appLock.canUsePIN {
-                PINEntryView(
-                    onUnlock: onUnlock,
-                    onUseFaceID: { triggerFaceID() }
-                )
+                // PINEntryView 가 Face ID 자동 인증·휠 모션을 자체 처리.
+                PINEntryView(onUnlock: onUnlock)
             } else {
                 faceIDScreen
             }

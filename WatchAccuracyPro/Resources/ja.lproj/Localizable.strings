@@ -117,6 +117,8 @@
 "pin.entry.remaining" = "残り %d 回";
 "pin.entry.locked_out" = "PIN ロック中 — Face ID で解除してください";
 "pin.entry.use_face_id" = "Face ID を使う";
+"pin.entry.use_pin" = "PINを入力";
+"pin.entry.unlocked" = "ロック解除";
 "settings.applock.pin_enabled" = "PIN を有効化";
 "settings.applock.pin_setup" = "PIN を設定";
 "settings.applock.pin_warning" = "5回失敗すると Face ID でのみ解除できます";

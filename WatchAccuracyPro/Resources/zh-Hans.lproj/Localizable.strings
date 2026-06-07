@@ -117,6 +117,8 @@
 "pin.entry.remaining" = "剩余 %d 次机会";
 "pin.entry.locked_out" = "PIN 已锁定 — 请使用 Face ID";
 "pin.entry.use_face_id" = "使用 Face ID";
+"pin.entry.use_pin" = "输入 PIN";
+"pin.entry.unlocked" = "已解锁";
 "settings.applock.pin_enabled" = "启用 PIN";
 "settings.applock.pin_setup" = "设置 PIN";
 "settings.applock.pin_warning" = "连续 5 次输入错误后,只能用 Face ID 解锁";

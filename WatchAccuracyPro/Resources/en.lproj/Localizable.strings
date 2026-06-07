@@ -117,6 +117,8 @@
 "pin.entry.remaining" = "%d attempts remaining";
 "pin.entry.locked_out" = "PIN locked — use Face ID";
 "pin.entry.use_face_id" = "Use Face ID";
+"pin.entry.use_pin" = "Enter PIN";
+"pin.entry.unlocked" = "Unlocked";
 "settings.applock.pin_enabled" = "Enable PIN";
 "settings.applock.pin_setup" = "Set up PIN";
 "settings.applock.pin_warning" = "After 5 failed attempts, only Face ID can unlock";

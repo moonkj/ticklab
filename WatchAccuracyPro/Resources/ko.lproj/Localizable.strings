@@ -117,6 +117,8 @@
 "pin.entry.remaining" = "남은 시도: %d회";
 "pin.entry.locked_out" = "PIN 5회 실패 — Face ID 로 잠금 해제";
 "pin.entry.use_face_id" = "Face ID 사용";
+"pin.entry.use_pin" = "PIN 입력";
+"pin.entry.unlocked" = "잠금 해제됨";
 "settings.applock.pin_enabled" = "PIN 사용";
 "settings.applock.pin_setup" = "PIN 설정";
 "settings.applock.pin_warning" = "PIN 5회 실패 시 Face ID 로만 잠금 해제 가능";

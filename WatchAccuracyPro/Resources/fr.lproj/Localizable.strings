@@ -117,6 +117,8 @@
 "pin.entry.remaining" = "%d tentatives restantes";
 "pin.entry.locked_out" = "Code verrouillé — utilisez Face ID";
 "pin.entry.use_face_id" = "Utiliser Face ID";
+"pin.entry.use_pin" = "Saisir le PIN";
+"pin.entry.unlocked" = "Déverrouillé";
 "settings.applock.pin_enabled" = "Activer le code";
 "settings.applock.pin_setup" = "Configurer le code";
 "settings.applock.pin_warning" = "Après 5 tentatives échouées, seul Face ID permettra le déverrouillage";
