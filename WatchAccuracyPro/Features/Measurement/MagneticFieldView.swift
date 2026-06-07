@@ -101,8 +101,8 @@ struct MagneticFieldView: View {
             startMeasurement()
         } label: {
             HStack(spacing: 10) {
-                // 측정 전/중 모두 회전하는 말굽자석 아이콘(밸런스휠 글리프 대체).
-                MagneticFieldLoader(size: 24)
+                // 말굽자석 아이콘 — 측정 중일 때만 회전, 평소엔 정지.
+                MagneticFieldLoader(size: 24, animating: isMeasuring)
                 Text(isMeasuring
                      ? String(localized: "magnetic.measuring")
                      : String(localized: "magnetic.measure_button"))

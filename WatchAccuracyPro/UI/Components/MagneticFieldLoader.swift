@@ -4,12 +4,16 @@ import SwiftUI
 /// 나침반/밸런스휠 아님. 다크/라이트 배경 모두 가독. Reduce Motion 시 정적.
 struct MagneticFieldLoader: View {
     var size: CGFloat = 26
+    /// 회전 여부 — 측정 중일 때만 true. false 면 정지(자석 똑바로).
+    var animating: Bool = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
+    private var move: Bool { animating && !reduceMotion }
+
     var body: some View {
-        TimelineView(.animation(minimumInterval: 1.0 / 60.0, paused: reduceMotion)) { tl in
+        TimelineView(.animation(minimumInterval: 1.0 / 60.0, paused: !move)) { tl in
             Canvas { gc, sz in
-                let t = reduceMotion ? 0 : tl.date.timeIntervalSinceReferenceDate
+                let t = move ? tl.date.timeIntervalSinceReferenceDate : 0
                 draw(gc, sz, t)
             }
         }
