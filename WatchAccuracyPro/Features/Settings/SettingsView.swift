@@ -546,7 +546,7 @@ struct SettingsView: View {
                         .foregroundStyle(AppColors.ink0)
                     }
                     .sheet(item: $shareCardItem) { item in
-                        ActivityShareSheet(items: [item.url])
+                        ActivityShareSheet(items: item.items)
                     }
                     // 기능 B: 공유카드를 커뮤니티에 바로 게시 (커뮤니티 활성 시에만 노출).
                     if FeatureFlags.shared.communityEnabled {

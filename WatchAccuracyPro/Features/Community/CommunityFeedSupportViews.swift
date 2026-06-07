@@ -44,7 +44,7 @@ struct CommunitySavedView: View {
                                     onFollow: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleFollow(post.authorUID) } },
                                     onBookmark: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleBookmark(post) } },
                                     onShare: {
-                                        if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) }
+                                        shareItem = ShareCardItem(url: service.imageURL(for: post.imagePath), text: CommunityShareText.make(for: post))
                                     },
                                     onAuthor: { authorTarget = post },
                                     onDelete: nil
@@ -65,7 +65,7 @@ struct CommunitySavedView: View {
                 }
             }
             .task { await service.loadSavedPosts(); loaded = true }
-            .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
+            .sheet(item: $shareItem) { item in ActivityShareSheet(items: item.items) }
             .sheet(isPresented: $showLogin) { CommunityLoginView() }
             .sheet(item: $authorTarget) { post in
                 NavigationStack {

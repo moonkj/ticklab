@@ -95,7 +95,7 @@ struct CommunityFeedView: View {
                 CommunityLoginView()
             }
             .sheet(item: $shareItem) { item in
-                ActivityShareSheet(items: [item.url])
+                ActivityShareSheet(items: item.items)
             }
             .sheet(isPresented: $showSaved) {
                 CommunitySavedView()
@@ -503,8 +503,9 @@ struct CommunityFeedView: View {
         }
     }
     private func sharePost(_ post: Community.Post) {
-        guard let url = service.imageURL(for: post.imagePath) else { return }
-        shareItem = ShareCardItem(url: url)
+        // 이미지 게시물은 이미지+캡션, 글-전용 게시물은 캡션 텍스트만 공유.
+        shareItem = ShareCardItem(url: service.imageURL(for: post.imagePath),
+                                  text: CommunityShareText.make(for: post))
     }
 
     private func showSavedTab() {

@@ -21,9 +21,31 @@ enum CollectionShareCardGenerator {
 }
 
 /// 공유 대상 래퍼 — sheet(item:) 용 Identifiable.
+/// 이미지 없는 글-전용 게시물도 공유 가능하도록 url 옵셔널 + 캡션 텍스트 동봉.
 struct ShareCardItem: Identifiable {
     let id = UUID()
-    let url: URL
+    var url: URL? = nil
+    var text: String? = nil
+    /// UIActivityViewController 에 넘길 실제 항목들 — 이미지·텍스트 중 있는 것만.
+    var items: [Any] {
+        var arr: [Any] = []
+        if let url { arr.append(url) }
+        if let text, !text.isEmpty { arr.append(text) }
+        return arr
+    }
+}
+
+/// 커뮤니티 게시물 공유 텍스트 — 캡션/브랜드 우선, 둘 다 없으면 일반 태그라인.
+/// 글-전용 게시물(이미지 없음)도 항상 공유할 내용이 있도록 보장.
+enum CommunityShareText {
+    static func make(for post: Community.Post) -> String? {
+        let caption = post.caption?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let caption, !caption.isEmpty { return caption }
+        let brand = post.brand?.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let brand, !brand.isEmpty { return brand }
+        // 이미지가 있는 게시물이면 캡션이 없어도 이미지만 공유되므로 nil 허용.
+        return post.imagePath == nil ? String(localized: "collection.sharecard.tagline") : nil
+    }
 }
 
 /// UIActivityViewController 래퍼 — 공유시트.

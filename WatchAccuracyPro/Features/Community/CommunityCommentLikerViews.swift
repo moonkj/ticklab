@@ -200,8 +200,11 @@ struct LikersView: View {
                     guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 조용한 팔로우 실패 방지
                     Task { await service.toggleFollow(liker.uid) }
                 } label: {
-                    Text(String(localized: following ? "community.following" : "community.follow"))
-                        .font(.system(size: 12, weight: .semibold))
+                    HStack(spacing: 4) {
+                        if following { Image(systemName: "checkmark").font(.system(size: 10, weight: .bold)) }
+                        Text(String(localized: following ? "community.following" : "community.follow"))
+                            .font(.system(size: 12, weight: .semibold))
+                    }
                         .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
                         .padding(.horizontal, 14).padding(.vertical, 6)
                         .background(following ? Color.clear : AppColors.ink0)

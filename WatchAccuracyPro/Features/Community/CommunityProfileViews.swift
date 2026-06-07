@@ -147,13 +147,20 @@ struct UserPostsView: View {
                 guard service.isSignedIn else { showLogin = true; return }
                 Task { await service.toggleFollow(uid) }
             } label: {
-                Text(String(localized: isFollowing ? "community.following" : "community.follow"))
-                    .font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(isFollowing ? AppColors.interactiveTint : AppColors.paper0)
-                    .padding(.horizontal, 18).padding(.vertical, 9)
-                    .background(isFollowing ? Color.clear : AppColors.interactiveTint)
-                    .overlay(Capsule().stroke(isFollowing ? AppColors.interactiveTint : Color.clear, lineWidth: 1.5))
-                    .clipShape(Capsule())
+                HStack(spacing: 5) {
+                    // 팔로잉 상태 — 체크 + "팔로잉". 미팔로우 — "팔로우"만.
+                    if isFollowing {
+                        Image(systemName: "checkmark").font(.system(size: 11, weight: .bold))
+                    }
+                    Text(String(localized: isFollowing ? "community.following" : "community.follow"))
+                        .font(.system(size: 13, weight: .semibold))
+                }
+                .foregroundStyle(isFollowing ? AppColors.interactiveTint : AppColors.paper0)
+                .padding(.horizontal, 16).padding(.vertical, 9)
+                .background(isFollowing ? Color.clear : AppColors.interactiveTint)
+                .overlay(Capsule().stroke(isFollowing ? AppColors.interactiveTint : Color.clear, lineWidth: 1.5))
+                .clipShape(Capsule())
+                .animation(.spring(response: 0.3, dampingFraction: 0.7), value: isFollowing)
             }.buttonStyle(.plain)
         }
     }
@@ -476,7 +483,7 @@ struct PostDetailView: View {
                 onBlock: { Task { await service.block(authorOf: post) } },
                 onFollow: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleFollow(post.authorUID) } },
                 onBookmark: { guard service.isSignedIn else { showLogin = true; return }; Task { await service.toggleBookmark(post) } },
-                onShare: { if let url = service.imageURL(for: post.imagePath) { shareItem = ShareCardItem(url: url) } },
+                onShare: { shareItem = ShareCardItem(url: service.imageURL(for: post.imagePath), text: CommunityShareText.make(for: post)) },
                 onComment: { commentTarget = post },
                 onLikers: { likersTarget = post },
                 onDelete: nil
@@ -487,7 +494,7 @@ struct PostDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .sheet(item: $commentTarget) { CommentsView(post: $0) }
         .sheet(item: $likersTarget) { LikersView(post: $0) }
-        .sheet(item: $shareItem) { item in ActivityShareSheet(items: [item.url]) }
+        .sheet(item: $shareItem) { item in ActivityShareSheet(items: item.items) }
         .sheet(isPresented: $showLogin) { CommunityLoginView() }
         .alert(String(localized: "community.report.done"), isPresented: $reportDone) {
             Button(String(localized: "common.done"), role: .cancel) {}

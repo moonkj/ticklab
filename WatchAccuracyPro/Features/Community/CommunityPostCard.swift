@@ -134,8 +134,11 @@ struct CommunityPostCard: View {
                     HapticManager.trigger(.selection)
                     onFollow()
                 } label: {
-                    Text(String(localized: following ? "community.following" : "community.follow"))
-                        .font(.system(size: 12, weight: .semibold))
+                    HStack(spacing: 4) {
+                        if following { Image(systemName: "checkmark").font(.system(size: 10, weight: .bold)) }
+                        Text(String(localized: following ? "community.following" : "community.follow"))
+                            .font(.system(size: 12, weight: .semibold))
+                    }
                         .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
                         .padding(.horizontal, 12).padding(.vertical, 5)
                         .background(following ? Color.clear : AppColors.ink0)
