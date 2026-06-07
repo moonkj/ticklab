@@ -266,46 +266,30 @@ struct BrandLeagueView: View {
     private static let bronze = Color(red: 0.72, green: 0.45, blue: 0.20)
 
     private var podium: some View {
-        let arr = service.globalRanking
-        let n = min(arr.count, 3)
+        // 정렬: 착용수 내림차순 → 동률이면 내 대표 시계(isPrimary) 브랜드 우선 → 그다음 알파벳.
+        //   동률일 때 대표 시계 브랜드가 1위(금메달)가 된다(사용자 결정). 항상 금/은/동 메달색으로 구분.
+        let repBrand = watches.first(where: { $0.isPrimary })?.brand
+        let arr = Array(service.globalRanking.sorted { a, b in
+            if a.totalCount != b.totalCount { return a.totalCount > b.totalCount }
+            if let rep = repBrand {
+                if a.brand == rep { return true }
+                if b.brand == rep { return false }
+            }
+            return a.brand < b.brand
+        }.prefix(3))
+        let n = arr.count
         guard n >= 1 else { return AnyView(EmptyView()) }
 
-        // 동점 여부 계산 — 동일 count 면 같은 rank
-        let ranks: [Int] = (0..<n).map { i in
-            var r = 1
-            for j in 0..<i { if arr[j].totalCount > arr[i].totalCount { r += 1 } }
-            return r
-        }
-        let allTied = Set(ranks).count == 1
-
-        // 포디움 배치: [2위, 1위, 3위] 순서
+        // 포디움 배치: [2위, 1위, 3위] 순서. 순위는 위치 기반(동률은 위 정렬로 이미 깨짐).
         let podiumIndices: [Int] = n >= 3 ? [1, 0, 2] : n == 2 ? [1, 0] : [0]
-        let displayRanks = [2, 1, 3]
 
         return AnyView(
             HStack(alignment: .bottom, spacing: 8) {
-                ForEach(Array(podiumIndices.enumerated()), id: \.offset) { slot, dataIdx in
+                ForEach(Array(podiumIndices.enumerated()), id: \.offset) { _, dataIdx in
                     let b = arr[dataIdx]
-                    let actualRank = ranks[dataIdx]
-                    // 높이 = 순위 기준 (동점이면 동일 높이)
-                    let barHeight: CGFloat = {
-                        switch actualRank {
-                        case 1: return 130
-                        case 2: return 100
-                        default: return 80
-                        }
-                    }()
-
-                    // 순위별 바 색상 — 동점이면 브랜드 색, 구분이면 금/은/동
-                    let barColor: Color = {
-                        if allTied { return Self.brandColor(b.brand) }
-                        switch displayRanks[slot] {
-                        case 1: return Self.gold
-                        case 2: return Self.silver
-                        default: return Self.bronze
-                        }
-                    }()
-
+                    let rank = dataIdx + 1
+                    let barHeight: CGFloat = rank == 1 ? 130 : rank == 2 ? 100 : 80
+                    let barColor: Color = rank == 1 ? Self.gold : rank == 2 ? Self.silver : Self.bronze
                     VStack(spacing: 4) {
                         brandInitialBadge(b.brand, color: Self.brandColor(b.brand), size: 36)
                         Text(b.brand)
@@ -322,9 +306,7 @@ struct BrandLeagueView: View {
                             ))
                             .frame(maxWidth: .infinity)
                             .frame(height: barHeight)
-                            .overlay(
-                                trophyView(rank: actualRank)
-                            )
+                            .overlay(trophyView(rank: rank))
                             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 8, topTrailingRadius: 8))
                     }
                     .frame(maxWidth: .infinity)
