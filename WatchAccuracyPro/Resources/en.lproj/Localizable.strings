@@ -69,6 +69,8 @@
 "stats.title" = "Analysis";
 "stats.total_measurements" = "Measurements";
 "stats.total_entries" = "Entries";
+"stats.total_measurements.sub" = "Accuracy readings";
+"stats.total_entries.sub" = "Field notes & diary";
 "stats.mood_breakdown" = "Mood breakdown";
 "stats.average_rate.title" = "Average rate";
 "stats.average_rate.subtitle" = "Based on %d measurements";

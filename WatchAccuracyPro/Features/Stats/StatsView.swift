@@ -465,27 +465,39 @@ struct StatsView: View {
     private var summaryCards: some View {
         HStack(spacing: 12) {
             summaryCard(
+                icon: "waveform",
                 title: String(localized: "stats.total_measurements"),
+                subtitle: String(localized: "stats.total_measurements.sub", defaultValue: "정확도 측정 횟수"),
                 value: "\(measurements.count)",
                 accent: AppColors.accent
             )
             summaryCard(
+                icon: "note.text",
                 title: String(localized: "stats.total_entries"),
+                subtitle: String(localized: "stats.total_entries.sub", defaultValue: "필드노트·일기"),
                 value: "\(journalEntries.count)",
                 accent: AppColors.primaryDeep
             )
         }
     }
 
-    private func summaryCard(title: String, value: String, accent: Color) -> some View {
+    private func summaryCard(icon: String, title: String, subtitle: String, value: String, accent: Color) -> some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text(title.uppercased())
-                .font(.system(size: 9, weight: .semibold))
-                .tracking(1.5)
-                .foregroundStyle(AppColors.ink2)
+            HStack(spacing: 5) {
+                ConceptGlyph(systemName: icon, size: 12, color: accent)
+                Text(title.uppercased())
+                    .font(.system(size: 9, weight: .semibold))
+                    .tracking(1.5)
+                    .foregroundStyle(AppColors.ink2)
+            }
             Text(value)
                 .font(.system(size: 28, weight: .medium, design: .monospaced))
                 .foregroundStyle(accent)
+            // 무엇의 개수인지 한 줄로 명확히("총 기록"이 막연하다는 피드백).
+            Text(subtitle)
+                .font(.system(size: 10))
+                .foregroundStyle(AppColors.ink3)
+                .lineLimit(1).minimumScaleFactor(0.8)
         }
         .padding(14)
         .frame(maxWidth: .infinity, alignment: .leading)

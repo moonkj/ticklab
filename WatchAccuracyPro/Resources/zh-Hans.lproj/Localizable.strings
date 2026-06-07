@@ -69,6 +69,8 @@
 "stats.title" = "分析";
 "stats.total_measurements" = "测量次数";
 "stats.total_entries" = "日志条数";
+"stats.total_measurements.sub" = "精度测量次数";
+"stats.total_entries.sub" = "随手记 · 日记";
 "stats.mood_breakdown" = "心情分布";
 "stats.average_rate.title" = "平均走时";
 "stats.average_rate.subtitle" = "基于 %d 次测量";

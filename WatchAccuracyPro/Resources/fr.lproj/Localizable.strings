@@ -69,6 +69,8 @@
 "stats.title" = "Analyse";
 "stats.total_measurements" = "Mesures";
 "stats.total_entries" = "Entrées";
+"stats.total_measurements.sub" = "Mesures de précision";
+"stats.total_entries.sub" = "Notes et journal";
 "stats.mood_breakdown" = "Répartition des humeurs";
 "stats.average_rate.title" = "Marche moyenne";
 "stats.average_rate.subtitle" = "Basée sur %d mesures";

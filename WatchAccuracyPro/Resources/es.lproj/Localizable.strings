@@ -69,6 +69,8 @@
 "stats.title" = "Análisis";
 "stats.total_measurements" = "Mediciones";
 "stats.total_entries" = "Entradas";
+"stats.total_measurements.sub" = "Mediciones de precisión";
+"stats.total_entries.sub" = "Notas y diario";
 "stats.mood_breakdown" = "Desglose de ánimo";
 "stats.average_rate.title" = "Marcha media";
 "stats.average_rate.subtitle" = "Basado en %d mediciones";

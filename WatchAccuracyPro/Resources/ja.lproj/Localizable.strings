@@ -69,6 +69,8 @@
 "stats.title" = "分析";
 "stats.total_measurements" = "計測数";
 "stats.total_entries" = "記録数";
+"stats.total_measurements.sub" = "精度測定の回数";
+"stats.total_entries.sub" = "フィールドノート・日記";
 "stats.mood_breakdown" = "気分の分布";
 "stats.average_rate.title" = "平均歩度";
 "stats.average_rate.subtitle" = "%d 回の計測を基準";

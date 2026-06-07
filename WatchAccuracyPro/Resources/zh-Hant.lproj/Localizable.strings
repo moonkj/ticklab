@@ -69,6 +69,8 @@
 "stats.title" = "分析";
 "stats.total_measurements" = "測量次數";
 "stats.total_entries" = "紀錄則數";
+"stats.total_measurements.sub" = "精度測量次數";
+"stats.total_entries.sub" = "隨手記 · 日記";
 "stats.mood_breakdown" = "心情分佈";
 "stats.average_rate.title" = "平均走時";
 "stats.average_rate.subtitle" = "依據 %d 次測量";
