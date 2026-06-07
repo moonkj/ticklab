@@ -245,7 +245,9 @@ struct UserPostsView: View {
         return Button { tab = t } label: {
             HStack(spacing: 6) {
                 ConceptGlyph(systemName: icon, size: 15, color: fg)
-                Text(title).font(.system(size: 13, weight: on ? .bold : .medium))
+                // 폰트 weight 는 고정(.semibold) — bold↔medium 변경은 보간 불가라 애니메이션 시 텍스트가
+                // 두 비트맵으로 크로스페이드되며 깜박임. 선택 구분은 색(fg)으로만.
+                Text(title).font(.system(size: 13, weight: .semibold))
                     .foregroundStyle(fg)
             }
             .frame(maxWidth: .infinity).padding(.vertical, 10)
