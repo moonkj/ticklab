@@ -25,21 +25,21 @@ struct MagneticFieldLoader: View {
         let s = min(sz.width, sz.height)
         let cx = sz.width / 2, cy = sz.height / 2
         let R = s / 2
-        let field = AppColors.primary          // 인디고 — 자기장
-        let north = AppColors.danger           // 빨강 — N극
-        let south = Color(white: 0.62)         // 스틸 — S극
+        let field = Color(red: 0.28, green: 0.55, blue: 1.0)   // 선명한 블루 — 자기장(다크/라이트 둘 다 보임)
+        let north = Color(red: 0.95, green: 0.27, blue: 0.25)  // 밝은 빨강 — N극
+        let south = Color(white: 0.62)                         // 스틸 — S극
         let gold = AppColors.accent
 
         // 바깥으로 퍼지는 자기장 펄스 링(레이더식 = 장 감지).
         for k in 0..<3 {
             let phase = (t * 0.7 + Double(k) / 3.0).truncatingRemainder(dividingBy: 1.0)
             let rr = R * (0.30 + 0.70 * CGFloat(phase))
-            let op = (1.0 - phase) * 0.45
+            let op = (1.0 - phase) * 0.8
             gc.stroke(circle(cx, cy, rr), with: .color(field.opacity(op)),
-                      lineWidth: max(1, s * 0.03))
+                      lineWidth: max(1.4, s * 0.05))
         }
 
-        // 다이폴 필드 라인 — 큰 사이즈에서만(좌우 대칭 루프, 은은).
+        // 다이폴 필드 라인 — 큰 사이즈에서만(좌우 대칭 루프).
         if s >= 44 {
             for sgn in [-1.0, 1.0] as [CGFloat] {
                 var p = Path()
@@ -47,7 +47,7 @@ struct MagneticFieldLoader: View {
                 p.addCurve(to: CGPoint(x: cx, y: cy + R * 0.62),
                            control1: CGPoint(x: cx + sgn * R * 0.95, y: cy - R * 0.30),
                            control2: CGPoint(x: cx + sgn * R * 0.95, y: cy + R * 0.30))
-                gc.stroke(p, with: .color(field.opacity(0.22)), lineWidth: max(1, s * 0.022))
+                gc.stroke(p, with: .color(field.opacity(0.40)), lineWidth: max(1, s * 0.03))
             }
         }
 
@@ -55,7 +55,7 @@ struct MagneticFieldLoader: View {
         var g = gc
         g.translateBy(x: cx, y: cy)
         g.rotate(by: .radians(t * (2 * .pi / 2.6)))
-        let len = R * 0.60, w = R * 0.16
+        let len = R * 0.66, w = R * 0.20
         var pn = Path()
         pn.move(to: CGPoint(x: 0, y: -len)); pn.addLine(to: CGPoint(x: -w, y: 0)); pn.addLine(to: CGPoint(x: w, y: 0)); pn.closeSubpath()
         g.fill(pn, with: .color(north))
