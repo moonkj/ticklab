@@ -442,8 +442,9 @@ struct UserPostsView: View {
                 let d = cal.date(byAdding: .day, value: -(69 - i), to: today)!
                 return acc + (counts[d, default: 0] > 0 ? 1 : 0)
             }
-            // 7열 × 10행, 읽는 순서(왼→오, 위→아래): 왼쪽 위 = 70일 전(첫날), 오른쪽 아래 = 오늘.
-            let gridCols = Array(repeating: GridItem(.flexible(), spacing: 4), count: 7)
+            // 14열 × 5행, 읽는 순서(왼→오, 위→아래): 왼쪽 위 = 70일 전(첫날), 오른쪽 아래 = 오늘.
+            // (열을 14로 늘려 칸 크기를 줄임 — 70=14×5 정확히 나눠 떨어지고 오늘은 오른쪽 아래 모서리.)
+            let gridCols = Array(repeating: GridItem(.flexible(), spacing: 3), count: 14)
             VStack(alignment: .leading, spacing: 10) {
                 sectionHeader(String(localized: "community.section.activity", defaultValue: "측정 활동"))
                 VStack(spacing: 12) {
@@ -457,7 +458,7 @@ struct UserPostsView: View {
                         Text(String(format: String(localized: "community.activity.total", defaultValue: "최근 10주 · %d회"), total))
                             .font(.system(size: 11)).foregroundStyle(AppColors.ink3)
                     }
-                    LazyVGrid(columns: gridCols, spacing: 4) {
+                    LazyVGrid(columns: gridCols, spacing: 3) {
                         ForEach(0..<70, id: \.self) { i in
                             let d = cal.date(byAdding: .day, value: -(69 - i), to: today)!
                             heatCell(counts[d, default: 0], isToday: i == 69)
