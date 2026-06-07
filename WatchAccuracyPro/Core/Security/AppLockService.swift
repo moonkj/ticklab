@@ -61,6 +61,31 @@ final class AppLockService: ObservableObject {
         }
     }
 
+    /// 생체 인증만 시도 — 패스코드 폴백 없음. PIN 화면의 Face ID 자동/수동 시도용.
+    /// 실패하면 화면의 커스텀 PIN 키패드로 폴백하므로, 시스템 패스코드/Face ID 재프롬프트를 띄우지 않는다.
+    /// (`unlock()` 의 .deviceOwnerAuthentication 폴백은 Face ID 를 다시 띄워 "얼굴 인식 안 됨" 재노출 → 사용 금지.)
+    func unlockBiometricsOnly() async -> Bool {
+        let context = LAContext()
+        var error: NSError?
+        guard context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) else {
+            return false
+        }
+        do {
+            let success = try await context.evaluatePolicy(
+                .deviceOwnerAuthenticationWithBiometrics,
+                localizedReason: String(localized: "applock.reason")
+            )
+            if success {
+                unlocked = true
+                lastUnlockedAt = Date()
+                pinService.resetFailureCount()
+            }
+            return success
+        } catch {
+            return false
+        }
+    }
+
     private func fallbackPasscode() async -> Bool {
         let context = LAContext()
         do {

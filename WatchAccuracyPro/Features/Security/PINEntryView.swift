@@ -195,10 +195,10 @@ struct PINEntryView: View {
 
     private func attemptBiometric() async {
         guard biometricsAvailable, !unlocking else { return }
-        if await appLock.unlock() {
+        // 생체 인증만(패스코드 폴백 없음) — 실패 시 Face ID 가 재실행되지 않고 PIN 키패드로 폴백.
+        if await appLock.unlockBiometricsOnly() {
             playUnlock()
         } else {
-            // 실패/취소 → PIN 키패드 노출(사용자가 직접 풀 수 있게).
             withAnimation(.easeOut(duration: 0.25)) { showKeypad = true }
         }
     }
