@@ -101,11 +101,8 @@ struct MagneticFieldView: View {
             startMeasurement()
         } label: {
             HStack(spacing: 10) {
-                if isMeasuring {
-                    MagneticFieldLoader(size: 22)
-                } else {
-                    ConceptGlyph(systemName: "dot.radiowaves.left.and.right", size: 16, color: .white)
-                }
+                // 측정 전/중 모두 회전하는 말굽자석 아이콘(밸런스휠 글리프 대체).
+                MagneticFieldLoader(size: 24)
                 Text(isMeasuring
                      ? String(localized: "magnetic.measuring")
                      : String(localized: "magnetic.measure_button"))
