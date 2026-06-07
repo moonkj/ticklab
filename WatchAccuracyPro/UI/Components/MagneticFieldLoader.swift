@@ -4,8 +4,10 @@ import SwiftUI
 /// 나침반/밸런스휠 아님. 다크/라이트 배경 모두 가독. Reduce Motion 시 정적.
 struct MagneticFieldLoader: View {
     var size: CGFloat = 26
-    /// 회전 여부 — 측정 중일 때만 true. false 면 정지(자석 똑바로).
+    /// 회전 여부 — 측정 중일 때만 true. false 면 정지.
     var animating: Bool = true
+    /// 자석 방향 — 기본은 양극이 아래(관용적 말굽자석).
+    var facingDown: Bool = true
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     private var move: Bool { animating && !reduceMotion }
@@ -37,6 +39,7 @@ struct MagneticFieldLoader: View {
         var g = gc
         g.translateBy(x: cx, y: cy)
         g.rotate(by: .radians(t * (2 * .pi / 2.2)))              // 천천히 회전(로딩)
+        if facingDown { g.scaleBy(x: 1, y: -1) }                 // 양극이 아래를 향하도록 상하 반전
         g.translateBy(x: -cx, y: -cy)
 
         let legX = R * 0.40                                       // 다리 좌우 간격

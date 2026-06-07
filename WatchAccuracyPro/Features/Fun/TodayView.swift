@@ -560,11 +560,12 @@ struct TodayView: View {
             compactSquareCard(
                 title: String(localized: "today.card.magnetic.title"),
                 subtitle: String(localized: "today.card.magnetic.subtitle"),
-                icon: "magnet",
-                iconColor: .white,
                 gradient: [Color(red: 0.18, green: 0.32, blue: 0.55),
                            Color(red: 0.30, green: 0.46, blue: 0.72)]
-            )
+            ) {
+                // 흰색 SF 아이콘 → 커스텀 말굽자석(아래 향함). 카드에선 정지(측정 시에만 회전).
+                MagneticFieldLoader(size: 30, animating: false)
+            }
         }
         .buttonStyle(.plain)
     }
@@ -572,13 +573,21 @@ struct TodayView: View {
     /// 2-col grid 용 컴팩트 정사각형 카드.
     private func compactSquareCard(title: String, subtitle: String, icon: String,
                                     iconColor: Color, gradient: [Color]) -> some View {
+        compactSquareCard(title: title, subtitle: subtitle, gradient: gradient) {
+            ConceptGlyph(systemName: icon, size: 24, color: iconColor)
+        }
+    }
+
+    /// 커스텀 아이콘 뷰 버전(48×48 타일 안에 임의 뷰).
+    private func compactSquareCard<Icon: View>(title: String, subtitle: String, gradient: [Color],
+                                               @ViewBuilder icon: () -> Icon) -> some View {
         VStack(alignment: .leading, spacing: 12) {
             ZStack {
                 RoundedRectangle(cornerRadius: 12)
                     .fill(LinearGradient(colors: gradient,
                                          startPoint: .topLeading, endPoint: .bottomTrailing))
                     .frame(width: 48, height: 48)
-                ConceptGlyph(systemName: icon, size: 24, color: iconColor)
+                icon()
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(title)
