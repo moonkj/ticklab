@@ -33,8 +33,6 @@ struct CommunityFeedView: View {
     /// 운영 ID(관리자) 활성 — 모든 글 삭제 권한 노출.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
     @State private var adminDeleteTarget: Community.Post?
-    /// 본인 글 삭제 확인 대상 — 즉시 삭제 대신 확인 다이얼로그 경유.
-    @State private var deleteTarget: Community.Post?
     /// 피드 범위 — false=전체, true=팔로잉한 계정만.
     @State private var followingOnly = false
     /// 운영자 경고 — 내 미확인 경고.
@@ -172,17 +170,6 @@ struct CommunityFeedView: View {
                     adminDeleteTarget = nil
                 }
                 Button(String(localized: "common.cancel"), role: .cancel) { adminDeleteTarget = nil }
-            }
-            .confirmationDialog(
-                String(localized: "community.delete.confirm"),
-                isPresented: Binding(get: { deleteTarget != nil }, set: { if !$0 { deleteTarget = nil } }),
-                titleVisibility: .visible
-            ) {
-                Button(String(localized: "common.delete"), role: .destructive) {
-                    if let target = deleteTarget { Task { await service.deleteMyPost(target) } }
-                    deleteTarget = nil
-                }
-                Button(String(localized: "common.cancel"), role: .cancel) { deleteTarget = nil }
             }
         }
     }
@@ -418,7 +405,7 @@ struct CommunityFeedView: View {
                         onLikers: { likersTarget = post },
                         onAuthor: { authorTarget = post },
                         onBrandTap: { brand in brandFilterTarget = brand },
-                        onDelete: post.isMine(currentUID: service.myUID) ? { deleteTarget = post } : nil,
+                        onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
                         onEdit: post.isMine(currentUID: service.myUID) ? { editTarget = post } : nil,
                         onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
                     )

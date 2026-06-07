@@ -26,6 +26,8 @@ struct CommunityPostCard: View {
     var onEdit: (() -> Void)? = nil
     /// 관리자(운영 ID) 전용 — 모든 글 삭제. nil 이면 미노출.
     var onAdminDelete: (() -> Void)? = nil
+    /// 본인 글 삭제 확인 — "..." 메뉴에 anchor 된 다이얼로그(부모 body 에 붙으면 화면 중앙에 떠 위치가 어색).
+    @State private var confirmingDelete = false
 
     // 코드리뷰: 카드는 service 를 관찰하면 안 됨(좋아요 1개에 전체 피드 re-render). imageURL 은
     //   순수 함수라 shared 에서 직접 호출 — 관찰 제거로 피드 성능 보호.
@@ -302,8 +304,9 @@ struct CommunityPostCard: View {
                     Label(String(localized: "common.edit"), systemImage: "pencil")
                 }
             }
-            if let onDelete {
-                Button(role: .destructive, action: onDelete) {
+            if onDelete != nil {
+                // 즉시 삭제 대신 확인 — "..." 에 anchor 된 confirmationDialog 로 펼침.
+                Button(role: .destructive) { confirmingDelete = true } label: {
                     Label(String(localized: "common.delete"), systemImage: "trash")
                 }
             }
@@ -319,6 +322,16 @@ struct CommunityPostCard: View {
                 .frame(width: 32, height: 32)
         }
         .accessibilityLabel(String(localized: "collection.more_menu"))
+        .confirmationDialog(
+            String(localized: "community.delete.confirm"),
+            isPresented: $confirmingDelete,
+            titleVisibility: .visible
+        ) {
+            if let onDelete {
+                Button(String(localized: "common.delete"), role: .destructive, action: onDelete)
+            }
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+        }
     }
 
     // MARK: - Derived
