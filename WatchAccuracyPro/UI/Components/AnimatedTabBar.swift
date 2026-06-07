@@ -9,20 +9,64 @@ struct AnimatedTabBar: View {
     @Namespace private var pillNS
 
     var body: some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                glassBar
+            } else {
+                legacyBar
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 4)
+        // 부드러운 스프링 — pill 글라스가 녹아 흐르듯 이동.
+        .animation(.spring(response: 0.55, dampingFraction: 0.74), value: selected)
+    }
+
+    /// iOS 26 — GlassEffectContainer 안에서 pill 이 glassEffectID 로 morph(액체처럼 녹아 이동).
+    @available(iOS 26.0, *)
+    private var glassBar: some View {
+        GlassEffectContainer(spacing: 8) {
+            HStack(spacing: 2) {
+                ForEach(tabs, id: \.self) { tab in
+                    tabLabel(tab)
+                        .background {
+                            if tab == selected {
+                                Capsule(style: .continuous)
+                                    .fill(AppColors.interactiveTint.opacity(0.14))
+                                    .glassEffect(.regular.interactive(), in: .capsule)
+                                    .glassEffectID("pill", in: pillNS)
+                            }
+                        }
+                }
+            }
+            .padding(.horizontal, 6)
+            .padding(.vertical, 6)
+            .glassEffect(.regular, in: .capsule)
+        }
+    }
+
+    /// iOS 17–25 — matchedGeometry 슬라이드 pill + material 배경.
+    private var legacyBar: some View {
         HStack(spacing: 2) {
             ForEach(tabs, id: \.self) { tab in
-                tabButton(tab)
+                tabLabel(tab)
+                    .background {
+                        if tab == selected {
+                            Capsule(style: .continuous)
+                                .fill(AppColors.interactiveTint.opacity(0.12))
+                                .matchedGeometryEffect(id: "pill", in: pillNS)
+                        }
+                    }
             }
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 6)
-        .modifier(GlassCapsuleBackground())
-        .padding(.horizontal, 16)
-        .padding(.bottom, 4)
-        .animation(.spring(response: 0.42, dampingFraction: 0.74), value: selected)
+        .background(.regularMaterial, in: Capsule(style: .continuous))
+        .overlay(Capsule(style: .continuous).stroke(AppColors.rule, lineWidth: 1))
+        .shadow(color: .black.opacity(0.10), radius: 12, y: 4)
     }
 
-    private func tabButton(_ tab: RootTabView.Tab) -> some View {
+    private func tabLabel(_ tab: RootTabView.Tab) -> some View {
         let isSel = tab == selected
         let color = isSel ? AppColors.interactiveTint : AppColors.ink3
         return Button {
@@ -39,13 +83,6 @@ struct AnimatedTabBar: View {
             .foregroundStyle(color)
             .frame(maxWidth: .infinity)
             .padding(.vertical, 7)
-            .background {
-                if isSel {
-                    Capsule(style: .continuous)
-                        .fill(AppColors.interactiveTint.opacity(0.12))
-                        .matchedGeometryEffect(id: "pill", in: pillNS)
-                }
-            }
             .contentShape(Capsule())
         }
         .buttonStyle(.plain)
@@ -58,20 +95,6 @@ struct AnimatedTabBar: View {
         case .journal:    return String(localized: "tab.journal")
         case .stats:      return String(localized: "tab.stats")
         case .community:  return String(localized: "community.tab.title")
-        }
-    }
-}
-
-/// 캡슐 배경 — iOS 26 Liquid Glass, 구버전은 반투명 material 폴백.
-private struct GlassCapsuleBackground: ViewModifier {
-    func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
-            content.glassEffect(.regular, in: .capsule)
-        } else {
-            content
-                .background(.regularMaterial, in: Capsule(style: .continuous))
-                .overlay(Capsule(style: .continuous).stroke(AppColors.rule, lineWidth: 1))
-                .shadow(color: .black.opacity(0.10), radius: 12, y: 4)
         }
     }
 }
