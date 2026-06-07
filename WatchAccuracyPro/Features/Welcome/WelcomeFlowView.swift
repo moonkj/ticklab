@@ -250,7 +250,7 @@ private struct FeatureCarousel: View {
             // Carousel pages with abstract illustration.
             TabView(selection: $page) {
                 ForEach(Array(pages.enumerated()), id: \.offset) { idx, feature in
-                    pageView(feature).tag(idx)
+                    pageView(feature, active: idx == page).tag(idx)
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -290,15 +290,22 @@ private struct FeatureCarousel: View {
         }
     }
 
-    private func pageView(_ feature: Feature) -> some View {
+    private func pageView(_ feature: Feature, active: Bool) -> some View {
         VStack(spacing: 32) {
             Spacer()
-            // 240×240 illustration container — accent50 (paper2 너무 옅음).
+            // 240×240 일러스트 컨테이너 — 진입(active) 시 히어로 애니메이션 재생.
             ZStack {
                 RoundedRectangle(cornerRadius: 36)
                     .fill(AppColors.accent50)
-                illustration(for: feature)
-                    .frame(width: 200, height: 200)
+                Group {
+                    switch feature {
+                    case .collect:   CollectHero(active: active)
+                    case .analyze:   AnalyzeHero(active: active)
+                    case .community: CommunityHero(active: active)
+                    case .measure:   MeasureHero(active: active)
+                    }
+                }
+                .frame(width: 200, height: 200)
             }
             .frame(width: 240, height: 240)
             VStack(spacing: 12) {
@@ -318,211 +325,228 @@ private struct FeatureCarousel: View {
         }
     }
 
-    @ViewBuilder private func illustration(for feature: Feature) -> some View {
-        switch feature {
-        case .measure:   illustrationMeasure
-        case .collect:   illustrationCollect
-        case .analyze:   illustrationAnalyze
-        case .community: illustrationCommunity
-        }
-    }
+}
 
-    // Page 0 — waveform + dots + "+5.2 s/d". Round 158: 시각 무게 중심 (100,100) 으로 재정렬.
-    // Round 19 (Sora): TabView swipe 중 매 frame Canvas re-draw 비용 회피 — .drawingGroup 으로 Metal-backed offscreen.
-    private var illustrationMeasure: some View {
-        Canvas { ctx, size in
-            let s = size.width / 200.0
-            // radial gold gradient — center 를 정중앙으로.
-            let bgPath = Path(ellipseIn: CGRect(
-                x: (100 - 90) * s, y: (100 - 90) * s,
-                width: 180 * s, height: 180 * s
-            ))
-            ctx.fill(bgPath, with: .radialGradient(
-                Gradient(colors: [AppColors.accent.opacity(0.25), .clear]),
-                center: CGPoint(x: 100 * s, y: 100 * s),
-                startRadius: 0,
-                endRadius: 90 * s
-            ))
-            // waveform path — y-axis 를 y=90 으로 살짝 위로 올려 text 와 균형.
-            var p = Path()
-            p.move(to: CGPoint(x: 20 * s, y: 90 * s))
-            p.addQuadCurve(to: CGPoint(x: 60 * s, y: 90 * s), control: CGPoint(x: 40 * s, y: 50 * s))
-            p.addQuadCurve(to: CGPoint(x: 100 * s, y: 90 * s), control: CGPoint(x: 80 * s, y: 130 * s))
-            p.addQuadCurve(to: CGPoint(x: 140 * s, y: 90 * s), control: CGPoint(x: 120 * s, y: 50 * s))
-            p.addQuadCurve(to: CGPoint(x: 180 * s, y: 90 * s), control: CGPoint(x: 160 * s, y: 130 * s))
-            ctx.stroke(p, with: .color(AppColors.primary500), lineWidth: 2 * s)
-            // 4 dots @ y=90.
-            for (i, xPos) in [40.0, 80.0, 120.0, 160.0].enumerated() {
-                let color: Color = i % 2 == 0 ? AppColors.success : AppColors.accent
-                let r = 4.0 * s
-                let rect = CGRect(
-                    x: (xPos - 4) * s, y: (90 - 4) * s,
-                    width: 2 * r, height: 2 * r
-                )
-                ctx.fill(Path(ellipseIn: rect), with: .color(color))
-            }
-            // Round 158: "+5.2 s/d" → "+0.8 s/d" (정상 워치 범위, ±1 s/d body 카피와 일치).
-            let text = Text("+0.8 \(String(localized: "unit.seconds_per_day"))")
-                .font(.system(size: 16 * s, weight: .medium, design: .monospaced))
-                .foregroundColor(AppColors.ink0)
-            ctx.draw(text, at: CGPoint(x: 100 * s, y: 140 * s), anchor: .center)
-        }
-        .drawingGroup()
-    }
+// MARK: - 온보딩 히어로 (진입 시 애니메이션 재생) — ticklab-onboarding 목업 포팅
 
-    // Page 1 — journal card with photo placeholder (jsx 200×200 viewBox port).
-    // Round 19 (Sora): .drawingGroup 으로 TabView transform 비용 절감.
-    private var illustrationCollect: some View {
-        Canvas { ctx, size in
-            let s = size.width / 200.0
-            // White card 120×140 at (40,30) radius 6, border #E5E5E5.
-            let cardRect = CGRect(x: 40 * s, y: 30 * s, width: 120 * s, height: 140 * s)
-            ctx.fill(
-                Path(roundedRect: cardRect, cornerRadius: 6 * s),
-                with: .color(.white)
-            )
-            ctx.stroke(
-                Path(roundedRect: cardRect, cornerRadius: 6 * s),
-                with: .color(AppColors.rule),
-                lineWidth: 1
-            )
-            // 6px gold accent stripe (left).
-            let stripeRect = CGRect(x: 40 * s, y: 30 * s, width: 6 * s, height: 140 * s)
-            ctx.fill(Path(stripeRect), with: .color(AppColors.accent))
-            // Text placeholder lines.
-            var line1 = Path()
-            line1.move(to: CGPoint(x: 60 * s, y: 60 * s))
-            line1.addLine(to: CGPoint(x: 140 * s, y: 60 * s))
-            ctx.stroke(line1, with: .color(AppColors.rule), lineWidth: 1)
-            var line2 = Path()
-            line2.move(to: CGPoint(x: 60 * s, y: 80 * s))
-            line2.addLine(to: CGPoint(x: 120 * s, y: 80 * s))
-            ctx.stroke(line2, with: .color(AppColors.rule), lineWidth: 1)
-            // Photo placeholder rect 80×50 at (60,95), accent-100 fill.
-            let photoRect = CGRect(x: 60 * s, y: 95 * s, width: 80 * s, height: 50 * s)
-            ctx.fill(
-                Path(roundedRect: photoRect, cornerRadius: 4 * s),
-                with: .color(AppColors.accent100)
-            )
-            // Center gold circle r=14 at (100,120).
-            let circleRect = CGRect(
-                x: (100 - 14) * s, y: (120 - 14) * s,
-                width: 28 * s, height: 28 * s
-            )
-            ctx.fill(Path(ellipseIn: circleRect), with: .color(AppColors.accent))
-        }
-        .drawingGroup()
-    }
-
-    // Page 2 — 분석: 상승 트렌드 라인 + 막대 + 별. (측정 게이지 대신 '분석' 축 표현 — 정체성 균형)
-    // Round 19 (Sora): .drawingGroup 으로 TabView transform 비용 절감.
-    private var illustrationAnalyze: some View {
-        Canvas { ctx, size in
-            let s = size.width / 200.0
-            let baseY = 150.0
-            let xs: [Double] = [50, 85, 120, 155]
-            let barH: [Double] = [38, 64, 52, 92]
-            // 막대 — 마지막(최고)만 골드, 나머지는 옅은 indigo.
-            for (i, x) in xs.enumerated() {
-                let h = barH[i] * s
-                let rect = CGRect(x: (x - 13) * s, y: baseY * s - h, width: 26 * s, height: h)
-                let col = i == xs.count - 1 ? AppColors.accent : AppColors.primary500.opacity(0.45)
-                ctx.fill(Path(roundedRect: rect, cornerRadius: 5 * s), with: .color(col))
-            }
-            // baseline.
-            var base = Path()
-            base.move(to: CGPoint(x: 36 * s, y: baseY * s))
-            base.addLine(to: CGPoint(x: 168 * s, y: baseY * s))
-            ctx.stroke(base, with: .color(AppColors.rule), lineWidth: 1)
-            // 트렌드 라인(상승) + 노드.
-            let pts: [(Double, Double)] = [(50, 112), (85, 84), (120, 96), (155, 52)]
-            var line = Path()
-            for (i, pt) in pts.enumerated() {
-                let p = CGPoint(x: pt.0 * s, y: pt.1 * s)
-                if i == 0 { line.move(to: p) } else { line.addLine(to: p) }
-            }
-            ctx.stroke(line, with: .color(AppColors.primaryDeep),
-                       style: StrokeStyle(lineWidth: 2.5 * s, lineCap: .round, lineJoin: .round))
-            for pt in pts {
-                ctx.fill(Path(ellipseIn: CGRect(x: (pt.0 - 3) * s, y: (pt.1 - 3) * s, width: 6 * s, height: 6 * s)),
-                         with: .color(AppColors.accent))
-            }
-            // sparkle.
-            ctx.fill(starPath(center: CGPoint(x: 168 * s, y: 42 * s), radius: 9 * s), with: .color(AppColors.accent))
-            // 라벨.
-            let label = Text(String(localized: "welcome.illustration.trend"))
-                .font(.system(size: 12 * s, weight: .medium))
-                .foregroundColor(AppColors.ink0)
-            ctx.draw(label, at: CGPoint(x: 100 * s, y: 180 * s), anchor: .center)
-        }
-        .drawingGroup()
-    }
-
-    // Page — 커뮤니티: 겹쳐진 사진 카드 + 하트(좋아요) + 떠다니는 하트. 익명 사진 피드 축 표현.
-    private var illustrationCommunity: some View {
-        Canvas { ctx, size in
-            let s = size.width / 200.0
-            // 뒤 카드(살짝 어긋난 두 번째 게시물).
-            ctx.fill(Path(roundedRect: CGRect(x: 62 * s, y: 40 * s, width: 88 * s, height: 108 * s), cornerRadius: 10 * s),
-                     with: .color(AppColors.accent100))
-            // 앞 카드(흰 배경 + 테두리).
-            let front = CGRect(x: 48 * s, y: 54 * s, width: 96 * s, height: 116 * s)
-            ctx.fill(Path(roundedRect: front, cornerRadius: 10 * s), with: .color(.white))
-            ctx.stroke(Path(roundedRect: front, cornerRadius: 10 * s), with: .color(AppColors.rule), lineWidth: 1)
-            // 사진 영역(상단) + 시계 실루엣 느낌 원.
-            ctx.fill(Path(roundedRect: CGRect(x: 48 * s, y: 54 * s, width: 96 * s, height: 72 * s), cornerRadius: 10 * s),
-                     with: .color(AppColors.primary500.opacity(0.16)))
-            ctx.fill(Path(ellipseIn: CGRect(x: (96 - 17) * s, y: (90 - 17) * s, width: 34 * s, height: 34 * s)),
-                     with: .color(AppColors.accent.opacity(0.55)))
-            // 하단 — 하트(좋아요) + 캡션 라인.
-            ctx.fill(heartPath(center: CGPoint(x: 64 * s, y: 144 * s), size: 12 * s), with: .color(AppColors.danger))
-            var caption = Path()
-            caption.move(to: CGPoint(x: 84 * s, y: 144 * s)); caption.addLine(to: CGPoint(x: 130 * s, y: 144 * s))
-            ctx.stroke(caption, with: .color(AppColors.rule), lineWidth: 2.5 * s)
-            // 떠다니는 작은 하트(골드).
-            ctx.fill(heartPath(center: CGPoint(x: 150 * s, y: 58 * s), size: 9 * s), with: .color(AppColors.accent))
-            // 라벨.
-            let label = Text(String(localized: "welcome.illustration.community"))
-                .font(.system(size: 12 * s, weight: .medium))
-                .foregroundColor(AppColors.ink0)
-            ctx.draw(label, at: CGPoint(x: 100 * s, y: 184 * s), anchor: .center)
-        }
-        .drawingGroup()
-    }
-
-    /// 하트 path — 두 원(위) + 삼각(아래). 작은 일러스트용 근사.
-    private func heartPath(center c: CGPoint, size r: CGFloat) -> Path {
+private struct SineWaveShape: Shape {
+    var periods: Double = 2
+    func path(in rect: CGRect) -> Path {
         var p = Path()
-        p.addEllipse(in: CGRect(x: c.x - r, y: c.y - r * 0.62, width: r, height: r))
-        p.addEllipse(in: CGRect(x: c.x, y: c.y - r * 0.62, width: r, height: r))
-        p.move(to: CGPoint(x: c.x - r * 0.92, y: c.y + r * 0.02))
-        p.addLine(to: CGPoint(x: c.x + r * 0.92, y: c.y + r * 0.02))
-        p.addLine(to: CGPoint(x: c.x, y: c.y + r * 1.08))
-        p.closeSubpath()
+        let steps = 80
+        for i in 0...steps {
+            let t = Double(i) / Double(steps)
+            let x = rect.width * CGFloat(t)
+            let y = rect.midY - CGFloat(sin(t * .pi * 2 * periods)) * rect.height * 0.42
+            if i == 0 { p.move(to: CGPoint(x: x, y: y)) } else { p.addLine(to: CGPoint(x: x, y: y)) }
+        }
         return p
     }
+}
 
-    /// 4-point star path (sparkle).
-    private func starPath(center: CGPoint, radius: CGFloat) -> Path {
+private struct TrendLineShape: Shape {
+    let points: [(Double, Double)]   // (x frac, y frac · 0=top)
+    func path(in r: CGRect) -> Path {
         var p = Path()
-        let inner = radius * 0.3
-        let points: [(Double, Double)] = [
-            (0, -1),    (0.3, -0.3),
-            (1, 0),     (0.3, 0.3),
-            (0, 1),     (-0.3, 0.3),
-            (-1, 0),    (-0.3, -0.3),
-        ]
         for (i, pt) in points.enumerated() {
-            let r = i % 2 == 0 ? radius : inner
-            let x = center.x + r * CGFloat(pt.0)
-            let y = center.y + r * CGFloat(pt.1)
-            if i == 0 { p.move(to: CGPoint(x: x, y: y)) }
-            else { p.addLine(to: CGPoint(x: x, y: y)) }
+            let cp = CGPoint(x: r.minX + r.width * pt.0, y: r.minY + r.height * pt.1)
+            if i == 0 { p.move(to: cp) } else { p.addLine(to: cp) }
         }
-        p.closeSubpath()
         return p
     }
+}
 
+private struct SmileShape: Shape {
+    func path(in r: CGRect) -> Path {
+        var p = Path()
+        p.move(to: CGPoint(x: r.minX, y: r.minY))
+        p.addQuadCurve(to: CGPoint(x: r.maxX, y: r.minY), control: CGPoint(x: r.midX, y: r.maxY * 1.7))
+        return p
+    }
+}
+
+private struct MoodFace: View {
+    var body: some View {
+        ZStack {
+            Circle().fill(AppColors.paper1).overlay(Circle().strokeBorder(AppColors.accent, lineWidth: 3))
+            HStack(spacing: 9) {
+                Capsule().fill(AppColors.accent).frame(width: 3, height: 6)
+                Capsule().fill(AppColors.accent).frame(width: 3, height: 6)
+            }.offset(y: -3)
+            SmileShape().stroke(AppColors.accent, style: StrokeStyle(lineWidth: 3, lineCap: .round))
+                .frame(width: 18, height: 9).offset(y: 5)
+        }
+    }
+}
+
+/// 측정 — 파형 드로잉 + 밸런스 휠 진동 + rate.
+private struct MeasureHero: View {
+    let active: Bool
+    @Environment(\.accessibilityReduceMotion) private var rm
+    @State private var wave: CGFloat = 0
+    @State private var beat = false
+    @State private var show = false
+    var body: some View {
+        ZStack {
+            Circle().fill(RadialGradient(colors: [AppColors.accent.opacity(0.22), .clear],
+                                         center: .center, startRadius: 0, endRadius: 96))
+                .frame(width: 200, height: 200)
+            SineWaveShape(periods: 2)
+                .trim(from: 0, to: wave)
+                .stroke(AppColors.primary500, style: StrokeStyle(lineWidth: 2.6, lineCap: .round))
+                .frame(width: 168, height: 60).offset(y: -6)
+            BalanceWheelIcon(size: 44, color: AppColors.accent, holeColor: .clear)
+                .rotationEffect(.degrees(rm ? 0 : (beat ? 26 : -26)))
+                .offset(x: 66, y: -64)
+            Text("+0.8 \(String(localized: "unit.seconds_per_day"))")
+                .font(.system(size: 17, weight: .semibold, design: .monospaced))
+                .foregroundStyle(AppColors.success)
+                .opacity(show ? 1 : 0).offset(y: 62)
+        }
+        .frame(width: 200, height: 200)
+        .onChange(of: active) { _, on in if on { play() } else { reset() } }
+        .onAppear { if active { play() } }
+    }
+    private func reset() { wave = 0; show = false }
+    private func play() {
+        if rm { wave = 1; show = true; return }
+        wave = 0; show = false
+        withAnimation(.easeOut(duration: 0.9)) { wave = 1 }
+        withAnimation(.easeOut(duration: 0.4).delay(0.7)) { show = true }
+        withAnimation(.easeInOut(duration: 0.46).repeatForever(autoreverses: true)) { beat = true }
+    }
+}
+
+/// 컬렉션·기록 — 카드 스택 등장 + 텍스트 라인 + 기분 아이콘 팝.
+private struct CollectHero: View {
+    let active: Bool
+    @Environment(\.accessibilityReduceMotion) private var rm
+    @State private var shown = false
+    @State private var mood = false
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 14).fill(AppColors.accent100)
+                .frame(width: 96, height: 120).offset(x: shown ? 26 : 12, y: -8).opacity(shown ? 0.9 : 0)
+            RoundedRectangle(cornerRadius: 14).fill(AppColors.accent50)
+                .frame(width: 96, height: 120).offset(x: shown ? 13 : 4, y: -2).opacity(shown ? 1 : 0)
+            VStack(alignment: .leading, spacing: 7) {
+                RoundedRectangle(cornerRadius: 8).fill(AppColors.primary500.opacity(0.14))
+                    .frame(height: 54)
+                    .overlay(BalanceWheelIcon(size: 30, color: AppColors.accent, holeColor: .clear))
+                line(0.85); line(0.62); line(0.72, gold: true)
+            }
+            .padding(11).frame(width: 116, height: 138)
+            .background(RoundedRectangle(cornerRadius: 14).fill(AppColors.paper1))
+            .overlay(RoundedRectangle(cornerRadius: 14).stroke(AppColors.rule, lineWidth: 1))
+            .overlay(alignment: .leading) {
+                Rectangle().fill(AppColors.accent).frame(width: 5)
+                    .clipShape(RoundedRectangle(cornerRadius: 2))
+            }
+            .opacity(shown ? 1 : 0).offset(y: shown ? 0 : 14)
+            MoodFace().frame(width: 40, height: 40).offset(x: 56, y: -70)
+                .scaleEffect(mood ? 1 : 0).opacity(mood ? 1 : 0)
+        }
+        .frame(width: 200, height: 200)
+        .onChange(of: active) { _, on in if on { play() } else { shown = false; mood = false } }
+        .onAppear { if active { play() } }
+    }
+    private func line(_ w: CGFloat, gold: Bool = false) -> some View {
+        Capsule().fill(gold ? AppColors.accent.opacity(0.55) : AppColors.rule)
+            .frame(width: 90 * w, height: 5)
+    }
+    private func play() {
+        if rm { shown = true; mood = true; return }
+        shown = false; mood = false
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.72)) { shown = true }
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.55).delay(0.5)) { mood = true }
+    }
+}
+
+/// 분석 — 막대 grow + 추세선 드로잉 + 별 팝.
+private struct AnalyzeHero: View {
+    let active: Bool
+    @Environment(\.accessibilityReduceMotion) private var rm
+    @State private var grow: CGFloat = 0
+    @State private var line: CGFloat = 0
+    @State private var spark = false
+    private let heights: [CGFloat] = [52, 80, 64, 104]
+    var body: some View {
+        ZStack(alignment: .bottom) {
+            HStack(alignment: .bottom, spacing: 14) {
+                ForEach(0..<4, id: \.self) { i in
+                    Capsule(style: .continuous)
+                        .fill(i == 3 ? AppColors.accent : AppColors.primary500.opacity(0.4))
+                        .frame(width: 26, height: heights[i])
+                        .scaleEffect(y: grow, anchor: .bottom)
+                }
+            }
+            .frame(height: 120, alignment: .bottom).offset(y: -22)
+            TrendLineShape(points: [(0, 0.58), (0.33, 0.30), (0.66, 0.46), (1, 0.08)])
+                .trim(from: 0, to: line)
+                .stroke(AppColors.primaryDeep, style: StrokeStyle(lineWidth: 2.6, lineCap: .round, lineJoin: .round))
+                .frame(width: 150, height: 96).offset(y: -36)
+            Image(systemName: "sparkle").font(.system(size: 18)).foregroundStyle(AppColors.accent)
+                .scaleEffect(spark ? 1 : 0).opacity(spark ? 1 : 0).offset(x: 62, y: -118)
+            Text(String(localized: "welcome.illustration.trend"))
+                .font(.system(size: 12, weight: .medium)).foregroundStyle(AppColors.ink2)
+        }
+        .frame(width: 200, height: 200)
+        .onChange(of: active) { _, on in if on { play() } else { grow = 0; line = 0; spark = false } }
+        .onAppear { if active { play() } }
+    }
+    private func play() {
+        if rm { grow = 1; line = 1; spark = true; return }
+        grow = 0; line = 0; spark = false
+        withAnimation(.spring(response: 0.55, dampingFraction: 0.6)) { grow = 1 }
+        withAnimation(.easeOut(duration: 0.7).delay(0.45)) { line = 1 }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.5).delay(1.05)) { spark = true }
+    }
+}
+
+/// 커뮤니티 — 카드 등장 + 하트 비트 + 코너 하트 + 좋아요 라벨.
+private struct CommunityHero: View {
+    let active: Bool
+    @Environment(\.accessibilityReduceMotion) private var rm
+    @State private var card = false
+    @State private var corner = false
+    @State private var heart = false
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 14).fill(AppColors.accent100)
+                .frame(width: 100, height: 120).offset(x: 14, y: -10).opacity(card ? 0.85 : 0)
+            VStack(spacing: 9) {
+                RoundedRectangle(cornerRadius: 10).fill(AppColors.primary500.opacity(0.14))
+                    .frame(height: 78)
+                    .overlay(BalanceWheelIcon(size: 34, color: AppColors.accent, holeColor: .clear))
+                HStack(spacing: 7) {
+                    Image(systemName: "heart.fill").foregroundStyle(AppColors.danger)
+                        .font(.system(size: 16)).scaleEffect(heart ? 1.18 : 1)
+                    Capsule().fill(AppColors.rule).frame(height: 6)
+                }
+            }
+            .padding(11).frame(width: 124, height: 130)
+            .background(RoundedRectangle(cornerRadius: 16).fill(AppColors.paper1))
+            .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.rule, lineWidth: 1))
+            .opacity(card ? 1 : 0).scaleEffect(card ? 1 : 0.9).offset(y: -8)
+            Image(systemName: "heart.fill").font(.system(size: 16)).foregroundStyle(AppColors.accent)
+                .scaleEffect(corner ? 1 : 0).opacity(corner ? 1 : 0).offset(x: 58, y: -74)
+            HStack(spacing: 5) {
+                Image(systemName: "heart.fill").font(.system(size: 13)).foregroundStyle(AppColors.danger)
+                Text(String(localized: "welcome.illustration.community"))
+                    .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink2)
+            }.offset(y: 80).opacity(card ? 1 : 0)
+        }
+        .frame(width: 200, height: 200)
+        .onChange(of: active) { _, on in if on { play() } else { card = false; corner = false } }
+        .onAppear { if active { play() } }
+    }
+    private func play() {
+        if rm { card = true; corner = true; return }
+        card = false; corner = false
+        withAnimation(.spring(response: 0.5, dampingFraction: 0.6)) { card = true }
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.5).delay(0.5)) { corner = true }
+        withAnimation(.easeInOut(duration: 0.85).repeatForever(autoreverses: true).delay(0.6)) { heart = true }
+    }
 }
 
 // MARK: - Step 3: Quick watch add (디자인 SSOT screens-onboarding.jsx QuickWatchAddView)
