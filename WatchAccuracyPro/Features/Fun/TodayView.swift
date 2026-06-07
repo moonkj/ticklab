@@ -50,7 +50,8 @@ struct TodayView: View {
                 EditorialPageHeader(
                     eyebrow: String(localized: "today.eyebrow"),
                     title: String(localized: "tab.today"),
-                    showGear: true
+                    showGear: true,
+                    titleIcon: .today
                 )
                 .padding(.horizontal, 20)
                 .padding(.top, 8)

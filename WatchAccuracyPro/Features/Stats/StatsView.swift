@@ -85,7 +85,8 @@ struct StatsView: View {
             eyebrow: String(localized: "stats.eyebrow.figures"),
             title: String(localized: "stats.title"),
             subtitle: String(localized: "stats.subtitle"),
-            showGear: true
+            showGear: true,
+            titleIcon: .stats
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)

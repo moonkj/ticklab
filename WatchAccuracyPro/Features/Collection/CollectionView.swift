@@ -429,7 +429,8 @@ struct CollectionView: View {
             eyebrow: String(localized: "collection.eyebrow"),
             title: String(localized: "collection.title"),
             subtitle: String(localized: "collection.subtitle"),
-            showGear: true
+            showGear: true,
+            titleIcon: .collection
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)

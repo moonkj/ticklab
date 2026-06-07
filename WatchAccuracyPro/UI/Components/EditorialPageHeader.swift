@@ -8,12 +8,16 @@ struct EditorialPageHeader: View {
     let subtitle: String?
     /// 브랜드 시그니처 — eyebrow 옆 앰비언트 틱톡 기어(1초 1스텝). 홈에서만 권장.
     var showGear: Bool = false
+    /// 제목 옆 애니메이션 탭 아이콘(나타날 때 시그니처 모션 1회). 폰트 절반 크기.
+    var titleIcon: RootTabView.Tab? = nil
 
-    init(eyebrow: String, title: String, subtitle: String? = nil, showGear: Bool = false) {
+    init(eyebrow: String, title: String, subtitle: String? = nil,
+         showGear: Bool = false, titleIcon: RootTabView.Tab? = nil) {
         self.eyebrow = eyebrow
         self.title = title
         self.subtitle = subtitle
         self.showGear = showGear
+        self.titleIcon = titleIcon
     }
 
     var body: some View {
@@ -27,10 +31,15 @@ struct EditorialPageHeader: View {
                     .tracking(2.5)
                     .foregroundStyle(AppColors.accent)
             }
-            Text(title)
-                .font(.system(size: 38, weight: .medium, design: .serif))
-                .italic()
-                .foregroundStyle(AppColors.ink0)
+            HStack(alignment: .center, spacing: 9) {
+                Text(title)
+                    .font(.system(size: 38, weight: .medium, design: .serif))
+                    .italic()
+                    .foregroundStyle(AppColors.ink0)
+                if let titleIcon {
+                    HeaderTabIcon(kind: titleIcon, size: 19, color: AppColors.accent)
+                }
+            }
             if let subtitle {
                 Text(subtitle)
                     .font(.system(size: 13))

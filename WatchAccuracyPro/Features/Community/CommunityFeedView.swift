@@ -177,7 +177,8 @@ struct CommunityFeedView: View {
             eyebrow: String(localized: "community.eyebrow"),
             title: String(localized: "community.tab.title"),
             subtitle: String(localized: "community.subtitle"),
-            showGear: true
+            showGear: true,
+            titleIcon: .community
         )
         .padding(.horizontal, 20)
         .padding(.top, 8)

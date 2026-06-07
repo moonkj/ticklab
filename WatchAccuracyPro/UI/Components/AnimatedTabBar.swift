@@ -101,7 +101,23 @@ struct AnimatedTabBar: View {
 
 // MARK: - 아이콘 디스패치
 
-private struct AnimatedTabIcon: View {
+/// 제목 옆 등 어디서나 쓰는 애니메이션 탭 아이콘 래퍼 — 나타날 때 시그니처 모션 1회 재생.
+struct HeaderTabIcon: View {
+    let kind: RootTabView.Tab
+    var size: CGFloat = 19
+    var color: Color = AppColors.accent
+    @State private var play = false
+    var body: some View {
+        AnimatedTabIcon(kind: kind, color: color, play: play)
+            .frame(width: size, height: size)
+            .onAppear {
+                play = false
+                DispatchQueue.main.async { play = true }   // false→true 로 시그니처 모션 트리거
+            }
+    }
+}
+
+struct AnimatedTabIcon: View {
     let kind: RootTabView.Tab
     let color: Color
     let play: Bool
