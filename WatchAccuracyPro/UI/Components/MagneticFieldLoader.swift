@@ -26,8 +26,8 @@ struct MagneticFieldLoader: View {
         let cx = sz.width / 2, cy = sz.height / 2
         let R = s / 2
         let north = Color(red: 0.95, green: 0.27, blue: 0.25)   // N극 빨강
-        let south = Color(red: 0.28, green: 0.50, blue: 1.0)    // S극 파랑
-        let body = Color(white: 0.50)                            // 자석 몸체 스틸
+        let south = Color(red: 0.36, green: 0.58, blue: 1.0)    // S극 파랑(밝게)
+        let body = AppColors.accent                              // 자석 몸체 골드 — 다크/라이트 모두 또렷
         let lw = R * 0.30                                         // 자석 두께
 
         var g = gc
