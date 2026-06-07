@@ -313,6 +313,7 @@
 		EC8A33E2A211BC0FA8138067 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C47ABF66B3DE34B94929919A /* RootTabView.swift */; };
 		EC95084D4287B94F221841B5 /* AdminOpsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0DB8B9D022C43D8B4729A /* AdminOpsView.swift */; };
 		ECD94829EBE2AB0201C514F7 /* CollectionGalleryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F85CB710BDB6E5CCE4BEEFE /* CollectionGalleryGenerator.swift */; };
+		ED20A5BA35A232F87A735960 /* MagneticFieldLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7B10C0E2A2C1809168C87CB /* MagneticFieldLoader.swift */; };
 		F1031887A0BB52293D926A92 /* WearToggleIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6DA1AC4038C651CC0C5D0B0 /* WearToggleIntent.swift */; };
 		F1311624612DE197ED27B713 /* MeasurementResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0200F960B10CACE726DFBE5A /* MeasurementResultView.swift */; };
 		F17DA268E10C4E93E87AB956 /* FailureChecklistCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9C9305D66ACCCB09CA028CF /* FailureChecklistCard.swift */; };
@@ -691,6 +692,7 @@
 		E460665285032C7AAEBC05E4 /* Movement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movement.swift; sourceTree = "<group>"; };
 		E5376829DB10860B671A5289 /* PINServiceFormatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PINServiceFormatTests.swift; sourceTree = "<group>"; };
 		E733AA51EC69F71E8AA02809 /* Secrets.swift.template */ = {isa = PBXFileReference; path = Secrets.swift.template; sourceTree = "<group>"; };
+		E7B10C0E2A2C1809168C87CB /* MagneticFieldLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MagneticFieldLoader.swift; sourceTree = "<group>"; };
 		E8293C262F87D540B2E2C9E4 /* BadgesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BadgesView.swift; sourceTree = "<group>"; };
 		E82E2C0D2D39BAFA7D3FE141 /* SubscriptionOffboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionOffboardingView.swift; sourceTree = "<group>"; };
 		E8FF43737E8AEC16E460CA2E /* QuickMeasureEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QuickMeasureEntry.swift; sourceTree = "<group>"; };
@@ -1151,6 +1153,7 @@
 				6B9F24910DF8F590870E7801 /* HapticManager.swift */,
 				5EEC9BB0836D5D77929DCAB3 /* HelpCard.swift */,
 				7653F047902CBFFBCFBEAB63 /* LiveWaveformCanvas.swift */,
+				E7B10C0E2A2C1809168C87CB /* MagneticFieldLoader.swift */,
 				7AD0577B19DFB71F67A6BDD6 /* MetricBadge.swift */,
 				652253D00D757C46BD62A631 /* MoodIcon.swift */,
 				156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */,
@@ -1907,6 +1910,7 @@
 				A40BC6BA8177158F6189B90F /* LiveWaveformView.swift in Sources */,
 				1CF7B2C94A1BA11B0A3FA6C7 /* LockScreenView.swift in Sources */,
 				297F41161FD890F6F1E6B5D3 /* LuxeCard.swift in Sources */,
+				ED20A5BA35A232F87A735960 /* MagneticFieldLoader.swift in Sources */,
 				2540B9511A6535E855BFD290 /* MagneticFieldService.swift in Sources */,
 				F1928421CA0056ADA3D7B61C /* MagneticFieldView.swift in Sources */,
 				C6F871B4BBD28549CC8C2586 /* MasterReportGenerator.swift in Sources */,

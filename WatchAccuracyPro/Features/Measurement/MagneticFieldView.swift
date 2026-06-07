@@ -102,9 +102,7 @@ struct MagneticFieldView: View {
         } label: {
             HStack(spacing: 10) {
                 if isMeasuring {
-                    ProgressView()
-                        .progressViewStyle(.circular)
-                        .tint(.white)
+                    MagneticFieldLoader(size: 22)
                 } else {
                     ConceptGlyph(systemName: "dot.radiowaves.left.and.right", size: 16, color: .white)
                 }
@@ -216,8 +214,7 @@ struct MagneticFieldView: View {
                 }
             } else {
                 HStack(spacing: 8) {
-                    ProgressView()
-                        .scaleEffect(0.8)
+                    MagneticFieldLoader(size: 24)
                     Text(String(localized: "magnetic.verdict.loading"))
                         .font(.system(size: 13))
                         .foregroundStyle(AppColors.ink3)
