@@ -68,6 +68,7 @@
 /* Stats */
 "stats.title" = "विश्लेषण";
 "stats.total_measurements" = "कुल माप";
+"stats.summary.section" = "सारांश";
 "stats.total_entries" = "प्रविष्टियाँ";
 "stats.total_measurements.sub" = "सटीकता मापें";
 "stats.total_entries.sub" = "फ़ील्ड नोट्स और डायरी";

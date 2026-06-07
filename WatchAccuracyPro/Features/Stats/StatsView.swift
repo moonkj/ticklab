@@ -97,10 +97,8 @@ struct StatsView: View {
         VStack(alignment: .leading, spacing: 14) {
             // ── 그룹 1: 내 기록 ──
             VStack(alignment: .leading, spacing: 10) {
-                Text(String(localized: "stats.group.mine"))
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.5)
-                    .foregroundStyle(AppColors.ink3)
+                // 하단 섹션(평균 오차 등)과 동일한 EyebrowLabel('—' 룰) 로 헤더 스타일 통일.
+                EyebrowLabel(text: String(localized: "stats.group.mine"))
                 HStack(spacing: 10) {
                     NavigationLink { BadgesView() } label: {
                         funEntryCard(emoji: "🏆",
@@ -128,10 +126,7 @@ struct StatsView: View {
 
             // ── 그룹 2: 커뮤니티 ── (브랜드리그=글로벌분석 통합, 뉴스)
             VStack(alignment: .leading, spacing: 10) {
-                Text(String(localized: "stats.group.community"))
-                    .font(.system(size: 11, weight: .semibold))
-                    .tracking(1.5)
-                    .foregroundStyle(AppColors.ink3)
+                EyebrowLabel(text: String(localized: "stats.group.community"))
                 HStack(spacing: 10) {
                     // 브랜드리그 진입 → 내부에 글로벌분석 세그먼트 포함 (통합).
                     NavigationLink { BrandLeagueView() } label: {
@@ -463,21 +458,26 @@ struct StatsView: View {
     }
 
     private var summaryCards: some View {
-        HStack(spacing: 12) {
-            summaryCard(
-                icon: "waveform",
+        // 섹션 헤더 — 헤더가 없어 바로 위 '커뮤니티' 그룹에 묶여 보이던 문제(내 누적 합계임을 명확히).
+        // 다른 섹션과 동일한 EyebrowLabel 스타일로 통일.
+        VStack(alignment: .leading, spacing: 10) {
+            EyebrowLabel(text: String(localized: "stats.summary.section", defaultValue: "요약"))
+            HStack(spacing: 12) {
+                summaryCard(
+                    icon: "waveform",
                 title: String(localized: "stats.total_measurements"),
                 subtitle: String(localized: "stats.total_measurements.sub", defaultValue: "정확도 측정 횟수"),
                 value: "\(measurements.count)",
                 accent: AppColors.accent
             )
-            summaryCard(
-                icon: "note.text",
-                title: String(localized: "stats.total_entries"),
-                subtitle: String(localized: "stats.total_entries.sub", defaultValue: "필드노트·일기"),
-                value: "\(journalEntries.count)",
-                accent: AppColors.primaryDeep
-            )
+                summaryCard(
+                    icon: "note.text",
+                    title: String(localized: "stats.total_entries"),
+                    subtitle: String(localized: "stats.total_entries.sub", defaultValue: "필드노트·일기"),
+                    value: "\(journalEntries.count)",
+                    accent: AppColors.primaryDeep
+                )
+            }
         }
     }
 

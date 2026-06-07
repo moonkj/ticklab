@@ -68,6 +68,7 @@
 /* Stats */
 "stats.title" = "Analysis";
 "stats.total_measurements" = "Measurements";
+"stats.summary.section" = "Summary";
 "stats.total_entries" = "Entries";
 "stats.total_measurements.sub" = "Accuracy readings";
 "stats.total_entries.sub" = "Field notes & diary";

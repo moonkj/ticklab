@@ -68,6 +68,7 @@
 /* Stats */
 "stats.title" = "分析";
 "stats.total_measurements" = "計測数";
+"stats.summary.section" = "サマリー";
 "stats.total_entries" = "記録数";
 "stats.total_measurements.sub" = "精度測定の回数";
 "stats.total_entries.sub" = "フィールドノート・日記";

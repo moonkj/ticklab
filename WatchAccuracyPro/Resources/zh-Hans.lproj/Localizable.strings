@@ -68,6 +68,7 @@
 /* Stats */
 "stats.title" = "分析";
 "stats.total_measurements" = "测量次数";
+"stats.summary.section" = "概要";
 "stats.total_entries" = "日志条数";
 "stats.total_measurements.sub" = "精度测量次数";
 "stats.total_entries.sub" = "随手记 · 日记";

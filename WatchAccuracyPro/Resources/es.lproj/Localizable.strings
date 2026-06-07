@@ -68,6 +68,7 @@
 /* Stats */
 "stats.title" = "Análisis";
 "stats.total_measurements" = "Mediciones";
+"stats.summary.section" = "Resumen";
 "stats.total_entries" = "Entradas";
 "stats.total_measurements.sub" = "Mediciones de precisión";
 "stats.total_entries.sub" = "Notas y diario";

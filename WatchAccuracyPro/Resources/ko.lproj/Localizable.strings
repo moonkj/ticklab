@@ -68,6 +68,7 @@
 /* Stats */
 "stats.title" = "분석";
 "stats.total_measurements" = "총 측정";
+"stats.summary.section" = "요약";
 "stats.total_entries" = "총 기록";
 "stats.total_measurements.sub" = "정확도 측정 횟수";
 "stats.total_entries.sub" = "필드노트·일기";
