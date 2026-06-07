@@ -2087,3 +2087,9 @@
 "community.stat.followers" = "フォロワー";
 "community.stat.following" = "フォロー中";
 "community.profile.edit" = "プロフィール編集";
+
+/* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */
+"community.wstat.watches" = "所有";
+"community.wstat.measures" = "計測数";
+"community.wstat.accuracy" = "平均精度";
+"community.wcard.measures" = "計測%d回";

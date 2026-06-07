@@ -2147,3 +2147,9 @@
 "community.stat.followers" = "Followers";
 "community.stat.following" = "Following";
 "community.profile.edit" = "Edit profile";
+
+/* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */
+"community.wstat.watches" = "Watches";
+"community.wstat.measures" = "Measured";
+"community.wstat.accuracy" = "Avg accuracy";
+"community.wcard.measures" = "%d measurements";

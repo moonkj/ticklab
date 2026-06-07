@@ -2087,3 +2087,9 @@
 "community.stat.followers" = "Seguidores";
 "community.stat.following" = "Siguiendo";
 "community.profile.edit" = "Editar perfil";
+
+/* 커뮤니티 프로필 v3 — 시계 통계/컬렉션 카드 */
+"community.wstat.watches" = "Relojes";
+"community.wstat.measures" = "Mediciones";
+"community.wstat.accuracy" = "Precisión media";
+"community.wcard.measures" = "%d mediciones";
