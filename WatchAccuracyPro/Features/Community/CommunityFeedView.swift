@@ -32,7 +32,6 @@ struct CommunityFeedView: View {
     @State private var notifCount = 0
     /// 운영 ID(관리자) 활성 — 모든 글 삭제 권한 노출.
     @AppStorage("ticklab.admin.actingAsTickLab") private var actingAsTickLab = false
-    @State private var adminDeleteTarget: Community.Post?
     /// 피드 범위 — false=전체, true=팔로잉한 계정만.
     @State private var followingOnly = false
     /// 운영자 경고 — 내 미확인 경고.
@@ -159,17 +158,6 @@ struct CommunityFeedView: View {
             }
             .alert(String(localized: "community.report.done"), isPresented: $reportDone) {
                 Button(String(localized: "common.done"), role: .cancel) {}
-            }
-            .confirmationDialog(
-                String(localized: "community.admin.delete.confirm"),
-                isPresented: Binding(get: { adminDeleteTarget != nil }, set: { if !$0 { adminDeleteTarget = nil } }),
-                titleVisibility: .visible
-            ) {
-                Button(String(localized: "common.delete"), role: .destructive) {
-                    if let target = adminDeleteTarget { Task { await service.adminDeletePost(target) } }
-                    adminDeleteTarget = nil
-                }
-                Button(String(localized: "common.cancel"), role: .cancel) { adminDeleteTarget = nil }
             }
         }
     }
@@ -405,9 +393,9 @@ struct CommunityFeedView: View {
                         onLikers: { likersTarget = post },
                         onAuthor: { authorTarget = post },
                         onBrandTap: { brand in brandFilterTarget = brand },
-                        onDelete: post.isMine(currentUID: service.myUID) ? { Task { await service.deleteMyPost(post) } } : nil,
+                        onDelete: post.isMine(currentUID: service.myUID) ? { deleteOwnPost(post) } : nil,
                         onEdit: post.isMine(currentUID: service.myUID) ? { editTarget = post } : nil,
-                        onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDeleteTarget = post } : nil
+                        onAdminDelete: (actingAsTickLab && !post.isMine(currentUID: service.myUID)) ? { adminDelete(post) } : nil
                     )
                     // 웨이브2-C: 하드 0.5px divider → 갤러리 여백(포스트 간 호흡 확대).
                     Color.clear.frame(height: 18)
@@ -507,6 +495,10 @@ struct CommunityFeedView: View {
         shareItem = ShareCardItem(url: service.imageURL(for: post.imagePath),
                                   text: CommunityShareText.make(for: post))
     }
+    // 삭제는 헬퍼로 분리 — 인라인 Task 클로저 2개가 같은 initializer 에 있으면
+    // Task init(name:priority:operation:) 과 모호해져 컴파일 실패하므로.
+    private func deleteOwnPost(_ post: Community.Post) { Task { await service.deleteMyPost(post) } }
+    private func adminDelete(_ post: Community.Post) { Task { await service.adminDeletePost(post) } }
 
     private func showSavedTab() {
         guard service.isSignedIn else { showLogin = true; return }

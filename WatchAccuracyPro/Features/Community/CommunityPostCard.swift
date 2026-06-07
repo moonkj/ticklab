@@ -28,6 +28,8 @@ struct CommunityPostCard: View {
     var onAdminDelete: (() -> Void)? = nil
     /// 본인 글 삭제 확인 — "..." 메뉴에 anchor 된 다이얼로그(부모 body 에 붙으면 화면 중앙에 떠 위치가 어색).
     @State private var confirmingDelete = false
+    /// 관리자 삭제 확인 — 위와 동일하게 "..." 에 anchor.
+    @State private var confirmingAdminDelete = false
 
     // 코드리뷰: 카드는 service 를 관찰하면 안 됨(좋아요 1개에 전체 피드 re-render). imageURL 은
     //   순수 함수라 shared 에서 직접 호출 — 관찰 제거로 피드 성능 보호.
@@ -310,8 +312,8 @@ struct CommunityPostCard: View {
                     Label(String(localized: "common.delete"), systemImage: "trash")
                 }
             }
-            if let onAdminDelete {
-                Button(role: .destructive, action: onAdminDelete) {
+            if onAdminDelete != nil {
+                Button(role: .destructive) { confirmingAdminDelete = true } label: {
                     Label(String(localized: "community.admin.delete"), systemImage: "trash.slash")
                 }
             }
@@ -329,6 +331,16 @@ struct CommunityPostCard: View {
         ) {
             if let onDelete {
                 Button(String(localized: "common.delete"), role: .destructive, action: onDelete)
+            }
+            Button(String(localized: "common.cancel"), role: .cancel) {}
+        }
+        .confirmationDialog(
+            String(localized: "community.admin.delete.confirm"),
+            isPresented: $confirmingAdminDelete,
+            titleVisibility: .visible
+        ) {
+            if let onAdminDelete {
+                Button(String(localized: "common.delete"), role: .destructive, action: onAdminDelete)
             }
             Button(String(localized: "common.cancel"), role: .cancel) {}
         }
