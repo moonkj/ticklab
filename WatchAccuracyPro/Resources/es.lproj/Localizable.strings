@@ -314,7 +314,7 @@
 "community.saved.empty" = "Aún no hay publicaciones guardadas";
 "community.account" = "Cuenta";
 "community.loading" = "Cargando…";
-"community.menu.profile" = "Editar perfil";
+"community.menu.profile" = "Mi perfil";
 "community.menu.logout" = "Cerrar sesión";
 "timeline.title" = "Historia del reloj";
 "timeline.entry" = "Línea de vida";
@@ -1709,6 +1709,7 @@
 "wear.tag.sports" = "Deporte";
 "community.warning.title" = "Advertencia del moderador";
 "community.admin.delete.confirm" = "¿Eliminar esta publicación? (Admin)";
+"community.delete.confirm" = "¿Eliminar esta publicación? No se puede deshacer.";
 "community.admin.delete" = "Eliminar (admin)";
 "community.scope.all" = "Todo";
 "community.scope.following" = "Siguiendo";

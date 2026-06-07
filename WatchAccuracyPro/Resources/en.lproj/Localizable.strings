@@ -321,7 +321,7 @@
 "community.saved.empty" = "No saved posts yet";
 "community.account" = "Account";
 "community.loading" = "Loading…";
-"community.menu.profile" = "Edit profile";
+"community.menu.profile" = "My profile";
 "community.menu.logout" = "Log out";
 "timeline.title" = "Watch Story";
 "timeline.entry" = "Life Timeline";
@@ -1777,6 +1777,7 @@
 "wear.tag.sports" = "Sports";
 "community.warning.title" = "Moderator Warning";
 "community.admin.delete.confirm" = "Delete this post? (Admin)";
+"community.delete.confirm" = "Delete this post? This can't be undone.";
 "community.admin.delete" = "Admin Delete";
 "community.scope.all" = "All";
 "community.scope.following" = "Following";

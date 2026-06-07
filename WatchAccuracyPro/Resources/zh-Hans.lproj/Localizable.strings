@@ -314,7 +314,7 @@
 "community.saved.empty" = "暂无收藏";
 "community.account" = "账户";
 "community.loading" = "加载中…";
-"community.menu.profile" = "编辑资料";
+"community.menu.profile" = "我的资料";
 "community.menu.logout" = "退出登录";
 "timeline.title" = "腕表生平";
 "timeline.entry" = "生平时间线";
@@ -1709,6 +1709,7 @@
 "wear.tag.sports" = "运动";
 "community.warning.title" = "运营者警告";
 "community.admin.delete.confirm" = "确定删除此帖子吗？（管理员）";
+"community.delete.confirm" = "确定删除此帖子吗？删除后无法恢复。";
 "community.admin.delete" = "管理员删除";
 "community.scope.all" = "全部";
 "community.scope.following" = "关注";

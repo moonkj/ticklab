@@ -314,7 +314,7 @@
 "community.saved.empty" = "保存した投稿はありません";
 "community.account" = "アカウント";
 "community.loading" = "読み込み中…";
-"community.menu.profile" = "プロフィール編集";
+"community.menu.profile" = "マイプロフィール";
 "community.menu.logout" = "ログアウト";
 "timeline.title" = "時計の記録";
 "timeline.entry" = "ライフタイムライン";
@@ -1709,6 +1709,7 @@
 "wear.tag.sports" = "スポーツ";
 "community.warning.title" = "運営者警告";
 "community.admin.delete.confirm" = "この投稿を削除しますか？（管理者）";
+"community.delete.confirm" = "この投稿を削除しますか？削除すると元に戻せません。";
 "community.admin.delete" = "管理者削除";
 "community.scope.all" = "すべて";
 "community.scope.following" = "フォロー中";

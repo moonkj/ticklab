@@ -245,7 +245,7 @@
 "community.saved.empty" = "저장한 게시물이 없어요";
 "community.account" = "계정";
 "community.loading" = "불러오는 중…";
-"community.menu.profile" = "프로필 편집";
+"community.menu.profile" = "내 프로필";
 "community.menu.logout" = "로그아웃";
 "timeline.title" = "시계 생애 기록";
 "timeline.entry" = "생애 타임라인";
@@ -1776,6 +1776,7 @@
 "wear.tag.sports" = "스포츠";
 "community.warning.title" = "운영자 경고";
 "community.admin.delete.confirm" = "이 게시물을 삭제할까요? (관리자)";
+"community.delete.confirm" = "이 게시물을 삭제할까요? 삭제하면 되돌릴 수 없어요.";
 "community.admin.delete" = "관리자 삭제";
 "community.scope.all" = "전체";
 "community.scope.following" = "팔로잉";

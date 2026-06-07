@@ -314,7 +314,7 @@
 "community.saved.empty" = "尚無收藏";
 "community.account" = "帳戶";
 "community.loading" = "載入中…";
-"community.menu.profile" = "編輯個人檔案";
+"community.menu.profile" = "我的個人檔案";
 "community.menu.logout" = "登出";
 "timeline.title" = "腕錶生平";
 "timeline.entry" = "生平時間線";
@@ -1709,6 +1709,7 @@
 "wear.tag.sports" = "運動";
 "community.warning.title" = "管理員警告";
 "community.admin.delete.confirm" = "確定刪除此貼文嗎？（管理員）";
+"community.delete.confirm" = "確定刪除此貼文嗎？刪除後無法復原。";
 "community.admin.delete" = "管理員刪除";
 "community.scope.all" = "全部";
 "community.scope.following" = "追蹤中";

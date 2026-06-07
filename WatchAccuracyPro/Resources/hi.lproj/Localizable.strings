@@ -314,7 +314,7 @@
 "community.saved.empty" = "अभी तक कोई सेव पोस्ट नहीं";
 "community.account" = "खाता";
 "community.loading" = "लोड हो रहा है…";
-"community.menu.profile" = "प्रोफ़ाइल संपादित करें";
+"community.menu.profile" = "मेरी प्रोफ़ाइल";
 "community.menu.logout" = "लॉग आउट";
 "timeline.title" = "घड़ी की कहानी";
 "timeline.entry" = "जीवन समयरेखा";
@@ -1709,6 +1709,7 @@
 "wear.tag.sports" = "खेल";
 "community.warning.title" = "संचालक की चेतावनी";
 "community.admin.delete.confirm" = "क्या इस पोस्ट को हटाएँ? (एडमिन)";
+"community.delete.confirm" = "क्या इस पोस्ट को हटाएँ? इसे पूर्ववत नहीं किया जा सकता।";
 "community.admin.delete" = "एडमिन द्वारा हटाएँ";
 "community.scope.all" = "सभी";
 "community.scope.following" = "फ़ॉलो किए गए";

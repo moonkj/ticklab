@@ -314,7 +314,7 @@
 "community.saved.empty" = "Aucune publication enregistrée";
 "community.account" = "Compte";
 "community.loading" = "Chargement…";
-"community.menu.profile" = "Modifier le profil";
+"community.menu.profile" = "Mon profil";
 "community.menu.logout" = "Se déconnecter";
 "timeline.title" = "Histoire de la montre";
 "timeline.entry" = "Chronologie";
@@ -1709,6 +1709,7 @@
 "wear.tag.sports" = "Sport";
 "community.warning.title" = "Avertissement du modérateur";
 "community.admin.delete.confirm" = "Supprimer cette publication ? (Admin)";
+"community.delete.confirm" = "Supprimer cette publication ? Cette action est irréversible.";
 "community.admin.delete" = "Supprimer (admin)";
 "community.scope.all" = "Tous";
 "community.scope.following" = "Abonnements";
