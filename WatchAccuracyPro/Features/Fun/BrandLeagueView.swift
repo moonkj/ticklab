@@ -70,15 +70,8 @@ struct BrandLeagueView: View {
     }
 
     private var myCountForPeriod: [String: Int] {
-        let cutoff: Date = {
-            let cal = Calendar.current; let now = Date()
-            switch period {
-            case .day:   return cal.startOfDay(for: now)
-            case .week:  return cal.date(byAdding: .day,   value: -7,  to: now) ?? now
-            case .month: return cal.date(byAdding: .month, value: -1,  to: now) ?? now
-            case .year:  return cal.date(byAdding: .year,  value: -1,  to: now) ?? now
-            }
-        }()
+        // 달력 경계 정렬(week=이번주 시작 등) — 업로드(computeBrandCounts)와 동일 소스로 정합.
+        let cutoff = SupabaseBrandLeagueService.periodCutoff(type: period.supabaseType)
         var dict: [String: Int] = [:]
         for log in wearLogs.filter({ $0.date >= cutoff }) {
             if let b = log.watch?.brand { dict[b, default: 0] += 1 }

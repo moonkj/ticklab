@@ -70,6 +70,20 @@ final class SupabaseBrandLeagueService: ObservableObject {
         }
     }
 
+    /// 기간 시작 시각 — periodKey(달력 버킷)와 정합되어야 함.
+    /// 버그 수정: 기존 week/month/year 가 '롤링 N일' cutoff 라 달력 버킷 키와 어긋나,
+    /// 새 주(월요일 등)가 돼도 지난 7일치가 새 주 키에 합산돼 초기화가 안 됐음.
+    /// → 이번 주/달/해의 '시작' 으로 정렬(달력 경계에서 리셋). day 는 종전대로 오늘 0시.
+    static func periodCutoff(type: String, date: Date = Date()) -> Date {
+        let cal = Calendar.current
+        switch type {
+        case "week":  return cal.dateInterval(of: .weekOfYear, for: date)?.start ?? cal.startOfDay(for: date)
+        case "month": return cal.dateInterval(of: .month, for: date)?.start ?? cal.startOfDay(for: date)
+        case "year":  return cal.dateInterval(of: .year, for: date)?.start ?? cal.startOfDay(for: date)
+        default:      return cal.startOfDay(for: date)
+        }
+    }
+
     // MARK: - Upload user's brand wear count
 
     /// 착용 기록 변경 시 호출 — 해당 기기의 브랜드별 착용 수를 Supabase 에 upsert.
@@ -211,12 +225,11 @@ final class SupabaseBrandLeagueService: ObservableObject {
     /// BrandLeagueView.computedBrandCounts 와 동일 로직 — 단일 진실 소스.
     static func computeBrandCounts(from logs: [WearLog]) -> [(brand: String, type: String, key: String, count: Int)] {
         let now = Date()
-        let cal = Calendar.current
         let periods: [(type: String, cutoff: Date)] = [
-            ("day",   cal.startOfDay(for: now)),
-            ("week",  cal.date(byAdding: .day,   value: -7,  to: now) ?? now),
-            ("month", cal.date(byAdding: .month, value: -1,  to: now) ?? now),
-            ("year",  cal.date(byAdding: .year,  value: -1,  to: now) ?? now),
+            ("day",   periodCutoff(type: "day", date: now)),
+            ("week",  periodCutoff(type: "week", date: now)),
+            ("month", periodCutoff(type: "month", date: now)),
+            ("year",  periodCutoff(type: "year", date: now)),
         ]
         var result: [(brand: String, type: String, key: String, count: Int)] = []
         for (pt, cutoff) in periods {
