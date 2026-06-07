@@ -1763,6 +1763,12 @@
 "admin.access.pin_wrong" = "Incorrect PIN.";
 "admin.access.pin_prompt" = "Enter the admin PIN.";
 "admin.stats.section" = "Statistics";
+"admin.stats.access.section" = "访问累计";
+"admin.stats.access.today" = "今日";
+"admin.stats.access.week" = "本周";
+"admin.stats.access.month" = "本月";
+"admin.stats.access.total" = "累计";
+"admin.stats.access.footer" = "每次进入前台计 1 次。需部署 access_log.sql — 未部署显示 0。";
 "admin.stats.footer" = "'Active Now' is an approximation of presence within the last 2 minutes · True concurrent sessions require Realtime";
 "admin.stats.active_users" = "Active Now";
 "admin.stats.today_posts" = "Today's Posts";

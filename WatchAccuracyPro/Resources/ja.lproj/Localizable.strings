@@ -1763,6 +1763,12 @@
 "admin.access.pin_wrong" = "Incorrect PIN.";
 "admin.access.pin_prompt" = "Enter the admin PIN.";
 "admin.stats.section" = "Statistics";
+"admin.stats.access.section" = "接続累計";
+"admin.stats.access.today" = "今日";
+"admin.stats.access.week" = "今週";
+"admin.stats.access.month" = "今月";
+"admin.stats.access.total" = "累計";
+"admin.stats.access.footer" = "アプリ起動(フォアグラウンド)ごとに1回集計。access_log.sql の適用が必要 — 未適用時は0。";
 "admin.stats.footer" = "'Active Now' is an approximation of presence within the last 2 minutes · True concurrent sessions require Realtime";
 "admin.stats.active_users" = "Active Now";
 "admin.stats.today_posts" = "Today's Posts";

@@ -1763,6 +1763,12 @@
 "admin.access.pin_wrong" = "Incorrect PIN.";
 "admin.access.pin_prompt" = "Enter the admin PIN.";
 "admin.stats.section" = "Statistics";
+"admin.stats.access.section" = "कुल एक्सेस";
+"admin.stats.access.today" = "आज";
+"admin.stats.access.week" = "इस सप्ताह";
+"admin.stats.access.month" = "इस माह";
+"admin.stats.access.total" = "कुल";
+"admin.stats.access.footer" = "ऐप फ़ोरग्राउंड पर एक बार गिना जाता है। access_log.sql ज़रूरी — परिनियोजन तक 0।";
 "admin.stats.footer" = "'Active Now' is an approximation of presence within the last 2 minutes · True concurrent sessions require Realtime";
 "admin.stats.active_users" = "Active Now";
 "admin.stats.today_posts" = "Today's Posts";

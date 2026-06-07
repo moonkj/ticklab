@@ -1830,6 +1830,12 @@
 "admin.access.pin_wrong" = "PIN이 틀렸습니다.";
 "admin.access.pin_prompt" = "관리자 PIN을 입력하세요.";
 "admin.stats.section" = "통계";
+"admin.stats.access.section" = "접속 누계";
+"admin.stats.access.today" = "오늘 접속";
+"admin.stats.access.week" = "이번주 접속";
+"admin.stats.access.month" = "이번달 접속";
+"admin.stats.access.total" = "총 접속";
+"admin.stats.access.footer" = "앱 접속(포그라운드)마다 1회 집계. access_log.sql 배포 필요 — 미배포 시 0.";
 "admin.stats.footer" = "'현재 활동'은 최근 2분 내 사용(presence) 근사치 · 진짜 동시접속은 Realtime 필요";
 "admin.stats.active_users" = "현재 활동";
 "admin.stats.today_posts" = "오늘 게시물";

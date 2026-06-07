@@ -1831,6 +1831,12 @@
 "admin.access.pin_wrong" = "Incorrect PIN.";
 "admin.access.pin_prompt" = "Enter the admin PIN.";
 "admin.stats.section" = "Statistics";
+"admin.stats.access.section" = "Access totals";
+"admin.stats.access.today" = "Today";
+"admin.stats.access.week" = "This week";
+"admin.stats.access.month" = "This month";
+"admin.stats.access.total" = "All time";
+"admin.stats.access.footer" = "Counted once per app foreground. Requires access_log.sql — shows 0 until deployed.";
 "admin.stats.footer" = "'Active Now' is an approximation of presence within the last 2 minutes · True concurrent sessions require Realtime";
 "admin.stats.active_users" = "Active Now";
 "admin.stats.today_posts" = "Today's Posts";

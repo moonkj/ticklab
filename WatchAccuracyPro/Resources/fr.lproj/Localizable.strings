@@ -1763,6 +1763,12 @@
 "admin.access.pin_wrong" = "Incorrect PIN.";
 "admin.access.pin_prompt" = "Enter the admin PIN.";
 "admin.stats.section" = "Statistics";
+"admin.stats.access.section" = "Total des accès";
+"admin.stats.access.today" = "Aujourd'hui";
+"admin.stats.access.week" = "Cette semaine";
+"admin.stats.access.month" = "Ce mois";
+"admin.stats.access.total" = "Total";
+"admin.stats.access.footer" = "Compté une fois par passage au premier plan. Nécessite access_log.sql — 0 avant déploiement.";
 "admin.stats.footer" = "'Active Now' is an approximation of presence within the last 2 minutes · True concurrent sessions require Realtime";
 "admin.stats.active_users" = "Active Now";
 "admin.stats.today_posts" = "Today's Posts";

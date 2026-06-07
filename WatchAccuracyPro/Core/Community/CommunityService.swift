@@ -1146,17 +1146,46 @@ final class CommunityService: ObservableObject {
         _ = try? await URLSession.shared.data(for: req)
     }
 
-    /// 운영 통계. 전체/오늘 게시물은 public 읽기로 동작, 활동 사용자는 presence 테이블 필요.
+    /// 앱 접속 1회 기록 — community_access_log INSERT(서버 default uid/created_at).
+    /// 접속 누계 집계용. 테이블 미배포(access_log.sql 전)면 조용히 실패(graceful).
+    func logAccess() async {
+        await ensureSignedIn()
+        guard let url = URL(string: "\(baseURL)/rest/v1/community_access_log") else { return }
+        var req = authedRequest(url, method: "POST")
+        req.setValue("return=minimal", forHTTPHeaderField: "Prefer")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: [String: Any]())
+        _ = try? await URLSession.shared.data(for: req)
+    }
+
+    /// 운영 통계. 전체/오늘 게시물은 public 읽기로 동작, 활동 사용자·접속 누계는 admin RLS 테이블 필요.
     func fetchOpsStats() async -> Community.OpsStats {
         await ensureSignedIn()
-        let todayISO = ISO8601DateFormatter().string(from: Calendar.current.startOfDay(for: Date()))
-        let activeCutoff = ISO8601DateFormatter().string(from: Date().addingTimeInterval(-120))
+        let iso = ISO8601DateFormatter()
+        let cal = Calendar.current
+        let now = Date()
+        let startToday = cal.startOfDay(for: now)
+        let startWeek = cal.dateInterval(of: .weekOfYear, for: now)?.start ?? startToday
+        let startMonth = cal.dateInterval(of: .month, for: now)?.start ?? startToday
+        let todayISO = iso.string(from: startToday)
+        let activeCutoff = iso.string(from: now.addingTimeInterval(-120))
         async let total = countRows(table: "community_posts", selectCol: "id", filter: "status=eq.approved")
         async let today = countRows(table: "community_posts", selectCol: "id",
                                     filter: "status=eq.approved&created_at=gte.\(todayISO)")
         async let active = countRows(table: "community_presence", selectCol: "uid",
                                      filter: "last_seen=gte.\(activeCutoff)")
-        return Community.OpsStats(activeUsers: await active, todayPosts: await today, totalPosts: await total)
+        // 접속 누계 — community_access_log created_at 윈도우별 카운트(미배포 시 0).
+        async let accToday = countRows(table: "community_access_log", selectCol: "id",
+                                       filter: "created_at=gte.\(todayISO)")
+        async let accWeek = countRows(table: "community_access_log", selectCol: "id",
+                                      filter: "created_at=gte.\(iso.string(from: startWeek))")
+        async let accMonth = countRows(table: "community_access_log", selectCol: "id",
+                                       filter: "created_at=gte.\(iso.string(from: startMonth))")
+        async let accTotal = countRows(table: "community_access_log", selectCol: "id", filter: "id=gte.0")
+        return Community.OpsStats(
+            activeUsers: await active, todayPosts: await today, totalPosts: await total,
+            todayAccess: await accToday, weekAccess: await accWeek,
+            monthAccess: await accMonth, totalAccess: await accTotal
+        )
     }
 
     /// 신고 목록 (admin SELECT RLS 필요 — 미배포 시 빈 배열).

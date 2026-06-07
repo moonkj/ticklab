@@ -262,6 +262,10 @@ private struct RootView: View {
         .task {
             // Round 172 (clock 보정): 최초 실행에 앵커(NTP↔monotonic) 설정. 이후 foreground 마다 갱신.
             await ClockCalibrationService.shared.calibrateNow()
+            // 접속 누계 — 콜드 런치 1회 기록(운영 대시보드 집계용). 커뮤니티 활성 시에만.
+            if FeatureFlags.shared.communityEnabled {
+                Task { await CommunityService.shared.logAccess() }
+            }
             // Round 152: launch 시 알림 재예약.
             // - 랜덤 시계 픽: 매일 단발 알림 → 매 launch 마다 새 watch 로 다시 예약.
             // - 수동감기 / Quartz 배터리: 기존 시계 설정에 따라 재예약 (idempotent — 같은 identifier 면 덮어씀).
@@ -339,6 +343,10 @@ private struct RootView: View {
             //   기존엔 커뮤니티 피드 열 때만 찍혀 '앱 실행 중인데 0명' 발생 → 포그라운드로 보강.
             if FeatureFlags.shared.communityEnabled {
                 Task { await CommunityService.shared.heartbeat() }
+                // 백그라운드에서 복귀 = 접속 1회(콜드 런치는 .task 에서 별도 기록 → 중복 방지).
+                if lastBackgroundedAt != nil {
+                    Task { await CommunityService.shared.logAccess() }
+                }
             }
             lastBackgroundedAt = nil
         @unknown default: break

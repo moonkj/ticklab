@@ -84,6 +84,11 @@ enum Community {
         var activeUsers: Int = 0
         var todayPosts: Int = 0
         var totalPosts: Int = 0
+        /// 접속 누계 — community_access_log 집계(미배포 시 0).
+        var todayAccess: Int = 0
+        var weekAccess: Int = 0
+        var monthAccess: Int = 0
+        var totalAccess: Int = 0
     }
 
     /// 공지 (운영자 발송 — 노출 기간 동안 하단 시트로 표시).

@@ -61,6 +61,21 @@ private struct AdminOpsView: View {
             } footer: {
                 Text(String(localized: "admin.stats.footer"))
             }
+            // 접속 누계 — 오늘/이번주/이번달/총 (community_access_log 집계).
+            Section {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
+                    AdminStatTile(icon: "sun.max.fill", value: stats.todayAccess, label: String(localized: "admin.stats.access.today", defaultValue: "오늘 접속"), tone: AppColors.accent)
+                    AdminStatTile(icon: "calendar", value: stats.weekAccess, label: String(localized: "admin.stats.access.week", defaultValue: "이번주 접속"), tone: AppColors.info)
+                    AdminStatTile(icon: "calendar.badge.clock", value: stats.monthAccess, label: String(localized: "admin.stats.access.month", defaultValue: "이번달 접속"), tone: AppColors.primaryDeep)
+                    AdminStatTile(icon: "sum", value: stats.totalAccess, label: String(localized: "admin.stats.access.total", defaultValue: "총 접속"), tone: AppColors.ink2)
+                }
+                .listRowInsets(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                .listRowBackground(Color.clear)
+            } header: {
+                Text(String(localized: "admin.stats.access.section", defaultValue: "접속 누계"))
+            } footer: {
+                Text(String(localized: "admin.stats.access.footer", defaultValue: "앱 접속(포그라운드)마다 1회 집계. access_log.sql 배포 필요 — 미배포 시 0."))
+            }
             // 뱃지 확인용 — 전부 획득/원상복구 (실데이터 변경 없음, 화면 표시만 override).
             Section {
                 Toggle(isOn: $forceAllBadges) {
