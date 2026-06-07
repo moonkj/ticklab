@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// 자기장 측정 로딩 인디케이터 — 회전하는 나침반 바늘(N 빨강/S 스틸) + 바깥으로 퍼지는 자기장 펄스 링
-/// + 다이폴 필드 라인(큰 사이즈일 때). 다크/라이트 배경 모두 가독. Reduce Motion 시 정적.
+/// 자기장 측정 로딩 — 회전하는 **말굽자석**(N 빨강 / S 파랑) + 양극 사이 자기장 펄스.
+/// 나침반/밸런스휠 아님. 다크/라이트 배경 모두 가독. Reduce Motion 시 정적.
 struct MagneticFieldLoader: View {
-    var size: CGFloat = 64
+    var size: CGFloat = 26
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
@@ -17,58 +17,64 @@ struct MagneticFieldLoader: View {
         .accessibilityHidden(true)
     }
 
-    private func circle(_ x: CGFloat, _ y: CGFloat, _ r: CGFloat) -> Path {
-        Path(ellipseIn: CGRect(x: x - r, y: y - r, width: 2 * r, height: 2 * r))
+    private func line(_ x1: CGFloat, _ y1: CGFloat, _ x2: CGFloat, _ y2: CGFloat) -> Path {
+        var p = Path(); p.move(to: CGPoint(x: x1, y: y1)); p.addLine(to: CGPoint(x: x2, y: y2)); return p
     }
 
     private func draw(_ gc: GraphicsContext, _ sz: CGSize, _ t: Double) {
         let s = min(sz.width, sz.height)
         let cx = sz.width / 2, cy = sz.height / 2
         let R = s / 2
-        let field = Color(red: 0.28, green: 0.55, blue: 1.0)   // 선명한 블루 — 자기장(다크/라이트 둘 다 보임)
-        let north = Color(red: 0.95, green: 0.27, blue: 0.25)  // 밝은 빨강 — N극
-        let south = Color(white: 0.62)                         // 스틸 — S극
-        let gold = AppColors.accent
+        let north = Color(red: 0.95, green: 0.27, blue: 0.25)   // N극 빨강
+        let south = Color(red: 0.28, green: 0.50, blue: 1.0)    // S극 파랑
+        let body = Color(white: 0.50)                            // 자석 몸체 스틸
+        let lw = R * 0.30                                         // 자석 두께
 
-        // 바깥으로 퍼지는 자기장 펄스 링(레이더식 = 장 감지).
-        for k in 0..<3 {
-            let phase = (t * 0.7 + Double(k) / 3.0).truncatingRemainder(dividingBy: 1.0)
-            let rr = R * (0.30 + 0.70 * CGFloat(phase))
-            let op = (1.0 - phase) * 0.8
-            gc.stroke(circle(cx, cy, rr), with: .color(field.opacity(op)),
-                      lineWidth: max(1.4, s * 0.05))
-        }
-
-        // 다이폴 필드 라인 — 큰 사이즈에서만(좌우 대칭 루프).
-        if s >= 44 {
-            for sgn in [-1.0, 1.0] as [CGFloat] {
-                var p = Path()
-                p.move(to: CGPoint(x: cx, y: cy - R * 0.62))
-                p.addCurve(to: CGPoint(x: cx, y: cy + R * 0.62),
-                           control1: CGPoint(x: cx + sgn * R * 0.95, y: cy - R * 0.30),
-                           control2: CGPoint(x: cx + sgn * R * 0.95, y: cy + R * 0.30))
-                gc.stroke(p, with: .color(field.opacity(0.40)), lineWidth: max(1, s * 0.03))
-            }
-        }
-
-        // 회전하는 나침반 바늘 — 천천히 스캔(2.6s/회).
         var g = gc
         g.translateBy(x: cx, y: cy)
-        g.rotate(by: .radians(t * (2 * .pi / 2.6)))
-        let len = R * 0.66, w = R * 0.20
-        var pn = Path()
-        pn.move(to: CGPoint(x: 0, y: -len)); pn.addLine(to: CGPoint(x: -w, y: 0)); pn.addLine(to: CGPoint(x: w, y: 0)); pn.closeSubpath()
-        g.fill(pn, with: .color(north))
-        var ps = Path()
-        ps.move(to: CGPoint(x: 0, y: len)); ps.addLine(to: CGPoint(x: -w, y: 0)); ps.addLine(to: CGPoint(x: w, y: 0)); ps.closeSubpath()
-        g.fill(ps, with: .color(south))
-        g.fill(circle(0, 0, w * 0.6), with: .color(gold))
+        g.rotate(by: .radians(t * (2 * .pi / 2.2)))              // 천천히 회전(로딩)
+        g.translateBy(x: -cx, y: -cy)
+
+        let legX = R * 0.40                                       // 다리 좌우 간격
+        let topY = cy - R * 0.42                                  // 양극(위) y
+        let botY = cy + R * 0.30                                  // 곡선 시작 y
+        let capLen = R * 0.30                                     // 극 색 캡 길이
+
+        // 몸체 U(말굽) — 양다리 + 바닥 곡선.
+        var u = Path()
+        u.move(to: CGPoint(x: cx - legX, y: topY + capLen))
+        u.addLine(to: CGPoint(x: cx - legX, y: botY))
+        u.addQuadCurve(to: CGPoint(x: cx + legX, y: botY),
+                       control: CGPoint(x: cx, y: botY + legX * 1.7))
+        u.addLine(to: CGPoint(x: cx + legX, y: topY + capLen))
+        g.stroke(u, with: .color(body), style: StrokeStyle(lineWidth: lw, lineCap: .round, lineJoin: .round))
+
+        // 양극 색 캡 — 좌 N(빨강) / 우 S(파랑).
+        g.stroke(line(cx - legX, topY, cx - legX, topY + capLen), with: .color(north),
+                 style: StrokeStyle(lineWidth: lw, lineCap: .round))
+        g.stroke(line(cx + legX, topY, cx + legX, topY + capLen), with: .color(south),
+                 style: StrokeStyle(lineWidth: lw, lineCap: .round))
+
+        // 양극 사이 자기장 펄스(위로 퍼지는 호) — 큰 사이즈에서만.
+        if s >= 40 {
+            for k in 0..<2 {
+                let phase = (t * 1.1 + Double(k) / 2.0).truncatingRemainder(dividingBy: 1.0)
+                let lift = R * (0.0 + 0.42 * CGFloat(phase))
+                let op = (1.0 - phase) * 0.7
+                var arc = Path()
+                let ay = topY - lift
+                arc.move(to: CGPoint(x: cx - legX, y: ay))
+                arc.addQuadCurve(to: CGPoint(x: cx + legX, y: ay),
+                                 control: CGPoint(x: cx, y: ay - R * 0.30))
+                g.stroke(arc, with: .color(south.opacity(op)), style: StrokeStyle(lineWidth: max(1, s * 0.035)))
+            }
+        }
     }
 }
 
 #Preview {
     HStack(spacing: 24) {
-        MagneticFieldLoader(size: 22)
+        MagneticFieldLoader(size: 24)
         MagneticFieldLoader(size: 64)
     }
     .padding(40)

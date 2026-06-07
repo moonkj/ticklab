@@ -24,15 +24,6 @@ struct MagneticFieldView: View {
                     unavailableCard
                 }
                 measureButton
-                if isMeasuring {
-                    // 측정 중 — 크고 또렷한 자기장 로더(라이트 카드). 버튼이 "측정 중" 텍스트 담당.
-                    MagneticFieldLoader(size: 76)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 24)
-                        .background(AppColors.paper1)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.rule, lineWidth: 1))
-                }
                 if isMeasuring || !service.sampleHistory.isEmpty {
                     liveChartCard
                 }
