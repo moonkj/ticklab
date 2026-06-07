@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 /// 커스텀 탭바 — 선택 pill 슬라이드(spring) + 탭별 시그니처 아이콘 애니메이션(선택 시 1회 재생).
@@ -102,43 +103,38 @@ struct AnimatedTabBar: View {
 // MARK: - 아이콘 디스패치
 
 /// 제목 옆 등 어디서나 쓰는 애니메이션 탭 아이콘 래퍼 — 나타날 때 + 이후 5초마다 시그니처 모션 재생.
-/// 반복은 .task(뷰 수명에 1회) 의 async 루프로 구동 — Timer.publish 스토어드는 부모 재렌더마다
-/// 새 타이머가 만들어져 카운트다운이 계속 리셋(→ 한 번만 동작하고 멈춤)되므로 사용하지 않는다.
+/// TickingGearView 와 동일하게 stored Timer + 단조 증가 카운터(beat)로 구동한다.
+/// (Bool play 의 false→true 토글은 렌더 병합 시 자식 onChange 가 변화를 못 봐 재트리거가 누락될 수 있어
+///  매번 값이 바뀌는 beat 증가 방식으로 확실히 재생.)
 struct HeaderTabIcon: View {
     let kind: RootTabView.Tab
     var size: CGFloat = 19
     var color: Color = AppColors.accent
-    @State private var play = false
+    @State private var beat = 0
     @Environment(\.accessibilityReduceMotion) private var rm
+    private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     var body: some View {
-        AnimatedTabIcon(kind: kind, color: color, play: play)
+        AnimatedTabIcon(kind: kind, color: color, beat: beat)
             .frame(width: size, height: size)
-            .task {
-                guard !rm else { return }   // 모션 줄이기 켜짐: 반복 애니메이션 생략
-                // 첫 회 즉시 + 이후 5초마다 재생. 뷰가 사라지면 task 취소.
-                while !Task.isCancelled {
-                    await MainActor.run { trigger() }
-                    try? await Task.sleep(for: .seconds(5))
-                }
-            }
-    }
-    @MainActor private func trigger() {
-        play = false
-        DispatchQueue.main.async { play = true }   // false→true 로 시그니처 모션 트리거
+            .onAppear { if !rm { beat += 1 } }              // 첫 회 즉시 재생
+            .onReceive(timer) { _ in if !rm { beat += 1 } }  // 5초마다 재생
     }
 }
 
 struct AnimatedTabIcon: View {
     let kind: RootTabView.Tab
     let color: Color
-    let play: Bool
+    /// 탭바 선택 시 1회 재생(false→true). 헤더 반복은 beat 사용.
+    var play: Bool = false
+    /// 단조 증가 트리거 — 값이 바뀔 때마다 시그니처 모션 재생(헤더 5초 반복용).
+    var beat: Int = 0
     var body: some View {
         switch kind {
-        case .collection: TabIconCollection(color: color, play: play)
-        case .today:      TabIconToday(color: color, play: play)
-        case .journal:    TabIconJournal(color: color, play: play)
-        case .stats:      TabIconStats(color: color, play: play)
-        case .community:  TabIconCommunity(color: color, play: play)
+        case .collection: TabIconCollection(color: color, play: play, beat: beat)
+        case .today:      TabIconToday(color: color, play: play, beat: beat)
+        case .journal:    TabIconJournal(color: color, play: play, beat: beat)
+        case .stats:      TabIconStats(color: color, play: play, beat: beat)
+        case .community:  TabIconCommunity(color: color, play: play, beat: beat)
         }
     }
 }
@@ -148,6 +144,7 @@ struct AnimatedTabIcon: View {
 /// 컬렉션 — 2×2 다이얼. 좌→우·위→아래 stagger pop.
 private struct TabIconCollection: View {
     let color: Color; let play: Bool
+    var beat: Int = 0
     var size: CGFloat = 26
     @Environment(\.accessibilityReduceMotion) private var rm
     @State private var sc: [CGFloat] = [1, 1, 1, 1]
@@ -166,6 +163,7 @@ private struct TabIconCollection: View {
         }
         .frame(width: size, height: size)
         .onChange(of: play) { _, p in if p { run() } }
+        .onChange(of: beat) { _, _ in run() }
     }
     private func run() {
         guard !rm else { return }
@@ -179,6 +177,7 @@ private struct TabIconCollection: View {
 /// 오늘 — 다이얼 + 침. 선택 시 침이 한 바퀴 sweep.
 private struct TabIconToday: View {
     let color: Color; let play: Bool
+    var beat: Int = 0
     var size: CGFloat = 26
     @Environment(\.accessibilityReduceMotion) private var rm
     @State private var spin: Double = 0
@@ -199,12 +198,16 @@ private struct TabIconToday: View {
         .onChange(of: play) { _, p in
             if p, !rm { withAnimation(.easeInOut(duration: 0.75)) { spin += 360 } }
         }
+        .onChange(of: beat) { _, _ in
+            if !rm { withAnimation(.easeInOut(duration: 0.75)) { spin += 360 } }
+        }
     }
 }
 
 /// 기록 — 책 + 텍스트 라인. 선택 시 라인이 좌→우로 그려짐.
 private struct TabIconJournal: View {
     let color: Color; let play: Bool
+    var beat: Int = 0
     var size: CGFloat = 26
     @Environment(\.accessibilityReduceMotion) private var rm
     @State private var ln: [CGFloat] = [1, 1]
@@ -223,6 +226,7 @@ private struct TabIconJournal: View {
         }
         .frame(width: size, height: size)
         .onChange(of: play) { _, p in if p { run() } }
+        .onChange(of: beat) { _, _ in run() }
     }
     private func run() {
         guard !rm else { return }
@@ -236,6 +240,7 @@ private struct TabIconJournal: View {
 /// 분석 — 막대 3. 선택 시 바닥에서 위로 stagger grow.
 private struct TabIconStats: View {
     let color: Color; let play: Bool
+    var beat: Int = 0
     var size: CGFloat = 26
     @Environment(\.accessibilityReduceMotion) private var rm
     @State private var bar: [CGFloat] = [1, 1, 1]
@@ -255,6 +260,7 @@ private struct TabIconStats: View {
         }
         .frame(width: size, height: size)
         .onChange(of: play) { _, p in if p { run() } }
+        .onChange(of: beat) { _, _ in run() }
     }
     private func run() {
         guard !rm else { return }
@@ -268,6 +274,7 @@ private struct TabIconStats: View {
 /// 커뮤니티 — 인물 2. 선택 시 순차 bounce.
 private struct TabIconCommunity: View {
     let color: Color; let play: Bool
+    var beat: Int = 0
     var size: CGFloat = 26
     @Environment(\.accessibilityReduceMotion) private var rm
     @State private var off: [CGFloat] = [0, 0]   // [front, back]
@@ -279,6 +286,7 @@ private struct TabIconCommunity: View {
         .offset(y: size * 0.08)
         .frame(width: size, height: size)
         .onChange(of: play) { _, p in if p { run() } }
+        .onChange(of: beat) { _, _ in run() }
     }
     private var person: some View {
         VStack(spacing: -size * 0.03) {
