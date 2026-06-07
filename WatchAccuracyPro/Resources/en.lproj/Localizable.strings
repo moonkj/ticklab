@@ -2131,3 +2131,7 @@
 "mood.category.positive" = "Positive";
 "mood.category.reflective" = "Reflective";
 "mood.category.complex" = "Complex";
+
+/* 시계 상태 케어 액션 — 타입별(충전/배터리) */
+"tamagotchi.charge" = "Charge";
+"tamagotchi.battery" = "Battery";

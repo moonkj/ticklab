@@ -2071,3 +2071,7 @@
 "mood.category.positive" = "सकारात्मक";
 "mood.category.reflective" = "चिंतनशील";
 "mood.category.complex" = "जटिल";
+
+/* 시계 상태 케어 액션 — 타입별(충전/배터리) */
+"tamagotchi.charge" = "चार्ज";
+"tamagotchi.battery" = "बैटरी";

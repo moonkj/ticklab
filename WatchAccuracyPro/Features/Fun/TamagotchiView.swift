@@ -225,18 +225,13 @@ struct TamagotchiView: View {
 
     private func actionRow(watch: Watch) -> some View {
         let worn = WearLogService.isWornToday(watch, in: modelContext)
+        // 측정·태엽감기는 기계식(오토/수동)만. 스마트워치=충전, 쿼츠=배터리.
+        let isMechanical = !watch.isSmartwatch
+            && (watch.movementType == .automatic || watch.movementType == .manual)
         return HStack(spacing: 8) {
-            // 태엽 감기 — 커스텀 메인스프링(나선 코일) 아이콘. 감는 중이면 라벨 변경.
-            petAction(
-                icon: "mainspring",
-                label: isWinding
-                    ? String(localized: "tamagotchi.winding")
-                    : String(localized: "tamagotchi.wind"),
-                state: isWinding ? .active : .primary
-            ) {
-                wind(watch)
-            }
-            // 오늘 착용 — wornToday 면 checkmark + accent.
+            // 1차 케어 액션 — 시계 타입별로 태엽 감기 / 충전 / 배터리.
+            primaryCareAction(watch: watch)
+            // 오늘 착용 — 모든 타입.
             petAction(
                 icon: worn ? "checkmark.seal.fill" : "hand.raised.fill",
                 label: worn
@@ -247,16 +242,38 @@ struct TamagotchiView: View {
                 UIImpactFeedbackGenerator(style: .light).impactOccurred()
                 WearLogService.toggleToday(watch, in: modelContext)
             }
-            // 측정 — NavigationLink (state 없음).
-            NavigationLink {
-                MeasurementView(watch: watch, preferences: preferences)
-            } label: {
-                petActionBody(
-                    icon: "dot.radiowaves.left.and.right",
-                    label: String(localized: "tamagotchi.measure"),
-                    state: .secondary
-                )
+            // 측정 — 기계식만(쿼츠·스마트워치는 측정 불가).
+            if isMechanical {
+                NavigationLink {
+                    MeasurementView(watch: watch, preferences: preferences)
+                } label: {
+                    petActionBody(
+                        icon: "dot.radiowaves.left.and.right",
+                        label: String(localized: "tamagotchi.measure"),
+                        state: .secondary
+                    )
+                }
             }
+        }
+    }
+
+    /// 1차 케어 액션 — 스마트워치=충전(bolt), 쿼츠=배터리, 기계식=태엽 감기(mainspring·회전).
+    @ViewBuilder
+    private func primaryCareAction(watch: Watch) -> some View {
+        if watch.isSmartwatch {
+            petAction(icon: "bolt.fill",
+                      label: String(localized: "tamagotchi.charge", defaultValue: "충전"),
+                      state: .primary) { wind(watch) }
+        } else if watch.movementType == .quartz {
+            petAction(icon: "minus.plus.batteryblock",
+                      label: String(localized: "tamagotchi.battery", defaultValue: "배터리"),
+                      state: .primary) { wind(watch) }
+        } else {
+            petAction(
+                icon: "mainspring",
+                label: isWinding ? String(localized: "tamagotchi.winding") : String(localized: "tamagotchi.wind"),
+                state: isWinding ? .active : .primary
+            ) { wind(watch) }
         }
     }
 
