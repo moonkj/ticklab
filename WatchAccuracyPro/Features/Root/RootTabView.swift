@@ -87,6 +87,7 @@ struct RootTabView: View {
         TabView(selection: $selected) {
             CollectionView(path: $collectionPath)
                 .id(collectionEpoch)
+                .toolbar(.hidden, for: .tabBar)
                 .tabItem {
                     Label {
                         Text(String(localized: "tab.collection"))
@@ -98,6 +99,7 @@ struct RootTabView: View {
 
             TodayView(path: $todayPath)
                 .id(todayEpoch)
+                .toolbar(.hidden, for: .tabBar)
                 .tabItem {
                     Label {
                         Text(String(localized: "tab.today"))
@@ -109,6 +111,7 @@ struct RootTabView: View {
 
             JournalFeedView(path: $journalPath)
                 .id(journalEpoch)
+                .toolbar(.hidden, for: .tabBar)
                 .tabItem {
                     Label {
                         Text(String(localized: "tab.journal"))
@@ -120,6 +123,7 @@ struct RootTabView: View {
 
             StatsView(path: $statsPath)
                 .id(statsEpoch)
+                .toolbar(.hidden, for: .tabBar)
                 .tabItem {
                     Label {
                         Text(String(localized: "tab.stats"))
@@ -133,6 +137,7 @@ struct RootTabView: View {
             if flags.communityEnabled {
                 CommunityFeedView()
                     .id(communityEpoch)
+                    .toolbar(.hidden, for: .tabBar)
                     .tabItem {
                         Label {
                             Text(String(localized: "community.tab.title"))
@@ -147,8 +152,7 @@ struct RootTabView: View {
         //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.
         //   다크모드: indigo 는 어두운 배경에서 안 보임 → interactiveTint(light=indigo, dark=gold) 로 적응형화.
         .tint(AppColors.interactiveTint)
-        // 시스템 탭바 숨기고 커스텀 애니메이션 탭바를 하단에 오버레이(콘텐츠/상태는 TabView 가 계속 관리).
-        .toolbar(.hidden, for: .tabBar)
+        // 커스텀 애니메이션 탭바를 하단에 오버레이(시스템 탭바는 각 탭에서 .toolbar(.hidden) 처리).
         .safeAreaInset(edge: .bottom) {
             if !keyboardUp {
                 AnimatedTabBar(tabs: tabList, selected: selected, onSelect: select)

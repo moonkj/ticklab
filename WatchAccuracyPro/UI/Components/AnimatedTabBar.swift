@@ -16,12 +16,7 @@ struct AnimatedTabBar: View {
         }
         .padding(.horizontal, 6)
         .padding(.vertical, 6)
-        .background(
-            Capsule(style: .continuous)
-                .fill(AppColors.paper1)
-                .shadow(color: .black.opacity(0.10), radius: 12, y: 4)
-        )
-        .overlay(Capsule(style: .continuous).stroke(AppColors.rule, lineWidth: 1))
+        .modifier(GlassCapsuleBackground())
         .padding(.horizontal, 16)
         .padding(.bottom, 4)
         .animation(.spring(response: 0.42, dampingFraction: 0.74), value: selected)
@@ -63,6 +58,20 @@ struct AnimatedTabBar: View {
         case .journal:    return String(localized: "tab.journal")
         case .stats:      return String(localized: "tab.stats")
         case .community:  return String(localized: "community.tab.title")
+        }
+    }
+}
+
+/// 캡슐 배경 — iOS 26 Liquid Glass, 구버전은 반투명 material 폴백.
+private struct GlassCapsuleBackground: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.glassEffect(.regular, in: .capsule)
+        } else {
+            content
+                .background(.regularMaterial, in: Capsule(style: .continuous))
+                .overlay(Capsule(style: .continuous).stroke(AppColors.rule, lineWidth: 1))
+                .shadow(color: .black.opacity(0.10), radius: 12, y: 4)
         }
     }
 }
