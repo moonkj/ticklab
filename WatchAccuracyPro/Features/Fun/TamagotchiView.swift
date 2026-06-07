@@ -265,9 +265,8 @@ struct TamagotchiView: View {
                       label: String(localized: "tamagotchi.charge", defaultValue: "충전"),
                       state: .primary) { wind(watch) }
         } else if watch.movementType == .quartz {
-            petAction(icon: "minus.plus.batteryblock",
-                      label: String(localized: "tamagotchi.battery", defaultValue: "배터리"),
-                      state: .primary) { wind(watch) }
+            // 쿼츠 — 케어 액션 없음. 배터리 교체는 일상 인터랙션이 아니라 1차 액션 미노출.
+            EmptyView()
         } else {
             petAction(
                 icon: "mainspring",
