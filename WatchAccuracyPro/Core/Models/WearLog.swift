@@ -68,7 +68,7 @@ enum WearTag: String, CaseIterable, Identifiable, Sendable {
         switch self {
         case .business: return "briefcase"
         case .casual:   return "tshirt"
-        case .formal:   return "suit"
+        case .formal:   return "wineglass"   // "suit" 는 실존하지 않는 SF Symbol → 빈 칸. 유효 심볼로 교체.
         case .travel:   return "airplane"
         case .special:  return "star"
         case .sports:   return "figure.run"
