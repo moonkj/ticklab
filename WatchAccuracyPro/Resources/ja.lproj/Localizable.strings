@@ -30,6 +30,11 @@
 "feature.journal.body" = "複雑な数値を一行に要約。\nApple Intelligence が結果を分かりやすく解説します。";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
 "welcome.subtitle" = "記録して、分析して、シェアする時計ライフ。";
+"onboard.welcome.title" = "手首の上の";
+"onboard.welcome.accent" = "精密さ";
+"onboard.welcome.sub" = "機械式時計の鼓動を測定・記録・共有する精度ライフプラットフォーム";
+"onboard.analyze.label" = "週間トレンド";
+"onboard.community.likes" = "いいね %d";
 "watch.primary.set" = "メインに設定";
 "watch.primary.unset" = "メインを解除";
 "stats.mood.this_month" = "今月";

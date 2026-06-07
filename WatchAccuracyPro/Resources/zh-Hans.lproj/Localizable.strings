@@ -30,6 +30,11 @@
 "feature.journal.body" = "复杂的数据化为一句话。\n支持的设备由 Apple Intelligence 解读测量结果。";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
 "welcome.subtitle" = "记录、分析并分享你的腕表生活。";
+"onboard.welcome.title" = "腕上的";
+"onboard.welcome.accent" = "精准";
+"onboard.welcome.sub" = "测量、记录、分享机械表的脉动——精准生活平台";
+"onboard.analyze.label" = "每周趋势";
+"onboard.community.likes" = "%d 个赞";
 "watch.primary.set" = "设为主表";
 "watch.primary.unset" = "取消主表";
 "stats.mood.this_month" = "本月";

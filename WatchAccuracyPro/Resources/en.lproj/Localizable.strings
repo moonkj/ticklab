@@ -30,6 +30,11 @@
 "feature.journal.body" = "Complex numbers turned into one line.\nApple Intelligence explains the result when available.";
 /* Round (3-2): mode.* family removed — ModeSelectView/OnboardingView 가 Round 40 v3 pivot 으로 삭제됨에 따라 dead. */
 "welcome.subtitle" = "Record, analyze, and share your watch life.";
+"onboard.welcome.title" = "Precision on";
+"onboard.welcome.accent" = "your wrist";
+"onboard.welcome.sub" = "Measure, log, and share your mechanical watch's heartbeat — the accuracy life platform.";
+"onboard.analyze.label" = "Weekly trend";
+"onboard.community.likes" = "%d likes";
 "watch.primary.set" = "Set as featured";
 "watch.primary.unset" = "Unfeature";
 "stats.mood.this_month" = "This month";
