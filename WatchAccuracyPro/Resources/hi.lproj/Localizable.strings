@@ -2075,3 +2075,9 @@
 /* 시계 상태 케어 액션 — 타입별(충전/배터리) */
 "tamagotchi.charge" = "चार्ज";
 "tamagotchi.battery" = "बैटरी";
+
+/* 기분 분포 재디자인 — 하이라이트/스택바/범례 */
+"stats.mood.top_label" = "इस माह सबसे ज़्यादा महसूस किया मूड";
+"stats.mood.top_count" = "%d बार दर्ज";
+"stats.mood.month_total" = "इस माह · %d प्रविष्टियाँ";
+"stats.empty.mood.title" = "अभी कोई प्रविष्टि नहीं";

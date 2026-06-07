@@ -505,48 +505,79 @@ struct StatsView: View {
     }
 
     private var moodDonut: some View {
-        // Round 23 (Sora): thisMonthEntries 가 매 body re-render 마다 평가됨 + moodDonut 안에서 2번 사용
-        //   + moodCounts() 가 또 호출 → Dictionary(grouping:) 폭주. 한 번만 평가하도록 let 으로 hoist.
+        // Round 23 (Sora): thisMonthEntries hoist — Dictionary(grouping:) 폭주 방지.
         let monthly = thisMonthEntries
         let counts = monthly.isEmpty ? [] : Dictionary(grouping: monthly, by: { $0.mood })
             .map { MoodCount(mood: $0.key, count: $0.value.count) }
             .sorted { $0.count > $1.count }
-        return VStack(alignment: .leading, spacing: 12) {
+        let total = monthly.count
+        return VStack(alignment: .leading, spacing: 14) {
             EyebrowLabel(text: String(localized: "stats.mood_breakdown"))
-            if monthly.isEmpty {
-                Text(String(localized: "stats.empty.mood"))
-                    .font(.system(size: 13))
-                    .foregroundStyle(AppColors.ink3)
-                    .padding(.vertical, 30)
-                    .frame(maxWidth: .infinity)
-            } else {
-                ZStack {
-                    Chart(counts, id: \.mood) { item in
-                        SectorMark(
-                            angle: .value("Count", item.count),
-                            innerRadius: .ratio(0.6)
-                        )
-                        .foregroundStyle(colorForMood(item.mood))
-                        .annotation(position: .overlay) {
-                            Text(item.mood.emoji)
-                                .font(.system(size: 14))
+            if let top = counts.first {
+                let topColor = colorForMood(top.mood)
+                // 하이라이트 — 이번 달 가장 많이 느낀 기분.
+                HStack(spacing: 16) {
+                    MoodIcon(mood: top.mood, size: 64)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(String(localized: "stats.mood.top_label", defaultValue: "이번 달 가장 많이 느낀 기분"))
+                            .font(.system(size: 11.5))
+                            .foregroundStyle(AppColors.ink3)
+                        Text(top.mood.localizedName)
+                            .font(.system(size: 26, weight: .medium, design: .serif))
+                            .foregroundStyle(topColor)
+                        Text(String(format: NSLocalizedString("stats.mood.top_count", comment: ""), top.count))
+                            .font(.system(size: 13)).foregroundStyle(AppColors.ink2)
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(16)
+                .background(topColor.opacity(0.08))
+                .overlay(RoundedRectangle(cornerRadius: 16).stroke(topColor.opacity(0.4), lineWidth: 1.5))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                // 전체 분포 한 줄 스택 막대.
+                GeometryReader { geo in
+                    let avail = geo.size.width - CGFloat(max(0, counts.count - 1)) * 2
+                    HStack(spacing: 2) {
+                        ForEach(counts, id: \.mood) { item in
+                            Capsule().fill(colorForMood(item.mood))
+                                .frame(width: max(3, avail * CGFloat(item.count) / CGFloat(max(1, total))))
                         }
                     }
-                    VStack(spacing: 2) {
-                        Text(String(localized: "stats.mood.this_month"))
-                            .font(.system(size: 10, weight: .semibold))
-                            .tracking(2)
-                            .foregroundStyle(AppColors.ink2)
-                        Text("\(monthly.count)")
-                            .font(.system(size: 28, weight: .semibold, design: .monospaced))
-                            .foregroundStyle(AppColors.ink0)
-                        Text(String(localized: "stats.total_entries"))
-                            .font(.system(size: 11))
-                            .foregroundStyle(AppColors.ink2)
+                }
+                .frame(height: 12)
+
+                // 범례 — 색 dot + 기분 이름(자동 줄바꿈).
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 78), spacing: 8)], alignment: .leading, spacing: 7) {
+                    ForEach(counts, id: \.mood) { item in
+                        HStack(spacing: 5) {
+                            Circle().fill(colorForMood(item.mood)).frame(width: 8, height: 8)
+                            Text(item.mood.localizedName)
+                                .font(.system(size: 11.5))
+                                .foregroundStyle(AppColors.ink2)
+                                .lineLimit(1)
+                        }
                     }
                 }
-                .frame(height: 220)
-                .padding(.vertical, 6)
+
+                Text(String(format: NSLocalizedString("stats.mood.month_total", comment: ""), total))
+                    .font(.system(size: 11))
+                    .foregroundStyle(AppColors.ink3)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            } else {
+                // 빈 상태 — 무드 아이콘 + 안내.
+                VStack(spacing: 12) {
+                    MoodIcon(mood: .neutral, size: 72)
+                    Text(String(localized: "stats.empty.mood.title", defaultValue: "아직 기록이 없어요"))
+                        .font(.system(size: 18, weight: .semibold, design: .serif))
+                        .foregroundStyle(AppColors.ink0)
+                    Text(String(localized: "stats.empty.mood"))
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.ink3)
+                        .multilineTextAlignment(.center)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 24)
             }
         }
     }

@@ -2075,3 +2075,9 @@
 /* 시계 상태 케어 액션 — 타입별(충전/배터리) */
 "tamagotchi.charge" = "充电";
 "tamagotchi.battery" = "电池";
+
+/* 기분 분포 재디자인 — 하이라이트/스택바/범례 */
+"stats.mood.top_label" = "本月最常出现的心情";
+"stats.mood.top_count" = "记录了 %d 次";
+"stats.mood.month_total" = "本月 · 共 %d 条";
+"stats.empty.mood.title" = "还没有记录";

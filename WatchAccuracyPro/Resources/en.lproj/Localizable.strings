@@ -2135,3 +2135,9 @@
 /* 시계 상태 케어 액션 — 타입별(충전/배터리) */
 "tamagotchi.charge" = "Charge";
 "tamagotchi.battery" = "Battery";
+
+/* 기분 분포 재디자인 — 하이라이트/스택바/범례 */
+"stats.mood.top_label" = "Most-felt mood this month";
+"stats.mood.top_count" = "Logged %d times";
+"stats.mood.month_total" = "This month · %d entries";
+"stats.empty.mood.title" = "No entries yet";
