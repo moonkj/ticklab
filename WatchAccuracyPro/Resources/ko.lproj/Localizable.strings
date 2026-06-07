@@ -22,7 +22,7 @@
 "welcome.subtitle" = "기록하고, 분석하고, 나누는 시계 라이프.";
 "onboard.welcome.title" = "손목 위의";
 "onboard.welcome.accent" = "정밀함";
-"onboard.welcome.sub" = "기계식 시계의 박동을 측정하고, 기록하고, 나누는 정확도 라이프 플랫폼";
+"onboard.welcome.sub" = "기계식 시계의 박동을 측정하고, 기록하고, 나누는 워치 라이프 플랫폼";
 "onboard.analyze.label" = "주간 트렌드";
 "onboard.community.likes" = "좋아요 %d";
 "watch.primary.set" = "대표 시계로 설정";

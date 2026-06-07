@@ -136,27 +136,14 @@ private struct WelcomeHero: View {
         }
     }
 
-    /// 목업: DM Serif Display 느낌 — "손목 위의 / *정밀함*"(악센트 이탤릭 골드) + 서브.
+    /// 첫 화면 — 로고 애니메이션은 유지하고, 아래엔 한 줄 소개만 표시(사용자 요청).
     private var tagline: some View {
-        VStack(spacing: 16) {
-            VStack(spacing: 2) {
-                Text(String(localized: "onboard.welcome.title"))
-                    .foregroundStyle(AppColors.ink0)
-                Text(String(localized: "onboard.welcome.accent"))
-                    .italic().foregroundStyle(AppColors.accentDark)
-            }
-            .font(.system(size: 34, weight: .semibold, design: .serif))
+        Text(String(localized: "onboard.welcome.sub"))
+            .font(.system(size: 16))
+            .foregroundStyle(AppColors.ink2)
             .multilineTextAlignment(.center)
-            .lineSpacing(4)
-            .minimumScaleFactor(0.7)
-            Text(String(localized: "onboard.welcome.sub"))
-                .font(.system(size: 15))
-                .foregroundStyle(AppColors.ink2)
-                .multilineTextAlignment(.center)
-                .lineSpacing(3)
-                .padding(.horizontal, 28)
-        }
-        .padding(.horizontal, 24)
+            .lineSpacing(5)
+            .padding(.horizontal, 32)
     }
 
     private var ctaSection: some View {

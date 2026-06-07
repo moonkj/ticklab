@@ -32,7 +32,7 @@
 "welcome.subtitle" = "記録して、分析して、シェアする時計ライフ。";
 "onboard.welcome.title" = "手首の上の";
 "onboard.welcome.accent" = "精密さ";
-"onboard.welcome.sub" = "機械式時計の鼓動を測定・記録・共有する精度ライフプラットフォーム";
+"onboard.welcome.sub" = "機械式時計の鼓動を測定・記録・共有するウォッチライフプラットフォーム";
 "onboard.analyze.label" = "週間トレンド";
 "onboard.community.likes" = "いいね %d";
 "watch.primary.set" = "メインに設定";
