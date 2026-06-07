@@ -109,11 +109,25 @@ struct VideoFeedView: View {
                     Color(AppColors.paper2)
                         .aspectRatio(16.0 / 9.0, contentMode: .fit)
                         .overlay {
-                            // 가장 빠른 로딩: 작고 항상 존재하는 mqdefault(320x180)만 사용. maxres(큰 이미지·
-                            //   자주 404)는 카드마다 백그라운드 대역폭을 먹어 전체를 느리게 해 제거.
-                            AsyncImage(url: video.thumbnailMid) { img in
-                                img.resizable().scaledToFill()
-                            } placeholder: { Color.clear }
+                            // 즉시 표시: mqdefault(320x180) placeholder → 그 위로 고화질 업그레이드.
+                            //   maxres(720p) 성공 시 fade-in, 없으면 hqdefault(480) 폴백. 화질 우선.
+                            ZStack {
+                                AsyncImage(url: video.thumbnailMid) { img in
+                                    img.resizable().scaledToFill()
+                                } placeholder: { Color.clear }
+                                AsyncImage(url: video.thumbnailHigh) { phase in
+                                    switch phase {
+                                    case .success(let img):
+                                        img.resizable().scaledToFill().transition(.opacity)
+                                    case .failure:
+                                        AsyncImage(url: video.thumbnailHQ) { img in
+                                            img.resizable().scaledToFill()
+                                        } placeholder: { Color.clear }
+                                    default:
+                                        Color.clear
+                                    }
+                                }
+                            }
                         }
                         .clipped()
                     HStack(spacing: 4) {

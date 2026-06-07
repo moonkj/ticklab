@@ -21,9 +21,11 @@ final class YouTubeFeedService: ObservableObject {
         let publishedAt: Date
         let thumbnailURL: URL?      // RSS 기본(미사용) — 폴백용
         var watchURL: URL? { URL(string: "https://www.youtube.com/watch?v=\(id)") }
-        /// 16:9 고화질(없을 수 있음 → mid 폴백). 4:3 잘림 방지.
+        /// 16:9 고화질(1280x720, 없을 수 있음 → HQ/mid 폴백).
         var thumbnailHigh: URL? { URL(string: "https://i.ytimg.com/vi/\(id)/maxresdefault.jpg") }
-        /// 16:9 항상 존재(320x180).
+        /// 중간 화질(480x360, 거의 항상 존재) — maxres 없을 때 폴백.
+        var thumbnailHQ: URL? { URL(string: "https://i.ytimg.com/vi/\(id)/hqdefault.jpg") }
+        /// 16:9 항상 존재(320x180) — 즉시 표시 placeholder.
         var thumbnailMid: URL? { URL(string: "https://i.ytimg.com/vi/\(id)/mqdefault.jpg") }
     }
 
