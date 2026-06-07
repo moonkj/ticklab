@@ -240,7 +240,9 @@ struct UserPostsView: View {
     private func tabButton(_ t: ProfileTab, icon: String, title: String) -> some View {
         let on = tab == t
         let fg = on ? AppColors.accentDark : AppColors.ink2
-        return Button { withAnimation(.easeOut(duration: 0.15)) { tab = t } } label: {
+        // 전역 withAnimation 은 재렌더되는 상단 카드(대표 시계 사진·통계)까지 크로스페이드시켜 깜박임 유발 →
+        // 탭 전환은 즉시. 버튼 스타일 전환만 아래 .animation(value:) 로 국소 적용.
+        return Button { tab = t } label: {
             HStack(spacing: 6) {
                 ConceptGlyph(systemName: icon, size: 15, color: fg)
                 Text(title).font(.system(size: 13, weight: on ? .bold : .medium))
@@ -254,6 +256,7 @@ struct UserPostsView: View {
                 .stroke(on ? AppColors.accent : AppColors.ink3.opacity(0.45),
                         lineWidth: on ? 1.6 : 1))
             .shadow(color: on ? .black.opacity(0.08) : .clear, radius: 3, y: 1)
+            .animation(.easeOut(duration: 0.15), value: on)   // 선택 스타일만 국소 전환(상단 카드 영향 없음)
         }.buttonStyle(.plain)
     }
 
@@ -368,15 +371,8 @@ struct UserPostsView: View {
     }
 
     /// 시계 썸네일 — 등록 사진 있으면 사진, 없으면 실루엣. (대표 시계·컬렉션 카드 공통)
-    @ViewBuilder
     private func watchThumb(_ w: Watch, size: CGFloat) -> some View {
-        if let data = w.photoData, let ui = UIImage(data: data) {
-            Image(uiImage: ui).resizable().scaledToFill()
-                .frame(width: size, height: size)
-                .clipShape(RoundedRectangle(cornerRadius: size * 0.18))
-        } else {
-            WatchSilhouette(watch: w, size: size)
-        }
+        WatchThumb(watch: w, size: size)
     }
 
     @ViewBuilder
@@ -543,6 +539,28 @@ struct PostDetailView: View {
         .sheet(isPresented: $showLogin) { CommunityLoginView() }
         .alert(String(localized: "community.report.done"), isPresented: $reportDone) {
             Button(String(localized: "common.done"), role: .cancel) {}
+        }
+    }
+}
+
+/// 시계 썸네일 — photoData 를 1회만 디코드해 @State 캐시(부모 재렌더마다 UIImage 재생성 → 깜박임 방지).
+/// 사진 있으면 둥근 사각형 사진, 없으면 실루엣.
+private struct WatchThumb: View {
+    let watch: Watch
+    let size: CGFloat
+    @State private var image: UIImage?
+    var body: some View {
+        Group {
+            if let image {
+                Image(uiImage: image).resizable().scaledToFill()
+                    .frame(width: size, height: size)
+                    .clipShape(RoundedRectangle(cornerRadius: size * 0.18))
+            } else {
+                WatchSilhouette(watch: watch, size: size)
+            }
+        }
+        .task(id: watch.photoData) {
+            image = watch.photoData.flatMap { UIImage(data: $0) }
         }
     }
 }
