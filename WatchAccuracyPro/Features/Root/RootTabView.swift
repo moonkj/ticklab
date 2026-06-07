@@ -152,8 +152,9 @@ struct RootTabView: View {
         //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.
         //   다크모드: indigo 는 어두운 배경에서 안 보임 → interactiveTint(light=indigo, dark=gold) 로 적응형화.
         .tint(AppColors.interactiveTint)
-        // 커스텀 애니메이션 탭바를 하단에 오버레이(시스템 탭바는 각 탭에서 .toolbar(.hidden) 처리).
-        .safeAreaInset(edge: .bottom) {
+        // 커스텀 애니메이션 탭바 — 콘텐츠 위에 floating 오버레이(콘텐츠가 글라스 뒤로 흐르며 굴절 → 네이티브 액체 질감).
+        // 시스템 탭바는 각 탭에서 .toolbar(.hidden) 처리. overlay 는 safe area 존중 → 홈 인디케이터 위.
+        .overlay(alignment: .bottom) {
             if !keyboardUp {
                 AnimatedTabBar(tabs: tabList, selected: selected, onSelect: select)
             }
