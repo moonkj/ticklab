@@ -33,6 +33,10 @@
 "onboard.welcome.title" = "कलाई पर";
 "onboard.welcome.accent" = "सटीकता";
 "onboard.welcome.sub" = "अपनी मैकेनिकल घड़ी की धड़कन मापें, रिकॉर्ड करें और साझा करें — वॉच लाइफ प्लेटफ़ॉर्म।";
+"onboard.league.title" = "ब्रांड लीग में शामिल हों";
+"onboard.league.body" = "अपनी ब्रांड पहनने की आवृत्ति को गुमनाम रूप से जोड़कर दुनिया भर के संग्राहकों के साथ रैंक करें। माप, फ़ोटो, सीरियल और कीमतें कभी नहीं भेजी जातीं।";
+"onboard.league.join" = "शामिल हों";
+"onboard.league.later" = "बाद में";
 "onboard.analyze.label" = "साप्ताहिक रुझान";
 "onboard.community.likes" = "%d लाइक";
 "watch.primary.set" = "फ़ीचर्ड बनाएँ";

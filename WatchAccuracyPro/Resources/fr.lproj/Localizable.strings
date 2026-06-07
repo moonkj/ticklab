@@ -33,6 +33,10 @@
 "onboard.welcome.title" = "La précision";
 "onboard.welcome.accent" = "au poignet";
 "onboard.welcome.sub" = "Mesurez, enregistrez et partagez le battement de votre montre mécanique — la plateforme watch life.";
+"onboard.league.title" = "Rejoindre la Ligue des marques";
+"onboard.league.body" = "Regroupez anonymement la fréquence de port de vos marques pour vous classer parmi les collectionneurs du monde. Mesures, photos, numéros de série et prix ne sont jamais envoyés.";
+"onboard.league.join" = "Rejoindre";
+"onboard.league.later" = "Plus tard";
 "onboard.analyze.label" = "Tendance hebdo";
 "onboard.community.likes" = "%d j'aime";
 "watch.primary.set" = "Mettre en avant";

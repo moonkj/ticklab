@@ -21,6 +21,10 @@ struct WelcomeFlowView: View {
                 case 0: WelcomeHero(onNext: next, onSkip: skipToEnd)
                 case 1: FeatureCarousel(onNext: next, onSkip: skipToEnd)
                 case 2: QuickWatchAdd(onNext: next, onSkip: next)
+                // 브랜드 리그 참여 명시 동의(Apple 5.1.1/5.1.2) — '참여하기' 누를 때만 opt-in ON.
+                case 3: BrandLeagueConsentStep(
+                            onJoin: { preferences.brandLeagueOptIn = true; next() },
+                            onSkip: next)
                 // Round 113 fix (사용자 보고: "측정 못함"): mock FirstMeasurement step 제거.
                 // QuickAdd 후 바로 Mode picker (FirstResult) — 실제 측정은 컬렉션에서.
                 default: FirstResultPlaceholder(onFinish: finish)
@@ -562,6 +566,59 @@ private struct CommunityHero: View {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.5).delay(0.9)) { corner = true }
         withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true).delay(0.8)) { heart = true }
         for i in 1...24 { DispatchQueue.main.asyncAfter(deadline: .now() + 0.9 + 0.022 * Double(i)) { if active { likes = i } } }
+    }
+}
+
+// MARK: - 브랜드 리그 참여 동의 (Apple 5.1.1/5.1.2 — 명시적 opt-in)
+/// 익명 브랜드+착용빈도 업로드 동의. '참여하기' = opt-in ON, '나중에' = OFF 유지.
+/// 측정값·사진·시리얼·구매가는 절대 전송하지 않음(문구로 명시).
+private struct BrandLeagueConsentStep: View {
+    let onJoin: () -> Void
+    let onSkip: () -> Void
+    var body: some View {
+        VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Button(String(localized: "welcome.skip"), action: onSkip)
+                    .font(.system(size: 15)).foregroundStyle(AppColors.ink2)
+                    .frame(minWidth: 44, minHeight: 44, alignment: .trailing).contentShape(Rectangle())
+            }
+            .padding(.horizontal, 24).padding(.top, 12)
+            Spacer()
+            ZStack {
+                RoundedRectangle(cornerRadius: 36).fill(AppColors.accent50)
+                Image(systemName: "medal.fill")
+                    .font(.system(size: 88, weight: .regular)).foregroundStyle(AppColors.accent)
+            }
+            .frame(width: 240, height: 240)
+            VStack(spacing: 12) {
+                Text(String(localized: "onboard.league.title"))
+                    .font(.system(size: 30, weight: .semibold)).tracking(-0.5)
+                    .foregroundStyle(AppColors.ink0).multilineTextAlignment(.center)
+                Text(String(localized: "onboard.league.body"))
+                    .font(.system(size: 15)).foregroundStyle(AppColors.ink2)
+                    .multilineTextAlignment(.center).lineSpacing(3).padding(.horizontal, 28)
+            }
+            .padding(.top, 28)
+            Spacer()
+            VStack(spacing: 8) {
+                Button(action: onJoin) {
+                    Text(String(localized: "onboard.league.join"))
+                        .font(.system(size: 17, weight: .semibold))
+                        .frame(maxWidth: .infinity).padding(.vertical, 16)
+                        .background(AppColors.primaryDeep).foregroundStyle(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: AppRadius.md))
+                }
+                .buttonStyle(.plain)
+                Button(action: onSkip) {
+                    Text(String(localized: "onboard.league.later"))
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(AppColors.ink2).padding(.vertical, 10)
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 24).padding(.bottom, 30)
+        }
     }
 }
 

@@ -23,6 +23,10 @@
 "onboard.welcome.title" = "손목 위의";
 "onboard.welcome.accent" = "정밀함";
 "onboard.welcome.sub" = "기계식 시계의 박동을 측정하고, 기록하고, 나누는 워치 라이프 플랫폼";
+"onboard.league.title" = "브랜드 리그 참여";
+"onboard.league.body" = "익명으로 내 브랜드 착용 빈도를 모아 전 세계 컬렉터와 순위를 겨뤄요. 측정값·사진·시리얼·구매가는 보내지 않아요.";
+"onboard.league.join" = "참여하기";
+"onboard.league.later" = "나중에";
 "onboard.analyze.label" = "주간 트렌드";
 "onboard.community.likes" = "좋아요 %d";
 "watch.primary.set" = "대표 시계로 설정";

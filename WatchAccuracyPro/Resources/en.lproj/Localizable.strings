@@ -33,6 +33,10 @@
 "onboard.welcome.title" = "Precision on";
 "onboard.welcome.accent" = "your wrist";
 "onboard.welcome.sub" = "Measure, log, and share your mechanical watch's heartbeat — the watch life platform.";
+"onboard.league.title" = "Join the Brand League";
+"onboard.league.body" = "Anonymously pool your brand wear frequency to rank with collectors worldwide. Measurements, photos, serials, and prices are never sent.";
+"onboard.league.join" = "Join";
+"onboard.league.later" = "Maybe later";
 "onboard.analyze.label" = "Weekly trend";
 "onboard.community.likes" = "%d likes";
 "watch.primary.set" = "Set as featured";

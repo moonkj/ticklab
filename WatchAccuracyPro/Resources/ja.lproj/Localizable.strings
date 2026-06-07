@@ -33,6 +33,10 @@
 "onboard.welcome.title" = "手首の上の";
 "onboard.welcome.accent" = "精密さ";
 "onboard.welcome.sub" = "機械式時計の鼓動を測定・記録・共有するウォッチライフプラットフォーム";
+"onboard.league.title" = "ブランドリーグに参加";
+"onboard.league.body" = "匿名でブランド着用頻度を集計し、世界中のコレクターと順位を競います。測定値・写真・シリアル・購入価格は送信しません。";
+"onboard.league.join" = "参加する";
+"onboard.league.later" = "あとで";
 "onboard.analyze.label" = "週間トレンド";
 "onboard.community.likes" = "いいね %d";
 "watch.primary.set" = "メインに設定";

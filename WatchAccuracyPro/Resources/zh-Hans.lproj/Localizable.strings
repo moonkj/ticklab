@@ -33,6 +33,10 @@
 "onboard.welcome.title" = "腕上的";
 "onboard.welcome.accent" = "精准";
 "onboard.welcome.sub" = "测量、记录、分享机械表的脉动——腕表生活平台";
+"onboard.league.title" = "加入品牌联赛";
+"onboard.league.body" = "匿名汇总你的品牌佩戴频率，与全球藏家一较高下。测量值、照片、序列号、购买价均不上传。";
+"onboard.league.join" = "加入";
+"onboard.league.later" = "以后再说";
 "onboard.analyze.label" = "每周趋势";
 "onboard.community.likes" = "%d 个赞";
 "watch.primary.set" = "设为主表";

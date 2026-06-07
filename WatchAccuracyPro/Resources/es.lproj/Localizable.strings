@@ -33,6 +33,10 @@
 "onboard.welcome.title" = "Precisión en";
 "onboard.welcome.accent" = "tu muñeca";
 "onboard.welcome.sub" = "Mide, registra y comparte el latido de tu reloj mecánico: la plataforma watch life.";
+"onboard.league.title" = "Únete a la Liga de Marcas";
+"onboard.league.body" = "Agrupa de forma anónima la frecuencia de uso de tus marcas para competir con coleccionistas de todo el mundo. Nunca se envían mediciones, fotos, números de serie ni precios.";
+"onboard.league.join" = "Unirme";
+"onboard.league.later" = "Quizás luego";
 "onboard.analyze.label" = "Tendencia semanal";
 "onboard.community.likes" = "%d me gusta";
 "watch.primary.set" = "Marcar como destacado";
