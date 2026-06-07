@@ -259,7 +259,12 @@ struct FollowListView: View {
             UserPostsView(uid: liker.uid, displayName: liker.authorName)
         }
         .sheet(isPresented: $showLogin) { CommunityLoginView() }
-        .task { users = await service.fetchFollowList(uid: uid, followers: followers); loaded = true }
+        .task {
+            // 내 팔로잉을 서버와 동기화한 뒤 목록 로드 — '팔로잉' 체크표시가 정확히 반영되도록.
+            await service.syncFollowing()
+            users = await service.fetchFollowList(uid: uid, followers: followers)
+            loaded = true
+        }
     }
 
     private func row(_ liker: Community.Liker) -> some View {

@@ -247,7 +247,21 @@ final class CommunityService: ObservableObject {
         } catch {
             lastError = error.localizedDescription
         }
+        await syncFollowing()
         await heartbeat()
+    }
+
+    /// 내 팔로잉 목록을 서버에서 동기화 — 로컬 followedUIDs 캐시를 최신화.
+    /// (재설치·익명 uid 변경·교차 기기 후 팔로잉 목록의 '팔로잉' 체크표시가 빠지던 문제 해소.)
+    func syncFollowing() async {
+        await ensureSignedIn()
+        guard let uid = myUID,
+              let url = URL(string: "\(baseURL)/rest/v1/community_follows?select=followed_uid&follower_uid=eq.\(uid)&limit=1000"),
+              let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
+              let rows = try? JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { return }
+        let serverFollows = Set(rows.compactMap { $0["followed_uid"] as? String })
+        followedUIDs = serverFollows
+        defaults.set(Array(serverFollows), forKey: Keys.followed)
     }
 
     /// 특정 브랜드 게시물만 — 브랜드 칩 탭 시(같은 브랜드 모아보기). 차단 작성자 제외.
