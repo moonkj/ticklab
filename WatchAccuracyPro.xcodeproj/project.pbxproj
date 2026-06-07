@@ -200,6 +200,7 @@
 		900D3F073538D3098D9AC89E /* ServiceLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA09F8C4A5F535A21D8C8AEF /* ServiceLog.swift */; };
 		901DBC9B7FBE6EE60B563C0B /* MovementCanvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 156AE5289B6A2320B184D5C4 /* MovementCanvas.swift */; };
 		936F6646A4D81A8B922D4EAE /* StreakService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D68900F4F27A1CAF6ABD1FEA /* StreakService.swift */; };
+		94607F6BB2A4F65AFB1076C9 /* AnimatedTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 900364B3AF84FC9F37C8D9D6 /* AnimatedTabBar.swift */; };
 		966D900DC82453601AA07667 /* LocalizationParityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF8B67DE1AE5717360E55EB0 /* LocalizationParityTests.swift */; };
 		96B364EF80BDCF81FD3B6421 /* RotorRefresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3F3B7EC25F0C4F7B21698A3 /* RotorRefresh.swift */; };
 		96E18BF4543AA4B570297798 /* MovementPickerSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1DE51C36EF79369655F6C4 /* MovementPickerSheet.swift */; };
@@ -574,6 +575,7 @@
 		8D77448D95D10F23488C6044 /* YouTubeFeedTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouTubeFeedTests.swift; sourceTree = "<group>"; };
 		8E6F59BEB9DB87D747A88169 /* SpectralFluxExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectralFluxExtractor.swift; sourceTree = "<group>"; };
 		8F8F4CF002D88A96EED09B78 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		900364B3AF84FC9F37C8D9D6 /* AnimatedTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatedTabBar.swift; sourceTree = "<group>"; };
 		9011AAB11CBD8E146ECAC6E1 /* BrandNewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrandNewsView.swift; sourceTree = "<group>"; };
 		9051C5FCD8FEB261C7BDF80F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		906F5F98363140ED3A1CE8EE /* WearLogServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WearLogServiceTests.swift; sourceTree = "<group>"; };
@@ -1133,6 +1135,7 @@
 			children = (
 				BD030531747E34B54A19412F /* AccuracyGradeChip.swift */,
 				A58F1B88C47C2355AC51ABE0 /* AIDiagnosisCard.swift */,
+				900364B3AF84FC9F37C8D9D6 /* AnimatedTabBar.swift */,
 				2DE10565489923480790DEF0 /* AsyncDiskImage.swift */,
 				7584E79FDD44E822785661CB /* BadgeGlyphs.swift */,
 				440628D64E2AD525A2B10DA3 /* CameraImagePicker.swift */,
@@ -1823,6 +1826,7 @@
 				6D120686D7D100A75E3FEDBF /* AddWatchView.swift in Sources */,
 				EC95084D4287B94F221841B5 /* AdminOpsView.swift in Sources */,
 				2521BE79E2DE837FACC7DAF4 /* AmplitudeEstimator.swift in Sources */,
+				94607F6BB2A4F65AFB1076C9 /* AnimatedTabBar.swift in Sources */,
 				6DF3C0FA58B411726D96A2DC /* AnomalyDetector.swift in Sources */,
 				657BD3247A0796584F6340F8 /* AppDevice.swift in Sources */,
 				9C7AE6FF6BAAD47C401F4EB6 /* AppLockService.swift in Sources */,

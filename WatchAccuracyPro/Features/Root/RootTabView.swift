@@ -38,6 +38,8 @@ struct RootTabView: View {
     /// Round 140 (Hyemi/Min H1 Critical): 측정 진행 중 탭 전환 시 epoch 증가가 측정 silent 폐기 유발.
     /// MeasurementViewModel.start/stop 이 notification post → 측정 중에는 epoch 증가 차단.
     @State private var measurementInProgress: Bool = false
+    /// 커스텀 탭바 — 키보드 올라오면 숨김(시스템 탭바와 동일 거동).
+    @State private var keyboardUp: Bool = false
     /// 사용자 보고 fix: 4 분산 sheet 호스트를 shell 레벨로 통합 — iPad multi-window race 차단 + 신규 진입점 추가 cost 감소.
     @State private var purchaseRouter = PurchaseRouter()
     /// 신기능 안내 시트 — 버전당 1회, 기존 사용자 전용.
@@ -51,46 +53,38 @@ struct RootTabView: View {
         case community
     }
 
+    /// 커스텀 탭바에 노출할 탭 순서(커뮤니티는 플래그 ON 일 때만).
+    private var tabList: [Tab] {
+        var t: [Tab] = [.collection, .today, .journal, .stats]
+        if flags.communityEnabled { t.append(.community) }
+        return t
+    }
+
+    /// 탭 선택 — 햅틱 + (측정 중 아니면) path/epoch 리셋(같은 탭 재탭 = pop to root). 커스텀 탭바가 호출.
+    private func select(_ newTab: Tab) {
+        if newTab != selected {
+            UISelectionFeedbackGenerator().selectionChanged()
+            UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.5)
+        }
+        // Round 140: 측정 진행 중에는 deep state 보존 → epoch 증가/ path reset 차단.
+        let allowReset = !measurementInProgress
+        switch newTab {
+        case .collection:
+            if allowReset { collectionPath = NavigationPath(); collectionEpoch &+= 1 }
+        case .today:
+            if allowReset { todayPath = NavigationPath(); todayEpoch &+= 1 }
+        case .journal:
+            if allowReset { journalPath = NavigationPath(); journalEpoch &+= 1 }
+        case .stats:
+            if allowReset { statsPath = NavigationPath(); statsEpoch &+= 1 }
+        case .community:
+            if allowReset { communityEpoch &+= 1 }
+        }
+        selected = newTab
+    }
+
     var body: some View {
-        TabView(selection: Binding(
-            get: { selected },
-            set: { newTab in
-                if newTab != selected {
-                    UISelectionFeedbackGenerator().selectionChanged()
-                    // Sprint 9 UX: 탭 아이콘 bounce
-                    UIImpactFeedbackGenerator(style: .soft).impactOccurred(intensity: 0.5)
-                }
-                // Round 140 (Hyemi/Min H1 Critical): 측정 진행 중에는 deep state 보존 → epoch 증가 차단.
-                // Round 19 (Hyemi): path reset 도 같이 guard — 이전엔 측정 중에도 NavigationPath 가 비워져
-                //   detail context 사라지던 버그 (epoch reset 만 차단되고 path 는 그대로 reset 됐었음).
-                let allowReset = !measurementInProgress
-                switch newTab {
-                case .collection:
-                    if allowReset {
-                        collectionPath = NavigationPath()
-                        collectionEpoch &+= 1
-                    }
-                case .today:
-                    if allowReset {
-                        todayPath = NavigationPath()
-                        todayEpoch &+= 1
-                    }
-                case .journal:
-                    if allowReset {
-                        journalPath = NavigationPath()
-                        journalEpoch &+= 1
-                    }
-                case .stats:
-                    if allowReset {
-                        statsPath = NavigationPath()
-                        statsEpoch &+= 1
-                    }
-                case .community:
-                    if allowReset { communityEpoch &+= 1 }
-                }
-                selected = newTab
-            }
-        )) {
+        TabView(selection: $selected) {
             CollectionView(path: $collectionPath)
                 .id(collectionEpoch)
                 .tabItem {
@@ -153,6 +147,19 @@ struct RootTabView: View {
         //   탭바 selected color 만 indigo 로 바꾸면 alert 도 indigo 로 또렷해짐. 명시적 .tint(accent) 오버라이드는 유지됨.
         //   다크모드: indigo 는 어두운 배경에서 안 보임 → interactiveTint(light=indigo, dark=gold) 로 적응형화.
         .tint(AppColors.interactiveTint)
+        // 시스템 탭바 숨기고 커스텀 애니메이션 탭바를 하단에 오버레이(콘텐츠/상태는 TabView 가 계속 관리).
+        .toolbar(.hidden, for: .tabBar)
+        .safeAreaInset(edge: .bottom) {
+            if !keyboardUp {
+                AnimatedTabBar(tabs: tabList, selected: selected, onSelect: select)
+            }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+            keyboardUp = true
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+            keyboardUp = false
+        }
         // 관리자(운영 ID) 활성 시 작은 플로팅 배지로 표시 — 상단 버튼을 가리지 않게
         // 오버레이(레이아웃 비점유) + allowsHitTesting(false)(탭 통과). 탭바 위에 위치.
         .overlay(alignment: .bottomTrailing) {
