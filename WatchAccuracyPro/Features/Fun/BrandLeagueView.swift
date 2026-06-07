@@ -273,16 +273,21 @@ struct BrandLeagueView: View {
         let n = arr.count
         guard n >= 1 else { return AnyView(EmptyView()) }
 
-        // 포디움 배치: [2위, 1위, 3위] 순서. 순위는 위치 기반(동률은 위 정렬로 이미 깨짐).
+        // 메달은 착용수 '값' 기준 — 동률이면 같은 메달. 위치(dataIdx)가 아니라 distinct rank.
+        //   예: [5,5,4] → 금·금·은,  [5,4,4] → 금·은·은,  [5,5,5] → 금·금·금.
+        let distinctCounts = Array(Set(service.globalRanking.map { $0.totalCount })).sorted(by: >)
+        func medalRank(_ count: Int) -> Int { (distinctCounts.firstIndex(of: count) ?? 0) + 1 }
+
+        // 포디움 배치: [2위, 1위, 3위] 순서(위치는 정렬 기준, 메달색·높이는 medalRank 로 동률 처리).
         let podiumIndices: [Int] = n >= 3 ? [1, 0, 2] : n == 2 ? [1, 0] : [0]
 
         return AnyView(
             HStack(alignment: .bottom, spacing: 8) {
                 ForEach(Array(podiumIndices.enumerated()), id: \.offset) { _, dataIdx in
                     let b = arr[dataIdx]
-                    let rank = dataIdx + 1
-                    let barHeight: CGFloat = rank == 1 ? 130 : rank == 2 ? 100 : 80
-                    let barColor: Color = rank == 1 ? Self.gold : rank == 2 ? Self.silver : Self.bronze
+                    let medal = medalRank(b.totalCount)
+                    let barHeight: CGFloat = medal == 1 ? 130 : medal == 2 ? 100 : 80
+                    let barColor: Color = medal == 1 ? Self.gold : medal == 2 ? Self.silver : Self.bronze
                     VStack(spacing: 4) {
                         brandInitialBadge(b.brand, color: Self.brandColor(b.brand), size: 36)
                         Text(b.brand)
@@ -299,7 +304,7 @@ struct BrandLeagueView: View {
                             ))
                             .frame(maxWidth: .infinity)
                             .frame(height: barHeight)
-                            .overlay(trophyView(rank: rank))
+                            .overlay(trophyView(rank: medal))
                             .clipShape(UnevenRoundedRectangle(topLeadingRadius: 8, topTrailingRadius: 8))
                     }
                     .frame(maxWidth: .infinity)
@@ -314,7 +319,8 @@ struct BrandLeagueView: View {
     private func myTeamCard(brand: String) -> some View {
         let arr  = service.globalRanking
         let idx  = arr.firstIndex(where: { $0.brand == brand })
-        let rank = (idx ?? arr.count) + 1
+        // 동률 정합 — 위치(idx+1)가 아니라 dense rank 사용(메달·리스트와 동일).
+        let rank = idx.map { precomputedRanks[$0] } ?? (arr.count + 1)
         let globalCount = idx.map { arr[$0].totalCount } ?? 0
         let myCount = myCountForPeriod[brand] ?? 0
         return HStack(spacing: 12) {
@@ -354,8 +360,9 @@ struct BrandLeagueView: View {
         var ranks = [Int](repeating: 1, count: arr.count)
         var currentRank = 1
         for i in 1..<arr.count {
+            // 동률은 같은 등수, 다음 값은 바로 다음 등수(dense rank) — 메달(금/은/동)과 정합.
             if arr[i].totalCount < arr[i - 1].totalCount {
-                currentRank = i + 1
+                currentRank += 1
             }
             ranks[i] = currentRank
         }
