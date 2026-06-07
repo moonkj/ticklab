@@ -1,3 +1,4 @@
+import Combine
 import SwiftUI
 
 /// 커스텀 탭바 — 선택 pill 슬라이드(spring) + 탭별 시그니처 아이콘 애니메이션(선택 시 1회 재생).
@@ -101,19 +102,25 @@ struct AnimatedTabBar: View {
 
 // MARK: - 아이콘 디스패치
 
-/// 제목 옆 등 어디서나 쓰는 애니메이션 탭 아이콘 래퍼 — 나타날 때 시그니처 모션 1회 재생.
+/// 제목 옆 등 어디서나 쓰는 애니메이션 탭 아이콘 래퍼 — 나타날 때 + 이후 5초마다 시그니처 모션 재생.
 struct HeaderTabIcon: View {
     let kind: RootTabView.Tab
     var size: CGFloat = 19
     var color: Color = AppColors.accent
     @State private var play = false
+    @Environment(\.accessibilityReduceMotion) private var rm
+    // 5초마다 시그니처 모션 재생. 뷰 인스턴스당 1개의 타이머(body 재평가마다 새로 만들지 않도록 stored).
+    private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     var body: some View {
         AnimatedTabIcon(kind: kind, color: color, play: play)
             .frame(width: size, height: size)
-            .onAppear {
-                play = false
-                DispatchQueue.main.async { play = true }   // false→true 로 시그니처 모션 트리거
-            }
+            .onAppear { trigger() }              // false→true 로 시그니처 모션 트리거
+            .onReceive(timer) { _ in trigger() }  // 5초마다 재생
+    }
+    private func trigger() {
+        guard !rm else { return }   // 모션 줄이기 켜짐: 반복 애니메이션 생략
+        play = false
+        DispatchQueue.main.async { play = true }
     }
 }
 
