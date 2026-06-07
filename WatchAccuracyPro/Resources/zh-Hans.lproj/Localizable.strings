@@ -2093,3 +2093,10 @@
 "community.wstat.measures" = "总测量";
 "community.wstat.accuracy" = "平均精度";
 "community.wcard.measures" = "测量 %d 次";
+
+/* 커뮤니티 프로필 v3 — 대표 시계/측정 활동 */
+"community.section.signature" = "代表腕表";
+"community.signature.reliability" = "可信度";
+"community.section.activity" = "测量活动";
+"community.activity.streak" = "连续测量 %d 天";
+"community.activity.total" = "近10周 · %d 次";

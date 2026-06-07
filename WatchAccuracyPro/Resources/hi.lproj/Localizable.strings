@@ -2093,3 +2093,10 @@
 "community.wstat.measures" = "कुल मापन";
 "community.wstat.accuracy" = "औसत सटीकता";
 "community.wcard.measures" = "%d मापन";
+
+/* 커뮤니티 프로필 v3 — 대표 시계/측정 활동 */
+"community.section.signature" = "मुख्य घड़ी";
+"community.signature.reliability" = "विश्वसनीयता";
+"community.section.activity" = "मापन गतिविधि";
+"community.activity.streak" = "%d दिन लगातार मापन";
+"community.activity.total" = "पिछले 10 सप्ताह · %d";

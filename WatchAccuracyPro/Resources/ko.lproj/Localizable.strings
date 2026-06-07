@@ -2152,3 +2152,10 @@
 "community.wstat.measures" = "총 측정";
 "community.wstat.accuracy" = "평균 정확도";
 "community.wcard.measures" = "측정 %d회";
+
+/* 커뮤니티 프로필 v3 — 대표 시계/측정 활동 */
+"community.section.signature" = "대표 시계";
+"community.signature.reliability" = "신뢰도";
+"community.section.activity" = "측정 활동";
+"community.activity.streak" = "%d일 연속 측정";
+"community.activity.total" = "최근 10주 · %d회";

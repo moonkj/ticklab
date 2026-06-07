@@ -2093,3 +2093,10 @@
 "community.wstat.measures" = "Mesures";
 "community.wstat.accuracy" = "Précision moy.";
 "community.wcard.measures" = "%d mesures";
+
+/* 커뮤니티 프로필 v3 — 대표 시계/측정 활동 */
+"community.section.signature" = "Montre phare";
+"community.signature.reliability" = "Fiabilité";
+"community.section.activity" = "Activité de mesure";
+"community.activity.streak" = "%d jours de mesure d'affilée";
+"community.activity.total" = "10 dernières semaines · %d";

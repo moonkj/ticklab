@@ -2093,3 +2093,10 @@
 "community.wstat.measures" = "Mediciones";
 "community.wstat.accuracy" = "Precisión media";
 "community.wcard.measures" = "%d mediciones";
+
+/* 커뮤니티 프로필 v3 — 대표 시계/측정 활동 */
+"community.section.signature" = "Reloj insignia";
+"community.signature.reliability" = "Fiabilidad";
+"community.section.activity" = "Actividad de medición";
+"community.activity.streak" = "%d días midiendo seguidos";
+"community.activity.total" = "Últimas 10 semanas · %d";

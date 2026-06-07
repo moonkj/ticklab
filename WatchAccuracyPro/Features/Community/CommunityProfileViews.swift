@@ -41,7 +41,11 @@ struct UserPostsView: View {
         ScrollView {
             VStack(spacing: 16) {
                 profileCard
-                if isMe { tabBar }
+                if isMe {
+                    signatureSection
+                    activitySection
+                    tabBar
+                }
                 tabContent
             }
             .padding(.bottom, 24)
@@ -221,15 +225,19 @@ struct UserPostsView: View {
 
     private func tabButton(_ t: ProfileTab, icon: String, title: String) -> some View {
         let on = tab == t
+        let fg = on ? AppColors.accentDark : AppColors.ink3
         return Button { withAnimation(.easeOut(duration: 0.15)) { tab = t } } label: {
             HStack(spacing: 6) {
-                ConceptGlyph(systemName: icon, size: 15, color: on ? AppColors.ink0 : AppColors.ink3)
-                Text(title).font(.system(size: 13, weight: .semibold))
-                    .foregroundStyle(on ? AppColors.ink0 : AppColors.ink3)
+                ConceptGlyph(systemName: icon, size: 15, color: fg)
+                Text(title).font(.system(size: 13, weight: on ? .bold : .medium))
+                    .foregroundStyle(fg)
             }
-            .frame(maxWidth: .infinity).padding(.vertical, 8)
+            .frame(maxWidth: .infinity).padding(.vertical, 9)
+            // 선택 탭 — 흰색 pill + 그림자 + 골드 글자로 배경(paper2)과 또렷이 구분.
             .background(on ? AppColors.paper0 : Color.clear)
             .clipShape(RoundedRectangle(cornerRadius: 9))
+            .overlay(RoundedRectangle(cornerRadius: 9).stroke(on ? AppColors.accent.opacity(0.35) : Color.clear, lineWidth: 1))
+            .shadow(color: on ? .black.opacity(0.08) : .clear, radius: 3, y: 1)
         }.buttonStyle(.plain)
     }
 
@@ -323,6 +331,120 @@ struct UserPostsView: View {
         .background(AppColors.paper1)
         .overlay(RoundedRectangle(cornerRadius: 16).stroke(AppColors.rule, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 16))
+    }
+
+    // MARK: - 대표 시계 / 측정 활동 (내 프로필 · 온디바이스)
+
+    private func sectionHeader(_ title: String) -> some View {
+        HStack(spacing: 8) {
+            Text(title.uppercased())
+                .font(.system(size: 10, weight: .semibold, design: .monospaced))
+                .tracking(2).foregroundStyle(AppColors.accentDark)
+            Rectangle().fill(AppColors.accent.opacity(0.25)).frame(height: 1)
+        }
+        .padding(.horizontal, 16)
+    }
+
+    @ViewBuilder
+    private var signatureSection: some View {
+        if let w = myWatches.first(where: { $0.isPrimary }) ?? myWatches.first {
+            let latest = w.measurements.max(by: { $0.timestamp < $1.timestamp })
+            VStack(alignment: .leading, spacing: 10) {
+                sectionHeader(String(localized: "community.section.signature", defaultValue: "대표 시계"))
+                HStack(spacing: 16) {
+                    WatchSilhouette(watch: w, size: 72)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(w.brand + " " + w.model)
+                            .font(.system(size: 15, weight: .bold)).foregroundStyle(AppColors.ink0).lineLimit(2)
+                        if let ref = w.referenceNumber, !ref.isEmpty {
+                            Text(ref).font(.system(size: 11, design: .monospaced)).foregroundStyle(AppColors.ink3)
+                        }
+                        if let m = latest {
+                            HStack(spacing: 10) {
+                                Text("\(m.rateSecondsPerDay >= 0 ? "+" : "")\(String(format: "%.1f", m.rateSecondsPerDay)) s/d")
+                                    .font(.system(size: 18, weight: .medium, design: .serif))
+                                    .foregroundStyle(rateColor(m.rateSecondsPerDay))
+                                gradePill(m.confidenceScore)
+                            }
+                            .padding(.top, 2)
+                        }
+                    }
+                    Spacer(minLength: 0)
+                }
+                .padding(16)
+                .background(AppColors.paper1)
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .padding(.horizontal, 16)
+            }
+        }
+    }
+
+    private func rateColor(_ r: Double) -> Color {
+        let a = abs(r); return a <= 6 ? AppColors.success : a <= 20 ? AppColors.warning : AppColors.danger
+    }
+
+    private func gradePill(_ score: Int) -> some View {
+        let g = score >= 80 ? "A" : score >= 60 ? "B" : "C"
+        return HStack(spacing: 4) {
+            Text(g).font(.system(size: 10, weight: .heavy)).foregroundStyle(.white)
+                .frame(width: 16, height: 16).background(Circle().fill(AppColors.accent))
+            Text(String(localized: "community.signature.reliability", defaultValue: "신뢰도"))
+                .font(.system(size: 11, weight: .semibold)).foregroundStyle(AppColors.accentDark)
+        }
+        .padding(.horizontal, 8).padding(.vertical, 4)
+        .background(AppColors.accent.opacity(0.12)).clipShape(Capsule())
+    }
+
+    @ViewBuilder
+    private var activitySection: some View {
+        let timestamps = myWatches.flatMap { $0.measurements.map(\.timestamp) }
+        if !timestamps.isEmpty {
+            let cal = Calendar.current
+            let today = cal.startOfDay(for: Date())
+            let counts: [Date: Int] = timestamps.reduce(into: [:]) { $0[cal.startOfDay(for: $1), default: 0] += 1 }
+            let streak = StreakService.streak(from: timestamps).current
+            let total = (0..<70).reduce(0) { acc, i in
+                let d = cal.date(byAdding: .day, value: -(69 - i), to: today)!
+                return acc + (counts[d, default: 0] > 0 ? 1 : 0)
+            }
+            VStack(alignment: .leading, spacing: 10) {
+                sectionHeader(String(localized: "community.section.activity", defaultValue: "측정 활동"))
+                VStack(spacing: 12) {
+                    HStack {
+                        HStack(spacing: 6) {
+                            ConceptGlyph(systemName: "flame.fill", size: 16, color: AppColors.accent)
+                            Text(String(format: String(localized: "community.activity.streak", defaultValue: "%d일 연속 측정"), streak))
+                                .font(.system(size: 13, weight: .semibold)).foregroundStyle(AppColors.ink0)
+                        }
+                        Spacer()
+                        Text(String(format: String(localized: "community.activity.total", defaultValue: "최근 10주 · %d회"), total))
+                            .font(.system(size: 11)).foregroundStyle(AppColors.ink3)
+                    }
+                    LazyHGrid(rows: Array(repeating: GridItem(.fixed(13), spacing: 3), count: 7), spacing: 3) {
+                        ForEach(0..<70, id: \.self) { i in
+                            let d = cal.date(byAdding: .day, value: -(69 - i), to: today)!
+                            heatCell(counts[d, default: 0])
+                        }
+                    }
+                    .frame(height: 7 * 13 + 6 * 3)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                }
+                .padding(16)
+                .background(AppColors.paper1)
+                .overlay(RoundedRectangle(cornerRadius: 18).stroke(AppColors.rule, lineWidth: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 18))
+                .padding(.horizontal, 16)
+            }
+        }
+    }
+
+    private func heatCell(_ count: Int) -> some View {
+        let color: Color = count == 0 ? AppColors.paper2
+            : count == 1 ? AppColors.accent.opacity(0.35)
+            : count == 2 ? AppColors.accent.opacity(0.65)
+            : AppColors.accent
+        return RoundedRectangle(cornerRadius: 3).fill(color).frame(width: 13, height: 13)
     }
 }
 

@@ -2093,3 +2093,10 @@
 "community.wstat.measures" = "計測数";
 "community.wstat.accuracy" = "平均精度";
 "community.wcard.measures" = "計測%d回";
+
+/* 커뮤니티 프로필 v3 — 대표 시계/측정 활동 */
+"community.section.signature" = "代表のウォッチ";
+"community.signature.reliability" = "信頼度";
+"community.section.activity" = "計測アクティビティ";
+"community.activity.streak" = "%d日連続で計測中";
+"community.activity.total" = "直近10週 · %d回";
