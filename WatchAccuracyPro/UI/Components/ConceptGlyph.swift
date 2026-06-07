@@ -269,14 +269,22 @@ struct ConceptGlyph: View {
     }
 
     private var bookmark: some View {
-        Path { p in
+        let path = Path { p in
             p.move(to: CGPoint(x: size * 0.3, y: size * 0.16))
             p.addLine(to: CGPoint(x: size * 0.7, y: size * 0.16))
             p.addLine(to: CGPoint(x: size * 0.7, y: size * 0.84))
             p.addLine(to: CGPoint(x: size * 0.5, y: size * 0.66))
             p.addLine(to: CGPoint(x: size * 0.3, y: size * 0.84))
             p.closeSubpath()
-        }.stroke(fill, style: stroke)
+        }
+        // ".fill" 이면 채움, 아니면 아웃라인 — 스크랩 on/off 가 또렷이 구분되게.
+        return Group {
+            if systemName.hasSuffix(".fill") {
+                path.fill(fill)
+            } else {
+                path.stroke(fill, style: stroke)
+            }
+        }
     }
 
     private var tag: some View {

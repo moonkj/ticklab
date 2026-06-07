@@ -102,7 +102,44 @@ private enum MoodArt {
     }
 
     // swiftlint:disable:next cyclomatic_complexity function_body_length
+    /// 몸체(베젤 전체) 모션 — 무드별 흔들/끄덕/기울/호흡. 0..100 공간, 중심(50,50) 기준.
+    static func bodyTransform(_ mood: Mood, _ t: Double) -> (dx: CGFloat, dy: CGFloat, scale: CGFloat, rot: Double) {
+        func bosc(_ p: Double) -> Double { (1 - cos(t / p * 2 * .pi)) / 2 }   // 0→1→0 (50%에서 peak)
+        func sn(_ p: Double) -> Double { sin(t / p * 2 * .pi) }               // -1↔1
+        let d = Double.pi / 180
+        switch mood {
+        case .happy:        return (0, CGFloat(-3 * bosc(2.6)), 1 + 0.07 * bosc(2.6), 0)
+        case .excited:      return (0, CGFloat(-4 * bosc(1.3)), 1, 9 * d * sn(0.65))
+        case .proud:        return (0, 0, 1 + 0.12 * bosc(2.4), 0)
+        case .awe:          return (0, CGFloat(-3 * bosc(2.2)), 1 + 0.13 * bosc(2.2), -3 * d * bosc(2.2))
+        case .accomplished: return (0, CGFloat(3 - 8 * bosc(2.0)), 1, 0)
+        case .love:         return (0, 0, 1 + 0.14 * bosc(0.75), 0)
+        case .relief:       return (0, CGFloat(-5 + 8 * bosc(2.8)), 1, 0)
+        case .calm:         return (0, 0, 0.98 + 0.11 * bosc(3.4), 0)
+        case .neutral:      return (0, 0, 1, 5 * d * sn(3.8))
+        case .curious:      return (0, CGFloat(-1 * bosc(2.8)), 1, 13 * d * sn(2.8))
+        case .focused:      return (0, 0, 1.08 - 0.20 * bosc(2.0), 0)
+        case .thoughtful:   return (0, CGFloat(-3 * bosc(3.2)), 1, 10 * d * sn(3.2))
+        case .nostalgic:    return (0, 0, 1, 11 * d * sn(3.4))
+        case .concerned:    return (CGFloat(3.5 * sn(0.25)), 0, 1, 5 * d * sn(0.25))
+        case .disappointed: return (0, CGFloat(6 * bosc(2.8)), 1, -2 * d * bosc(2.8))
+        case .surprised:    return (0, CGFloat(-5 * bosc(2.0)), 1 + 0.18 * bosc(2.0), 0)
+        case .confused:     return (0, 0, 1, 14 * d * sn(2.6))
+        case .longing:      return (CGFloat(1 - 4 * bosc(3.0)), 0, 1, (2 - 15 * bosc(3.0)) * d)
+        case .tired:        return (0, CGFloat(6 * bosc(3.0)), 1, 7 * d * bosc(3.0))
+        }
+    }
+
     static func draw(_ mood: Mood, into ctx: inout GraphicsContext, t: Double, selected: Bool, animate: Bool) {
+        // 몸체 모션 — 전체(베젤+얼굴)에 무드별 변형 적용. 얼굴 세부 모션은 그 위에 중첩.
+        if animate {
+            let b = bodyTransform(mood, t)
+            ctx.translateBy(x: 50, y: 50)
+            ctx.translateBy(x: b.dx, y: b.dy)
+            if b.scale != 1 { ctx.scaleBy(x: b.scale, y: b.scale) }
+            if b.rot != 0 { ctx.rotate(by: .radians(b.rot)) }
+            ctx.translateBy(x: -50, y: -50)
+        }
         bezel(&ctx, t: t, selected: selected, animate: animate)
         switch mood {
         // ===== 긍정 =====
