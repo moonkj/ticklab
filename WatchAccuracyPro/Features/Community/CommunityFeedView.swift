@@ -101,7 +101,10 @@ struct CommunityFeedView: View {
                 CommunitySavedView()
             }
             .sheet(isPresented: $showProfile) {
-                UserProfileView()
+                // 내 프로필도 타인 프로필과 동일한 인스타식 뷰(게시물·팔로워·팔로잉 + 편집 버튼).
+                NavigationStack {
+                    UserPostsView(uid: service.myUID ?? "", displayName: service.myDisplayName)
+                }
             }
             .sheet(isPresented: $showBlocked) {
                 BlockedUsersView()

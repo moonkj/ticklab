@@ -2081,3 +2081,9 @@
 "stats.mood.top_count" = "Registrado %d veces";
 "stats.mood.month_total" = "Este mes · %d registros";
 "stats.empty.mood.title" = "Aún no hay registros";
+
+/* 커뮤니티 프로필 — 인스타식 통계/편집 */
+"community.stat.posts" = "Publicaciones";
+"community.stat.followers" = "Seguidores";
+"community.stat.following" = "Siguiendo";
+"community.profile.edit" = "Editar perfil";

@@ -2141,3 +2141,9 @@
 "stats.mood.top_count" = "Logged %d times";
 "stats.mood.month_total" = "This month · %d entries";
 "stats.empty.mood.title" = "No entries yet";
+
+/* 커뮤니티 프로필 — 인스타식 통계/편집 */
+"community.stat.posts" = "Posts";
+"community.stat.followers" = "Followers";
+"community.stat.following" = "Following";
+"community.profile.edit" = "Edit profile";

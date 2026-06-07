@@ -2081,3 +2081,9 @@
 "stats.mood.top_count" = "%d बार दर्ज";
 "stats.mood.month_total" = "इस माह · %d प्रविष्टियाँ";
 "stats.empty.mood.title" = "अभी कोई प्रविष्टि नहीं";
+
+/* 커뮤니티 프로필 — 인스타식 통계/편집 */
+"community.stat.posts" = "पोस्ट";
+"community.stat.followers" = "फ़ॉलोअर";
+"community.stat.following" = "फ़ॉलोइंग";
+"community.profile.edit" = "प्रोफ़ाइल संपादित करें";

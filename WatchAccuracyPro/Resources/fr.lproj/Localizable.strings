@@ -2081,3 +2081,9 @@
 "stats.mood.top_count" = "Noté %d fois";
 "stats.mood.month_total" = "Ce mois-ci · %d entrées";
 "stats.empty.mood.title" = "Aucune entrée pour l'instant";
+
+/* 커뮤니티 프로필 — 인스타식 통계/편집 */
+"community.stat.posts" = "Publications";
+"community.stat.followers" = "Abonnés";
+"community.stat.following" = "Abonnements";
+"community.profile.edit" = "Modifier le profil";

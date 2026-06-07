@@ -2081,3 +2081,9 @@
 "stats.mood.top_count" = "%d回記録";
 "stats.mood.month_total" = "今月 · 計%d件";
 "stats.empty.mood.title" = "まだ記録がありません";
+
+/* 커뮤니티 프로필 — 인스타식 통계/편집 */
+"community.stat.posts" = "投稿";
+"community.stat.followers" = "フォロワー";
+"community.stat.following" = "フォロー中";
+"community.profile.edit" = "プロフィール編集";

@@ -24,6 +24,9 @@ struct UserPostsView: View {
     @State private var posts: [Community.Post] = []
     @State private var loaded = false
     @State private var showLogin = false
+    @State private var followers = 0
+    @State private var following = 0
+    @State private var showEditProfile = false
 
     private let cols = [GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2), GridItem(.flexible(), spacing: 2)]
 
@@ -36,23 +39,41 @@ struct UserPostsView: View {
                         .font(.system(size: 18, weight: .bold)).foregroundStyle(AppColors.ink0)
                     Spacer()
                     if uid != service.myUID {
-                        let following = service.isFollowing(uid)
+                        let isFollowing = service.isFollowing(uid)
                         Button {
                             guard service.isSignedIn else { showLogin = true; return }   // 감사 수정: 미로그인 조용한 팔로우 실패 방지
                             Task { await service.toggleFollow(uid) }
                         } label: {
-                            Text(String(localized: following ? "community.following" : "community.follow"))
+                            Text(String(localized: isFollowing ? "community.following" : "community.follow"))
                                 .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(following ? AppColors.ink2 : AppColors.paper0)
+                                .foregroundStyle(isFollowing ? AppColors.ink2 : AppColors.paper0)
                                 .padding(.horizontal, 16).padding(.vertical, 7)
-                                .background(following ? Color.clear : AppColors.ink0)
-                                .overlay(Capsule().stroke(following ? AppColors.rule : Color.clear, lineWidth: 1))
+                                .background(isFollowing ? Color.clear : AppColors.ink0)
+                                .overlay(Capsule().stroke(isFollowing ? AppColors.rule : Color.clear, lineWidth: 1))
                                 .clipShape(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    } else {
+                        // 내 프로필 — 편집 버튼.
+                        Button { showEditProfile = true } label: {
+                            Text(String(localized: "community.profile.edit", defaultValue: "프로필 편집"))
+                                .font(.system(size: 13, weight: .semibold))
+                                .foregroundStyle(AppColors.ink0)
+                                .padding(.horizontal, 16).padding(.vertical, 7)
+                                .overlay(Capsule().stroke(AppColors.rule, lineWidth: 1))
                         }
                         .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 16).padding(.top, 8)
+
+                // 인스타식 통계 — 게시물 / 팔로워 / 팔로잉.
+                HStack(spacing: 0) {
+                    statCell(count: posts.count, title: String(localized: "community.stat.posts", defaultValue: "게시물"))
+                    statCell(count: followers, title: String(localized: "community.stat.followers", defaultValue: "팔로워"))
+                    statCell(count: following, title: String(localized: "community.stat.following", defaultValue: "팔로잉"))
+                }
+                .padding(.horizontal, 16)
 
                 // 컬렉터 정보 — 소개 + 시작연도·좋아하는 브랜드·대표 메이커. (서버 비정규화 스냅샷, 욕설 필터 통과분)
                 if let info = posts.first,
@@ -130,7 +151,25 @@ struct UserPostsView: View {
         .navigationTitle(displayName ?? String(localized: "community.anon_handle"))
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showLogin) { CommunityLoginView() }
-        .task { posts = await service.fetchPostsByAuthor(uid: uid); loaded = true }
+        .sheet(isPresented: $showEditProfile) { UserProfileView() }
+        .task {
+            posts = await service.fetchPostsByAuthor(uid: uid); loaded = true
+            let c = await service.fetchProfileCounts(uid: uid)
+            followers = c.followers; following = c.following
+        }
+    }
+
+    /// 인스타식 통계 셀 — 큰 숫자 + 라벨.
+    private func statCell(count: Int, title: String) -> some View {
+        VStack(spacing: 2) {
+            Text("\(count)")
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundStyle(AppColors.ink0)
+            Text(title)
+                .font(.system(size: 11.5))
+                .foregroundStyle(AppColors.ink3)
+        }
+        .frame(maxWidth: .infinity)
     }
 
     /// 컬렉터 정보 한 줄 — 시작연도 · 좋아하는 브랜드 · 대표 메이커.

@@ -2081,3 +2081,9 @@
 "stats.mood.top_count" = "记录了 %d 次";
 "stats.mood.month_total" = "本月 · 共 %d 条";
 "stats.empty.mood.title" = "还没有记录";
+
+/* 커뮤니티 프로필 — 인스타식 통계/편집 */
+"community.stat.posts" = "帖子";
+"community.stat.followers" = "粉丝";
+"community.stat.following" = "关注";
+"community.profile.edit" = "编辑资料";

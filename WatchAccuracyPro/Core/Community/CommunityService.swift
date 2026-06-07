@@ -333,6 +333,24 @@ final class CommunityService: ObservableObject {
                                  commentsReceived: comments, followerCount: followers)
     }
 
+    /// 내 표시 이름(로컬 저장). 없으면 nil.
+    var myDisplayName: String? {
+        let n = (defaults.string(forKey: "ticklab.profile.name") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+        return n.isEmpty ? nil : n
+    }
+
+    /// 인스타식 프로필 카운트 — 게시물/팔로워(나를 팔로우)/팔로잉(내가 팔로우). 임의 uid.
+    func fetchProfileCounts(uid: String) async -> (posts: Int, followers: Int, following: Int) {
+        await ensureSignedIn()
+        async let posts = countRows(table: "community_posts", selectCol: "id",
+                                    filter: "author_uid=eq.\(uid)&status=eq.approved")
+        async let followers = countRows(table: "community_follows", selectCol: "follower_uid",
+                                        filter: "followed_uid=eq.\(uid)")
+        async let following = countRows(table: "community_follows", selectCol: "followed_uid",
+                                        filter: "follower_uid=eq.\(uid)")
+        return (await posts, await followers, await following)
+    }
+
     /// 게시물 라이커 목록(인스타 "누가 좋아요") — 차단 작성자 제외. likes 전체 읽기 RLS 필요.
     func fetchLikers(postID: String) async -> [Community.Liker] {
         await ensureSignedIn()
