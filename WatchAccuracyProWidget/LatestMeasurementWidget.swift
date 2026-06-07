@@ -90,13 +90,9 @@ struct LatestMeasurementWidgetView: View {
             header
             Text(entry.snapshot?.watchName ?? "—")
                 .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
-            // 측정 데이터(rate) 왼쪽에 밸런스 휠 — 측정 엔진의 시그니처.
-            HStack(spacing: 8) {
-                BalanceWheelGlyph(size: 30)
-                Text(rateText())
-                    .font(.system(.title2, design: .rounded).weight(.bold))
-                    .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.6)
-            }
+            Text(rateText())
+                .font(.system(.title2, design: .rounded).weight(.bold))
+                .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.6)
             HStack(spacing: 10) {
                 metric("metronome", beatErrorText())
                 if showsAmplitude { metric("gauge.medium", amplitudeText()) }
@@ -122,16 +118,10 @@ struct LatestMeasurementWidgetView: View {
                         Text(cal).font(.caption2).foregroundStyle(.secondary).lineLimit(1)
                     }
                     Spacer(minLength: 2)
-                    // 측정 데이터(rate) 왼쪽에 밸런스 휠 — 측정 엔진의 시그니처. (HTML 목업 레이아웃)
-                    HStack(spacing: 11) {
-                        BalanceWheelGlyph(size: 46)
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(rateText())
-                                .font(.system(.title, design: .rounded).weight(.bold))
-                                .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.5)
-                            Text(timestampText()).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
-                        }
-                    }
+                    Text(rateText())
+                        .font(.system(.title, design: .rounded).weight(.bold))
+                        .foregroundStyle(rateColor()).lineLimit(1).minimumScaleFactor(0.5)
+                    Text(timestampText()).font(.caption2).foregroundStyle(.tertiary).lineLimit(1)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -347,64 +337,5 @@ struct LatestMeasurementWidgetView: View {
         guard let s = entry.snapshot else { return "" }
         let formatter = RelativeDateTimeFormatter()
         return formatter.localizedString(for: s.timestamp, relativeTo: Date())
-    }
-}
-
-/// 밸런스 휠 벡터 — 골드 그라데이션 림 + 안쪽 링 + 3스포크(끝에 타이밍 스크류) + 허브.
-/// ⚠️ WidgetKit 홈 위젯은 자유 애니메이션이 불가(타임라인 스냅샷 렌더)하므로 **정지 벡터**로 표시한다.
-/// 살짝 기운 각도로 '정지 상태의 실제 밸런스 휠'처럼 보이게 함.
-struct BalanceWheelGlyph: View {
-    var size: CGFloat = 44
-    /// 정지 각도 — 대칭이 아니라 살짝 기운 모습(실물 느낌).
-    var angle: Double = 16
-
-    private let goldLight = Color(red: 0.91, green: 0.79, blue: 0.48)
-    private let goldMid   = Color(red: 0.79, green: 0.66, blue: 0.30)
-    private let goldDark  = Color(red: 0.60, green: 0.48, blue: 0.18)
-    private let hub       = Color(red: 0.08, green: 0.08, blue: 0.11)
-
-    var body: some View {
-        Canvas { ctx, sz in
-            let s = min(sz.width, sz.height)
-            let u = s / 100                       // HTML viewBox(100) 기준 스케일
-            let c = CGPoint(x: sz.width / 2, y: sz.height / 2)
-
-            func circleRect(_ r: CGFloat) -> CGRect {
-                CGRect(x: c.x - r, y: c.y - r, width: r * 2, height: r * 2)
-            }
-
-            // 림(골드 그라데이션)
-            ctx.stroke(
-                Path(ellipseIn: circleRect(38 * u)),
-                with: .linearGradient(
-                    Gradient(colors: [goldLight, goldMid, goldDark]),
-                    startPoint: CGPoint(x: c.x - 38 * u, y: c.y - 38 * u),
-                    endPoint: CGPoint(x: c.x + 38 * u, y: c.y + 38 * u)),
-                lineWidth: 7 * u)
-            // 안쪽 링
-            ctx.stroke(Path(ellipseIn: circleRect(31 * u)),
-                       with: .color(goldMid.opacity(0.35)), lineWidth: 1.5 * u)
-
-            // 3스포크 + 끝 스크류(120°씩)
-            for k in 0..<3 {
-                var g = ctx
-                g.translateBy(x: c.x, y: c.y)
-                g.rotate(by: .degrees(Double(k) * 120))
-                var spoke = Path()
-                spoke.move(to: .zero)
-                spoke.addLine(to: CGPoint(x: 0, y: -35 * u))
-                g.stroke(spoke, with: .color(goldDark),
-                         style: StrokeStyle(lineWidth: 4.5 * u, lineCap: .round))
-                let dr = 3 * u
-                g.fill(Path(ellipseIn: CGRect(x: -dr, y: -36 * u - dr, width: dr * 2, height: dr * 2)),
-                       with: .color(goldMid))
-            }
-
-            // 허브
-            ctx.fill(Path(ellipseIn: circleRect(6 * u)), with: .color(goldMid))
-            ctx.fill(Path(ellipseIn: circleRect(2.5 * u)), with: .color(hub))
-        }
-        .frame(width: size, height: size)
-        .rotationEffect(.degrees(angle))
     }
 }
