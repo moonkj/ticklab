@@ -57,10 +57,16 @@ struct BrandLeagueView: View {
     // MARK: - My data
 
     private var myTeam: String? {
-        // 가장 많이 착용한 브랜드
+        // 기준: 착용 기록이 가장 많은 브랜드(전체 기간). 기간 탭과 무관하게 동일.
+        //   동률일 때 max(by:) 는 딕셔너리 순서가 불안정해 매번 다른 팀이 나옴(사용자 보고) →
+        //   (착용수 내림차순, 브랜드명 오름차순)으로 정렬해 고정한다.
         var counts: [String: Int] = [:]
         for log in wearLogs { if let b = log.watch?.brand { counts[b, default: 0] += 1 } }
-        return counts.max(by: { $0.value < $1.value })?.key ?? watches.first?.brand
+        if let top = counts.sorted(by: { $0.value != $1.value ? $0.value > $1.value : $0.key < $1.key }).first {
+            return top.key
+        }
+        // 착용 기록이 없으면 보유 시계 브랜드 중 알파벳순 첫 번째(역시 고정).
+        return watches.compactMap { $0.brand }.sorted().first
     }
 
     private var myCountForPeriod: [String: Int] {
