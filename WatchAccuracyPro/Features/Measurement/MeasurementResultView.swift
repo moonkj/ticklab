@@ -392,7 +392,7 @@ struct MeasurementResultView: View {
         if reduceMotion {
             // 연출 생략 — 즉시 최종 상태(숫자·인장 바로 표시), 단발 햅틱만.
             heroRateTarget = result.rateSecondsPerDay
-            showGoldSeal = true   // 사용자 결정: 신뢰도 무관 완료 인장 표시
+            if result.reliabilityGrade == .a { showGoldSeal = true }   // 골드 인장은 A등급만
             fireGradeHaptic()
             return
         }
@@ -406,12 +406,14 @@ struct MeasurementResultView: View {
             heroRateTarget = result.rateSecondsPerDay
         }
 
-        // ⓓ 도착(~0.85s) 후 0.4s 뒤 완료 인장 fade-in + stamp 햅틱. (사용자 결정: 신뢰도 무관 표시)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.85 + 0.4) {
-            withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
-                showGoldSeal = true
+        // ⓓ A등급일 때만 도착(~0.85s) 후 0.4s 뒤 골드 인장 fade-in + stamp 햅틱.
+        if result.reliabilityGrade == .a {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.85 + 0.4) {
+                withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
+                    showGoldSeal = true
+                }
+                HapticManager.trigger(.sealStamped)
             }
-            HapticManager.trigger(.sealStamped)
         }
     }
 
@@ -561,7 +563,8 @@ struct MeasurementResultView: View {
         // 웨이브2-B(hero readout 격상): 고신뢰는 borderless·hero 숫자 확대(~88pt)·세리프 verdict 를 숫자 바로 아래로.
         // 저신뢰(C/F·COSC 밖)는 기존 억제 레이아웃(작은 참고용 숫자·테두리 카드) 유지.
         let bigFont: CGFloat = isHighConfidenceGrade ? rateValueSizeHigh : rateValueSizeLow
-        let bigColor: Color = isHighConfidenceGrade ? verdict.toneColor : AppColors.ink3
+        // 사용자 결정: rate 숫자는 크게(A등급 사이즈) 유지하되 색상은 항상 회색.
+        let bigColor: Color = AppColors.ink3
         let dialSize: CGFloat = isHighConfidenceGrade ? 220 : 160
         let dialOpacity: Double = isHighConfidenceGrade ? 1.0 : 0.55
         // 카운트업 표시값: 고신뢰는 reveal 동안 0→실제값(reduce motion·정적 모드면 즉시 실제값).
@@ -623,8 +626,8 @@ struct MeasurementResultView: View {
                     .opacity(dialOpacity)
                     // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
                     .accessibilityHidden(true)
-                // 도착 후 0.4s 뒤 완료 인장 fade-in. (사용자 결정: 신뢰도 무관 표시)
-                if isHighConfidenceGrade {
+                // A등급일 때만 도착 후 0.4s 뒤 골드 인장 fade-in.
+                if isHighConfidenceGrade && result.reliabilityGrade == .a {
                     RevealGoldSeal()
                         .frame(width: dialSize * 0.34, height: dialSize * 0.34)
                         .opacity(showGoldSeal ? 1 : 0)
