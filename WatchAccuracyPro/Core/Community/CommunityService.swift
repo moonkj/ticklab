@@ -251,10 +251,16 @@ final class CommunityService: ObservableObject {
         await heartbeat()
     }
 
+    /// 진행 중인 팔로우 토글 쓰기 수 — >0 이면 syncFollowing 이 덮어쓰지 않음(낙관적 상태 클로버 방지).
+    private var followWritesInFlight = 0
+
     /// 내 팔로잉 목록을 서버에서 동기화 — 로컬 followedUIDs 캐시를 최신화.
     /// (재설치·익명 uid 변경·교차 기기 후 팔로잉 목록의 '팔로잉' 체크표시가 빠지던 문제 해소.)
     func syncFollowing() async {
         await ensureSignedIn()
+        // 토글 POST/DELETE 가 아직 서버에 반영 안 됐을 때 syncFollowing 이 옛 서버상태로 덮어써
+        //   방금 누른 팔로우가 되돌아가는 race 방지 — 진행 중이면 동기화 스킵.
+        guard followWritesInFlight == 0 else { return }
         guard let uid = myUID,
               let url = URL(string: "\(baseURL)/rest/v1/community_follows?select=followed_uid&follower_uid=eq.\(uid)&limit=1000"),
               let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
@@ -907,6 +913,9 @@ final class CommunityService: ObservableObject {
         let following = followedUIDs.contains(authorUID)
         if following { followedUIDs.remove(authorUID) } else { followedUIDs.insert(authorUID) }
         defaults.set(Array(followedUIDs), forKey: Keys.followed)
+        // 쓰기 진행 중 표시 — 이 사이 syncFollowing 이 끼어들어 낙관적 상태를 덮어쓰지 않게.
+        followWritesInFlight += 1
+        defer { followWritesInFlight -= 1 }
         if following {
             guard let uid = myUID,
                   let url = URL(string: "\(baseURL)/rest/v1/community_follows?follower_uid=eq.\(uid)&followed_uid=eq.\(authorUID)") else { return }

@@ -399,6 +399,7 @@ private struct MeasureHero: View {
     @State private var beat = false
     @State private var dots = false
     @State private var rate: Double = 0
+    @State private var runID = 0   // 카운트업 세대 토큰 — 페이지 재진입 시 옛 closure 무효화
     private let dotPos: [(CGFloat, CGFloat)] = [(-62, -37), (-20, 9), (22, -37), (64, 9)]
     var body: some View {
         ZStack {
@@ -419,16 +420,18 @@ private struct MeasureHero: View {
                 .foregroundStyle(AppColors.success).offset(y: 64)
         }
         .frame(width: 200, height: 200)
-        .onChange(of: active) { _, on in if on { play() } else { wave = 0; dots = false; rate = 0 } }
+        .onChange(of: active) { _, on in if on { play() } else { runID += 1; wave = 0; dots = false; rate = 0 } }
         .onAppear { if active { play() } }
     }
     private func play() {
+        runID += 1
         if rm { wave = 1; dots = true; rate = 0.8; return }
         wave = 0; dots = false; rate = 0
         withAnimation(.easeOut(duration: 0.9)) { wave = 1 }
         withAnimation(.spring(response: 0.4, dampingFraction: 0.5).delay(0.85)) { dots = true }
         withAnimation(.easeInOut(duration: 0.58).repeatForever(autoreverses: true)) { beat = true }
-        for i in 1...18 { DispatchQueue.main.asyncAfter(deadline: .now() + 0.05 * Double(i)) { if active { rate = 0.8 * Double(i) / 18.0 } } }
+        let myRun = runID
+        for i in 1...18 { DispatchQueue.main.asyncAfter(deadline: .now() + 0.05 * Double(i)) { if runID == myRun { rate = 0.8 * Double(i) / 18.0 } } }
     }
 }
 
@@ -530,6 +533,7 @@ private struct CommunityHero: View {
     @State private var corner = false
     @State private var heart = false
     @State private var likes = 0
+    @State private var runID = 0   // 카운트업 세대 토큰 — 페이지 재진입 시 옛 closure 무효화
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 14).fill(AppColors.accent100)
@@ -555,17 +559,19 @@ private struct CommunityHero: View {
             }.offset(y: 80).opacity(card ? 1 : 0)
         }
         .frame(width: 200, height: 200)
-        .onChange(of: active) { _, on in if on { play() } else { card = false; peek = false; corner = false; likes = 0 } }
+        .onChange(of: active) { _, on in if on { play() } else { runID += 1; card = false; peek = false; corner = false; likes = 0 } }
         .onAppear { if active { play() } }
     }
     private func play() {
+        runID += 1
         if rm { card = true; peek = true; corner = true; likes = 24; return }
         card = false; peek = false; corner = false; likes = 0
         withAnimation(.spring(response: 0.5, dampingFraction: 0.6).delay(0.1)) { card = true }
         withAnimation(.easeOut(duration: 0.5).delay(0.25)) { peek = true }
         withAnimation(.spring(response: 0.4, dampingFraction: 0.5).delay(0.9)) { corner = true }
         withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true).delay(0.8)) { heart = true }
-        for i in 1...24 { DispatchQueue.main.asyncAfter(deadline: .now() + 0.9 + 0.022 * Double(i)) { if active { likes = i } } }
+        let myRun = runID
+        for i in 1...24 { DispatchQueue.main.asyncAfter(deadline: .now() + 0.9 + 0.022 * Double(i)) { if runID == myRun { likes = i } } }
     }
 }
 

@@ -343,8 +343,9 @@ private struct RootView: View {
             //   기존엔 커뮤니티 피드 열 때만 찍혀 '앱 실행 중인데 0명' 발생 → 포그라운드로 보강.
             if FeatureFlags.shared.communityEnabled {
                 Task { await CommunityService.shared.heartbeat() }
-                // 백그라운드에서 복귀 = 접속 1회(콜드 런치는 .task 에서 별도 기록 → 중복 방지).
-                if lastBackgroundedAt != nil {
+                // 백그라운드에서 '의미 있는 시간(>3s)' 후 복귀 = 접속 1회. 콜드 런치는 .task 에서 별도 기록.
+                //   런치 중 잠깐 .inactive→.active 깜빡임(<1s)은 제외해 콜드런치 이중 집계 방지.
+                if let bg = lastBackgroundedAt, Date().timeIntervalSince(bg) > 3 {
                     Task { await CommunityService.shared.logAccess() }
                 }
             }

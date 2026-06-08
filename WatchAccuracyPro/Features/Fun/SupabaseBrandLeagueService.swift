@@ -75,7 +75,11 @@ final class SupabaseBrandLeagueService: ObservableObject {
     /// 새 주(월요일 등)가 돼도 지난 7일치가 새 주 키에 합산돼 초기화가 안 됐음.
     /// → 이번 주/달/해의 '시작' 으로 정렬(달력 경계에서 리셋). day 는 종전대로 오늘 0시.
     static func periodCutoff(type: String, date: Date = Date()) -> Date {
-        let cal = Calendar.current
+        // periodKey 와 반드시 같은 달력을 써야 cutoff 윈도우와 버킷 키가 일치(주 경계 리셋 정확).
+        //   periodKey 가 POSIX Gregorian(일요일 시작)이므로 여기도 동일하게 — Calendar.current(로케일
+        //   firstWeekday) 를 쓰면 월요일 시작 로케일에서 키/윈도우가 어긋나 리셋이 또 누락됨.
+        var cal = Calendar(identifier: .gregorian)
+        cal.locale = Locale(identifier: "en_US_POSIX")
         switch type {
         case "week":  return cal.dateInterval(of: .weekOfYear, for: date)?.start ?? cal.startOfDay(for: date)
         case "month": return cal.dateInterval(of: .month, for: date)?.start ?? cal.startOfDay(for: date)

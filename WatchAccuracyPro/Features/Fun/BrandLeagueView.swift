@@ -388,7 +388,8 @@ struct BrandLeagueView: View {
                     HStack(spacing: 12) {
                         Text("\(rank)")
                             .font(.system(size: 15, weight: .bold, design: .monospaced))
-                            .foregroundStyle(i < 3 ? AppColors.accentDark : AppColors.ink3)
+                            // 동률 정합 — 위치(i)가 아니라 등수(rank)로 강조: 메달권(1~3위)이면 골드.
+                            .foregroundStyle(rank <= 3 ? AppColors.accentDark : AppColors.ink3)
                             .frame(width: 22, alignment: .center)
                         brandInitialBadge(b.brand, color: Self.brandColor(b.brand), size: 28)
                         VStack(alignment: .leading, spacing: 1) {
