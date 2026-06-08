@@ -281,8 +281,11 @@ final class AppleIntelligenceVerdictService {
     nonisolated static func sanitizeLLMResponse(_ text: String) -> String {
         var s = text
         // XML/HTML 유사 태그 제거 — 모델이 <headline>/<content> 등으로 감싸는 경우(사용자 보고).
-        //   `<` 뒤가 영문자인 여는/닫는 태그만 매치 → "rate < 5" 같은 부등호는 안 건드림.
-        s = s.replacingOccurrences(of: #"</?[A-Za-z][A-Za-z0-9_]*\s*/?>"#,
+        //   `<` 뒤가 영문자/슬래시일 때만 매치 → "rate < 5" 같은 부등호는 보존.
+        //   속성 포함(<headline lang="ko">)도 잡도록 [^>]* 사용 + 닫는 > 없는 잘린 조각도 제거.
+        s = s.replacingOccurrences(of: #"</?[A-Za-z][^>]*>"#,
+                                   with: "", options: .regularExpression)
+        s = s.replacingOccurrences(of: #"</?[A-Za-z][^>\n]*$"#,
                                    with: "", options: .regularExpression)
         // bold/italic markdown
         s = s.replacingOccurrences(of: "**", with: "")

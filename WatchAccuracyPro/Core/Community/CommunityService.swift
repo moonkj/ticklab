@@ -300,34 +300,50 @@ final class CommunityService: ObservableObject {
         }
         persistLiked()
 
+        var netOK = false
         if liked {
             // DELETE /community_likes?post_id=eq.&uid=eq.
-            guard let uid = myUID,
-                  let url = URL(string: "\(baseURL)/rest/v1/community_likes?post_id=eq.\(post.id)&uid=eq.\(uid)") else { return }
-            _ = try? await URLSession.shared.data(for: authedRequest(url, method: "DELETE"))
-        } else {
-            guard let url = URL(string: "\(baseURL)/rest/v1/community_likes") else { return }
-            var req = authedRequest(url, method: "POST")
-            var dict: [String: Any] = ["post_id": post.id]
-            if defaults.bool(forKey: "ticklab.admin.actingAsTickLab") {
-                dict["author_name"] = "TickLab"
-            } else {
-                let n = (defaults.string(forKey: "ticklab.profile.name") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
-                dict["author_name"] = n.isEmpty ? "Collector" : n
-            }
-            req.httpBody = try? JSONSerialization.data(withJSONObject: dict)
-            _ = try? await URLSession.shared.data(for: req)
-            // 좋아요 목록 아바타 — 내 대표사진 경로를 best-effort 로 기록.
-            // 별도 PATCH 라 컬럼(author_avatar_path) 미배포여도 좋아요 자체는 안 깨진다(조용히 무시).
             if let uid = myUID,
-               let avatarPath = defaults.string(forKey: "ticklab.profile.avatarPath"), !avatarPath.isEmpty,
-               !defaults.bool(forKey: "ticklab.admin.actingAsTickLab"),
-               let patchURL = URL(string: "\(baseURL)/rest/v1/community_likes?post_id=eq.\(post.id)&uid=eq.\(uid)") {
-                var preq = authedRequest(patchURL, method: "PATCH")
-                preq.httpBody = try? JSONSerialization.data(withJSONObject: ["author_avatar_path": avatarPath])
-                _ = try? await URLSession.shared.data(for: preq)
+               let url = URL(string: "\(baseURL)/rest/v1/community_likes?post_id=eq.\(post.id)&uid=eq.\(uid)") {
+                netOK = await httpOK(authedRequest(url, method: "DELETE"))
+            }
+        } else {
+            if let url = URL(string: "\(baseURL)/rest/v1/community_likes") {
+                var req = authedRequest(url, method: "POST")
+                var dict: [String: Any] = ["post_id": post.id]
+                if defaults.bool(forKey: "ticklab.admin.actingAsTickLab") {
+                    dict["author_name"] = "TickLab"
+                } else {
+                    let n = (defaults.string(forKey: "ticklab.profile.name") ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
+                    dict["author_name"] = n.isEmpty ? "Collector" : n
+                }
+                req.httpBody = try? JSONSerialization.data(withJSONObject: dict)
+                netOK = await httpOK(req)
+                // 좋아요 목록 아바타 — 성공 시에만 내 대표사진 경로 best-effort 기록.
+                if netOK, let uid = myUID,
+                   let avatarPath = defaults.string(forKey: "ticklab.profile.avatarPath"), !avatarPath.isEmpty,
+                   !defaults.bool(forKey: "ticklab.admin.actingAsTickLab"),
+                   let patchURL = URL(string: "\(baseURL)/rest/v1/community_likes?post_id=eq.\(post.id)&uid=eq.\(uid)") {
+                    var preq = authedRequest(patchURL, method: "PATCH")
+                    preq.httpBody = try? JSONSerialization.data(withJSONObject: ["author_avatar_path": avatarPath])
+                    _ = try? await URLSession.shared.data(for: preq)
+                }
             }
         }
+        // 서버 반영 실패(오프라인·RLS 거부 등) → 낙관적 상태 롤백. 안 하면 하트는 켜졌는데 서버엔 없어
+        //   다음 loadFeed 에서 카운트만 되돌아가고 하트는 남는 발산 상태가 됨.
+        if !netOK {
+            if liked { likedPostIDs.insert(post.id); adjustLocalLike(post.id, delta: +1) }
+            else { likedPostIDs.remove(post.id); adjustLocalLike(post.id, delta: -1) }
+            persistLiked()
+        }
+    }
+
+    /// 요청이 2xx 로 성공했는지 — 낙관적 UI 롤백 판정용.
+    private func httpOK(_ req: URLRequest) async -> Bool {
+        guard let (_, resp) = try? await URLSession.shared.data(for: req),
+              let http = resp as? HTTPURLResponse else { return false }
+        return (200...299).contains(http.statusCode)
     }
 
     /// 특정 작성자의 공개 게시물(프로필 그리드용) — 최신순.
@@ -816,7 +832,8 @@ final class CommunityService: ObservableObject {
         // 1) 내 게시물 id·썸네일 경로
         struct PostRow: Decodable { let id: String; let image_path: String? }
         var pathByID: [String: String?] = [:]
-        if let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=id,image_path&author_uid=eq.\(uid)"),
+        // 최근 80개로 제한 — 무제한이면 다작 작성자의 post id 들이 아래 in.(csv) URL 을 폭주시켜 414/빈결과.
+        if let url = URL(string: "\(baseURL)/rest/v1/community_posts?select=id,image_path&author_uid=eq.\(uid)&order=created_at.desc&limit=80"),
            let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
            let rows = try? Self.decoder.decode([PostRow].self, from: data) {
             for r in rows { pathByID[r.id] = r.image_path }
@@ -844,13 +861,13 @@ final class CommunityService: ObservableObject {
                 }
             }
         }
-        // 3) 새 팔로워
-        struct FollowRow: Decodable { let created_at: Date }
-        if let url = URL(string: "\(baseURL)/rest/v1/community_follows?select=created_at&followed_uid=eq.\(uid)&order=created_at.desc&limit=50"),
+        // 3) 새 팔로워 — id 에 follower_uid 포함(같은 초에 2명 팔로우 시 id 충돌로 알림 누락하던 버그).
+        struct FollowRow: Decodable { let created_at: Date; let follower_uid: String }
+        if let url = URL(string: "\(baseURL)/rest/v1/community_follows?select=created_at,follower_uid&followed_uid=eq.\(uid)&order=created_at.desc&limit=50"),
            let (data, _) = try? await URLSession.shared.data(for: authedRequest(url, method: "GET")),
            let rows = try? Self.decoder.decode([FollowRow].self, from: data) {
             for r in rows {
-                events.append(.init(id: "follow-\(Int(r.created_at.timeIntervalSince1970))",
+                events.append(.init(id: "follow-\(r.follower_uid)-\(Int(r.created_at.timeIntervalSince1970))",
                                     kind: .follow, postImagePath: nil, createdAt: r.created_at))
             }
         }
@@ -954,7 +971,8 @@ final class CommunityService: ObservableObject {
     func loadSavedPosts() async {
         await ensureSignedIn()
         guard !bookmarkedPostIDs.isEmpty else { savedFeed = []; return }
-        let ids = bookmarkedPostIDs.joined(separator: ",")
+        // 최근 100개로 제한 — 북마크가 수백 개면 in.(csv) URL 이 길이 한계(414)를 넘어 저장탭이 통째로 빈결과.
+        let ids = bookmarkedPostIDs.prefix(100).joined(separator: ",")
         let query = "select=*&id=in.(\(ids))&order=created_at.desc"
         guard let url = URL(string: "\(baseURL)/rest/v1/community_posts?\(query)") else { return }
         do {
@@ -1408,7 +1426,9 @@ final class CommunityService: ObservableObject {
         d.dateDecodingStrategy = .custom { decoder in
             let s = try decoder.singleValueContainer().decode(String.self)
             if let date = isoFrac.date(from: s) ?? iso.date(from: s) { return date }
-            return Date()
+            // 파싱 실패 시 now() 면 피드 최상단으로 튀고 알림 id 가 매 fetch 마다 바뀌어 배지가 안 꺼짐 →
+            //   distantPast 로 fail-closed(맨 아래·안정적 id).
+            return .distantPast
         }
         return d
     }()

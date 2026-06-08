@@ -118,6 +118,13 @@ final class AppLockService: ObservableObject {
         return success
     }
 
+    /// 자동 락/토글로 다시 잠길 때 — RootView.isUnlocked 와 정합 위해 published unlocked 도 false 로.
+    ///   (기존엔 RootView 만 false 되고 서비스 플래그는 true 로 남아 두 진실이 어긋남.)
+    func relock() {
+        unlocked = false
+        lastUnlockedAt = nil
+    }
+
     // Round 146 (Hyemi 6): didEnterBackground/didBecomeActive 메서드는 dead code — RootView 가
     // 자체적으로 ScenePhase 60s 로직을 구현. 의미상 buggy (didEnterBackground 가 lastUnlockedAt 갱신해
     // auto-lock 을 오히려 지연) 이라 호출됐다면 위험. 안전하게 제거.

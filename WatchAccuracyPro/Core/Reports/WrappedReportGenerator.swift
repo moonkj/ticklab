@@ -70,7 +70,8 @@ struct WrappedReportData {
             guard let w = log.watch else { continue }
             wearByWatch[w.id] = (w, (wearByWatch[w.id]?.1 ?? 0) + 1)
         }
-        let sorted = wearByWatch.values.sorted { $0.1 > $1.1 }
+        // 동률 시 deterministic — id 2차 정렬(딕셔너리 순서 불안정으로 결과가 매번 바뀌던 문제).
+        let sorted = wearByWatch.values.sorted { $0.1 != $1.1 ? $0.1 > $1.1 : $0.0.id.uuidString < $1.0.id.uuidString }
         let mostWorn  = sorted.first.map { (watch: $0.0, count: $0.1) }
         let leastWorn = sorted.last.map  { (watch: $0.0, count: $0.1) }
 
@@ -140,9 +141,14 @@ struct WrappedReportData {
             guard let w = m.watch else { continue }
             rateByWatch[w.id, default: (w, [])].1.append(m.rateSecondsPerDay)
         }
-        let bestAccuracy = rateByWatch.values
-            .map { (watch: $0.0, avgRate: $0.1.reduce(0, +) / Double($0.1.count)) }
-            .min(by: { abs($0.avgRate) < abs($1.avgRate) })
+        let avgByWatch: [(watch: Watch, avgRate: Double)] = rateByWatch.values.map {
+            (watch: $0.0, avgRate: $0.1.reduce(0, +) / Double($0.1.count))
+        }
+        // 동률(|avgRate| 같음) 시 deterministic — id 2차(딕셔너리 순서 불안정으로 결과 흔들림 방지).
+        let bestAccuracy = avgByWatch.min { a, b in
+            let da = abs(a.avgRate), db = abs(b.avgRate)
+            return da != db ? da < db : a.watch.id.uuidString < b.watch.id.uuidString
+        }
 
         // COSC 밴드(-4 ~ +6 s/d) 통과 측정 건수. (UI/Components/COSCBar SSOT 와 동일 범위.)
         let coscPassCount = meas.filter { $0.rateSecondsPerDay >= -4 && $0.rateSecondsPerDay <= 6 }.count

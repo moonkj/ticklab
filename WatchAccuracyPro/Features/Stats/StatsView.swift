@@ -301,7 +301,10 @@ struct StatsView: View {
     }
 
     private var weekdayHeaderRow: some View {
-        let symbols = Calendar.current.veryShortStandaloneWeekdaySymbols
+        // firstWeekday 부터 시작하도록 회전(monthDays 오프셋과 정렬). 기본 심볼 index 0 = 일요일.
+        let cal = Calendar.current
+        let base = cal.veryShortStandaloneWeekdaySymbols
+        let symbols = (0..<7).map { base[(cal.firstWeekday - 1 + $0) % base.count] }
         return LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 6), count: 7), spacing: 0) {
             ForEach(Array(symbols.enumerated()), id: \.offset) { _, label in
                 Text(label.uppercased())
@@ -375,14 +378,15 @@ struct StatsView: View {
               let start = cal.date(from: cal.dateComponents([.year, .month], from: anchor)) else {
             return ([], 0)
         }
-        let firstWeekday = cal.component(.weekday, from: start) - 1
-        var days: [Date?] = Array(repeating: nil, count: firstWeekday)
+        // 로케일 firstWeekday 반영(일요일 고정 X) — 월요일 시작 로케일에서 날짜가 한 칸 어긋나던 버그.
+        let offset = (cal.component(.weekday, from: start) - cal.firstWeekday + 7) % 7
+        var days: [Date?] = Array(repeating: nil, count: offset)
         for d in range {
             if let date = cal.date(byAdding: .day, value: d - 1, to: start) {
                 days.append(date)
             }
         }
-        return (days, firstWeekday)
+        return (days, offset)
     }
 
     /// 특정 날짜의 착용 시계 개수 — pre-computed dict 에서 O(1) lookup.

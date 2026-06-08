@@ -273,7 +273,7 @@ private struct RootView: View {
         }
         .onChange(of: preferences.appLockEnabled) { _, newValue in
             // 토글을 켰을 때 즉시 unlock 상태 reset → lock 화면 등장.
-            if newValue { isUnlocked = false }
+            if newValue { isUnlocked = false; AppLockService.shared.relock() }
         }
         .task {
             // Round 172 (clock 보정): 최초 실행에 앵커(NTP↔monotonic) 설정. 이후 foreground 마다 갱신.
@@ -341,6 +341,7 @@ private struct RootView: View {
                let bg = lastBackgroundedAt,
                Date().timeIntervalSince(bg) > 60 {
                 isUnlocked = false
+                AppLockService.shared.relock()   // 서비스 플래그도 동기화(자동 락)
             }
             // 일자 변경 시 mood 캐시 stale 가능성 → 전체 invalidate.
             if let bg = lastBackgroundedAt,

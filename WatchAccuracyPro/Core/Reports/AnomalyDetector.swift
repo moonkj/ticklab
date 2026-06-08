@@ -113,10 +113,17 @@ enum AnomalyDetector {
     /// 중앙값 + MAD→σ 환산 척도(1.4826). floor 로 하한을 둬 MAD≈0 시 0 나눗셈/과민반응 방지.
     private static func robustStats(_ values: [Double], floor: Double) -> RobustStat {
         let sorted = values.sorted()
-        let median = sorted[sorted.count / 2]
+        let median = medianOfSorted(sorted)
         let deviations = values.map { Swift.abs($0 - median) }.sorted()
-        let mad = deviations[deviations.count / 2]
+        let mad = medianOfSorted(deviations)
         let scale = Swift.max(mad * 1.4826, floor)
         return RobustStat(median: median, scale: scale)
+    }
+
+    /// 정렬된 배열의 참 중앙값 — 짝수 개수면 두 중앙값 평균(기존 sorted[n/2] 는 짝수서 상위값 편향).
+    private static func medianOfSorted(_ s: [Double]) -> Double {
+        let n = s.count
+        guard n > 0 else { return 0 }
+        return n % 2 == 1 ? s[n / 2] : (s[n / 2 - 1] + s[n / 2]) / 2
     }
 }
