@@ -216,6 +216,19 @@ private struct RootView: View {
                     .zIndex(10)
                 }
             }
+            // 앱 잠금 활성 + 비활성/백그라운드(앱스위처·Control Center) 시 민감정보(시리얼·구매가 등)를
+            //   멀티태스킹 스냅샷에서 가린다. .active 복귀하면 사라지고, 필요 시 잠금화면이 이어받음.
+            .overlay {
+                if preferences.appLockEnabled && scenePhase != .active && !showSplash {
+                    ZStack {
+                        AppColors.primaryDeep.ignoresSafeArea()
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 40, weight: .light))
+                            .foregroundStyle(AppColors.accent)
+                    }
+                    .zIndex(30)
+                }
+            }
     }
 
     @ViewBuilder

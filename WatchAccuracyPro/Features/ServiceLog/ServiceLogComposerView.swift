@@ -128,9 +128,10 @@ struct ServiceLogComposerView: View {
         if !center.trimmingCharacters(in: .whitespaces).isEmpty {
             ServiceCenterFavoritesService.recordUsage(center)
         }
-        if let cost = Decimal(string: costText) {
+        if let cost = LocalizedNumber.decimal(costText) {   // 로케일 인식 파싱
             log.costAmount = cost
-            log.costCurrency = "KRW"
+            // 통화 KRW 하드코딩 → 시계 구매 통화에 맞춤(TCO 통화 혼합 방지). 없으면 로케일 통화.
+            log.costCurrency = watch.purchaseCurrency ?? Locale.current.currency?.identifier ?? "KRW"
         }
         // 다음 service 권장 일자 자동 계산.
         if let months = type.recommendedIntervalMonths {

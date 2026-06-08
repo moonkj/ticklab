@@ -42,3 +42,30 @@ enum AppDevice {
         }
     }
 }
+
+/// 로케일 인식 숫자 파싱 — `.decimalPad`/`.numberPad` 입력은 사용자 로케일 소수점 구분자(쉼표 등)를
+/// 쓰므로, `Decimal(string:)`/`Double(string:)`(`.`만 인정)로 파싱하면 유럽/일부 로케일에서 값이 손상된다.
+/// (예: 독일 사용자 "1.500,50" → Decimal(string:) = 1.5). NumberFormatter(current locale)로 파싱.
+enum LocalizedNumber {
+    private static let formatter: NumberFormatter = {
+        let f = NumberFormatter()
+        f.numberStyle = .decimal
+        f.locale = .current
+        f.generatesDecimalNumbers = true
+        return f
+    }()
+
+    static func decimal(_ raw: String) -> Decimal? {
+        let t = raw.trimmingCharacters(in: .whitespaces)
+        guard !t.isEmpty else { return nil }
+        if let n = formatter.number(from: t) { return n.decimalValue }
+        return Decimal(string: t)   // 폴백: POSIX('.') 형식(붙여넣기 등)
+    }
+
+    static func double(_ raw: String) -> Double? {
+        let t = raw.trimmingCharacters(in: .whitespaces)
+        guard !t.isEmpty else { return nil }
+        if let n = formatter.number(from: t) { return n.doubleValue }
+        return Double(t)
+    }
+}

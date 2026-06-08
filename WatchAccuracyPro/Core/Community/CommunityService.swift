@@ -1159,6 +1159,9 @@ final class CommunityService: ObservableObject {
     /// 접속 누계 집계용. 테이블 미배포(access_log.sql 전)면 조용히 실패(graceful).
     func logAccess() async {
         await ensureSignedIn()
+        // 세션 없으면(미로그인) RLS(uid=auth.uid())에 막혀 무조건 실패 → 헛된 요청 스킵.
+        //   (Apple 전용 전환으로 자동 익명가입 없음 — 접속 누계는 로그인 사용자 기준 집계.)
+        guard isSignedIn else { return }
         guard let url = URL(string: "\(baseURL)/rest/v1/community_access_log") else { return }
         var req = authedRequest(url, method: "POST")
         req.setValue("return=minimal", forHTTPHeaderField: "Prefer")

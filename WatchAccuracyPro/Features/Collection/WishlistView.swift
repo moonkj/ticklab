@@ -315,10 +315,11 @@ struct WishlistComposerView: View {
         item.brand = brand.trimmingCharacters(in: .whitespaces)
         item.model = model.trimmingCharacters(in: .whitespaces)
         item.referenceNumber = refNo.isEmpty ? nil : refNo
-        item.targetPrice = Decimal(string: priceText.trimmingCharacters(in: .whitespaces))
+        // 로케일 인식 파싱(쉼표 소수점 손상 방지).
+        item.targetPrice = LocalizedNumber.decimal(priceText)
         item.currency = currency; item.note = note; item.imageData = imageData
-        item.savedAmount = Decimal(string: savedText.trimmingCharacters(in: .whitespaces)) ?? 0
-        item.monthlyGoal = Decimal(string: monthlyText.trimmingCharacters(in: .whitespaces))
+        item.savedAmount = LocalizedNumber.decimal(savedText) ?? 0
+        item.monthlyGoal = LocalizedNumber.decimal(monthlyText)
         if existing == nil { context.insert(item) }
         try? context.save(); dismiss()
     }

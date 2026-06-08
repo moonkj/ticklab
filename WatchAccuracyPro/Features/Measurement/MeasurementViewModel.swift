@@ -170,6 +170,13 @@ final class MeasurementViewModel {
             let reliability = movement?.confidenceLabel ?? .high
             let source: AudioSource = audioSourceOverride ?? AudioCapture()
             captureSource = source
+            // 통화/Siri/알람 인터럽션 시 측정을 우아하게 실패 처리(엔진이 죽은 채 truncated 버퍼로
+            //   엉뚱한 결과를 내던 문제). 핸들러는 정의돼 있었으나 어디서도 연결 안 돼 있었음.
+            if let ac = source as? AudioCapture {
+                ac.installInterruptionHandler { [weak self] in
+                    Task { @MainActor in self?.handleAudioInterruption() }
+                }
+            }
             let pipeline = DSPPipeline(
                 source: source,
                 nominalBph: nominalBph,
@@ -225,10 +232,38 @@ final class MeasurementViewModel {
                 }
             }
         } catch {
+            // 엔진 start 실패 — 위에서 만든 metrics/waveform Task 와 pipeline 을 정리하지 않으면
+            //   스트림이 finish() 안 돼 Task 가 영구 suspend(누수). 재시도마다 누적됨.
+            let p = pipeline
+            pipeline = nil
+            captureSource = nil
+            metricsTask?.cancel()
+            waveformTask?.cancel()
             state = .failed(.audioEngineFailure)
             HapticManager.trigger(.measurementFailed)
             announce(.failed)
+            Task.detached(priority: .utility) { _ = p?.stop() }   // 스트림 finish·엔진 정리
         }
+    }
+
+    /// 오디오 인터럽션(통화/Siri/알람) 시 측정 중이면 우아하게 실패 처리.
+    @MainActor
+    private func handleAudioInterruption() {
+        guard case .measuring = state else { return }
+        let p = pipeline
+        pipeline = nil
+        captureSource = nil
+        metricsTask?.cancel()
+        waveformTask?.cancel()
+        setKeepScreenOn(enabled: false)
+        if #available(iOS 16.2, *) {
+            MeasurementLiveActivityService.shared.end(final: nil)
+        }
+        state = .failed(.audioEngineFailure)
+        HapticManager.trigger(.measurementFailed)
+        announce(.failed)
+        NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
+        Task.detached(priority: .utility) { _ = p?.stop() }
     }
 
     // MARK: - VoiceOver announcements (스트림A)
@@ -395,7 +430,9 @@ final class MeasurementViewModel {
     @MainActor
     func cancel() {
         isCancelled = true
-        _ = pipeline?.stop()
+        // 무거운 stop()(전체 DSP 분석)을 메인스레드에서 동기 실행하면 백그라운드 전환 중 행/워치독 위험 →
+        //   결과는 버리므로 pipeline 즉시 nil 처리 후 백그라운드에서 정리(스트림 finish·엔진 정지 포함).
+        let p = pipeline
         pipeline = nil
         metricsTask?.cancel()
         waveformTask?.cancel()
@@ -406,6 +443,7 @@ final class MeasurementViewModel {
         // 모든 경우에 state 리셋 — navigationDestination(item:) 재발화 차단 (재측정 흐름 정상화).
         state = .idle
         NotificationCenter.default.post(name: .ticklabMeasurementDidEnd, object: nil)
+        Task.detached(priority: .utility) { _ = p?.stop() }
     }
 
     /// 신뢰 게이트 — persist 여부(또는 빠른측정 표시 여부)를 결정하는 순수 판정.

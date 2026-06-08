@@ -590,9 +590,9 @@ struct PurchaseView: View {
         isRestoring = true
         defer { isRestoring = false }
         await ProEntitlement.shared.restore()
-        // 사용자 보고 fix: UserPreferences.isPro 는 NotificationCenter 이벤트 비동기 → race.
-        //   ProEntitlement.shared.isPro 를 직접 read (StoreKit 검증 후 즉시 set 됨).
-        if ProEntitlement.shared.isPro {
+        // 복원 성공 판정은 realPro(실제 StoreKit 엔타이틀먼트)로 — isPro 는 프로모 기간엔 강제 true 라
+        //   구매 없는 사용자도 '복원 성공'으로 오탐(프로모 종료 후 버그). 실제 구매 여부만 본다.
+        if ProEntitlement.shared.realPro {
             purchaseSuccess = true
         } else {
             // Apple guideline 3.1.1: Restore 탭 후 사용자에게 명시적 결과 안내 필수.

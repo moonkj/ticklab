@@ -884,7 +884,8 @@ struct AddWatchView: View {
         let purchaseLocationTrimmed = purchaseLocation.trimmingCharacters(in: .whitespaces)
         let purchaseSalespersonTrimmed = purchaseSalesperson.trimmingCharacters(in: .whitespaces)
         let purchasePriceTrimmed = purchasePriceText.trimmingCharacters(in: .whitespaces)
-        let parsedPurchasePrice: Decimal? = Decimal(string: purchasePriceTrimmed)
+        // 로케일 인식 파싱 — 쉼표 소수점 로케일에서 Decimal(string:) 가 가격을 손상시키던 버그.
+        let parsedPurchasePrice: Decimal? = LocalizedNumber.decimal(purchasePriceTrimmed)
         let receivedFromTrimmed = receivedFrom.trimmingCharacters(in: .whitespaces)
         let parsedCustomBph: Int? = isManualEntry ? Int(manualBphText) : nil
         if let existing {
@@ -896,7 +897,7 @@ struct AddWatchView: View {
             PhotoCache.invalidate(id: existing.id)
             // Round (3-1): 다음 ListRow/Hero render 시 main thread 디코드 spike 회피.
             PhotoCache.prefetch(for: existing.id, data: photoData)
-            existing.liftAngleOverride = Double(liftAngleOverride.trimmingCharacters(in: .whitespaces))
+            existing.liftAngleOverride = LocalizedNumber.double(liftAngleOverride)
             existing.movementType = movementType
             existing.nickname = nicknameTrimmed.isEmpty ? nil : nicknameTrimmed
             existing.story = storyTrimmed.isEmpty ? nil : storyTrimmed
@@ -919,7 +920,7 @@ struct AddWatchView: View {
                 caliber: caliber,
                 purchaseDate: purchaseDate,
                 photoData: photoData,
-                liftAngleOverride: Double(liftAngleOverride.trimmingCharacters(in: .whitespaces)),
+                liftAngleOverride: LocalizedNumber.double(liftAngleOverride),
                 movementType: movementType,
                 nickname: nicknameTrimmed.isEmpty ? nil : nicknameTrimmed,
                 story: storyTrimmed.isEmpty ? nil : storyTrimmed,
@@ -939,7 +940,10 @@ struct AddWatchView: View {
         }
         // 구매 컨디션 + 연식 (신규/편집 공통).
         watch.purchaseCondition = purchaseCondition
-        watch.productionYear = Int(productionYearText.trimmingCharacters(in: .whitespaces))
+        // 연식은 합리적 범위로만 저장(오타 99999/0 등 방어). 범위 밖이면 미설정(nil).
+        watch.productionYear = Int(productionYearText.trimmingCharacters(in: .whitespaces)).flatMap {
+            (1900...(Calendar.current.component(.year, from: Date()) + 1)).contains($0) ? $0 : nil
+        }
         if movementType == .manual {
             watch.windReminderEnabled = windReminderEnabled
             let comps = Calendar.current.dateComponents([.hour, .minute], from: windReminderTime)
