@@ -402,7 +402,15 @@ enum DataExportService {
         for d in (dto.specCards ?? []) where !exSpec.contains(d.id) { context.insert(d.make(byID)) }
         let lifeCount = (dto.wearLogs?.count ?? 0) + (dto.journals?.count ?? 0)
             + (dto.serviceLogs?.count ?? 0) + (dto.specCards?.count ?? 0)
-        if imported > 0 || lifeCount > 0 { try? context.save() }
+        // 대표 시계(isPrimary) 단일 불변식 강제 — 가져온 백업이 이미 있는 대표와 겹쳐 2개가 되는 것 방지.
+        let allWatches = (try? context.fetch(FetchDescriptor<Watch>())) ?? []
+        let primaries = allWatches.filter { $0.isPrimary }
+        if primaries.count > 1 {
+            // 가장 먼저 만들어진 시계 1개만 대표 유지, 나머지 해제.
+            let keep = primaries.min(by: { $0.createdAt < $1.createdAt })
+            for w in primaries where w.id != keep?.id { w.isPrimary = false }
+        }
+        if imported > 0 || lifeCount > 0 || primaries.count > 1 { try? context.save() }
         return imported
     }
 

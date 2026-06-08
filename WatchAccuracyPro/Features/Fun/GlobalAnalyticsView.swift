@@ -23,13 +23,10 @@ struct GlobalAnalyticsView: View {
         return wearLogs.filter { $0.date >= cutoff }.count
     }
 
+    // 롤링 윈도우(-1month/-1year)는 서버의 달력 버킷(periodKey)과 어긋나 '내 vs 글로벌' 기간이
+    //   불일치했음 → 서버와 동일한 달력 정렬 cutoff(이번 달/해 시작) 공유 함수 사용.
     private var periodCutoff: Date {
-        let cal = Calendar.current; let now = Date()
-        switch period {
-        case .day:   return cal.startOfDay(for: now)
-        case .month: return cal.date(byAdding: .month, value: -1, to: now) ?? now
-        case .year:  return cal.date(byAdding: .year,  value: -1, to: now) ?? now
-        }
+        SupabaseBrandLeagueService.periodCutoff(type: period.rawValue)
     }
 
     // 내 컬렉션 브랜드들의 글로벌 순위

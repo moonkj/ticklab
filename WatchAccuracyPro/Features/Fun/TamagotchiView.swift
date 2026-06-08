@@ -424,8 +424,9 @@ struct TamagotchiView: View {
                     }
                 }
             }
-            // 실제 효과: wear log + measurement 활성화 효과.
-            WearLogService.toggleToday(watch, in: modelContext)
+            // 실제 효과: 오늘 착용 기록 보장(이미 있으면 그대로). toggleToday 는 이미 착용한 날엔
+            //   기록을 '제거'해 케어 액션이 착용을 취소하던 버그 → 멱등 ensure 로 교체.
+            WearLogService.ensureTodayWearOnMeasure(watch, in: modelContext)
             try? await Task.sleep(nanoseconds: 1_400_000_000)
             withAnimation(.easeOut(duration: 0.3)) {
                 reactionVisible = false

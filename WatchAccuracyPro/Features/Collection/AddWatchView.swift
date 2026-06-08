@@ -986,6 +986,9 @@ struct AddWatchView: View {
                 years: preferences.overhaulReminderYears,
                 enabled: preferences.overhaulReminderEnabled
             )
+        } else {
+            // 기계식→쿼츠/스마트워치로 편집 시 이전에 잡혀 있던 오버홀 알림 취소(안 그러면 수년 뒤 오발화).
+            NotificationService.cancelOverhaulReminder(for: watch)
         }
         // 캐시 무효화 — 모델 변경이 collection / detail 에 즉시 반영.
         WatchMoodService.invalidate(for: watch)

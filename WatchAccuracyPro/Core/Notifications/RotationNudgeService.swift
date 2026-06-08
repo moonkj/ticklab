@@ -44,6 +44,16 @@ enum RotationNudgeService {
         }
     }
 
+    /// 설정에서 로테이션 넛지를 끄면 호출 — 이미 예약된 모든 'rotation-nudge-*' 알림 제거.
+    ///   (기존엔 cancel API 가 없어 토글 OFF 후에도 다음날 아침 넛지가 발화하던 버그.)
+    static func cancelAll() {
+        let center = UNUserNotificationCenter.current()
+        center.getPendingNotificationRequests { reqs in
+            let ids = reqs.map { $0.identifier }.filter { $0.hasPrefix("rotation-nudge-") }
+            if !ids.isEmpty { center.removePendingNotificationRequests(withIdentifiers: ids) }
+        }
+    }
+
     private static func scheduleNudge(for watch: Watch) async {
         let id = "rotation-nudge-\(watch.id.uuidString)"
         UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [id])

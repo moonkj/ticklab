@@ -331,7 +331,11 @@ struct SettingsView: View {
                     // Sprint 7 (P2-14): 로테이션 넛지
                     Toggle(String(localized: "settings.rotation_nudge"), isOn: Binding(
                         get: { preferences.rotationNudgeEnabled },
-                        set: { preferences.rotationNudgeEnabled = $0 }
+                        set: { newValue in
+                            preferences.rotationNudgeEnabled = newValue
+                            // OFF 시 이미 예약된 넛지 알림 즉시 취소(안 그러면 다음날 아침 발화).
+                            if !newValue { RotationNudgeService.cancelAll() }
+                        }
                     ))
                     if preferences.rotationNudgeEnabled {
                         Picker(String(localized: "settings.rotation_nudge.days"),

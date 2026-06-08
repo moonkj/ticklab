@@ -123,9 +123,12 @@ struct WatchAccuracyProApp: App {
     /// makeContainer 의 in-memory 모드가 throw 하면 호출 — 의도적으로 실패하지 않게 강제 unwrap 직전 한 번 더 시도.
     private static func emergencyInMemoryContainer() -> ModelContainer {
         let cfg = ModelConfiguration(isStoredInMemoryOnly: true)
+        // makeContainer 와 동일한 9개 모델 등록 — 누락 시(Strap/WatchPhoto/WishlistItem) 해당 화면에서
+        //   'model not found in schema' 크래시. 비상 컨테이너도 풀 스키마로 맞춘다.
         return try! ModelContainer(
             for: Watch.self, WatchMeasurement.self,
             JournalEntry.self, ServiceLog.self, WearLog.self, SpecCard.self,
+            Strap.self, WatchPhoto.self, WishlistItem.self,
             configurations: cfg
         )
     }
