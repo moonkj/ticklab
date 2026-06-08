@@ -392,7 +392,7 @@ struct MeasurementResultView: View {
         if reduceMotion {
             // 연출 생략 — 즉시 최종 상태(숫자·인장 바로 표시), 단발 햅틱만.
             heroRateTarget = result.rateSecondsPerDay
-            if result.reliabilityGrade == .a { showGoldSeal = true }
+            showGoldSeal = true   // 사용자 결정: 신뢰도 무관 완료 인장 표시
             fireGradeHaptic()
             return
         }
@@ -406,14 +406,12 @@ struct MeasurementResultView: View {
             heroRateTarget = result.rateSecondsPerDay
         }
 
-        // ⓓ A등급일 때만 도착(~0.85s) 후 0.4s 뒤 골드 인장 fade-in + stamp 햅틱.
-        if result.reliabilityGrade == .a {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.85 + 0.4) {
-                withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
-                    showGoldSeal = true
-                }
-                HapticManager.trigger(.sealStamped)
+        // ⓓ 도착(~0.85s) 후 0.4s 뒤 완료 인장 fade-in + stamp 햅틱. (사용자 결정: 신뢰도 무관 표시)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.85 + 0.4) {
+            withAnimation(.spring(response: 0.45, dampingFraction: 0.6)) {
+                showGoldSeal = true
             }
+            HapticManager.trigger(.sealStamped)
         }
     }
 
@@ -553,12 +551,10 @@ struct MeasurementResultView: View {
     /// 2) COSC 밖 (-4 ~ +6 외) → detection 시스템 bias 의심 영역, 사용자 정상 시계도 큰 음수 나옴
     /// 둘 중 하나라도 해당하면 메시지 우선 모드.
     private var isHighConfidenceGrade: Bool {
-        let inCOSC = result.rateSecondsPerDay >= -4 && result.rateSecondsPerDay <= 6
-        let goodGrade: Bool = {
-            guard let g = result.reliabilityGrade else { return true }
-            return g == .a || g == .b
-        }()
-        return inCOSC && goodGrade
+        // 사용자 결정(2026-06-08): 신뢰도·COSC 범위와 무관하게 결과를 동일한 hero 레이아웃으로 표시
+        //   (rate 크게·색상·다이얼 220·완료 인장·verdict headline). 저신뢰 억제 레이아웃 폐지.
+        //   신뢰도 정보는 등급 배지·verdict 문구·"COSC 외" 칩·±정밀도 칩으로 별도 전달됨.
+        return true
     }
 
     private var rateDialCard: some View {
@@ -627,8 +623,8 @@ struct MeasurementResultView: View {
                     .opacity(dialOpacity)
                     // 접근성: rate 값은 위 readout 에서 이미 음성 안내됨 — 다이얼은 시각 전용 장식
                     .accessibilityHidden(true)
-                // A등급(고신뢰)일 때 도착 후 0.4s 뒤 골드 인장 fade-in.
-                if isHighConfidenceGrade && result.reliabilityGrade == .a {
+                // 도착 후 0.4s 뒤 완료 인장 fade-in. (사용자 결정: 신뢰도 무관 표시)
+                if isHighConfidenceGrade {
                     RevealGoldSeal()
                         .frame(width: dialSize * 0.34, height: dialSize * 0.34)
                         .opacity(showGoldSeal ? 1 : 0)
